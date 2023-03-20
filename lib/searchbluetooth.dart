@@ -67,6 +67,15 @@ class BluetoothOffScreen extends StatelessWidget {
                         ?.copyWith(color: Color.fromARGB(255, 0, 0, 0)),
                   ),
                   GestureDetector(
+                      onTap: () {
+                        print(state);
+                      },
+                      child: Container(
+                        height: 50,
+                        width: 200,
+                        color: Colors.white,
+                      )),
+                  GestureDetector(
                     onTap: () {
                       FlutterBluePlus.instance.turnOn();
                     },
