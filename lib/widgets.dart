@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
+import 'package:smart_health/device/Hc80.dart';
+import 'package:smart_health/device/Mibfs.dart';
 
 class ScanResultTile extends StatelessWidget {
   const ScanResultTile({Key? key, required this.result, this.onTap})
@@ -29,8 +31,6 @@ class ScanResultTile extends StatelessWidget {
     }
   }
 
-
-
   Widget _buildAdvRow(BuildContext context, String title, String value) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 4.0),
@@ -55,8 +55,6 @@ class ScanResultTile extends StatelessWidget {
       ),
     );
   }
-
-
 
   String getNiceHexArray(List<int> bytes) {
     return '[${bytes.map((i) => i.toRadixString(16).padLeft(2, '0')).join(', ')}]'
@@ -174,28 +172,26 @@ class CharacteristicTile extends StatelessWidget {
       this.onNotificationPressed})
       : super(key: key);
 
+  String readBluetooth(List<int>? bytes) {
+    String temp = '';
+    String weight = '';
 
-      String readTemp(List<int>? bytes){
-        String temp = '';
-  String weight = '';
+    // if (bytes != null && bytes.length > 8) {
+    //   for (int i = 5; i <= 8; i++) {
+    //     temp += String.fromCharCode(bytes[i]);
+    //   }
 
-        if(bytes!=null&&bytes.length>8){
-        for(int i=5; i<=8; i++){
-          temp += String.fromCharCode(bytes[i]);
-          }
+    //   int i = 256 * bytes[bytes.length - 1] + bytes[bytes.length - 2];
+    //   double w = i / 200.0;
 
+    //   weight = w.toString();
+    // }
+    temp = Hc80.parse(bytes);
+    weight = Mibfs.parse(bytes);
 
-
-        int i = 256*bytes[bytes.length-1]+bytes[bytes.length-2];
-        double w = i/200.0;
-
-        weight = w.toString();
-
-       }
-          return temp+ ' weight='+weight ;
-          //return double.parse(temp);
-
-      }
+    return temp + ' weight=' + weight;
+    //return double.parse(temp);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -212,7 +208,7 @@ class CharacteristicTile extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                Text('Temperature ${readTemp(snapshot.data)} C'),
+                Text('Temperature ${readBluetooth(snapshot.data)} '),
                 Text(characteristic.uuid
                     .toString()
                     .toUpperCase()

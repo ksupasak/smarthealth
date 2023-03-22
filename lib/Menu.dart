@@ -10,6 +10,8 @@ import 'package:provider/provider.dart';
 import 'package:smart_health/Homeaapp.dart';
 import 'package:smart_health/provider/Provider.dart';
 import 'package:http/http.dart' as http;
+import 'package:smart_health/searchbluetooth.dart';
+import 'package:smart_health/widgets.dart';
 //import 'package:smart_health/searchbluetooth.dart';
 
 class Menuindexuser extends StatefulWidget {
@@ -40,6 +42,9 @@ class _MenuindexuserState extends State<Menuindexuser> {
   TextEditingController SYS = TextEditingController();
   TextEditingController URIC = TextEditingController();
   TextEditingController SI = TextEditingController();
+  List<BluetoothDevice> devicesList2 = [];
+  List<BluetoothDevice> devicesList1 = [];
+  String? id;
   bool indexsend = true;
   void send() async {
     var url = Uri.parse(
@@ -68,16 +73,138 @@ class _MenuindexuserState extends State<Menuindexuser> {
     }
   }
 
-  void conB() {}
+  // String readTemp(List<int>? bytes) {
+  //   String temp = '';
+  //   String weight = '';
+
+  //   if (bytes != null && bytes.length > 8) {
+  //     for (int i = 5; i <= 8; i++) {
+  //       temp += String.fromCharCode(bytes[i]);
+  //     }
+
+  //     int i = 256 * bytes[bytes.length - 1] + bytes[bytes.length - 2];
+  //     double w = i / 200.0;
+
+  //     weight = w.toString();
+  //   }
+  //   return temp + ' weight=' + weight;
+  //   //return double.parse(temp);
+
+  //   //HC_80.parse(List<int>? bytes)
+  //   //MIBFS.parse(List<int>? bytes)
+  // }
+  FlutterBluePlus flutterBlue = FlutterBluePlus.instance;
+  void scanDevices() async {
+    flutterBlue.startScan(timeout: Duration(seconds: 60));
+    flutterBlue.scanResults.listen((results) async {
+      for (ScanResult r in results) {
+        if (!devicesList2.contains(r.device)) {
+          devicesList2.add(r.device);
+
+          print('1 ${r.device.id}');
+          if (r.device.id.toString() == '00:1C:C2:52:ED:A4') {
+            r.device.connect();
+            print('เจอเเล้ว');
+            print('---------${r.device.services.last}--------');
+            setState(() {
+              id = r.device.id.toString();
+            });
+            print('เจอเเล้ว$id');
+          }
+        }
+      }
+    });
+    print(devicesList1);
+    flutterBlue.stopScan();
+  }
+
+  void scan() {
+    // หากต้องการค้นหาอุปกรณ์ที่ตรงกับ MAC address ที่กำหนด
+    BluetoothDevice device = devicesList2
+        .firstWhere((element) => element.id.id == 'B0:B1:13:76:0F:23');
+
+    if (device != null) {
+      // หากพบอุปกรณ์ จะแสดงข้อมูลดังนี้
+      print('Name: ${device.name}');
+      print('MAC address: ${device.id.id}');
+      // device.uuids.forEach((uuid) {
+      //   print('UUID: ${uuid.toString()}');
+      // });
+    } else {
+      // หากไม่พบอุปกรณ์
+      print('Device not found');
+    }
+  }
+  // void connectToDevice() async {
+  //   List<BluetoothService> services;
+  //   BluetoothDevice connectedDevice =
+  //       await BluetoothDevice.fromId('B0:B1:13:76:0F:23');
+
+  //   if (connectedDevice.id.toString() == 'B0:B1:13:76:0F:23') {
+  //     StreamBuilder<List<BluetoothService>>(
+  //       stream: connectedDevice.services,
+  //       initialData: const [],
+  //       builder: (c, snapshot) {
+  //         return Container(
+  //           child: Text('1'),
+  //         );
+  //       },
+  //     );
+  //     print('connect hc-08');
+  //     print(connectedDevice.id.toString());
+  //   } else {
+  //     print('No connect= ');
+  //   }
+  // }
+
+// เรียกใช้งาน FlutterBlue object
+  // FlutterBluePlus? flutterBlue = BluetoothDevice;
+  // BluetoothDevice device = BluetoothDevice.fromId('');
+  // Future<void> conncet() async {
+  //   BluetoothDevice device = await BluetoothDevice.fromId('');
+  //   // device = await FlutterBluete.instance.getBondedDevices();
+  // }
+// // ค้นหาอุปกรณ์ Bluetooth ด้วย ID ที่กำหนด
+//     FlutterBluePlus.instance.scanResults.listen((results) {
+//       for (ScanResult r in results) {
+//         if (r.device.id.toString() == "B0:B1:13:76:0F:23") {
+//           // พบอุปกรณ์ที่ต้องการค้นหา
+//           device = r.device;
+//           // ทำอย่างอื่นที่ต้องการกับอุปกรณ์นี้
+//           print('เชื่อต่อสำเร็จ');
+//         } else {
+//           print('ไม่สำเร็จ');
+//         }
+//       }
+//     });
+  //   flutterBlue.scan(timeout: Duration(seconds: 5)).listen((scanResult) {
+  //     if (scanResult.device.id.toString() == "B0:B1:13:76:0F:23") {
+  //       // สร้าง BluetoothDevice object สำหรับอุปกรณ์ที่ต้องการเชื่อมต่อ
+  //       BluetoothDevice device = scanResult.device;
+  //       print('เชื่อเเล้ว');
+  //       // เชื่อมต่ออุปกรณ์ Bluetooth
+  //       device.connect();
+  //     } else {
+  //       print('ไม่ได้เชื่อ');
+  //     }
+  //   });
+  //   final BluetoothDevice device;
+  //   if (FlutterBluePlus.instance.state != BluetoothState.on) {
+  //     setState(() {
+  //       FlutterBluePlus.instance.turnOn();
+  //     });
+  //   }
+
   @override
   void initState() {
     care_unit_id.text = '63d79d61790f9bc857000006';
     if (FlutterBluePlus.instance.state != BluetoothState.on) {
       setState(() {
         FlutterBluePlus.instance.turnOn();
-        conB();
+        scanDevices();
       });
     }
+
     // TODO: implement initState
     super.initState();
   }
@@ -89,6 +216,9 @@ class _MenuindexuserState extends State<Menuindexuser> {
         FocusScope.of(context).requestFocus(FocusNode());
       },
       child: Scaffold(
+        appBar: AppBar(
+          title: Text(devicesList2.length.toString()),
+        ),
         body: Stack(
           children: [
             Positioned(
@@ -1229,6 +1359,93 @@ class _MenuindexuserState extends State<Menuindexuser> {
                                     ),
                             ],
                           )),
+                      SingleChildScrollView(
+                        child: Column(
+                          children: <Widget>[
+                            StreamBuilder<List<BluetoothDevice>>(
+                              stream:
+                                  Stream.periodic(const Duration(seconds: 2))
+                                      .asyncMap((_) => FlutterBluePlus
+                                          .instance.connectedDevices),
+                              initialData: const [],
+                              builder: (c, snapshot) => Column(
+                                children: snapshot.data!
+                                    .map((d) => ListTile(
+                                          title: Text('d.name'),
+                                          subtitle: Text(d.id.toString()),
+                                          trailing: StreamBuilder<
+                                              BluetoothDeviceState>(
+                                            stream: d.state,
+                                            initialData: BluetoothDeviceState
+                                                .disconnected,
+                                            builder: (c, snapshot) {
+                                              if (snapshot.data ==
+                                                  BluetoothDeviceState
+                                                      .connected) {
+                                                return GestureDetector(
+                                                  onTap: () => Navigator.of(
+                                                          context)
+                                                      .push(MaterialPageRoute(
+                                                          builder: (context) =>
+                                                              DeviceScreen(
+                                                                  device: d))),
+                                                  child: Container(
+                                                    height:
+                                                        MediaQuery.of(context)
+                                                                .size
+                                                                .height *
+                                                            0.045,
+                                                    width:
+                                                        MediaQuery.of(context)
+                                                                .size
+                                                                .width *
+                                                            0.4,
+                                                    decoration: BoxDecoration(
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(
+                                                          MediaQuery.of(context)
+                                                                  .size
+                                                                  .width *
+                                                              0.05,
+                                                        ),
+                                                        color: Colors.green),
+                                                    child: Center(
+                                                        child: Text(
+                                                            'Connected Successfully / Open')),
+                                                  ),
+                                                );
+                                              }
+                                              return Text(
+                                                  snapshot.data.toString());
+                                            },
+                                          ),
+                                        ))
+                                    .toList(),
+                              ),
+                            ),
+                            // StreamBuilder<List<ScanResult>>(
+                            //   stream: FlutterBluePlus.instance.scanResults,
+                            //   initialData: const [],
+                            //   builder: (c, snapshot) => Column(
+                            //     children: snapshot.data!
+                            //         .map(
+                            //           (r) => ScanResultTile(
+                            //             result: r,
+                            //             onTap: () => Navigator.of(context).push(
+                            //                 MaterialPageRoute(
+                            //                     builder: (context) {
+                            //               r.device.connect();
+                            //               return DeviceScreen(device: r.device);
+                            //             })),
+                            //           ),
+                            //         )
+                            //         .toList(),
+                            //   ),
+                            // ),
+                          ],
+                        ),
+                      ),
                     ],
                   ),
                 ),

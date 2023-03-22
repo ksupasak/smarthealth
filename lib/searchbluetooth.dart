@@ -327,7 +327,7 @@ class DeviceScreen extends StatelessWidget {
                   break;
                 case BluetoothDeviceState.disconnected:
                   onPressed = () => device.connect();
-                  text = 'CONNECT';
+                  text = 'CONNECT2';
                   break;
                 default:
                   onPressed = null;
