@@ -9,6 +9,7 @@ import 'package:smart_health/provider/Provider.dart';
 import 'package:smart_health/provider/local.dart';
 import 'package:smart_health/searchbluetooth.dart';
 import 'package:http/http.dart' as http;
+import 'package:smart_health/ss.dart';
 
 class settinglist extends StatefulWidget {
   const settinglist({super.key});

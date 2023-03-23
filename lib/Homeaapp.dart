@@ -103,6 +103,64 @@ class _HomeappState extends State<Homeapp> {
     }
   }
 
+//   String? id;
+//   List<BluetoothDevice> devicesList2 = [];
+//   FlutterBluePlus flutterBlue = FlutterBluePlus.instance;
+//   void scanDevices() async {
+//     FlutterBluePlus.instance.turnOn();
+//     flutterBlue.startScan(timeout: Duration(seconds: 30));
+//     flutterBlue.scanResults.listen((results) async {
+//       for (ScanResult r in results) {
+//         // print('devicesList2= $devicesList2');
+//         if (true
+//             //!devicesList2.contains(r.device)
+//             ) {
+//           devicesList2.add(r.device);
+
+//           // print('1 ${r.device.id}');
+//           if (r.device.name == 'HC-08') {
+//             r.device..connect();
+//             print('object: ${r.device}');
+//             print('advertise: ${r.advertisementData.toString()}');
+
+//             r.device.state.listen((state) async {
+//               switch (state) {
+//                 case BluetoothDeviceState.connected:
+//                   print('->connected');
+//                   break;
+//                 case BluetoothDeviceState.disconnected:
+//                   print('--disconnected');
+//                   break;
+//                 default:
+//                   print('-Noconnect');
+//                   break;
+//               }
+//             });
+
+// //00:1C:C2:52:ED:A4
+
+//             r.device.isDiscoveringServices.listen((event) async {
+//               print('isDiscoveringServices = ${event}');
+//               if (event) {
+//                 List<BluetoothService> services =
+//                     await r.device.discoverServices();
+//                 print('services.length = ${services.length}');
+//               }
+//             });
+//             print('เจอเเล้ว');
+
+//             setState(() {
+//               id = r.device.id.toString();
+//             });
+//             print('$id');
+//           }
+//         }
+//       }
+//     });
+//     // print(devicesList1);
+//     flutterBlue.stopScan();
+//   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -923,9 +981,7 @@ class _HomeappState extends State<Homeapp> {
                                                   ),
                                                   GestureDetector(
                                                     onTap: () {
-                                                      setState(() {
-                                                        chake = 'HOME';
-                                                      });
+                                                      setState(() {});
                                                     },
                                                     child: Container(
                                                       height:

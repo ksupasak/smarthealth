@@ -1,7 +1,9 @@
 import 'package:smart_health/device/Defaultblue.dart';
 
-class Hc80 extends Defaultblue {
+class Hc08 extends Defaultblue {
   String? name;
+
+  static scanDevices() async {}
 
   static String parse(List<int>? bytes) {
     String temp = '';

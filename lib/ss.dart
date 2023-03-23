@@ -1,32 +1,60 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/container.dart';
-import 'package:flutter/src/widgets/framework.dart';
 
-class gg extends StatefulWidget {
-  const gg({super.key});
+import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 
+class BluetoothApp extends StatefulWidget {
   @override
-  State<gg> createState() => _ggState();
+  _BluetoothAppState createState() => _BluetoothAppState();
 }
 
-class _ggState extends State<gg> {
+class _BluetoothAppState extends State<BluetoothApp> {
+  FlutterBluePlus flutterBlue = FlutterBluePlus.instance;
+  BluetoothDevice device = BluetoothDevice as BluetoothDevice;
+  BluetoothCharacteristic? characteristic;
+
+  @override
+  void initState() {
+    super.initState();
+    startScan();
+  }
+
+  Future<void> startScan() async {
+    flutterBlue.scan(timeout: Duration(seconds: 4)).listen((scanResult) {
+      if (scanResult.device.id.toString() == '00:1C:C2:52:ED:A4') {
+        print('Found device');
+        device = scanResult.device;
+        connectToDevice();
+      }
+    });
+  }
+
+  Future<void> connectToDevice() async {
+    await device.connect();
+    discoverServices();
+  }
+
+  Future<void> discoverServices() async {
+    List<BluetoothService> services = await device.discoverServices();
+    services.forEach((service) {
+      service.characteristics.forEach((characteristic) {
+        if (characteristic.uuid.toString() == 'your_service_uuid') {
+          this.characteristic = characteristic;
+          print('Found characteristic');
+        }
+      });
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: Text('Bluetooth App'),
+      ),
       body: Center(
-        child: Container(
-            width: MediaQuery.of(context).size.width / 2,
-            height: MediaQuery.of(context).size.height / 2,
-            color: Colors.amber,
-            child: Center(
-              child: Container(
-                width: MediaQuery.of(context).size.width / 3.5,
-                height: MediaQuery.of(context).size.height / 15,
-                decoration: BoxDecoration(
-                    color: Colors.black,
-                    borderRadius: BorderRadius.circular(10)),
-              ),
-            )),
+        child: Text('Bluetooth App'),
       ),
     );
   }
