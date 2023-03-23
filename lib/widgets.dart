@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
-import 'package:smart_health/device/Hc80.dart';
+import 'package:smart_health/device/hc08.dart';
 import 'package:smart_health/device/Mibfs.dart';
 
 class ScanResultTile extends StatelessWidget {
@@ -90,7 +90,7 @@ class ScanResultTile extends StatelessWidget {
       title: _buildTitle(context),
       leading: Text(result.rssi.toString()),
       trailing: ElevatedButton(
-        child: const Text('CONNECT'),
+        child: const Text('CONNECT5'),
         style: ElevatedButton.styleFrom(
           primary: Color.fromARGB(255, 204, 0, 0),
           onPrimary: Colors.white,
@@ -214,7 +214,7 @@ class CharacteristicTile extends StatelessWidget {
                     .toUpperCase()
                     .substring(4, 8)),
                 Text(
-                    '0x${characteristic.uuid.toString().toUpperCase().substring(10)}',
+                    '=${characteristic.uuid.toString().toUpperCase().substring(10)}',
                     style: Theme.of(context).textTheme.bodyText1?.copyWith(
                         color: Theme.of(context).textTheme.caption?.color)),
               ],
