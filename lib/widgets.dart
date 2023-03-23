@@ -186,7 +186,7 @@ class CharacteristicTile extends StatelessWidget {
 
     //   weight = w.toString();
     // }
-    temp = Hc80.parse(bytes);
+    temp = Hc08.parse(bytes);
     weight = Mibfs.parse(bytes);
 
     return temp + ' weight=' + weight;
