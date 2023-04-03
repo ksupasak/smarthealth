@@ -6,6 +6,7 @@ import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 import 'package:provider/provider.dart';
 import 'package:smart_health/Menu.dart';
+import 'package:smart_health/healthcheck.dart';
 import 'package:smart_health/provider/Provider.dart';
 import 'package:smart_health/searchbluetooth.dart';
 import 'package:smart_health/setting.dart';
@@ -91,6 +92,8 @@ class _HomeappState extends State<Homeapp> {
             context.read<stringitem>().image = resTojson['data']['picture_url'];
             context.read<stringitem>().id = passwordslogin;
 
+            // Navigator.push(
+            //     context, MaterialPageRoute(builder: (context) => scan()));
             Navigator.push(context,
                 MaterialPageRoute(builder: (context) => Menuindexuser()));
           });

@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 
 class stringitem with ChangeNotifier {
   String NAMEOFHOSPITAL = 'NAME OF HOSPITAL';
@@ -10,6 +11,7 @@ class stringitem with ChangeNotifier {
   String TextNumpad = '';
   String height = '';
   String weight = '';
+  String temp = '';
   String sys = '';
   String dia = '';
   String pul = '';
@@ -22,4 +24,5 @@ class stringitem with ChangeNotifier {
   String LicenseKey = 'test/LicenseKey';
   String PlatfromURL = 'https://emr-life.com/clinic_master/clinic/Api/';
   String care_unit_id = '63d79d61790f9bc857000006';
+  BluetoothDevice? deviceidprovider;
 }

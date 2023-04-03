@@ -243,10 +243,7 @@ class CharacteristicTile extends StatelessWidget {
               ),
               IconButton(
                 icon: Icon(
-                    characteristic.isNotifying
-                        ? Icons.home
-                        //Icons.sync_disabled
-                        : Icons.sync,
+                    characteristic.isNotifying ? Icons.padding : Icons.home,
                     color: Theme.of(context).iconTheme.color?.withOpacity(0.5)),
                 onPressed: onNotificationPressed,
               )

@@ -5,7 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
-//import 'package:flutter_blue/flutter_blue.dart';
+
 import 'package:provider/provider.dart';
 import 'package:smart_health/Homeaapp.dart';
 import 'package:smart_health/device/hc08.dart';
@@ -13,7 +13,6 @@ import 'package:smart_health/provider/Provider.dart';
 import 'package:http/http.dart' as http;
 import 'package:smart_health/searchbluetooth.dart';
 import 'package:smart_health/widgets.dart';
-//import 'package:smart_health/searchbluetooth.dart';
 
 class Menuindexuser extends StatefulWidget {
   @override
@@ -46,6 +45,39 @@ class _MenuindexuserState extends State<Menuindexuser> {
 
   String? id;
   bool indexsend = true;
+
+  Stream<BluetoothDeviceState> checkConnectionState() async* {
+    // เริ่มต้นตรวจสอบว่าบลูทูธถูกเปิดหรือไม่
+    bool isOn = await flutterBlue.isOn;
+
+    if (!isOn) {
+      // ถ้าไม่ได้เปิดบลูทูธ
+
+    } else {
+      // ถ้าเปิดบลูทูธ ตรวจสอบการเชื่อต่อของอุปกรณ์ id B0:B1:13:76:0F:23
+      bool isConnected = false;
+      flutterBlue.connectedDevices
+          .asStream()
+          .listen((List<BluetoothDevice> devices) {
+        for (BluetoothDevice device in devices) {
+          if (device.id.toString() == 'B0:B1:13:76:0F:23') {
+            print('กำลังเชื่อมต่อ');
+            isConnected = true;
+
+            break;
+          }
+        }
+      });
+
+      if (isConnected) {
+        print('เชื่อมสำเร็จ');
+        yield BluetoothDeviceState.connected;
+      } else {
+        print('ไม่ได้เชื่อมต่อ');
+        yield BluetoothDeviceState.disconnected;
+      }
+    }
+  }
 
   void send() async {
     var url = Uri.parse(
@@ -80,16 +112,23 @@ class _MenuindexuserState extends State<Menuindexuser> {
     device.discoverServices().then((services) async {
       if (services.isNotEmpty) {
         for (BluetoothService service in services) {
-          print('Service found:-----> ${service.uuid}');
+          print('----->Service found:-----> ${service.uuid}');
           for (BluetoothService service in services) {
             if (service.uuid.toString() ==
-                '0000ffe0-0000-1000-8000-00805f9b34fb') {
+                '0000181b-0000-1000-8000-00805f9b34fb')
+            //0000181b-0000-1000-8000-00805f9b34fb เครื่องชั่งน้ำหนัก
+            // 0000ffe0-0000-1000-8000-00805f9b34fb เครื่องวัดอุณหถูมิ
+            {
+              print('เจอ service.uuid เเล้ว');
               desiredServices.add(service);
               print("****************-----${service}");
 
               for (BluetoothCharacteristic char in service.characteristics) {
                 print('char: ${char.uuid}');
                 await char.read().then((c) {
+                  setState(() {
+                    //เอาc ไปเก็บที่provider
+                  });
                   print('read : ${c}');
                   print('last list: ${char.lastValue}');
                   print('last temp: ${Hc08.parse(char.lastValue)}');
@@ -99,11 +138,13 @@ class _MenuindexuserState extends State<Menuindexuser> {
                   });
                 });
               }
+            } else {
+              print('------------->ไม่เจอ service.uuid  ');
             }
           }
         }
       } else {
-        print('No services found');
+        print('------------>No services found');
       }
     });
   }
@@ -117,7 +158,7 @@ class _MenuindexuserState extends State<Menuindexuser> {
     FlutterBluePlus.instance.connectedDevices.then((connectedDs) async {
       print('connectedDevices1 : ${connectedDs}');
       for (BluetoothDevice device in connectedDs) {
-        if (device.id.toString() == 'B0:B1:13:76:0F:23') {
+        if (device.id.toString() == '0C:95:41:17:9C:ED') {
           readDevices(device);
         }
       }
@@ -127,8 +168,10 @@ class _MenuindexuserState extends State<Menuindexuser> {
         if (true) {
           devicesList2.add(r.device);
 
-          if (r.device.id.toString() == 'B0:B1:13:76:0F:23') {
-            print('เจอเเล้ว');
+          if (r.device.id.toString() == '0C:95:41:17:9C:ED') {
+            print('id = ${r.device.id} ${r.device.name}');
+            //B0:B1:13:76:0F:23 เครื่องวัดอุณห๓ูมิ
+            print('เจอ r.device.id เเล้ว');
             FlutterBluePlus.instance.connectedDevices.then((connectedDs) async {
               print('connectedDevices2 : ${connectedDs}');
               if (!connectedDs.contains(r.device)) {
@@ -1295,9 +1338,9 @@ class _MenuindexuserState extends State<Menuindexuser> {
                               indexsend == true
                                   ? GestureDetector(
                                       onTap: () {
-                                        //  indexsend = false;
-                                        //  send();
-                                        scanDevices();
+                                        indexsend = false;
+                                        send();
+                                        //  scanDevices();
                                       },
                                       child: Center(
                                         child: Container(
