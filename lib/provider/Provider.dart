@@ -23,7 +23,7 @@ class StringItem with ChangeNotifier {
   int appID = 733551517; //
   String appSign =
       '98418d25e39d83614bd7d3919fca8948d817cf7a2979c3c38a4fe47edebef86a'; //
-  String callID = '-'; //
+  String callID = '1234'; //
   List<String> listDeviceName = [];
   List<String> knownDevice = ['HC-08', 'MIBFS', 'HJ-Narigmed'];
   String status = 'Ready';
