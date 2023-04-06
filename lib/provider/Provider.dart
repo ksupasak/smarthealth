@@ -24,12 +24,12 @@ class StringItem with ChangeNotifier {
   List<String> listDeviceName = [];
   List<String> knownDevice = ['HC-08', 'MIBFS', 'HJ-Narigmed'];
   String status = 'Ready';
-  String temp = 'Temp'; //1
+  String temp = 'ค่าที่1'; //1
   String weight = '';
   String sys = '';
   String dia = '';
-  String spo2 = 'Spo2'; //2
-  String pr = 'Pr'; //3
+  String spo2 = 'ค่าที่3'; //2
+  String pr = 'ค่าที่2'; //3
 
   void clear() {
     temp = '';
