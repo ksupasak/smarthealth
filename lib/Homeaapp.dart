@@ -6,6 +6,8 @@ import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 import 'package:provider/provider.dart';
 import 'package:smart_health/Menu.dart';
+import 'package:smart_health/device/hc08.dart';
+import 'package:smart_health/device/hj_narigmed.dart';
 import 'package:smart_health/healthcheck.dart';
 import 'package:smart_health/provider/Provider.dart';
 import 'package:smart_health/searchbluetooth.dart';
@@ -29,6 +31,9 @@ class _HomeappState extends State<Homeapp> {
 
   String colortexts = 'back';
   bool button = false;
+
+  int _counter = 0;
+  FlutterBluePlus flutterBlue = FlutterBluePlus.instance;
   var resTojson;
 
   int checkDigit(String id) {
@@ -106,64 +111,68 @@ class _HomeappState extends State<Homeapp> {
     }
   }
 
-//   String? id;
-//   List<BluetoothDevice> devicesList2 = [];
-//   FlutterBluePlus flutterBlue = FlutterBluePlus.instance;
-//   void scanDevices() async {
-//     FlutterBluePlus.instance.turnOn();
-//     flutterBlue.startScan(timeout: Duration(seconds: 30));
-//     flutterBlue.scanResults.listen((results) async {
-//       for (ScanResult r in results) {
-//         // print('devicesList2= $devicesList2');
-//         if (true
-//             //!devicesList2.contains(r.device)
-//             ) {
-//           devicesList2.add(r.device);
+  @override
+  void initState() {
+    scanTimer(4500);
 
-//           // print('1 ${r.device.id}');
-//           if (r.device.name == 'HC-08') {
-//             r.device..connect();
-//             print('object: ${r.device}');
-//             print('advertise: ${r.advertisementData.toString()}');
+    bleScan();
+    // TODO: implement initState
+    super.initState();
+  }
 
-//             r.device.state.listen((state) async {
-//               switch (state) {
-//                 case BluetoothDeviceState.connected:
-//                   print('->connected');
-//                   break;
-//                 case BluetoothDeviceState.disconnected:
-//                   print('--disconnected');
-//                   break;
-//                 default:
-//                   print('-Noconnect');
-//                   break;
-//               }
-//             });
+  void bleScan() {
+    List<String> knownDevice = context.read<StringItem>().knownDevice;
+    flutterBlue.scanResults.listen((results) {
+      // results.forEach((r) {
+      if (results.length > 0) {
+        ScanResult r = results.last;
+        if (knownDevice.contains(r.device.name)) {
+          r.device.connect();
+          print('Connect = ${r.device.name} ');
+        }
+      }
+      // });
+    });
 
-// //00:1C:C2:52:ED:A4
+    Stream.periodic(Duration(seconds: 1))
+        .asyncMap((_) => flutterBlue.connectedDevices)
+        .listen((connectedDevices) {
+      connectedDevices.forEach((device) {
+        print("Found " + device.name);
+        context.read<StringItem>().status = 'Measuring';
+        if (device.name == 'HC-08') {
+          Hc08 hc08 = Hc08(device: device);
+          hc08.parse().listen((temp) {
+            if (temp != null && temp != '') {
+              setState(() {
+                context.read<StringItem>().temp = temp;
+              });
+            }
+          });
+        } else if (device.name == 'HJ-Narigmed') {
+          HjNarigmed hjNarigmed = HjNarigmed(device: device);
+          hjNarigmed.parse().listen((mVal) {
+            if (!mVal.isEmpty()) {
+              setState(() {
+                context.read<StringItem>().spo2 = mVal['spo2'];
+                context.read<StringItem>().pr = mVal['pr'];
+              });
+            }
+          });
+        } else {
+          // Other devices
+        }
+      });
+    });
+  }
 
-//             r.device.isDiscoveringServices.listen((event) async {
-//               print('isDiscoveringServices = ${event}');
-//               if (event) {
-//                 List<BluetoothService> services =
-//                     await r.device.discoverServices();
-//                 print('services.length = ${services.length}');
-//               }
-//             });
-//             print('เจอเเล้ว');
-
-//             setState(() {
-//               id = r.device.id.toString();
-//             });
-//             print('$id');
-//           }
-//         }
-//       }
-//     });
-//     // print(devicesList1);
-//     flutterBlue.stopScan();
-//   }
-
+  Timer scanTimer([int milliseconds = 4000]) =>
+      Timer.periodic(Duration(milliseconds: milliseconds), (Timer timer) {
+        print("start scan");
+        FlutterBluePlus.instance.startScan(timeout: Duration(seconds: 4));
+        // flutterBlue.startScan(timeout: Duration(seconds: 4));
+        print("stop scan");
+      });
   @override
   Widget build(BuildContext context) {
     return Scaffold(

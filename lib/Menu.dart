@@ -46,39 +46,6 @@ class _MenuindexuserState extends State<Menuindexuser> {
   String? id;
   bool indexsend = true;
 
-  Stream<BluetoothDeviceState> checkConnectionState() async* {
-    // เริ่มต้นตรวจสอบว่าบลูทูธถูกเปิดหรือไม่
-    bool isOn = await flutterBlue.isOn;
-
-    if (!isOn) {
-      // ถ้าไม่ได้เปิดบลูทูธ
-
-    } else {
-      // ถ้าเปิดบลูทูธ ตรวจสอบการเชื่อต่อของอุปกรณ์ id B0:B1:13:76:0F:23
-      bool isConnected = false;
-      flutterBlue.connectedDevices
-          .asStream()
-          .listen((List<BluetoothDevice> devices) {
-        for (BluetoothDevice device in devices) {
-          if (device.id.toString() == 'B0:B1:13:76:0F:23') {
-            print('กำลังเชื่อมต่อ');
-            isConnected = true;
-
-            break;
-          }
-        }
-      });
-
-      if (isConnected) {
-        print('เชื่อมสำเร็จ');
-        yield BluetoothDeviceState.connected;
-      } else {
-        print('ไม่ได้เชื่อมต่อ');
-        yield BluetoothDeviceState.disconnected;
-      }
-    }
-  }
-
   void send() async {
     var url = Uri.parse(
         '${context.read<StringItem>().PlatfromURL}add_hr'); //${context.read<stringitem>().uri}
@@ -106,138 +73,8 @@ class _MenuindexuserState extends State<Menuindexuser> {
     }
   }
 
-  FlutterBluePlus flutterBlue = FlutterBluePlus.instance;
-
-  void readDevices(BluetoothDevice device) {
-    device.discoverServices().then((services) async {
-      if (services.isNotEmpty) {
-        for (BluetoothService service in services) {
-          print('----->Service found:-----> ${service.uuid}');
-          for (BluetoothService service in services) {
-            if (service.uuid.toString() ==
-                '0000181b-0000-1000-8000-00805f9b34fb')
-            //0000181b-0000-1000-8000-00805f9b34fb เครื่องชั่งน้ำหนัก
-            // 0000ffe0-0000-1000-8000-00805f9b34fb เครื่องวัดอุณหถูมิ
-            {
-              print('เจอ service.uuid เเล้ว');
-              desiredServices.add(service);
-              print("****************-----${service}");
-
-              for (BluetoothCharacteristic char in service.characteristics) {
-                print('char: ${char.uuid}');
-                await char.read().then((c) {
-                  setState(() {
-                    //เอาc ไปเก็บที่provider
-                  });
-                  print('read : ${c}');
-                  print('last list: ${char.lastValue}');
-               //   print('last temp: ${Hc08.parse(char.lastValue)}');
-                  char.value.listen((c) async {
-                    print('value list: ${c}');
-               //     print('value temp: ${Hc08.parse(c)}');
-                  });
-                });
-              }
-            } else {
-              print('------------->ไม่เจอ service.uuid  ');
-            }
-          }
-        }
-      } else {
-        print('------------>No services found');
-      }
-    });
-  }
-
-  void scanDevices() async {
-    setState(() {
-      devicesList2 = [];
-    });
-    print('เข้า');
-    FlutterBluePlus.instance.startScan(timeout: Duration(seconds: 4));
-    FlutterBluePlus.instance.connectedDevices.then((connectedDs) async {
-      print('connectedDevices1 : ${connectedDs}');
-      for (BluetoothDevice device in connectedDs) {
-        if (device.id.toString() == '0C:95:41:17:9C:ED') {
-          readDevices(device);
-        }
-      }
-    });
-    FlutterBluePlus.instance.scanResults.listen((results) async {
-      for (ScanResult r in results) {
-        if (true) {
-          devicesList2.add(r.device);
-
-          if (r.device.id.toString() == '0C:95:41:17:9C:ED') {
-            print('id = ${r.device.id} ${r.device.name}');
-            //B0:B1:13:76:0F:23 เครื่องวัดอุณห๓ูมิ
-            print('เจอ r.device.id เเล้ว');
-            FlutterBluePlus.instance.connectedDevices.then((connectedDs) async {
-              print('connectedDevices2 : ${connectedDs}');
-              if (!connectedDs.contains(r.device)) {
-                await r.device.connect();
-                readDevices(r.device);
-              }
-            });
-
-            print('object: ${r.device}');
-
-            print('advertise: ${r.advertisementData.toString()}');
-          }
-        }
-      }
-    });
-
-    FlutterBluePlus.instance.stopScan();
-  }
-
-  void scan() {
-    BluetoothDevice device = devicesList2
-        .firstWhere((element) => element.id.id == 'B0:B1:13:76:0F:23');
-
-    if (device != null) {
-      print('Name: ${device.name}');
-      print('MAC address: ${device.id.id}');
-    } else {
-      print('Device not found');
-    }
-  }
-
-  void connectToDevice() async {
-    List<BluetoothService> services;
-    BluetoothDevice connectedDevice =
-        await BluetoothDevice.fromId('B0:B1:13:76:0F:23');
-
-    if (connectedDevice.id.toString() == 'B0:B1:13:76:0F:23') {
-      StreamBuilder<List<BluetoothService>>(
-        stream: connectedDevice.services,
-        initialData: const [],
-        builder: (c, snapshot) {
-          return Container(
-            child: Text('1'),
-          );
-        },
-      );
-      print('connect hc-08');
-      print(connectedDevice.id.toString());
-    } else {
-      print('No connect= ');
-    }
-  }
-
   @override
   void initState() {
-    if (FlutterBluePlus.instance.state != BluetoothState.on) {
-      setState(() {
-        FlutterBluePlus.instance.turnOn();
-        scanDevices();
-      });
-    } else if (FlutterBluePlus.instance.state == BluetoothState.on) {
-      setState(() {
-        scanDevices();
-      });
-    }
-
     // TODO: implement initState
     super.initState();
   }
@@ -264,13 +101,6 @@ class _MenuindexuserState extends State<Menuindexuser> {
                 ),
               ),
             )),
-            // Positioned(
-            //   top: 100,
-            //   child: Image.network(
-            //     'http://www.w3.org/2000/svg',
-            //     fit: BoxFit.fill,
-            //   ),
-            // ),
             Positioned(
               child: RefreshIndicator(
                 onRefresh: () => FlutterBluePlus.instance
@@ -517,7 +347,7 @@ class _MenuindexuserState extends State<Menuindexuser> {
                                             MainAxisAlignment.center,
                                         children: [
                                           Text(
-                                            "Height",
+                                            "${context.read<StringItem>().temp}",
                                             style: TextStyle(
                                               fontSize: MediaQuery.of(context)
                                                       .size
@@ -667,7 +497,7 @@ class _MenuindexuserState extends State<Menuindexuser> {
                                             MainAxisAlignment.center,
                                         children: [
                                           Text(
-                                            "SYS",
+                                            '${context.read<StringItem>().spo2}',
                                             style: TextStyle(
                                               fontSize: MediaQuery.of(context)
                                                       .size
