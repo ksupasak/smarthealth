@@ -97,7 +97,7 @@ class _CallState extends State<Call> {
               height: 50,
               width: 200,
               child: TextFormField(
-                controller: id,
+                controller: first_name,
               ),
             ),
             Container(
@@ -158,8 +158,8 @@ class MyCall extends StatelessWidget {
       appID: 733551517,
       appSign:
           '98418d25e39d83614bd7d3919fca8948d817cf7a2979c3c38a4fe47edebef86a',
-      userID: 'test',
-      userName: 'test',
+      userID: 'test1',
+      userName: 'test1',
       callID: '1234',
       config: ZegoUIKitPrebuiltCallConfig.oneOnOneVideoCall()
         ..onOnlySelfInRoom = (context) => Navigator.of(context).pop(),
