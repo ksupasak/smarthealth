@@ -3,11 +3,11 @@ import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 
 class StringItem with ChangeNotifier {
   String NAMEOFHOSPITAL = 'NAME OF HOSPITAL';
-  String first_name = '';
-  String last_name = '';
+  String first_name = 'null'; //
+  String last_name = 'null'; //
   String image = '';
   String tel = '';
-  String id = '';
+  String id = ''; //
   String TextNumpad = '';
   String height = '';
   String pul = '';
@@ -20,7 +20,10 @@ class StringItem with ChangeNotifier {
   String PlatfromURL = 'https://emr-life.com/clinic_master/clinic/Api/';
   String care_unit_id = '63d79d61790f9bc857000006';
   BluetoothDevice? deviceidprovider;
-
+  int appID = 733551517; //
+  String appSign =
+      '98418d25e39d83614bd7d3919fca8948d817cf7a2979c3c38a4fe47edebef86a'; //
+  String callID = '-'; //
   List<String> listDeviceName = [];
   List<String> knownDevice = ['HC-08', 'MIBFS', 'HJ-Narigmed'];
   String status = 'Ready';

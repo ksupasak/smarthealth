@@ -16,6 +16,8 @@ import 'package:smart_health/ss.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
+import 'package:smart_health/videocall/videocall.dart';
+
 class Homeapp extends StatefulWidget {
   const Homeapp({super.key});
 
@@ -99,8 +101,10 @@ class _HomeappState extends State<Homeapp> {
 
             // Navigator.push(
             //     context, MaterialPageRoute(builder: (context) => scan()));
-            Navigator.push(context,
-                MaterialPageRoute(builder: (context) => Menuindexuser()));
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => VideoAndMenuindexuser()));
           });
         }
       }
@@ -113,6 +117,7 @@ class _HomeappState extends State<Homeapp> {
 
   @override
   void initState() {
+    context.read<StringItem>().id = passwordslogin;
     scanTimer(4500);
 
     bleScan();

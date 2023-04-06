@@ -41,6 +41,7 @@ dependencies:
   http: ^0.13.4
   sembast: ^3.2.0+1
   flutter_blue_plus: ^1.4.0
+  zego_uikit_prebuilt_call: ^3.1.1
   #flutter_webrtc: ^0.9.24
   #zego_uikit_prebuilt_call: ^3.1.1
  
