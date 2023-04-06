@@ -155,8 +155,9 @@ class MyCall extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ZegoUIKitPrebuiltCall(
-      appID: context.read<StringItem>().appID,
-      appSign: context.read<StringItem>().appSign,
+      appID: 733551517,
+      appSign:
+          '98418d25e39d83614bd7d3919fca8948d817cf7a2979c3c38a4fe47edebef86a',
       userID:
           '${context.read<StringItem>().first_name} ${context.read<StringItem>().last_name}',
       userName: '0x${context.read<StringItem>().id}',
