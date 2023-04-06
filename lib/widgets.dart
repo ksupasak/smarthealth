@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 import 'package:smart_health/device/hc08.dart';
-import 'package:smart_health/device/Mibfs.dart';
 
 class ScanResultTile extends StatelessWidget {
   const ScanResultTile({Key? key, required this.result, this.onTap})
@@ -186,8 +185,8 @@ class CharacteristicTile extends StatelessWidget {
 
     //   weight = w.toString();
     // }
-    temp = Hc08.parse(bytes);
-    weight = Mibfs.parse(bytes);
+    // temp = Hc08.parse(bytes);
+    // weight = Mibfs.parse(bytes);
 
     return temp + ' weight=' + weight;
     //return double.parse(temp);

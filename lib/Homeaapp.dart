@@ -75,7 +75,7 @@ class _HomeappState extends State<Homeapp> {
       String ids = id.toString();
       if (ids == passwordslogin[12]) {
         var url = Uri.parse(
-            '${context.read<stringitem>().PlatfromURL}get_patient?public_id=$passwordslogin'); //${context.read<stringitem>().uri}
+            '${context.read<StringItem>().PlatfromURL}get_patient?public_id=$passwordslogin'); //${context.read<stringitem>().uri}
         var res = await http.get(url);
         resTojson = json.decode(res.body);
         print(resTojson);
@@ -84,13 +84,13 @@ class _HomeappState extends State<Homeapp> {
           setState(() {
             button = false;
             passwordslogin = '';
-            context.read<stringitem>().first_name =
+            context.read<StringItem>().first_name =
                 resTojson['data']['first_name'];
-            context.read<stringitem>().last_name =
+            context.read<StringItem>().last_name =
                 resTojson['data']['last_name'];
-            context.read<stringitem>().tel = resTojson['data']['tel'];
-            context.read<stringitem>().image = resTojson['data']['picture_url'];
-            context.read<stringitem>().id = passwordslogin;
+            context.read<StringItem>().tel = resTojson['data']['tel'];
+            context.read<StringItem>().image = resTojson['data']['picture_url'];
+            context.read<StringItem>().id = passwordslogin;
 
             // Navigator.push(
             //     context, MaterialPageRoute(builder: (context) => scan()));
@@ -194,7 +194,7 @@ class _HomeappState extends State<Homeapp> {
                             child: Padding(
                               padding: const EdgeInsets.fromLTRB(0, 20, 0, 5),
                               child: Text(
-                                context.read<stringitem>().NAMEOFHOSPITAL,
+                                context.read<StringItem>().NAMEOFHOSPITAL,
                                 style: TextStyle(
                                   fontSize:
                                       MediaQuery.of(context).size.width * 0.08,

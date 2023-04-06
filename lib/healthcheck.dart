@@ -21,7 +21,7 @@ class _scanState extends State<scan> {
       for (BluetoothDevice device in connectedDs) {
         if (device.id.toString() == 'B0:B1:13:76:0F:23') {
           setState(() {
-            context.read<stringitem>().deviceidprovider == device;
+            context.read<StringItem>().deviceidprovider == device;
           });
           print('เชื่อต่ออยู่เเล้ว');
         }
@@ -34,7 +34,7 @@ class _scanState extends State<scan> {
           FlutterBluePlus.instance.connectedDevices.then((connectedDs) async {
             if (!connectedDs.contains(r.device)) {
               setState(() {
-                context.read<stringitem>().deviceidprovider == r.device;
+                context.read<StringItem>().deviceidprovider == r.device;
               });
 
               print('เชื่อมต่อ....');

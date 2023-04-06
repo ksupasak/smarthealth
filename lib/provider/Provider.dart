@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 
-class stringitem with ChangeNotifier {
+class StringItem with ChangeNotifier {
   String NAMEOFHOSPITAL = 'NAME OF HOSPITAL';
   String first_name = '';
   String last_name = '';
@@ -10,13 +10,8 @@ class stringitem with ChangeNotifier {
   String id = '';
   String TextNumpad = '';
   String height = '';
-  String weight = '';
-  String temp = '';
-  String sys = '';
-  String dia = '';
   String pul = '';
   String pressure = '';
-
   String Setting1 = '';
   String Setting2 = '';
   String Setting3 = '';
@@ -25,4 +20,23 @@ class stringitem with ChangeNotifier {
   String PlatfromURL = 'https://emr-life.com/clinic_master/clinic/Api/';
   String care_unit_id = '63d79d61790f9bc857000006';
   BluetoothDevice? deviceidprovider;
+
+  List<String> listDeviceName = [];
+  List<String> knownDevice = ['HC-08', 'MIBFS', 'HJ-Narigmed'];
+  String status = 'Ready';
+  String temp = '';
+  String weight = '';
+  String sys = '';
+  String dia = '';
+  String spo2 = '';
+  String pr = '';
+
+  void clear() {
+    temp = '';
+    weight = '';
+    sys = '';
+    dia = '';
+    spo2 = '';
+    pr = '';
+  }
 }

@@ -81,9 +81,9 @@ class _MenuindexuserState extends State<Menuindexuser> {
 
   void send() async {
     var url = Uri.parse(
-        '${context.read<stringitem>().PlatfromURL}add_hr'); //${context.read<stringitem>().uri}
+        '${context.read<StringItem>().PlatfromURL}add_hr'); //${context.read<stringitem>().uri}
     var res = await http.post(url, body: {
-      "public_id": context.read<stringitem>().id,
+      "public_id": context.read<StringItem>().id,
       "care_unit_id": '63d79d61790f9bc857000006',
       "temp": "${temp.text}",
       "pulse_rate": "${pulse_rate.text}",
@@ -131,10 +131,10 @@ class _MenuindexuserState extends State<Menuindexuser> {
                   });
                   print('read : ${c}');
                   print('last list: ${char.lastValue}');
-                  print('last temp: ${Hc08.parse(char.lastValue)}');
+               //   print('last temp: ${Hc08.parse(char.lastValue)}');
                   char.value.listen((c) async {
                     print('value list: ${c}');
-                    print('value temp: ${Hc08.parse(c)}');
+               //     print('value temp: ${Hc08.parse(c)}');
                   });
                 });
               }
@@ -286,7 +286,7 @@ class _MenuindexuserState extends State<Menuindexuser> {
                               child: Padding(
                                 padding: const EdgeInsets.fromLTRB(0, 20, 0, 5),
                                 child: Text(
-                                  context.read<stringitem>().NAMEOFHOSPITAL,
+                                  context.read<StringItem>().NAMEOFHOSPITAL,
                                   style: TextStyle(
                                     fontSize:
                                         MediaQuery.of(context).size.width *
@@ -371,7 +371,7 @@ class _MenuindexuserState extends State<Menuindexuser> {
                                           ],
                                         ),
                                         child:
-                                            context.read<stringitem>().image !=
+                                            context.read<StringItem>().image !=
                                                     ''
                                                 ? ClipRRect(
                                                     borderRadius:
@@ -382,7 +382,7 @@ class _MenuindexuserState extends State<Menuindexuser> {
                                                           0.03,
                                                     ),
                                                     child: Image.network(
-                                                      '${context.read<stringitem>().image}',
+                                                      '${context.read<StringItem>().image}',
                                                       fit: BoxFit.fill,
                                                     ),
                                                   )
@@ -400,11 +400,11 @@ class _MenuindexuserState extends State<Menuindexuser> {
                                             children: [
                                               Text(
                                                 context
-                                                        .read<stringitem>()
+                                                        .read<StringItem>()
                                                         .first_name +
                                                     '  ' +
                                                     context
-                                                        .read<stringitem>()
+                                                        .read<StringItem>()
                                                         .last_name,
                                                 style: TextStyle(
                                                   fontSize:
@@ -430,7 +430,7 @@ class _MenuindexuserState extends State<Menuindexuser> {
                                               Text(
                                                 "Number : " +
                                                     context
-                                                        .read<stringitem>()
+                                                        .read<StringItem>()
                                                         .tel,
                                                 style: TextStyle(
                                                   fontSize:

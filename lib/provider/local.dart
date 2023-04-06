@@ -29,7 +29,7 @@ Future deletedatabase() async {
   await store.drop(db);
 }
 
-Future Adddatabaseapp(stringitem data) async {
+Future Adddatabaseapp(StringItem data) async {
   Database db = await openDatabaseapp();
   var store = intMapStoreFactory.store('dataapp');
   var key = await store.add(db, {

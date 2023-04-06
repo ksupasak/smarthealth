@@ -25,10 +25,10 @@ class _settinglistState extends State<settinglist> {
   TextEditingController care_unit_id = TextEditingController();
   String CheckConnections = '';
   void adddata() {
-    context.read<stringitem>().Hospitalname = Hospitalname.text;
-    context.read<stringitem>().LicenseKey = LicenseKey.text;
-    context.read<stringitem>().PlatfromURL = PlatfromURL.text;
-    context.read<stringitem>().care_unit_id = care_unit_id.text;
+    context.read<StringItem>().Hospitalname = Hospitalname.text;
+    context.read<StringItem>().LicenseKey = LicenseKey.text;
+    context.read<StringItem>().PlatfromURL = PlatfromURL.text;
+    context.read<StringItem>().care_unit_id = care_unit_id.text;
     // Adddatabaseapp(context.read<stringitem>());
     Navigator.pop(context);
   }
@@ -49,10 +49,10 @@ class _settinglistState extends State<settinglist> {
   }
 
   void reset() {
-    Hospitalname.text = context.read<stringitem>().Hospitalname;
-    LicenseKey.text = context.read<stringitem>().LicenseKey;
-    PlatfromURL.text = context.read<stringitem>().PlatfromURL;
-    care_unit_id.text = context.read<stringitem>().care_unit_id;
+    Hospitalname.text = context.read<StringItem>().Hospitalname;
+    LicenseKey.text = context.read<StringItem>().LicenseKey;
+    PlatfromURL.text = context.read<StringItem>().PlatfromURL;
+    care_unit_id.text = context.read<StringItem>().care_unit_id;
   }
 
   @override
