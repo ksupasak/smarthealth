@@ -347,7 +347,7 @@ class _MenuindexuserState extends State<Menuindexuser> {
                                             MainAxisAlignment.center,
                                         children: [
                                           Text(
-                                            "${context.read<StringItem>().temp}",
+                                            "Temp- ${context.read<StringItem>().temp}",
                                             style: TextStyle(
                                               fontSize: MediaQuery.of(context)
                                                       .size
@@ -497,7 +497,7 @@ class _MenuindexuserState extends State<Menuindexuser> {
                                             MainAxisAlignment.center,
                                         children: [
                                           Text(
-                                            '${context.read<StringItem>().spo2}',
+                                            'Pr - ${context.read<StringItem>().pr}',
                                             style: TextStyle(
                                               fontSize: MediaQuery.of(context)
                                                       .size
@@ -785,7 +785,7 @@ class _MenuindexuserState extends State<Menuindexuser> {
                                             MainAxisAlignment.center,
                                         children: [
                                           Text(
-                                            "Spo2",
+                                            'Spo2-${context.read<StringItem>().spo2}',
                                             style: TextStyle(
                                               fontSize: MediaQuery.of(context)
                                                       .size
