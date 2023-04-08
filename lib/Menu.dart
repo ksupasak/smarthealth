@@ -514,7 +514,7 @@ class _MenuindexuserState extends State<Menuindexuser> {
                                             MainAxisAlignment.center,
                                         children: [
                                           Text(
-                                            'Pr - ${context.read<StringItem>().pr}',
+                                            'Pr ',
                                             style: TextStyle(
                                               fontSize: MediaQuery.of(context)
                                                       .size

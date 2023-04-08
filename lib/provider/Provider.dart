@@ -37,7 +37,7 @@ class StringItem with ChangeNotifier {
   String sys = '';
   String dia = '';
   String spo2 = ''; //2
-  String pr = 'ค่าที่2'; //3
+  String pr = ''; //3
 
   void clear() {
     temp = '';

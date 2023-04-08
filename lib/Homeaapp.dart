@@ -161,11 +161,14 @@ class _HomeappState extends State<Homeapp> {
           });
         } else if (device.name == 'HJ-Narigmed') {
           HjNarigmed hjNarigmed = HjNarigmed(device: device);
+
           hjNarigmed.parse().listen((mVal) {
             if (!mVal.isEmpty()) {
               setState(() {
                 context.read<StringItem>().spo2 = mVal['spo2'];
                 context.read<StringItem>().pr = mVal['pr'];
+                print('${context.read<StringItem>().spo2}');
+                print('${context.read<StringItem>().pr}');
               });
             }
           });
