@@ -6,8 +6,10 @@ import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 import 'package:provider/provider.dart';
 import 'package:smart_health/Menu.dart';
+import 'package:smart_health/device/ad_ua651ble.dart';
 import 'package:smart_health/device/hc08.dart';
 import 'package:smart_health/device/hj_narigmed.dart';
+import 'package:smart_health/device/mibfs.dart';
 import 'package:smart_health/healthcheck.dart';
 import 'package:smart_health/provider/Provider.dart';
 import 'package:smart_health/searchbluetooth.dart';
@@ -119,7 +121,6 @@ class _HomeappState extends State<Homeapp> {
   void initState() {
     context.read<StringItem>().id = passwordslogin;
     scanTimer(4500);
-
     bleScan();
     // TODO: implement initState
     super.initState();
@@ -127,10 +128,14 @@ class _HomeappState extends State<Homeapp> {
 
   void bleScan() {
     List<String> knownDevice = context.read<StringItem>().knownDevice;
+
     flutterBlue.scanResults.listen((results) {
       // results.forEach((r) {
       if (results.length > 0) {
         ScanResult r = results.last;
+        // r.device.name != null && r.device.name != ''
+        //     ? print("device.name--->${r.device.name}")
+        //     : null;
         if (knownDevice.contains(r.device.name)) {
           r.device.connect();
           print('Connect = ${r.device.name} ');
@@ -164,8 +169,14 @@ class _HomeappState extends State<Homeapp> {
               });
             }
           });
-        } else {
-          // Other devices
+        } else if (device.name == 'A&D_UA-651BLE_D57B3F') {
+          AdUa651ble adUa651ble = AdUa651ble(device: device);
+          adUa651ble.parse().listen((event) {
+            ///
+          });
+        } else if (device.name == 'MIBFS') {
+          Mibfs mibfs = Mibfs(device: device);
+          mibfs.parse().listen((widget) {});
         }
       });
     });

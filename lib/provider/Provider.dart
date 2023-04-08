@@ -25,13 +25,18 @@ class StringItem with ChangeNotifier {
       '98418d25e39d83614bd7d3919fca8948d817cf7a2979c3c38a4fe47edebef86a'; //
   String callID = '1234'; //
   List<String> listDeviceName = [];
-  List<String> knownDevice = ['HC-08', 'MIBFS', 'HJ-Narigmed'];
+  List<String> knownDevice = [
+    'HC-08',
+    'MIBFS',
+    'HJ-Narigmed',
+    'A&D_UA-651BLE_D57B3F'
+  ];
   String status = 'Ready';
-  String temp = 'ค่าที่1'; //1
+  String temp = ''; //1
   String weight = '';
   String sys = '';
   String dia = '';
-  String spo2 = 'ค่าที่3'; //2
+  String spo2 = ''; //2
   String pr = 'ค่าที่2'; //3
 
   void clear() {

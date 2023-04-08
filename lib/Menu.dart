@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
@@ -73,8 +74,24 @@ class _MenuindexuserState extends State<Menuindexuser> {
     }
   }
 
+  Timer? timer;
+  void StartUi() {
+    timer = Timer.periodic(Duration(milliseconds: 50), (_) {
+      setState(() {
+        height.text = context.read<StringItem>().temp;
+        Spo2.text = context.read<StringItem>().spo2;
+      });
+    });
+  }
+
+  void stop() {
+    timer?.cancel();
+  }
+
   @override
   void initState() {
+    StartUi();
+    context.read<StringItem>().temp = '';
     // TODO: implement initState
     super.initState();
   }
@@ -347,7 +364,7 @@ class _MenuindexuserState extends State<Menuindexuser> {
                                             MainAxisAlignment.center,
                                         children: [
                                           Text(
-                                            "Temp- ${context.read<StringItem>().temp}",
+                                            "Temp",
                                             style: TextStyle(
                                               fontSize: MediaQuery.of(context)
                                                       .size
@@ -785,7 +802,7 @@ class _MenuindexuserState extends State<Menuindexuser> {
                                             MainAxisAlignment.center,
                                         children: [
                                           Text(
-                                            'Spo2-${context.read<StringItem>().spo2}',
+                                            'Spo2 ',
                                             style: TextStyle(
                                               fontSize: MediaQuery.of(context)
                                                       .size
@@ -1169,6 +1186,7 @@ class _MenuindexuserState extends State<Menuindexuser> {
                                   ? GestureDetector(
                                       onTap: () {
                                         indexsend = false;
+                                        stop();
                                         send();
                                         //  scanDevices();
                                       },
