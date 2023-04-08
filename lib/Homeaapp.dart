@@ -1,5 +1,5 @@
 import 'dart:async';
-
+import 'dart:collection';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
@@ -126,8 +126,13 @@ class _HomeappState extends State<Homeapp> {
     super.initState();
   }
 
+  final Map<String, String> online_devices = HashMap();
+
   void bleScan() {
     List<String> knownDevice = context.read<StringItem>().knownDevice;
+
+
+
 
     flutterBlue.scanResults.listen((results) {
       // results.forEach((r) {
@@ -144,12 +149,16 @@ class _HomeappState extends State<Homeapp> {
       // });
     });
 
-    Stream.periodic(Duration(seconds: 1))
-        .asyncMap((_) => flutterBlue.connectedDevices)
-        .listen((connectedDevices) {
+    Stream.periodic(Duration(seconds: 1)).asyncMap((_) => flutterBlue.connectedDevices).listen((connectedDevices) {
       connectedDevices.forEach((device) {
         print("Found " + device.name);
         context.read<StringItem>().status = 'Measuring';
+
+        if(online_devices.containsKey(device.id.toString())==false){
+            online_devices[device.id.toString()] = device.name; 
+
+
+
         if (device.name == 'HC-08') {
           Hc08 hc08 = Hc08(device: device);
           hc08.parse().listen((temp) {
@@ -163,14 +172,14 @@ class _HomeappState extends State<Homeapp> {
           HjNarigmed hjNarigmed = HjNarigmed(device: device);
 
           hjNarigmed.parse().listen((mVal) {
-            if (!mVal.isEmpty()) {
+            // if (!mVal.isEmpty()) {
               setState(() {
                 context.read<StringItem>().spo2 = mVal['spo2'];
                 context.read<StringItem>().pr = mVal['pr'];
                 print('${context.read<StringItem>().spo2}');
                 print('${context.read<StringItem>().pr}');
               });
-            }
+            // }
           });
         } else if (device.name == 'A&D_UA-651BLE_D57B3F') {
           AdUa651ble adUa651ble = AdUa651ble(device: device);
@@ -181,6 +190,12 @@ class _HomeappState extends State<Homeapp> {
           Mibfs mibfs = Mibfs(device: device);
           mibfs.parse().listen((widget) {});
         }
+
+
+
+
+        }
+
       });
     });
   }
