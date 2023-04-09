@@ -26,7 +26,7 @@ class Hc08 {
                     temp += String.fromCharCode(values[i]);
                   }
                   controller.add('${temp}');
-                  print('Val get = ${temp}');
+                  // print('Val get = ${temp}');
                 }
               });
             }

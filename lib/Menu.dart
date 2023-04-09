@@ -39,6 +39,7 @@ class _MenuindexuserState extends State<Menuindexuser> {
   TextEditingController SYS = TextEditingController();
   TextEditingController URIC = TextEditingController();
   TextEditingController SI = TextEditingController();
+  TextEditingController pr = TextEditingController();
   List<BluetoothDevice> devicesList2 = [];
   List<BluetoothService> desiredServices = [];
   BluetoothDevice? ListBluetoothDevice;
@@ -80,8 +81,17 @@ class _MenuindexuserState extends State<Menuindexuser> {
       setState(() {
         height.text = context.read<StringItem>().temp;
         Spo2.text = context.read<StringItem>().spo2;
+        pr.text = context.read<StringItem>().pr;
+        weight.text = context.read<StringItem>().weight;
       });
     });
+  }
+
+  void reset() {
+    context.read<StringItem>().temp = '';
+    context.read<StringItem>().weight = '';
+    context.read<StringItem>().pr = '';
+    context.read<StringItem>().spo2 = '';
   }
 
   void stop() {
@@ -91,7 +101,7 @@ class _MenuindexuserState extends State<Menuindexuser> {
   @override
   void initState() {
     StartUi();
-    context.read<StringItem>().temp = '';
+    reset();
     // TODO: implement initState
     super.initState();
   }
@@ -720,7 +730,7 @@ class _MenuindexuserState extends State<Menuindexuser> {
                                   crossAxisAlignment: CrossAxisAlignment.center,
                                   children: [
                                     Container(
-                                      // color: Colors.amber,
+                                      //  color: Colors.amber,
                                       height:
                                           MediaQuery.of(context).size.height *
                                               0.08,
@@ -730,55 +740,51 @@ class _MenuindexuserState extends State<Menuindexuser> {
                                         mainAxisAlignment:
                                             MainAxisAlignment.center,
                                         children: [
-                                          // StreamBuilder<List<int>>(
-                                          //   stream: characteristic.value,
-                                          //   initialData:
-                                          //       characteristic.lastValue,
-                                          //   builder: (c, snapshot) {
-                                          //     final value = snapshot.data;
-
-                                          //     return ExpansionTile(
-                                          //       backgroundColor: Colors.amber,
-                                          //       title: ListTile(
-                                          //         title: Column(
-                                          //           mainAxisAlignment:
-                                          //               MainAxisAlignment
-                                          //                   .center,
-                                          //           crossAxisAlignment:
-                                          //               CrossAxisAlignment
-                                          //                   .start,
-                                          //           children: <Widget>[
-                                          //             Text(
-                                          //                 'Temperature ${snapshot.data} '),
-                                          //             Text(characteristic.uuid
-                                          //                 .toString()
-                                          //                 .toUpperCase()
-                                          //                 .substring(4, 8)),
-                                          //             Text(
-                                          //                 '0x${characteristic.uuid.toString().toUpperCase().substring(10)}',
-                                          //                 style: Theme.of(
-                                          //                         context)
-                                          //                     .textTheme
-                                          //                     .bodyText1
-                                          //                     ?.copyWith(
-                                          //                         color: Theme.of(
-                                          //                                 context)
-                                          //                             .textTheme
-                                          //                             .caption
-                                          //                             ?.color)),
-                                          //           ],
-                                          //         ),
-                                          //         subtitle: Column(
-                                          //           children: [
-                                          //             Text(value.toString()),
-                                          //           ],
-                                          //         ),
-                                          //         contentPadding:
-                                          //             const EdgeInsets.all(0.0),
-                                          //       ),
-                                          //     );
-                                          //   },
-                                          // )
+                                          Text(
+                                            'Pr ',
+                                            style: TextStyle(
+                                              fontSize: MediaQuery.of(context)
+                                                      .size
+                                                      .width *
+                                                  0.025,
+                                              color: Color.fromARGB(
+                                                  255, 12, 114, 105),
+                                              shadows: [
+                                                Shadow(
+                                                  color: Colors.white,
+                                                  blurRadius: 10,
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                          Container(
+                                              //     color: Colors.green,
+                                              width: MediaQuery.of(context)
+                                                      .size
+                                                      .width *
+                                                  0.2,
+                                              height: MediaQuery.of(context)
+                                                      .size
+                                                      .height *
+                                                  0.05,
+                                              child: TextField(
+                                                keyboardType:
+                                                    TextInputType.number,
+                                                controller: pr,
+                                                maxLines: 1,
+                                                style: TextStyle(
+                                                  fontSize:
+                                                      MediaQuery.of(context)
+                                                              .size
+                                                              .height *
+                                                          0.03,
+                                                ),
+                                                decoration: InputDecoration(
+                                                  contentPadding:
+                                                      EdgeInsets.symmetric(
+                                                          vertical: 2.0),
+                                                ),
+                                              )),
                                         ],
                                       ),
                                     ),

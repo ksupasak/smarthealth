@@ -20,18 +20,13 @@ class Mibfs {
             if (c.uuid.toString() == '00002a9c-0000-1000-8000-00805f9b34fb') {
               c.setNotifyValue(true);
               c.value.listen((values) {
-                //    print(values.toString());
+                String x;
 
-                // if (values[10] == 255) {
-                //   print("-------?>${values}");
-                //   int sum = 0;
-                //   int s;
-                //   for (int i = 0; i < 10; i++) {
-                //     sum += values[i];
-                //   }
-                //   s = ((sum - 5) / 10.0) as int;
-                //   controller.add(s.toString());
-                // }
+                x = ((((256 * values[12]) + values[11]) / 2) / 100).toString();
+                controller.add(x);
+                if (values[10] != 0) {
+                  controller.add(x);
+                }
               });
             }
           });

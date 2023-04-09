@@ -14,7 +14,7 @@ class AdUa651ble {
     device.discoverServices();
     device.services.listen((services) {
       services.forEach((service) {
-        print('Service = ${service.uuid.toString()}');
+        //   print('Service = ${service.uuid.toString()}');
         if (service.uuid.toString() ==
             '0000fe86-0000-1000-8000-00805f9b34fb') {}
         service.characteristics.forEach((c) {
@@ -22,7 +22,7 @@ class AdUa651ble {
           if (c.uuid.toString() == '0000fe02-0000-1000-8000-00805f9b34fb') {
             c.setNotifyValue(true);
             c.value.listen((values) {
-              print("varlues-->${values.toString()}");
+              //  print("varlues-->${values.toString()}");
             });
           }
         });

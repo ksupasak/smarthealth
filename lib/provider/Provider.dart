@@ -33,7 +33,7 @@ class StringItem with ChangeNotifier {
   ];
   String status = 'Ready';
   String temp = ''; //1
-  String weight = '';
+  String weight = ''; //4
   String sys = '';
   String dia = '';
   String spo2 = ''; //2

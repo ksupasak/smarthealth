@@ -131,9 +131,6 @@ class _HomeappState extends State<Homeapp> {
   void bleScan() {
     List<String> knownDevice = context.read<StringItem>().knownDevice;
 
-
-
-
     flutterBlue.scanResults.listen((results) {
       // results.forEach((r) {
       if (results.length > 0) {
@@ -143,59 +140,56 @@ class _HomeappState extends State<Homeapp> {
         //     : null;
         if (knownDevice.contains(r.device.name)) {
           r.device.connect();
-          print('Connect = ${r.device.name} ');
+          //   print('Connect = ${r.device.name} ');
         }
       }
       // });
     });
 
-    Stream.periodic(Duration(seconds: 1)).asyncMap((_) => flutterBlue.connectedDevices).listen((connectedDevices) {
+    Stream.periodic(Duration(seconds: 1))
+        .asyncMap((_) => flutterBlue.connectedDevices)
+        .listen((connectedDevices) {
       connectedDevices.forEach((device) {
-        print("Found " + device.name);
+        //   print("Found " + device.name);
         context.read<StringItem>().status = 'Measuring';
 
-        if(online_devices.containsKey(device.id.toString())==false){
-            online_devices[device.id.toString()] = device.name; 
+        if (online_devices.containsKey(device.id.toString()) == false) {
+          online_devices[device.id.toString()] = device.name;
 
+          if (device.name == 'HC-08') {
+            Hc08 hc08 = Hc08(device: device);
+            hc08.parse().listen((temp) {
+              if (temp != null && temp != '') {
+                setState(() {
+                  context.read<StringItem>().temp = temp;
+                });
+              }
+            });
+          } else if (device.name == 'HJ-Narigmed') {
+            HjNarigmed hjNarigmed = HjNarigmed(device: device);
 
-
-        if (device.name == 'HC-08') {
-          Hc08 hc08 = Hc08(device: device);
-          hc08.parse().listen((temp) {
-            if (temp != null && temp != '') {
-              setState(() {
-                context.read<StringItem>().temp = temp;
-              });
-            }
-          });
-        } else if (device.name == 'HJ-Narigmed') {
-          HjNarigmed hjNarigmed = HjNarigmed(device: device);
-
-          hjNarigmed.parse().listen((mVal) {
-            // if (!mVal.isEmpty()) {
+            hjNarigmed.parse().listen((mVal) {
+              // if (!mVal.isEmpty()) {
               setState(() {
                 context.read<StringItem>().spo2 = mVal['spo2'];
                 context.read<StringItem>().pr = mVal['pr'];
-                print('${context.read<StringItem>().spo2}');
-                print('${context.read<StringItem>().pr}');
               });
-            // }
-          });
-        } else if (device.name == 'A&D_UA-651BLE_D57B3F') {
-          AdUa651ble adUa651ble = AdUa651ble(device: device);
-          adUa651ble.parse().listen((event) {
-            ///
-          });
-        } else if (device.name == 'MIBFS') {
-          Mibfs mibfs = Mibfs(device: device);
-          mibfs.parse().listen((widget) {});
+              // }
+            });
+          } else if (device.name == 'A&D_UA-651BLE_D57B3F') {
+            AdUa651ble adUa651ble = AdUa651ble(device: device);
+            adUa651ble.parse().listen((event) {
+              ///
+            });
+          } else if (device.name == 'MIBFS') {
+            Mibfs mibfs = Mibfs(device: device);
+            mibfs.parse().listen((widget) {
+              setState(() {
+                context.read<StringItem>().weight = widget;
+              });
+            });
+          }
         }
-
-
-
-
-        }
-
       });
     });
   }

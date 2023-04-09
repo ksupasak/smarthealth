@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:collection';
+import 'dart:ffi';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 
 class HjNarigmed {
@@ -23,7 +24,7 @@ class HjNarigmed {
               c.setNotifyValue(true);
               c.value.listen((values) {
                 if (values.length > 2 && values[1] == 11) {
-                  print("Val get" + values.toString());
+                  //  print("Val get" + values.toString());
 
                   if (values[3] != 0) {
                     Map<String, String> val = HashMap();
