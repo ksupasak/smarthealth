@@ -5,7 +5,7 @@ import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 import 'package:provider/provider.dart';
-import 'package:smart_health/Menu.dart';
+import 'package:smart_health/menu.dart';
 import 'package:smart_health/device/ad_ua651ble.dart';
 import 'package:smart_health/device/hc08.dart';
 import 'package:smart_health/device/hj_narigmed.dart';
@@ -150,12 +150,11 @@ class _HomeappState extends State<Homeapp> {
         .asyncMap((_) => flutterBlue.connectedDevices)
         .listen((connectedDevices) {
       connectedDevices.forEach((device) {
-        //   print("Found " + device.name);
+        //print("Found ------->  ${device.name} + ${device.id}");
         context.read<StringItem>().status = 'Measuring';
 
         if (online_devices.containsKey(device.id.toString()) == false) {
           online_devices[device.id.toString()] = device.name;
-
           if (device.name == 'HC-08') {
             Hc08 hc08 = Hc08(device: device);
             hc08.parse().listen((temp) {
@@ -177,9 +176,15 @@ class _HomeappState extends State<Homeapp> {
               // }
             });
           } else if (device.name == 'A&D_UA-651BLE_D57B3F') {
+            //  print("${device.name}<--------------");
             AdUa651ble adUa651ble = AdUa651ble(device: device);
-            adUa651ble.parse().listen((event) {
-              ///
+            adUa651ble.parse().listen((mVal2) {
+              setState(() {
+                context.read<StringItem>().sys = mVal2['sys'];
+                context.read<StringItem>().dia = mVal2['dia'];
+                context.read<StringItem>().pul = mVal2['pul'];
+                //  print("*****************${mVal2['p']}");
+              });
             });
           } else if (device.name == 'MIBFS') {
             Mibfs mibfs = Mibfs(device: device);

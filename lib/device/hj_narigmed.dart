@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'dart:collection';
-import 'dart:ffi';
+
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 
 class HjNarigmed {

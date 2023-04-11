@@ -1,3 +1,4 @@
+import 'dart:collection';
 import 'dart:developer';
 import 'dart:async';
 import 'package:flutter/src/widgets/container.dart';
@@ -14,15 +15,34 @@ class AdUa651ble {
     device.discoverServices();
     device.services.listen((services) {
       services.forEach((service) {
-        //   print('Service = ${service.uuid.toString()}');
-        if (service.uuid.toString() ==
-            '0000fe86-0000-1000-8000-00805f9b34fb') {}
+        //   print('Service =---->--------> ${service.uuid.toString()}');
+        if (service.uuid.toString() == '00001810-0000-1000-8000-00805f9b34fb') {
+          service.characteristics.forEach((c) {
+            print("-----------222-------> ${c.uuid.toString()}");
+          });
+        }
         service.characteristics.forEach((c) {
-          //  print('characteristics --->${c.uuid.toString()}');
-          if (c.uuid.toString() == '0000fe02-0000-1000-8000-00805f9b34fb') {
+          if (c.uuid.toString() == '00002a35-0000-1000-8000-00805f9b34fb') {
             c.setNotifyValue(true);
             c.value.listen((values) {
-              //  print("varlues-->${values.toString()}");
+              Map<String, String> val = HashMap();
+              print(values);
+              print(values[1]);
+              print(values[3]);
+              print(values[7]);
+              if (values[1] == 255) {
+                val['sys'] = '0';
+                val['dia'] = '0';
+                val['pul'] = '0';
+                val['p'] = values.toString();
+                controller.add(val);
+              } else {
+                val['sys'] = values[1].toString();
+                val['dia'] = values[3].toString();
+                val['pul'] = values[7].toString();
+                val['p'] = values.toString();
+                controller.add(val);
+              }
             });
           }
         });

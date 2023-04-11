@@ -10,7 +10,7 @@ class StringItem with ChangeNotifier {
   String id = ''; //
   String TextNumpad = '';
   String height = '';
-  String pul = '';
+
   String pressure = '';
   String Setting1 = '';
   String Setting2 = '';
@@ -34,10 +34,11 @@ class StringItem with ChangeNotifier {
   String status = 'Ready';
   String temp = ''; //1
   String weight = ''; //4
-  String sys = '';
-  String dia = '';
+  String sys = ''; //5
+  String dia = ''; //6
   String spo2 = ''; //2
   String pr = ''; //3
+  String pul = ''; //7
 
   void clear() {
     temp = '';

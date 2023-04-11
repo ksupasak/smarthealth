@@ -13,6 +13,7 @@ import 'package:smart_health/device/hc08.dart';
 import 'package:smart_health/provider/Provider.dart';
 import 'package:http/http.dart' as http;
 import 'package:smart_health/searchbluetooth.dart';
+import 'package:smart_health/videocall/videocall.dart';
 import 'package:smart_health/widgets.dart';
 
 class Menuindexuser extends StatefulWidget {
@@ -47,8 +48,8 @@ class _MenuindexuserState extends State<Menuindexuser> {
 
   String? id;
   bool indexsend = true;
-
-  void send() async {
+  Future<void> send2() async {
+    stop();
     var url = Uri.parse(
         '${context.read<StringItem>().PlatfromURL}add_hr'); //${context.read<stringitem>().uri}
     var res = await http.post(url, body: {
@@ -64,6 +65,7 @@ class _MenuindexuserState extends State<Menuindexuser> {
       "fbs": "${fbs.text}",
     });
     var resTojson = json.decode(res.body);
+    print(resTojson['message']);
     if (res.statusCode == 200) {
       setState(() {
         indexsend = true;
@@ -75,6 +77,36 @@ class _MenuindexuserState extends State<Menuindexuser> {
     }
   }
 
+  void send() {
+    setState(() {
+      indexsend = true;
+    });
+    showDialog(
+        context: context,
+        builder: (context) {
+          return Container(
+            child: AlertDialog(title: Text('ยืนการส่ง'), actions: [
+              TextButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  child: Text('ยกเลิก')),
+              TextButton(
+                  onPressed: () {
+                    setState(() {
+                      indexsend = false;
+                      Navigator.pop(context);
+                    });
+                    send2();
+                  },
+                  child: Text('ตกลง')),
+            ]),
+          );
+        });
+
+    ///////////
+  }
+
   Timer? timer;
   void StartUi() {
     timer = Timer.periodic(Duration(milliseconds: 50), (_) {
@@ -83,6 +115,9 @@ class _MenuindexuserState extends State<Menuindexuser> {
         Spo2.text = context.read<StringItem>().spo2;
         pr.text = context.read<StringItem>().pr;
         weight.text = context.read<StringItem>().weight;
+        SYS.text = context.read<StringItem>().sys;
+        DIA.text = context.read<StringItem>().dia;
+        pulse_rate.text = context.read<StringItem>().pul;
       });
     });
   }
@@ -92,10 +127,24 @@ class _MenuindexuserState extends State<Menuindexuser> {
     context.read<StringItem>().weight = '';
     context.read<StringItem>().pr = '';
     context.read<StringItem>().spo2 = '';
+    context.read<StringItem>().sys = '';
+    context.read<StringItem>().dia = '';
+    context.read<StringItem>().pul = '';
   }
 
   void stop() {
     timer?.cancel();
+  }
+
+  bool setvalue = true;
+  void setvalues() {
+    if (setvalue) {
+      stop();
+      setvalue = false;
+    } else {
+      StartUi();
+      setvalue = true;
+    }
   }
 
   @override
@@ -334,6 +383,17 @@ class _MenuindexuserState extends State<Menuindexuser> {
                                     color: Colors.black,
                                   ),
                                 ),
+                                GestureDetector(
+                                    onTap: () {
+                                      setvalues();
+                                    },
+                                    child: Container(
+                                        child: Icon(
+                                      Icons.bluetooth,
+                                      color: setvalue == true
+                                          ? Colors.green
+                                          : Colors.red,
+                                    )))
                               ],
                             ),
                           ),
@@ -524,7 +584,7 @@ class _MenuindexuserState extends State<Menuindexuser> {
                                             MainAxisAlignment.center,
                                         children: [
                                           Text(
-                                            'Pr ',
+                                            'SYS',
                                             style: TextStyle(
                                               fontSize: MediaQuery.of(context)
                                                       .size
@@ -1192,9 +1252,8 @@ class _MenuindexuserState extends State<Menuindexuser> {
                                   ? GestureDetector(
                                       onTap: () {
                                         indexsend = false;
-                                        stop();
+
                                         send();
-                                        //  scanDevices();
                                       },
                                       child: Center(
                                         child: Container(
@@ -1238,8 +1297,8 @@ class _MenuindexuserState extends State<Menuindexuser> {
                                   : Center(
                                       child: Container(
                                         width:
-                                            MediaQuery.of(context).size.width *
-                                                0.45,
+                                            MediaQuery.of(context).size.height *
+                                                0.05,
                                         height:
                                             MediaQuery.of(context).size.height *
                                                 0.05,
@@ -1248,93 +1307,6 @@ class _MenuindexuserState extends State<Menuindexuser> {
                                     ),
                             ],
                           )),
-                      // SingleChildScrollView(
-                      //   child: Column(
-                      //     children: <Widget>[
-                      //       StreamBuilder<List<BluetoothDevice>>(
-                      //         stream:
-                      //             Stream.periodic(const Duration(seconds: 2))
-                      //                 .asyncMap((_) => FlutterBluePlus
-                      //                     .instance.connectedDevices),
-                      //         initialData: const [],
-                      //         builder: (c, snapshot) => Column(
-                      //           children: snapshot.data!
-                      //               .map((d) => ListTile(
-                      //                     title: Text('d.name'),
-                      //                     subtitle: Text(d.id.toString()),
-                      //                     trailing: StreamBuilder<
-                      //                         BluetoothDeviceState>(
-                      //                       stream: d.state,
-                      //                       initialData: BluetoothDeviceState
-                      //                           .disconnected,
-                      //                       builder: (c, snapshot) {
-                      //                         if (snapshot.data ==
-                      //                             BluetoothDeviceState
-                      //                                 .connected) {
-                      //                           return GestureDetector(
-                      //                             onTap: () => Navigator.of(
-                      //                                     context)
-                      //                                 .push(MaterialPageRoute(
-                      //                                     builder: (context) =>
-                      //                                         DeviceScreen(
-                      //                                             device: d))),
-                      //                             child: Container(
-                      //                               height:
-                      //                                   MediaQuery.of(context)
-                      //                                           .size
-                      //                                           .height *
-                      //                                       0.045,
-                      //                               width:
-                      //                                   MediaQuery.of(context)
-                      //                                           .size
-                      //                                           .width *
-                      //                                       0.4,
-                      //                               decoration: BoxDecoration(
-                      //                                   borderRadius:
-                      //                                       BorderRadius
-                      //                                           .circular(
-                      //                                     MediaQuery.of(context)
-                      //                                             .size
-                      //                                             .width *
-                      //                                         0.05,
-                      //                                   ),
-                      //                                   color: Colors.green),
-                      //                               child: Center(
-                      //                                   child: Text(
-                      //                                       'Connected Successfully / Open')),
-                      //                             ),
-                      //                           );
-                      //                         }
-                      //                         return Text(
-                      //                             snapshot.data.toString());
-                      //                       },
-                      //                     ),
-                      //                   ))
-                      //               .toList(),
-                      //         ),
-                      //       ),
-                      //       // StreamBuilder<List<ScanResult>>(
-                      //       //   stream: FlutterBluePlus.instance.scanResults,
-                      //       //   initialData: const [],
-                      //       //   builder: (c, snapshot) => Column(
-                      //       //     children: snapshot.data!
-                      //       //         .map(
-                      //       //           (r) => ScanResultTile(
-                      //       //             result: r,
-                      //       //             onTap: () => Navigator.of(context).push(
-                      //       //                 MaterialPageRoute(
-                      //       //                     builder: (context) {
-                      //       //               r.device.connect();
-                      //       //               return DeviceScreen(device: r.device);
-                      //       //             })),
-                      //       //           ),
-                      //       //         )
-                      //       //         .toList(),
-                      //       //   ),
-                      //       // ),
-                      //     ],
-                      //   ),
-                      // ),
                     ],
                   ),
                 ),

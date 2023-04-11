@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:provider/provider.dart';
-import 'package:smart_health/Menu.dart';
+import 'package:smart_health/menu.dart';
 import 'package:smart_health/provider/Provider.dart';
 import 'package:zego_uikit_prebuilt_call/zego_uikit_prebuilt_call.dart';
 
@@ -19,37 +19,58 @@ class _VideoAndMenuindexuserState extends State<VideoAndMenuindexuser> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            GestureDetector(
-              onTap: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => Menuindexuser()));
-              },
+      body: Stack(
+        children: [
+          Positioned(
               child: Container(
-                height: 50,
-                width: 200,
-                color: Colors.amber,
-                child: Center(child: Text('Menu')),
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                colors: [
+                  Color.fromARGB(255, 70, 180, 170),
+                  Colors.white,
+                ],
               ),
             ),
-            SizedBox(height: 10),
-            GestureDetector(
-              onTap: () {
-                Navigator.push(
-                    context, MaterialPageRoute(builder: (context) => Call()));
-              },
-              child: Container(
-                height: 50,
-                width: 200,
-                color: Colors.amber,
-                child: Center(child: Text('Videocall')),
+          )),
+          Positioned(
+            child: Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => Menuindexuser()));
+                    },
+                    child: Container(
+                      height: 50,
+                      width: 200,
+                      color: Colors.amber,
+                      child: Center(child: Text('Menu')),
+                    ),
+                  ),
+                  SizedBox(height: 10),
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.push(context,
+                          MaterialPageRoute(builder: (context) => Call()));
+                    },
+                    child: Container(
+                      height: 50,
+                      width: 200,
+                      color: Colors.amber,
+                      child: Center(child: Text('Videocall')),
+                    ),
+                  ),
+                ],
               ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
