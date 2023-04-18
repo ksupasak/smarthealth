@@ -8,11 +8,11 @@ import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 
 import 'package:http/http.dart' as http;
-import 'package:smart_health/Model/view/widgetdew.dart/popup.dart';
-import 'package:smart_health/Model/view/widgetdew.dart/widgetdew.dart';
 import 'package:smart_health/background/background.dart';
 import 'package:smart_health/background/color/style_color.dart';
-import 'package:smart_health/povider/provider.dart';
+import 'package:smart_health/provider/provider.dart';
+import 'package:smart_health/views/ui/widgetdew.dart/popup.dart';
+import 'package:smart_health/views/ui/widgetdew.dart/widgetdew.dart';
 
 class CheckQueue extends StatefulWidget {
   const CheckQueue({super.key});
@@ -23,7 +23,7 @@ class CheckQueue extends StatefulWidget {
 
 class _CheckQueueState extends State<CheckQueue> {
   var resTojson;
-  String textqueue = 'not found today appointment';
+  String textqueue = 'not found today appointment1';
   bool statusbottom = false;
   void checkqueue() async {
     var url = Uri.parse(

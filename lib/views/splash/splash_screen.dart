@@ -7,12 +7,12 @@ import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
-import 'package:smart_health/Model/view/home.dart';
 import 'package:smart_health/device/ad_ua651ble.dart';
 import 'package:smart_health/device/hc08.dart';
 import 'package:smart_health/device/hj_narigmed.dart';
 import 'package:smart_health/device/mibfs.dart';
-import 'package:smart_health/povider/provider.dart';
+import 'package:smart_health/provider/provider.dart';
+import 'package:smart_health/views/pages/home.dart';
 
 class Splash_Screen extends StatefulWidget {
   const Splash_Screen({super.key});

@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:provider/provider.dart';
-import 'package:smart_health/povider/provider.dart';
-import 'package:smart_health/povider/providerfunction.dart';
+import 'package:smart_health/provider/provider.dart';
+import 'package:smart_health/provider/provider_function.dart';
 
 class numpad extends StatefulWidget {
   const numpad({super.key});

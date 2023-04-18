@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
-import 'package:smart_health/Model/view/bottomnavigationbar/menubottombar.dart';
+import 'package:smart_health/views/ui/bottomnavigationbar/menubottombar.dart';
 
 class BottomNavigationBarApp extends StatefulWidget {
   const BottomNavigationBarApp({super.key});

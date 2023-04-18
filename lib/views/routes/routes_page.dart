@@ -1,10 +1,10 @@
 import 'package:get/get.dart';
-import 'package:smart_health/Model/splash/splash_screen.dart';
-import 'package:smart_health/Model/view/checkqueue.dart';
-import 'package:smart_health/Model/view/health_record.dart';
-import 'package:smart_health/Model/view/home.dart';
-import 'package:smart_health/Model/view/menu.dart';
-import 'package:smart_health/Model/view/setting.dart';
+import 'package:smart_health/views/pages/check_queue.dart';
+import 'package:smart_health/views/pages/health_record.dart';
+import 'package:smart_health/views/pages/home.dart';
+import 'package:smart_health/views/pages/menu.dart';
+import 'package:smart_health/views/pages/setting.dart';
+import 'package:smart_health/views/splash/splash_screen.dart';
 
 class Routes {
   static const String splash = '/splash';

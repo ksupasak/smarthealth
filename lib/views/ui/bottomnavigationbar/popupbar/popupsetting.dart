@@ -4,9 +4,9 @@ import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
-import 'package:smart_health/Model/view/widgetdew.dart/popup.dart';
-import 'package:smart_health/Model/view/widgetdew.dart/widgetdew.dart';
-import 'package:smart_health/povider/provider.dart';
+import 'package:smart_health/provider/provider.dart';
+import 'package:smart_health/views/ui/widgetdew.dart/popup.dart';
+import 'package:smart_health/views/ui/widgetdew.dart/widgetdew.dart';
 
 class PopupSetting extends StatefulWidget {
   const PopupSetting({super.key});

@@ -6,15 +6,16 @@ import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
+
 import 'package:http/http.dart' as http;
-import 'package:smart_health/Model/view/bottomnavigationbar/bottomnavigationbar.dart';
-import 'package:smart_health/Model/view/numpad.dart';
-import 'package:smart_health/Model/view/widgetdew.dart/popup.dart';
-import 'package:smart_health/Model/view/widgetdew.dart/widgetdew.dart';
 import 'package:smart_health/background/background.dart';
 import 'package:smart_health/background/color/style_color.dart';
-import 'package:smart_health/povider/provider.dart';
-import 'package:smart_health/povider/providerfunction.dart';
+import 'package:smart_health/provider/provider.dart';
+import 'package:smart_health/provider/provider_function.dart';
+import 'package:smart_health/views/pages/numpad.dart';
+import 'package:smart_health/views/ui/bottomnavigationbar/bottomnavigationbar.dart';
+import 'package:smart_health/views/ui/widgetdew.dart/popup.dart';
+import 'package:smart_health/views/ui/widgetdew.dart/widgetdew.dart';
 
 class Homeapp extends StatefulWidget {
   const Homeapp({super.key});

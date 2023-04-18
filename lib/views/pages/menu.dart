@@ -3,9 +3,9 @@ import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
-import 'package:smart_health/Model/view/widgetdew.dart/widgetdew.dart';
 import 'package:smart_health/background/background.dart';
 import 'package:smart_health/background/color/style_color.dart';
+import 'package:smart_health/views/ui/widgetdew.dart/widgetdew.dart';
 
 class Menu extends StatefulWidget {
   const Menu({super.key});

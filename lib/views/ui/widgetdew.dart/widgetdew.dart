@@ -7,8 +7,8 @@ import 'package:flutter/src/widgets/framework.dart';
 
 import 'package:just_audio/just_audio.dart';
 import 'package:provider/provider.dart';
-import 'package:smart_health/povider/provider.dart';
-import 'package:smart_health/povider/providerfunction.dart';
+import 'package:smart_health/provider/provider.dart';
+import 'package:smart_health/provider/provider_function.dart';
 import 'package:smart_health/widget_decorate/WidgetDecorate.dart';
 
 class BoxWidetdew extends StatefulWidget {

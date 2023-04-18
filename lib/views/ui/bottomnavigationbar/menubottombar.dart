@@ -4,8 +4,8 @@ import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
-import 'package:smart_health/Model/view/bottomnavigationbar/popupbar/popupsetting.dart';
-import 'package:smart_health/povider/providerfunction.dart';
+import 'package:smart_health/provider/provider_function.dart';
+import 'package:smart_health/views/ui/bottomnavigationbar/popupbar/popupsetting.dart';
 
 class Settingbar extends StatefulWidget {
   const Settingbar({super.key});
