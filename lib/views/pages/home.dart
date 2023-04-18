@@ -54,7 +54,7 @@ class _HomeappState extends State<Homeapp> {
                       texthead: 'สำเร็จ', pathicon: 'assets/correct.png');
                 });
             Timer(Duration(seconds: 2), () {
-              Navigator.pop(context);
+              // Navigator.pop(context);
               Get.offNamed('menu');
             });
           } else if (resTojson['message'] == 'not found') {
@@ -188,9 +188,7 @@ class _HomeappState extends State<Homeapp> {
                         child: Column(
                           children: [
                             numpad(),
-                            SizedBox(
-                              height: _height * 0.01,
-                            ),
+                            SizedBox(height: _height * 0.01),
                             status == false
                                 ? GestureDetector(
                                     onTap: () {
@@ -211,6 +209,46 @@ class _HomeappState extends State<Homeapp> {
                                         0.07,
                                     child: CircularProgressIndicator(),
                                   ),
+                            SizedBox(height: _height * 0.01),
+                            GestureDetector(
+                                onTap: () {
+                                  setState(() async {
+                                    context.read<DataProvider>().id =
+                                        '1710501456572';
+                                    var url = Uri.parse(
+                                        '${context.read<DataProvider>().platfromURL}get_patient?public_id=${context.read<DataProvider>().id}'); //${context.read<stringitem>().uri}
+                                    var res = await http.get(url);
+                                    if (res.statusCode == 200) {
+                                      var resTojson = json.decode(res.body);
+                                      if (resTojson['message'] == 'success') {
+                                        setState(() {
+                                          status = false;
+                                          context
+                                              .read<DataProvider>()
+                                              .dataidcard = resTojson;
+                                        });
+                                        showDialog(
+                                            context: context,
+                                            builder: (BuildContext context) {
+                                              return Popup(
+                                                  texthead: 'สำเร็จ',
+                                                  pathicon:
+                                                      'assets/correct.png');
+                                            });
+                                        Timer(Duration(seconds: 2), () {
+                                          Get.offNamed('menu');
+                                        });
+                                      }
+                                    }
+                                  });
+                                },
+                                child: BoxWidetdew(
+                                    color: Colors.red,
+                                    height: 0.05,
+                                    width: 0.3,
+                                    text: 'Test',
+                                    textcolor: Colors.white,
+                                    fontSize: 18.0))
                           ],
                         ),
                       ),

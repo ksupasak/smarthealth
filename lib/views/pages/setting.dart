@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
+import 'package:get/get.dart';
+import 'package:smart_health/background/background.dart';
+import 'package:smart_health/background/color/style_color.dart';
+import 'package:smart_health/views/ui/widgetdew.dart/widgetdew.dart';
 
 class Setting extends StatefulWidget {
   const Setting({super.key});
@@ -18,23 +22,53 @@ class _SettingState extends State<Setting> {
       onTap: (() {
         FocusScope.of(context).requestFocus(FocusNode());
       }),
-      child: Scaffold(
-          body: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
+      child: Stack(
         children: [
-          GestureDetector(
-            onTap: () {
-              Navigator.pop(context);
-            },
-            child: Container(
-                height: _height * 0.2,
-                width: _width * 0.5,
-                color: Colors.amber,
-                child: Center(child: Text('กลับ'))),
-          )
+          Positioned(
+              child: BackGroundSmart_Health(
+            BackGroundColor: [
+              StyleColor.backgroundbegin,
+              StyleColor.backgroundend
+            ],
+          )),
+          Positioned(
+            child: Scaffold(
+                body: Container(
+              child: Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    GestureDetector(
+                      onTap: () {
+                        //    Get.toNamed('device');
+                      },
+                      child: BoxWidetdew(
+                        color: Colors.grey,
+                        width: 0.4,
+                        height: 0.1,
+                        text: 'PasswordSetting',
+                        textcolor: Colors.white,
+                      ),
+                    ),
+                    GestureDetector(
+                      onTap: () {
+                        Get.toNamed('device');
+                      },
+                      child: BoxWidetdew(
+                        color: Colors.green,
+                        width: 0.4,
+                        height: 0.1,
+                        text: 'device',
+                        textcolor: Colors.white,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            )),
+          ),
         ],
-      )),
+      ),
     );
   }
 }

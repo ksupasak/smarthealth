@@ -1,11 +1,20 @@
 import 'dart:async';
 import 'dart:collection';
 import 'dart:convert';
+import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:just_audio/just_audio.dart';
 
 class Datafunction with ChangeNotifier {
+  // late Timer scanTimer;
+  // void scan(bool scan) {
+  //   scanTimer([int milliseconds = 4000]) =>
+  //       Timer.periodic(Duration(milliseconds: milliseconds), (Timer timer) {
+  //         FlutterBluePlus.instance.startScan(timeout: Duration(seconds: 4));
+  //       });
+  // }
+
   void playsound() async {
     late AudioPlayer _audioPlayer;
     _audioPlayer = AudioPlayer()..setAsset('assets/sounds/Sin2.mp3');

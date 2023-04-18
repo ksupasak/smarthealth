@@ -1,0 +1,42 @@
+import 'dart:io';
+
+import 'package:chang09/Provider/dataprovider.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:sembast/sembast.dart';
+import 'package:sembast/sembast_io.dart';
+
+Future<Database> openDatabaseapp() async {
+  Directory app = await getApplicationDocumentsDirectory();
+  String dbpart = app.path + '/' + 'localuser.db';
+  final db = await databaseFactoryIo.openDatabase(dbpart);
+  return db;
+}
+
+Future<int> Showdatabasedatauserapp() async {
+  Database db = await openDatabaseapp();
+  var store = intMapStoreFactory.store('datauser09');
+  var records = await store.find(db);
+  print(records);
+  if ((records.length == 0)) {
+    return 0;
+  } else {
+    return 1;
+  }
+}
+
+Future deletedatabase() async {
+  Database db = await openDatabaseapp();
+  var store = intMapStoreFactory.store('datauser09');
+  await store.drop(db);
+}
+
+Future Adddatabaseapp(styleapp datauser) async {
+  Database db = await openDatabaseapp();
+  var store = intMapStoreFactory.store('datauser09');
+  var key = await store.add(db, {
+    'language': datauser.language,
+    'id': datauser.id,
+  });
+  db.close();
+}
+

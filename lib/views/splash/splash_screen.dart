@@ -105,8 +105,8 @@ class _Splash_ScreenState extends State<Splash_Screen> {
 
   @override
   void initState() {
-    // scanTimer(4500);
-    // bleScan();
+    scanTimer(4500); //
+    bleScan(); //
     // TODO: implement initState
     super.initState();
   }
