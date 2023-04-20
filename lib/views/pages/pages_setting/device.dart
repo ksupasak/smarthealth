@@ -21,15 +21,17 @@ class Device extends StatefulWidget {
 
 class _DeviceState extends State<Device> {
   var device;
-
-  @override
+  List<BluetoothDevice> j = [];
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: SafeArea(
-        child: RefreshIndicator(
-          onRefresh: () => FlutterBluePlus.instance
-              .startScan(timeout: const Duration(seconds: 4)),
+    double _width = MediaQuery.of(context).size.width;
+    double _height = MediaQuery.of(context).size.height;
+    return RefreshIndicator(
+      onRefresh: () async {
+        setState(() {});
+      },
+      child: Scaffold(
+        body: SafeArea(
           child: SingleChildScrollView(
             child: Column(
               children: <Widget>[
@@ -41,9 +43,9 @@ class _DeviceState extends State<Device> {
                     children: snapshot.data!.map((d) {
                       if (!context
                           .read<DataProvider>()
-                          .listdevices
-                          .contains(d)) {
-                        context.read<DataProvider>().listdevices.add(d);
+                          .knownDevice
+                          .contains(d.name)) {
+                        context.read<DataProvider>().knownDevice.add(d.name);
                       }
                       return ListTile(
                         title: Text(d.name),
@@ -53,13 +55,7 @@ class _DeviceState extends State<Device> {
                           builder: (c, snapshot) {
                             if (snapshot.data ==
                                 BluetoothDeviceState.connected) {
-                              return ElevatedButton(
-                                child: const Text('OPEN'),
-                                onPressed: () => Navigator.of(context).push(
-                                    MaterialPageRoute(
-                                        builder: (context) =>
-                                            DeviceScreen(device: d))),
-                              );
+                              return Text(snapshot.data.toString());
                             }
                             return Text(snapshot.data.toString());
                           },
@@ -68,46 +64,108 @@ class _DeviceState extends State<Device> {
                     }).toList(),
                   ),
                 ),
-                StreamBuilder<List<BluetoothDevice>>(
-                  stream: Stream.periodic(const Duration(seconds: 2)).asyncMap(
-                      (_) => FlutterBluePlus.instance.connectedDevices),
-                  initialData: const [],
-                  builder: (c, snapshot) => Column(
-                    children: context
-                        .read<DataProvider>()
-                        .listdevices
-                        .map((d) => Container(
+                Column(
+                  children: context
+                      .read<DataProvider>()
+                      .knownDevice
+                      .map((d) => Dismissible(
+                            key: ValueKey(d),
+                            child: Container(
                               height: 50,
+                              width: _width,
                               color: Colors.amber,
                               child: Column(
                                 children: [
-                                  Text(d.id.toString()),
-                                  Text(d.name.toString()),
+                                  Text(d),
                                 ],
                               ),
-                            ))
-                        .toList(),
-                  ),
+                            ),
+                            onDismissed: (direction) {
+                              setState(() async {
+                                //
+                                List<BluetoothDevice> connectedDevices = [];
+                                List<BluetoothDevice> devices =
+                                    await FlutterBluePlus
+                                        .instance.connectedDevices;
+                                connectedDevices = devices;
+                                print('Connected devices: ${devices.length}');
+                                for (BluetoothDevice device in devices) {
+                                  if (device.name == d) {
+                                    device.disconnect();
+                                  }
+                                }
+                                //
+                                context
+                                    .read<DataProvider>()
+                                    .knownDevice
+                                    .remove(d);
+                              });
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(content: Text('$d dismissed')));
+                            },
+                            confirmDismiss: (direction) async {
+                              return await showDialog(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return AlertDialog(
+                                    title: const Text("Confirm"),
+                                    content: const Text(
+                                        "เปิดอุปกรณ์เพื่อยกเลิกการเชื่อมต่อ"),
+                                    actions: <Widget>[
+                                      TextButton(
+                                          onPressed: () =>
+                                              Navigator.of(context).pop(false),
+                                          child: const Text("CANCEL")),
+                                      TextButton(
+                                          onPressed: () =>
+                                              Navigator.of(context).pop(true),
+                                          child: const Text("DELETE"))
+                                    ],
+                                  );
+                                },
+                              );
+                            },
+                            background: Container(color: Colors.red),
+                          ))
+                      .toList(),
                 ),
               ],
             ),
           ),
         ),
+        bottomNavigationBar: Container(
+            height: 50,
+            child: Row(children: [
+              GestureDetector(
+                  onTap: () {
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: ((context) => scanble())));
+                  },
+                  child: Container(
+                      height: 50,
+                      width: 100,
+                      color: Colors.green,
+                      child: Center(child: Text('สลับหน้า')))),
+              GestureDetector(
+                  onTap: () {
+                    print(context.read<DataProvider>().knownDevice);
+                  },
+                  child: Container(
+                      height: 50,
+                      width: 100,
+                      color: Colors.red,
+                      child: Center(child: Text('P')))),
+              GestureDetector(
+                  onTap: () {
+                    setState(() {});
+                  },
+                  child: Container(
+                      height: 50,
+                      width: 100,
+                      color: Colors.pink,
+                      child: Center(child: Text('r')))),
+            ])),
       ),
-      bottomNavigationBar: Container(
-          height: 50,
-          child: Center(
-              child: GestureDetector(
-            onTap: () {
-              Navigator.push(context,
-                  MaterialPageRoute(builder: ((context) => scanble())));
-            },
-            child: Container(
-                height: 50,
-                width: 100,
-                color: Colors.green,
-                child: Center(child: Text('สลับหน้า'))),
-          ))),
     );
   }
 }

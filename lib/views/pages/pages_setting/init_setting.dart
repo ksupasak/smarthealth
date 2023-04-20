@@ -23,7 +23,7 @@ class _InitsettingState extends State<Initsetting> {
   TextEditingController passwordsetting = TextEditingController();
   late List<RecordSnapshot<int, Map<String, Object?>>> nameHospital;
   Future<void> printDatabase() async {
-    var knownDevices;
+    var knownDevice;
 
     nameHospital = await getAllData();
     for (RecordSnapshot<int, Map<String, Object?>> record in nameHospital) {
@@ -32,10 +32,15 @@ class _InitsettingState extends State<Initsetting> {
       checkqueueURL.text = record['checkqueueURL'].toString();
       care_unit_id.text = record['care_unit_id'].toString();
       passwordsetting.text = record['passwordsetting'].toString();
-      knownDevices = record['knownDevice'];
-
-      // ใช้ข้อมูลที่ดึงมาจากฐานข้อมูลได้ตามต้องการ เช่นแสดงผลในหน้า UI หรือประมวลผลต่อไป
-
+      knownDevice = record['knownDevice'];
+      print(name_hospital.text);
+      print(platfromURL.text);
+      print(checkqueueURL.text);
+      print(care_unit_id.text);
+      print(passwordsetting.text);
+      for (var knownDevices in knownDevice) {
+        print(knownDevices);
+      }
     }
   }
 

@@ -18,13 +18,15 @@ class DataProvider with ChangeNotifier {
   double sized_name_hospital = 0.08;
   FontWeight fontWeight_name_hospital = FontWeight.w600;
   Color shadow_name_hospital = Color.fromARGB(199, 255, 0, 0);
-  var listdevices = [];
-  List<String> knownDevice = [
-    'HC-08',
-    'MIBFS',
-    'HJ-Narigmed',
-    'A&D_UA-651BLE_D57B3F'
-  ];
+  // var listdevices = [];
+  Map<String, String> knownDevice2 = {};
+  List<String> knownDevice = [];
+  Map<String, BluetoothDevice> j = {};
+  // 'HC-08',
+  // 'MIBFS',
+  // 'HJ-Narigmed',
+  // 'A&D_UA-651BLE_D57B3F'
+
   String id = '';
   String temp = '';
   String weight = '';

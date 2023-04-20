@@ -191,7 +191,7 @@ class _HealthRecordState extends State<HealthRecord> {
   @override
   void initState() {
     clearprovider();
-    // scan(); //
+    scan(); //
     // TODO: implement initState
     super.initState();
   }
@@ -291,6 +291,7 @@ class _HealthRecordState extends State<HealthRecord> {
         Center(
             child: GestureDetector(
                 onTap: () {
+                  stop();
                   Navigator.pop(context);
                 },
                 child: BoxWidetdew(

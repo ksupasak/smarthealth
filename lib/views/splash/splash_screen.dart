@@ -30,7 +30,7 @@ class _Splash_ScreenState extends State<Splash_Screen> {
 
   void bleScan() {
     FlutterBluePlus flutterBlue = FlutterBluePlus.instance;
-    List<String> knownDevice = DataProvider().knownDevice;
+    var knownDevice = DataProvider().knownDevice;
     final Map<String, String> online_devices = HashMap();
     StreamController<Map<String, String>> datas =
         StreamController<Map<String, String>>();
