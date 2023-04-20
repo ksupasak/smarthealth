@@ -52,13 +52,25 @@ class _SettingState extends State<Setting> {
                     ),
                     GestureDetector(
                       onTap: () {
+                        Get.toNamed('initsetting');
+                      },
+                      child: BoxWidetdew(
+                        color: Colors.green,
+                        width: 0.4,
+                        height: 0.1,
+                        text: 'Initsetting',
+                        textcolor: Colors.white,
+                      ),
+                    ),
+                    GestureDetector(
+                      onTap: () {
                         Get.toNamed('device');
                       },
                       child: BoxWidetdew(
                         color: Colors.green,
                         width: 0.4,
                         height: 0.1,
-                        text: 'device',
+                        text: 'Device',
                         textcolor: Colors.white,
                       ),
                     ),

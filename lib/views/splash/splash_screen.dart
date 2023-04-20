@@ -11,6 +11,7 @@ import 'package:smart_health/device/ad_ua651ble.dart';
 import 'package:smart_health/device/hc08.dart';
 import 'package:smart_health/device/hj_narigmed.dart';
 import 'package:smart_health/device/mibfs.dart';
+import 'package:smart_health/local/local.dart';
 import 'package:smart_health/provider/provider.dart';
 import 'package:smart_health/views/pages/home.dart';
 
@@ -105,8 +106,8 @@ class _Splash_ScreenState extends State<Splash_Screen> {
 
   @override
   void initState() {
-    scanTimer(4500); //
-    bleScan(); //
+    //  scanTimer(4500); //
+    // bleScan(); //
     // TODO: implement initState
     super.initState();
   }

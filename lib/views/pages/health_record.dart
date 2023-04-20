@@ -191,7 +191,7 @@ class _HealthRecordState extends State<HealthRecord> {
   @override
   void initState() {
     clearprovider();
-    scan(); //
+    // scan(); //
     // TODO: implement initState
     super.initState();
   }

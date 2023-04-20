@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:collection';
 
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_blue_plus/gen/flutterblueplus.pb.dart';
 import 'package:just_audio/just_audio.dart';
 
 class DataProvider with ChangeNotifier {
@@ -17,7 +18,7 @@ class DataProvider with ChangeNotifier {
   double sized_name_hospital = 0.08;
   FontWeight fontWeight_name_hospital = FontWeight.w600;
   Color shadow_name_hospital = Color.fromARGB(199, 255, 0, 0);
-  List device = [];
+  var listdevices = [];
   List<String> knownDevice = [
     'HC-08',
     'MIBFS',
