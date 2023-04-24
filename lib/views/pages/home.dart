@@ -26,7 +26,7 @@ class Homeapp extends StatefulWidget {
 class _HomeappState extends State<Homeapp> {
   bool status = false;
 
-  void chaek() async {
+  void check() async {
     setState(() {
       status = true;
     });
@@ -53,9 +53,9 @@ class _HomeappState extends State<Homeapp> {
                   return Popup(
                       texthead: 'สำเร็จ', pathicon: 'assets/correct.png');
                 });
+
             Timer(Duration(seconds: 2), () {
-              // Navigator.pop(context);
-              Get.offNamed('menu');
+              Get.offNamed('user_information');
             });
           } else if (resTojson['message'] == 'not found') {
             showDialog(
@@ -192,7 +192,7 @@ class _HomeappState extends State<Homeapp> {
                             status == false
                                 ? GestureDetector(
                                     onTap: () {
-                                      chaek();
+                                      check();
                                     },
                                     child: BoxWidetdew(
                                         color:

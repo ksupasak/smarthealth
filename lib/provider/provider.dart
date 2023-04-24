@@ -20,7 +20,7 @@ class DataProvider with ChangeNotifier {
   Color shadow_name_hospital = Color.fromARGB(199, 255, 0, 0);
 
   //List<String> knownDevice = [];
-
+  var resTojson;
   List<String> devicename = [];
   List<String> namescan = [
     'HC-08',

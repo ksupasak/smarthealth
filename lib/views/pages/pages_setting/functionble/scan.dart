@@ -3,6 +3,8 @@ import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 import 'package:provider/provider.dart';
+import 'package:smart_health/background/background.dart';
+import 'package:smart_health/background/color/style_color.dart';
 import 'package:smart_health/provider/provider.dart';
 import 'package:smart_health/views/pages/pages_setting/functionble/ble.dart';
 import 'package:smart_health/views/ui/widgetdew.dart/widgetdew.dart';
@@ -37,75 +39,90 @@ class _scanbleState extends State<scanble> {
     double _width = MediaQuery.of(context).size.width;
     double _height = MediaQuery.of(context).size.height;
     return Scaffold(
-      body: Container(
-        // onRefresh: () => ,
-        //  FlutterBluePlus.instance
-        //     .startScan(timeout: const Duration(seconds: 4)),
-        child: Container(
-          child: StreamBuilder<List<ScanResult>>(
-            stream: FlutterBluePlus.instance.scanResults,
-            initialData: const [],
-            builder: (c, snapshot) => SafeArea(
-              child: ListView(
-                children: snapshot.data!.map((r) {
-                  if (context
-                      .read<DataProvider>()
-                      .namescan
-                      .contains(r.device.name)) {
-                    return Container(
-                      height: _height * 0.05,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          ElevatedButton(
-                              onPressed: (() {
-                                r.device.connect();
-                              }),
-                              child: Text('data')),
-                          Text(r.device.id.toString()),
-                          Text(r.device.name),
-                          context
-                                  .read<DataProvider>()
-                                  .deviceId
-                                  .contains(r.device.id.toString())
-                              ? Container()
-                              : ElevatedButton(
-                                  style: ButtonStyle(
-                                    backgroundColor: context
-                                            .read<DataProvider>()
-                                            .deviceId
-                                            .contains(r.device.id.toString())
-                                        ? MaterialStateProperty.all<Color>(
-                                            Color.fromARGB(0, 0, 0, 0))
-                                        : MaterialStateProperty.all<Color>(
-                                            Colors.green),
-                                  ),
-                                  child: const Text('Add'),
-                                  onPressed: () {
-                                    setState(() {
-                                      context
-                                          .read<DataProvider>()
-                                          .deviceId
-                                          .add(r.device.id.toString());
-                                      print(context
-                                          .read<DataProvider>()
-                                          .deviceId);
-                                      ScaffoldMessenger.of(context)
-                                          .showSnackBar(SnackBar(
-                                              content: Text(
-                                                  'เพิ่มอุปกรณ์ ${r.device.id.toString()}')));
-                                    });
-                                  })
-                        ],
-                      ),
-                    );
-                  }
-                  return Container();
-                }).toList(),
+      body: Stack(
+        children: [
+          Positioned(
+              child: BackGroundSmart_Health(
+            BackGroundColor: [
+              StyleColor.backgroundbegin,
+              StyleColor.backgroundend
+            ],
+          )),
+          Positioned(
+            child: Container(
+              // onRefresh: () => ,
+              //  FlutterBluePlus.instance
+              //     .startScan(timeout: const Duration(seconds: 4)),
+              child: Container(
+                child: StreamBuilder<List<ScanResult>>(
+                  stream: FlutterBluePlus.instance.scanResults,
+                  initialData: const [],
+                  builder: (c, snapshot) => SafeArea(
+                    child: ListView(
+                      children: snapshot.data!.map((r) {
+                        if (context
+                            .read<DataProvider>()
+                            .namescan
+                            .contains(r.device.name)) {
+                          return Container(
+                            height: _height * 0.05,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                ElevatedButton(
+                                    onPressed: (() {
+                                      r.device.connect();
+                                    }),
+                                    child: Text('data')),
+                                Text(r.device.id.toString()),
+                                Text(r.device.name),
+                                context
+                                        .read<DataProvider>()
+                                        .deviceId
+                                        .contains(r.device.id.toString())
+                                    ? Container()
+                                    : ElevatedButton(
+                                        style: ButtonStyle(
+                                          backgroundColor: context
+                                                  .read<DataProvider>()
+                                                  .deviceId
+                                                  .contains(
+                                                      r.device.id.toString())
+                                              ? MaterialStateProperty.all<
+                                                      Color>(
+                                                  Color.fromARGB(0, 0, 0, 0))
+                                              : MaterialStateProperty.all<
+                                                  Color>(Colors.green),
+                                        ),
+                                        child: const Text('Add'),
+                                        onPressed: () {
+                                          setState(() {
+                                            context
+                                                .read<DataProvider>()
+                                                .deviceId
+                                                .add(r.device.id.toString());
+                                            print(context
+                                                .read<DataProvider>()
+                                                .deviceId);
+                                            ScaffoldMessenger.of(context)
+                                                .showSnackBar(SnackBar(
+                                                    content: Text(
+                                                        'เพิ่มอุปกรณ์ ${r.device.id.toString()}')));
+                                          });
+                                        })
+                              ],
+                            ),
+                          );
+                        }
+                        return Container();
+                      }).toList(),
+                    ),
+                  ),
+                ),
               ),
             ),
-          ),
-        ),
+          )
+        ],
       ),
       bottomNavigationBar: Container(
           height: _height * 0.05,

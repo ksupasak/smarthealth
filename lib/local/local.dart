@@ -39,7 +39,7 @@ Future<void> addDataInfoToDatabase(DataProvider data) async {
     'platfromURL': data.platfromURL,
     'checkqueueURL': data.checkqueueURL,
     'care_unit_id': data.care_unit_id,
-    'device': data.deviceId,
+    'device': '1234',
     'passwordsetting': data.passwordsetting,
   });
 

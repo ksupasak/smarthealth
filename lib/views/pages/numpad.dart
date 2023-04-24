@@ -64,6 +64,13 @@ class _numpadState extends State<numpad> {
   }
 
   @override
+  void initState() {
+    passwordslogin = '3102100818892';
+    // TODO: implement initState
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Column(
       children: [

@@ -24,11 +24,11 @@ class Splash_Screen extends StatefulWidget {
 }
 
 class _Splash_ScreenState extends State<Splash_Screen> {
-  TextEditingController name_hospital = TextEditingController();
-  TextEditingController platfromURL = TextEditingController();
-  TextEditingController checkqueueURL = TextEditingController();
-  TextEditingController care_unit_id = TextEditingController();
-  TextEditingController passwordsetting = TextEditingController();
+  var name_hospital;
+  var platfromURL;
+  var checkqueueURL;
+  var care_unit_id;
+  var passwordsetting;
   late List<RecordSnapshot<int, Map<String, Object?>>> init;
   Timer scanTimer([int milliseconds = 6]) =>
       Timer.periodic(Duration(seconds: milliseconds), (Timer timer) {
@@ -36,17 +36,20 @@ class _Splash_ScreenState extends State<Splash_Screen> {
       });
 
   void bleScan() {
+    var deviceId;
+
     FlutterBluePlus flutterBlue = FlutterBluePlus.instance;
-    var deviceId = DataProvider().deviceId;
+
     final Map<String, String> online_devices = HashMap();
+    deviceId = DataProvider().deviceId;
     StreamController<Map<String, String>> datas =
         StreamController<Map<String, String>>();
     FlutterBluePlus.instance.scanResults.listen((results) {
       //2
-      print(results);
+      // print(results);
       if (results.length > 0) {
         //3
-        print(results.length);
+        // print(results.length);
         ScanResult r = results.last;
         if (deviceId.contains(r.device.id.toString())) {
           print('กำลังconnect');
@@ -60,9 +63,9 @@ class _Splash_ScreenState extends State<Splash_Screen> {
     Stream.periodic(Duration(seconds: 5)).listen((_) {
       FlutterBluePlus.instance.startScan(timeout: const Duration(seconds: 4));
       FlutterBluePlus.instance.scanResults.listen((results) {
-        print(results);
+        //  print(results);
         if (results.length > 0) {
-          print(results.length);
+          //   print(results.length);
           ScanResult r = results.last;
           if (deviceId.contains(r.device.id.toString())) {
             print('กำลังconnect');
@@ -77,11 +80,7 @@ class _Splash_ScreenState extends State<Splash_Screen> {
       connectedDevices.forEach((device) {
         if (online_devices.containsKey(device.id.toString()) == false) {
           online_devices[device.id.toString()] = device.name;
-          if (device.name == 'HC-08' &&
-              context
-                  .read<DataProvider>()
-                  .deviceId
-                  .contains(device.id.toString())) {
+          if (device.name == 'HC-08') {
             Hc08 hc08 = Hc08(device: device);
             hc08.parse().listen((temp) {
               if (temp != null && temp != '') {
@@ -93,11 +92,7 @@ class _Splash_ScreenState extends State<Splash_Screen> {
                 });
               }
             });
-          } else if (device.name == 'HJ-Narigmed' &&
-              context
-                  .read<DataProvider>()
-                  .deviceId
-                  .contains(device.id.toString())) {
+          } else if (device.name == 'HJ-Narigmed') {
             HjNarigmed hjNarigmed = HjNarigmed(device: device);
             hjNarigmed.parse().listen((mVal) {
               Map<String, String> val = HashMap();
@@ -109,11 +104,7 @@ class _Splash_ScreenState extends State<Splash_Screen> {
                 context.read<DataProvider>().pr = mVal['pr'];
               });
             });
-          } else if (device.name == 'A&D_UA-651BLE_D57B3F' &&
-              context
-                  .read<DataProvider>()
-                  .deviceId
-                  .contains(device.id.toString())) {
+          } else if (device.name == 'A&D_UA-651BLE_D57B3F') {
             AdUa651ble adUa651ble = AdUa651ble(device: device);
             adUa651ble.parse().listen((nVal) {
               Map<String, String> val = HashMap();
@@ -127,7 +118,7 @@ class _Splash_ScreenState extends State<Splash_Screen> {
                 context.read<DataProvider>().pul = nVal['pul'];
               });
             });
-          } else if (device.name == 'MIBFS' &&
+          } else if (device.name == 'MIBFS' ||
               context
                   .read<DataProvider>()
                   .deviceId
@@ -151,46 +142,91 @@ class _Splash_ScreenState extends State<Splash_Screen> {
 
     init = await getAllData();
     for (RecordSnapshot<int, Map<String, Object?>> record in init) {
-      name_hospital.text = record['name_hospital'].toString();
-      platfromURL.text = record['platfromURL'].toString();
-      checkqueueURL.text = record['checkqueueURL'].toString();
-      care_unit_id.text = record['care_unit_id'].toString();
-      passwordsetting.text = record['passwordsetting'].toString();
+      name_hospital = record['name_hospital'].toString();
+      platfromURL = record['platfromURL'].toString();
+      checkqueueURL = record['checkqueueURL'].toString();
+      care_unit_id = record['care_unit_id'].toString();
+      passwordsetting = record['passwordsetting'].toString();
       device = record['device'];
-      print(name_hospital.text);
-      print(platfromURL.text);
-      print(checkqueueURL.text);
-      print(care_unit_id.text);
-      print(passwordsetting.text);
-      for (var devices in device) {
-        print(devices);
-      }
+      print(name_hospital);
+      print(platfromURL);
+      print(checkqueueURL);
+      print(care_unit_id);
+      print(passwordsetting);
+      // for (var devices in device) {
+      // print(devices);
+      // }
     }
+    safe();
+  }
+
+  void safe() async {
+    context.read<DataProvider>().name_hospital = name_hospital;
+    context.read<DataProvider>().platfromURL = platfromURL;
+    context.read<DataProvider>().checkqueueURL = checkqueueURL;
+    context.read<DataProvider>().care_unit_id = care_unit_id;
+    context.read<DataProvider>().passwordsetting = passwordsetting;
+    setState(() {
+      addDataInfoToDatabase(context.read<DataProvider>());
+    });
   }
 
   @override
   void initState() {
-    // printDatabase();
-   // scanTimer(4500);
-   // bleScan();
+    printDatabase();
+    // scanTimer(4500);
+    // bleScan();
     //  TODO: implement initState
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
+    double _width = MediaQuery.of(context).size.width;
+    double _height = MediaQuery.of(context).size.height;
     return Scaffold(
-      body: StreamBuilder<BluetoothState>(
-        stream: FlutterBluePlus.instance.state,
-        initialData: BluetoothState.unknown,
-        builder: ((context, snapshot) {
-          if (snapshot.data == BluetoothState.on) {
-            return Homeapp();
-          } else if (snapshot.data == BluetoothState.off) {
-            FlutterBluePlus.instance.turnOn();
-          }
-          return const SizedBox.shrink();
-        }),
+      body: ListView(
+        children: [
+          Container(
+            width: _width,
+            height: _height * 0.95,
+            child: StreamBuilder<BluetoothState>(
+              stream: FlutterBluePlus.instance.state,
+              initialData: BluetoothState.unknown,
+              builder: ((context, snapshot) {
+                if (snapshot.data == BluetoothState.on) {
+                  return Homeapp();
+                } else if (snapshot.data == BluetoothState.off) {
+                  FlutterBluePlus.instance.turnOn();
+                }
+                return const SizedBox.shrink();
+              }),
+            ),
+          ),
+          Container(
+            width: _width,
+            height: _height * 0.0000000001,
+            child: StreamBuilder<List<ScanResult>>(
+              stream: FlutterBluePlus.instance.scanResults,
+              initialData: const [],
+              builder: (c, snapshot) => SafeArea(
+                child: ListView(
+                  children: snapshot.data!.map((r) {
+                    if (context
+                        .read<DataProvider>()
+                        .namescan
+                        .toString()
+                        .contains(r.device.name)) {
+                      r.device.connect();
+                      return Container();
+                    }
+                    return Container();
+                  }).toList(),
+                ),
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }

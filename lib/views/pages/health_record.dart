@@ -35,7 +35,7 @@ class _HealthRecordState extends State<HealthRecord> {
   TextEditingController uric = TextEditingController();
 
   void scan() {
-    timer = Timer.periodic(const Duration(seconds: 1), (_) {
+    timer = Timer.periodic(const Duration(seconds: 2), (_) {
       setState(() {
         temp.text = context.read<DataProvider>().temp;
         weight.text = context.read<DataProvider>().weight;
@@ -137,7 +137,7 @@ class _HealthRecordState extends State<HealthRecord> {
                 });
             Timer(Duration(seconds: 2), () {
               Navigator.pop(context);
-              Navigator.pop(context);
+              Get.toNamed('user_information');
               //  Get.offNamed('menu');
               //    Navigator.pushReplacement(
               //     context, MaterialPageRoute(builder: (context) => Menu()));
@@ -196,7 +196,7 @@ class _HealthRecordState extends State<HealthRecord> {
   @override
   void initState() {
     clearprovider();
-    scan(); //
+    // scan(); //
     // TODO: implement initState
     super.initState();
   }
@@ -209,105 +209,113 @@ class _HealthRecordState extends State<HealthRecord> {
     double heightline = _height * 0.03;
     Color teamcolor = Color.fromARGB(255, 47, 174, 164);
 
-    return Scaffold(
-        body: Stack(children: [
-      Positioned(
-          child: BackGroundSmart_Health(
-        BackGroundColor: [StyleColor.backgroundbegin, StyleColor.backgroundend],
-      )),
-      Positioned(
-          child: ListView(children: [
-        WidgetNameHospital(),
-        BoxDecorate(
-            color: Color.fromARGB(255, 43, 179, 161),
-            child: InformationCard(
-                dataidcard: context.read<DataProvider>().dataidcard)),
-        SizedBox(height: heightsizedbox),
-        BoxDecorate(
+    return SafeArea(
+      child: Scaffold(
+          body: Stack(children: [
+        Positioned(
+            child: BackGroundSmart_Health(
+          BackGroundColor: [
+            StyleColor.backgroundbegin,
+            StyleColor.backgroundend
+          ],
+        )),
+        Positioned(
+            child: ListView(children: [
+          WidgetNameHospital(),
+          BoxDecorate(
+              color: Color.fromARGB(255, 43, 179, 161),
+              child: InformationCard(
+                  dataidcard: context.read<DataProvider>().dataidcard)),
+          SizedBox(height: heightsizedbox),
+          BoxDecorate(
+              color: Colors.white,
+              child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    BoxRecord(texthead: 'TEMP', keyvavlue: temp),
+                    Line(height: heightline, color: teamcolor),
+                    BoxRecord(texthead: 'WEIGHT', keyvavlue: weight)
+                  ])),
+          SizedBox(height: heightsizedbox),
+          BoxDecorate(
+              color: Colors.white,
+              child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    BoxRecord(texthead: 'SYS', keyvavlue: sys),
+                    Line(height: heightline, color: teamcolor),
+                    BoxRecord(texthead: 'DIA', keyvavlue: dia),
+                    Line(height: heightline, color: teamcolor),
+                    BoxRecord(texthead: 'PULSE', keyvavlue: pulse)
+                  ])),
+          SizedBox(height: heightsizedbox),
+          BoxDecorate(
+              color: Colors.white,
+              child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    BoxRecord(texthead: 'PR', keyvavlue: pr),
+                    Line(height: heightline, color: teamcolor),
+                    BoxRecord(texthead: 'SPO2', keyvavlue: spo2),
+                  ])),
+          SizedBox(height: heightsizedbox),
+          BoxDecorate(
             color: Colors.white,
-            child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  BoxRecord(texthead: 'TEMP', keyvavlue: temp),
-                  Line(height: heightline, color: teamcolor),
-                  BoxRecord(texthead: 'WEIGHT', keyvavlue: weight)
-                ])),
-        SizedBox(height: heightsizedbox),
-        BoxDecorate(
-            color: Colors.white,
-            child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  BoxRecord(texthead: 'SYS', keyvavlue: sys),
-                  Line(height: heightline, color: teamcolor),
-                  BoxRecord(texthead: 'DIA', keyvavlue: dia),
-                  Line(height: heightline, color: teamcolor),
-                  BoxRecord(texthead: 'PULSE', keyvavlue: pulse)
-                ])),
-        SizedBox(height: heightsizedbox),
-        BoxDecorate(
-            color: Colors.white,
-            child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  BoxRecord(texthead: 'PR', keyvavlue: pr),
-                  Line(height: heightline, color: teamcolor),
-                  BoxRecord(texthead: 'SPO2', keyvavlue: spo2),
-                ])),
-        SizedBox(height: heightsizedbox),
-        BoxDecorate(
-          color: Colors.white,
-          child: Column(
-            children: [
-              Text('ค่าน้ำตาล',
-                  style: TextStyle(fontSize: _width * 0.04, color: teamcolor)),
-              SizedBox(height: heightsizedbox),
-              Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
-                BoxRecord(texthead: 'FBS', keyvavlue: fbs),
-                Line(height: heightline, color: teamcolor),
-                BoxRecord(texthead: 'SI', keyvavlue: si),
-                Line(height: heightline, color: teamcolor),
-                BoxRecord(texthead: 'URIC', keyvavlue: uric)
-              ]),
-            ],
+            child: Column(
+              children: [
+                Text('ค่าน้ำตาล',
+                    style:
+                        TextStyle(fontSize: _width * 0.04, color: teamcolor)),
+                SizedBox(height: heightsizedbox),
+                Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      BoxRecord(texthead: 'FBS', keyvavlue: fbs),
+                      Line(height: heightline, color: teamcolor),
+                      BoxRecord(texthead: 'SI', keyvavlue: si),
+                      Line(height: heightline, color: teamcolor),
+                      BoxRecord(texthead: 'URIC', keyvavlue: uric)
+                    ]),
+              ],
+            ),
           ),
-        ),
-        SizedBox(height: heightsizedbox),
-        Center(
-          child: prevent == false
-              ? GestureDetector(
+          SizedBox(height: heightsizedbox),
+          Center(
+            child: prevent == false
+                ? GestureDetector(
+                    onTap: () {
+                      chackrecorddata();
+                    },
+                    child: BoxWidetdew(
+                        height: 0.06,
+                        width: 0.3,
+                        text: 'บันทึก',
+                        fontSize: 0.05,
+                        color: teamcolor,
+                        textcolor: Colors.white),
+                  )
+                : Container(
+                    width: MediaQuery.of(context).size.width * 0.07,
+                    height: MediaQuery.of(context).size.width * 0.07,
+                    child: CircularProgressIndicator(),
+                  ),
+          ),
+          SizedBox(height: _height * 0.01),
+          Center(
+              child: GestureDetector(
                   onTap: () {
-                    chackrecorddata();
+                    stop();
+                    Navigator.pop(context);
                   },
                   child: BoxWidetdew(
-                      height: 0.06,
-                      width: 0.3,
-                      text: 'บันทึก',
+                      height: 0.055,
+                      width: 0.25,
                       fontSize: 0.05,
-                      color: teamcolor,
-                      textcolor: Colors.white),
-                )
-              : Container(
-                  width: MediaQuery.of(context).size.width * 0.07,
-                  height: MediaQuery.of(context).size.width * 0.07,
-                  child: CircularProgressIndicator(),
-                ),
-        ),
-        SizedBox(height: _height * 0.01),
-        Center(
-            child: GestureDetector(
-                onTap: () {
-                  stop();
-                  Navigator.pop(context);
-                },
-                child: BoxWidetdew(
-                    height: 0.055,
-                    width: 0.25,
-                    fontSize: 0.05,
-                    text: 'กลับ',
-                    color: Colors.red,
-                    textcolor: Colors.white)))
-      ]))
-    ]));
+                      text: 'กลับ',
+                      color: Colors.red,
+                      textcolor: Colors.white)))
+        ]))
+      ])),
+    );
   }
 }

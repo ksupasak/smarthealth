@@ -18,72 +18,71 @@ class _SettingState extends State<Setting> {
   Widget build(BuildContext context) {
     double _width = MediaQuery.of(context).size.width;
     double _height = MediaQuery.of(context).size.height;
-    return GestureDetector(
-      onTap: (() {
-        FocusScope.of(context).requestFocus(FocusNode());
-      }),
-      child: Stack(
-        children: [
-          Positioned(
-              child: BackGroundSmart_Health(
-            BackGroundColor: [
-              StyleColor.backgroundbegin,
-              StyleColor.backgroundend
-            ],
-          )),
-          Positioned(
-            child: Scaffold(
-                body: Container(
-              child: Center(
+    return Scaffold(
+      body: GestureDetector(
+        onTap: (() {
+          FocusScope.of(context).requestFocus(FocusNode());
+        }),
+        child: Stack(
+          children: [
+            Positioned(
+                child: BackGroundSmart_Health(
+              BackGroundColor: [
+                StyleColor.backgroundbegin,
+                StyleColor.backgroundend
+              ],
+            )),
+            Positioned(
+              child: Container(
+                width: _width,
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     GestureDetector(
-                      onTap: () {
-                        Get.toNamed('initsetting');
-                      },
-                      child: BoxWidetdew(
-                        color: Colors.green,
-                        width: 0.4,
-                        height: 0.1,
-                        fontSize: 0.05,
-                        text: 'Initsetting',
-                        textcolor: Colors.white,
-                      ),
-                    ),
+                        onTap: () {
+                          Get.toNamed('initsetting');
+                        },
+                        child: BoxWidetdew(
+                            color: Colors.green,
+                            radius: 0.0,
+                            width: 0.4,
+                            height: 0.1,
+                            fontSize: 0.05,
+                            text: 'Initsetting',
+                            textcolor: Colors.white)),
+                    SizedBox(height: _height * 0.01),
                     GestureDetector(
-                      onTap: () {
-                        Get.toNamed('device');
-                      },
-                      child: BoxWidetdew(
-                        color: Colors.green,
-                        width: 0.4,
-                        height: 0.1,
-                        fontSize: 0.05,
-                        text: 'Device',
-                        textcolor: Colors.white,
-                      ),
-                    ),
+                        onTap: () {
+                          Get.toNamed('device');
+                        },
+                        child: BoxWidetdew(
+                            color: Colors.green,
+                            width: 0.4,
+                            radius: 0.0,
+                            height: 0.1,
+                            fontSize: 0.05,
+                            text: 'Device',
+                            textcolor: Colors.white)),
+                    SizedBox(height: _height * 0.01),
                     GestureDetector(
-                      onTap: () {
-                        Navigator.pop(context);
-                        Get.offNamed('home');
-                      },
-                      child: BoxWidetdew(
-                        color: Colors.green,
-                        width: 0.4,
-                        height: 0.1,
-                        fontSize: 0.05,
-                        text: 'Exit',
-                        textcolor: Colors.white,
-                      ),
-                    ),
+                        onTap: () {
+                          Navigator.pop(context);
+                          Get.offNamed('home');
+                        },
+                        child: BoxWidetdew(
+                            color: Colors.green,
+                            width: 0.4,
+                            radius: 0.0,
+                            height: 0.1,
+                            fontSize: 0.05,
+                            text: 'Exit',
+                            textcolor: Colors.white)),
                   ],
                 ),
               ),
-            )),
-          ),
-        ],
+            ),
+          ],
+        ),
       ),
     );
   }

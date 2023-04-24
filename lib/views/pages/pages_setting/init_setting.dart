@@ -3,6 +3,8 @@ import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:provider/provider.dart';
 import 'package:sembast/sembast.dart';
+import 'package:smart_health/background/background.dart';
+import 'package:smart_health/background/color/style_color.dart';
 import 'package:smart_health/local/classlocal.dart';
 import 'package:smart_health/local/local.dart';
 import 'package:smart_health/provider/provider.dart';
@@ -72,61 +74,88 @@ class _InitsettingState extends State<Initsetting> {
         FocusScope.of(context).requestFocus(FocusNode());
       }),
       child: Scaffold(
-        body: ListView(
-          children: [
-            Container(
-              height: _height * 0.8,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text('name_hospital',
-                      style: TextStyle(fontSize: _width * 0.05)),
-                  TextField(
-                      controller: name_hospital,
-                      style: TextStyle(fontSize: _width * 0.05)),
-                  Text('platfromURL',
-                      style: TextStyle(fontSize: _width * 0.05)),
-                  TextField(
-                      controller: platfromURL,
-                      style: TextStyle(fontSize: _width * 0.05)),
-                  Text('checkqueueURL',
-                      style: TextStyle(fontSize: _width * 0.05)),
-                  TextField(
-                      controller: checkqueueURL,
-                      style: TextStyle(fontSize: _width * 0.05)),
-                  Text('care_unit_id',
-                      style: TextStyle(fontSize: _width * 0.05)),
-                  TextField(
-                      controller: care_unit_id,
-                      style: TextStyle(fontSize: _width * 0.05)),
-                  Text('passwordsetting',
-                      style: TextStyle(fontSize: _width * 0.05)),
-                  TextField(
-                      controller: passwordsetting,
-                      style: TextStyle(fontSize: _width * 0.05)),
-                  SizedBox(
-                    height: _height * 0.05,
+        body: Stack(children: [
+          Positioned(
+              child: BackGroundSmart_Health(
+            BackGroundColor: [
+              StyleColor.backgroundbegin,
+              StyleColor.backgroundend
+            ],
+          )),
+          Positioned(
+            child: ListView(
+              children: [
+                Container(
+                  height: _height * 0.8,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text('name_hospital',
+                          style: TextStyle(fontSize: _width * 0.05)),
+                      Container(
+                        width: _width * 0.8,
+                        child: TextField(
+                            controller: name_hospital,
+                            style: TextStyle(fontSize: _width * 0.05)),
+                      ),
+                      Text('platfromURL',
+                          style: TextStyle(fontSize: _width * 0.05)),
+                      Container(
+                        width: _width * 0.8,
+                        child: TextField(
+                            controller: platfromURL,
+                            style: TextStyle(fontSize: _width * 0.05)),
+                      ),
+                      Text('checkqueueURL',
+                          style: TextStyle(fontSize: _width * 0.05)),
+                      Container(
+                        width: _width * 0.8,
+                        child: TextField(
+                            controller: checkqueueURL,
+                            style: TextStyle(fontSize: _width * 0.05)),
+                      ),
+                      Text('care_unit_id',
+                          style: TextStyle(fontSize: _width * 0.05)),
+                      Container(
+                        width: _width * 0.8,
+                        child: TextField(
+                            controller: care_unit_id,
+                            style: TextStyle(fontSize: _width * 0.05)),
+                      ),
+                      Text('passwordsetting',
+                          style: TextStyle(fontSize: _width * 0.05)),
+                      Container(
+                        width: _width * 0.8,
+                        child: TextField(
+                            controller: passwordsetting,
+                            style: TextStyle(fontSize: _width * 0.05)),
+                      ),
+                      SizedBox(
+                        height: _height * 0.05,
+                      ),
+                      Container(
+                        child: Center(
+                          child: GestureDetector(
+                              onTap: () {
+                                safe();
+                              },
+                              child: BoxWidetdew(
+                                  text: 'บันทึก',
+                                  height: 0.07,
+                                  width: 0.6,
+                                  radius: 0.0,
+                                  textcolor: Colors.white,
+                                  fontSize: 0.05,
+                                  color: Color.fromARGB(255, 54, 200, 244))),
+                        ),
+                      ),
+                    ],
                   ),
-                  Container(
-                    child: Center(
-                      child: GestureDetector(
-                          onTap: () {
-                            safe();
-                          },
-                          child: BoxWidetdew(
-                              text: 'บันทึก',
-                              height: 0.15,
-                              width: 0.6,
-                              textcolor: Colors.white,
-                              fontSize: 0.05,
-                              color: Color.fromARGB(255, 54, 200, 244))),
-                    ),
-                  ),
-                ],
-              ),
+                ),
+              ],
             ),
-          ],
-        ),
+          )
+        ]),
       ),
     );
   }
