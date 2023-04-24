@@ -18,10 +18,18 @@ class DataProvider with ChangeNotifier {
   double sized_name_hospital = 0.08;
   FontWeight fontWeight_name_hospital = FontWeight.w600;
   Color shadow_name_hospital = Color.fromARGB(199, 255, 0, 0);
-  // var listdevices = [];
-  Map<String, String> knownDevice2 = {};
-  List<String> knownDevice = [];
-  Map<String, BluetoothDevice> j = {};
+
+  //List<String> knownDevice = [];
+
+  List<String> devicename = [];
+  List<String> namescan = [
+    'HC-08',
+    'MIBFS',
+    'HJ-Narigmed',
+    'A&D_UA-651BLE_D57B3F'
+  ];
+
+  // Map<String, BluetoothDevice> j = {}; //context.read<DataProvider>().
   // 'HC-08',
   // 'MIBFS',
   // 'HJ-Narigmed',
@@ -38,4 +46,19 @@ class DataProvider with ChangeNotifier {
   String fbs = '';
   String si = '';
   String uric = '';
+  List<String> deviceId = [];
+  StreamController<List<String>> _deviceIdStreamController =
+      StreamController<List<String>>();
+  Stream<List<String>> get deviceIdStream => _deviceIdStreamController.stream;
+
+  void addDeviceId(String deviceId) {
+    this.deviceId.add(deviceId);
+    _deviceIdStreamController.add(this.deviceId);
+    notifyListeners();
+  }
+
+  void dispose() {
+    _deviceIdStreamController.close();
+    super.dispose();
+  }
 }

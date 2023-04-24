@@ -40,6 +40,7 @@ class _MenuState extends State<Menu> {
                               height: 0.1,
                               width: 0.7,
                               text: 'เช็คสุขภาพ',
+                              fontSize: 0.05,
                               textcolor: Colors.white,
                               color: Color.fromARGB(255, 76, 199, 45))),
                       GestureDetector(
@@ -50,6 +51,7 @@ class _MenuState extends State<Menu> {
                               height: 0.1,
                               width: 0.7,
                               text: 'เช็คคิว',
+                              fontSize: 0.05,
                               textcolor: Colors.white,
                               color: Color.fromARGB(255, 7, 171, 200))),
                       GestureDetector(
@@ -58,6 +60,7 @@ class _MenuState extends State<Menu> {
                               height: 0.1,
                               width: 0.7,
                               text: 'อื่นๆ',
+                              fontSize: 0.05,
                               textcolor: Colors.white,
                               color: Color.fromARGB(255, 4, 156, 130))),
                       GestureDetector(
@@ -67,6 +70,7 @@ class _MenuState extends State<Menu> {
                           child: BoxWidetdew(
                               height: 0.1,
                               width: 0.7,
+                              fontSize: 0.05,
                               text: 'ออกจากระบบ',
                               textcolor: Colors.white,
                               color: Color.fromARGB(255, 231, 29, 29))),

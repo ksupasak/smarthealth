@@ -72,6 +72,7 @@ class _HealthRecordState extends State<HealthRecord> {
             return Popup(
               texthead: 'ข้อมูลไม่ครบ',
               textbody: 'ต่องการส่งข้อมูลหรือไม่',
+              fontSize: 0.05,
               pathicon: 'assets/warning.png',
               buttonbar: [
                 GestureDetector(
@@ -82,6 +83,7 @@ class _HealthRecordState extends State<HealthRecord> {
                         pathicon: 'assets/close.png',
                         height: 0.05,
                         width: 0.05)),
+                SizedBox(width: 50),
                 GestureDetector(
                     onTap: () {
                       recorddata();
@@ -89,8 +91,9 @@ class _HealthRecordState extends State<HealthRecord> {
                     },
                     child: MarkCheck(
                         pathicon: 'assets/check.png',
-                        height: 0.05,
-                        width: 0.05)),
+                        height: 0.08,
+                        width: 0.08)),
+                SizedBox(width: 50),
               ],
             );
           });
@@ -128,7 +131,9 @@ class _HealthRecordState extends State<HealthRecord> {
                 context: context,
                 builder: (BuildContext context) {
                   return Popup(
-                      texthead: 'สำเร็จ', pathicon: 'assets/correct.png');
+                      fontSize: 0.05,
+                      texthead: 'สำเร็จ',
+                      pathicon: 'assets/correct.png');
                 });
             Timer(Duration(seconds: 2), () {
               Navigator.pop(context);
@@ -278,6 +283,7 @@ class _HealthRecordState extends State<HealthRecord> {
                       height: 0.06,
                       width: 0.3,
                       text: 'บันทึก',
+                      fontSize: 0.05,
                       color: teamcolor,
                       textcolor: Colors.white),
                 )
@@ -297,6 +303,7 @@ class _HealthRecordState extends State<HealthRecord> {
                 child: BoxWidetdew(
                     height: 0.055,
                     width: 0.25,
+                    fontSize: 0.05,
                     text: 'กลับ',
                     color: Colors.red,
                     textcolor: Colors.white)))

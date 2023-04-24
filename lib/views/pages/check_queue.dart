@@ -55,6 +55,7 @@ class _CheckQueueState extends State<CheckQueue> {
             context: context,
             builder: (BuildContext context) {
               return Popup(
+                  fontSize: 0.05,
                   texthead: 'รับคิวที่เครื่อง',
                   textbody: 'กำลังปริ้นคิว...',
                   pathicon: 'assets/9df753370d3f57e6d1325129db200f93.gif');
@@ -123,6 +124,7 @@ class _CheckQueueState extends State<CheckQueue> {
                           printqueue();
                         },
                         child: BoxWidetdew(
+                          fontSize: 0.05,
                           height: 0.08,
                           width: 0.4,
                           color: resTojson == null
@@ -153,6 +155,7 @@ class _CheckQueueState extends State<CheckQueue> {
                     Navigator.pop(context);
                   },
                   child: BoxWidetdew(
+                    fontSize: 0.05,
                     height: 0.08,
                     width: 0.4,
                     color: Color.fromARGB(255, 255, 0, 0),

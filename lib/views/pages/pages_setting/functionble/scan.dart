@@ -2,7 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
+import 'package:provider/provider.dart';
+import 'package:smart_health/provider/provider.dart';
 import 'package:smart_health/views/pages/pages_setting/functionble/ble.dart';
+import 'package:smart_health/views/ui/widgetdew.dart/widgetdew.dart';
 
 class scanble extends StatefulWidget {
   const scanble({super.key});
@@ -13,6 +16,8 @@ class scanble extends StatefulWidget {
 
 class _scanbleState extends State<scanble> {
   bool connectionstatus = false;
+
+  Map<String, BluetoothDevice> j = {};
   void connectdevice(ScanResult r) async {
     setState(() {
       connectionstatus = true;
@@ -22,7 +27,7 @@ class _scanbleState extends State<scanble> {
 
   void initState() {
     FlutterBluePlus.instance.startScan(timeout: const Duration(seconds: 4));
-    FlutterBluePlus.instance.stopScan();
+    //
     // TODO: implement initState
     super.initState();
   }
@@ -32,117 +37,94 @@ class _scanbleState extends State<scanble> {
     double _width = MediaQuery.of(context).size.width;
     double _height = MediaQuery.of(context).size.height;
     return Scaffold(
-      body: RefreshIndicator(
-        onRefresh: () => FlutterBluePlus.instance
-            .startScan(timeout: const Duration(seconds: 4)),
-        child: StreamBuilder<List<ScanResult>>(
-          stream: FlutterBluePlus.instance.scanResults,
-          initialData: const [],
-          builder: (c, snapshot) => SafeArea(
-            child: ListView(
-              children: snapshot.data!
-                  .map(
-                    (r) => Container(
+      body: Container(
+        // onRefresh: () => ,
+        //  FlutterBluePlus.instance
+        //     .startScan(timeout: const Duration(seconds: 4)),
+        child: Container(
+          child: StreamBuilder<List<ScanResult>>(
+            stream: FlutterBluePlus.instance.scanResults,
+            initialData: const [],
+            builder: (c, snapshot) => SafeArea(
+              child: ListView(
+                children: snapshot.data!.map((r) {
+                  if (context
+                      .read<DataProvider>()
+                      .namescan
+                      .contains(r.device.name)) {
+                    return Container(
+                      height: _height * 0.05,
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Column(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              Text(r.device.name),
-                              Text(r.device.id.toString()),
-                            ],
-                          ),
                           ElevatedButton(
-                              child: r.advertisementData.connectable == true
-                                  ? const Text('Connect')
-                                  : const Text('Unable To Connect'),
-                              style: ElevatedButton.styleFrom(
-                                primary: r.advertisementData.connectable == true
-                                    ? Colors.yellow
-                                    : Color.fromARGB(0, 255, 17, 0),
-                                onPrimary: Colors.white,
-                              ),
-                              onPressed: r.advertisementData.connectable == true
-                                  ? (() {
-                                      showModalBottomSheet(
-                                          backgroundColor:
-                                              Color.fromARGB(0, 255, 255, 255),
-                                          isScrollControlled: true,
-                                          shape: RoundedRectangleBorder(
-                                              borderRadius:
-                                                  BorderRadius.vertical(
-                                                      top:
-                                                          Radius.circular(10))),
-                                          context: context,
-                                          builder: (context) => Container(
-                                                color: Colors.white,
-                                                height: _height * 0.5,
-                                                child: Center(
-                                                  child: Column(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment
-                                                            .center,
-                                                    children: [
-                                                      Text(r.device.name),
-                                                      StreamBuilder<
-                                                          BluetoothDeviceState>(
-                                                        stream: r.device.state,
-                                                        initialData:
-                                                            BluetoothDeviceState
-                                                                .disconnected,
-                                                        builder: (c, snapshot) {
-                                                          if (snapshot.data ==
-                                                              BluetoothDeviceState
-                                                                  .connected) {
-                                                            return ElevatedButton(
-                                                              style:
-                                                                  ButtonStyle(
-                                                                backgroundColor:
-                                                                    MaterialStateProperty.all<
-                                                                            Color>(
-                                                                        Colors
-                                                                            .green),
-                                                              ),
-                                                              child: const Text(
-                                                                  'CONNECTED'),
-                                                              onPressed: () {},
-                                                            );
-                                                          } else {
-                                                            return ElevatedButton(
-                                                              style:
-                                                                  ButtonStyle(
-                                                                backgroundColor:
-                                                                    MaterialStateProperty.all<
-                                                                            Color>(
-                                                                        Colors
-                                                                            .black),
-                                                              ),
-                                                              child: const Text(
-                                                                  'CONNECT'),
-                                                              onPressed: () {
-                                                                r.device
-                                                                    .connect();
-                                                              },
-                                                            );
-                                                          }
-                                                        },
-                                                      ),
-                                                    ],
-                                                  ),
-                                                ),
-                                              ));
-                                    })
-                                  : null),
+                              onPressed: (() {
+                                r.device.connect();
+                              }),
+                              child: Text('data')),
+                          Text(r.device.id.toString()),
+                          Text(r.device.name),
+                          context
+                                  .read<DataProvider>()
+                                  .deviceId
+                                  .contains(r.device.id.toString())
+                              ? Container()
+                              : ElevatedButton(
+                                  style: ButtonStyle(
+                                    backgroundColor: context
+                                            .read<DataProvider>()
+                                            .deviceId
+                                            .contains(r.device.id.toString())
+                                        ? MaterialStateProperty.all<Color>(
+                                            Color.fromARGB(0, 0, 0, 0))
+                                        : MaterialStateProperty.all<Color>(
+                                            Colors.green),
+                                  ),
+                                  child: const Text('Add'),
+                                  onPressed: () {
+                                    setState(() {
+                                      context
+                                          .read<DataProvider>()
+                                          .deviceId
+                                          .add(r.device.id.toString());
+                                      print(context
+                                          .read<DataProvider>()
+                                          .deviceId);
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(SnackBar(
+                                              content: Text(
+                                                  'เพิ่มอุปกรณ์ ${r.device.id.toString()}')));
+                                    });
+                                  })
                         ],
                       ),
-                    ),
-                  )
-                  .toList(),
+                    );
+                  }
+                  return Container();
+                }).toList(),
+              ),
             ),
           ),
         ),
       ),
+      bottomNavigationBar: Container(
+          height: _height * 0.05,
+          child: Row(mainAxisAlignment: MainAxisAlignment.end, children: [
+            GestureDetector(
+                onTap: () {
+                  FlutterBluePlus.instance.stopScan();
+                  Navigator.pop(context);
+                },
+                child: BoxWidetdew(
+                  color: Colors.red,
+                  text: 'ออก',
+                  textcolor: Colors.white,
+                  fontSize: 0.05,
+                  width: 0.2,
+                  height: 0.15,
+                  radius: 0.0,
+                )),
+          ])),
     );
   }
 }

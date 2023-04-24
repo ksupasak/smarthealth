@@ -12,16 +12,16 @@ import 'package:smart_health/provider/provider_function.dart';
 import 'package:smart_health/widget_decorate/WidgetDecorate.dart';
 
 class BoxWidetdew extends StatefulWidget {
-  BoxWidetdew({
-    super.key,
-    this.color,
-    this.text,
-    this.height,
-    this.width,
-    this.fontSize,
-    this.textcolor,
-    this.fontWeight,
-  });
+  BoxWidetdew(
+      {super.key,
+      this.color,
+      this.text,
+      this.height,
+      this.width,
+      this.fontSize,
+      this.textcolor,
+      this.fontWeight,
+      this.radius});
   var color;
   var text;
   var width;
@@ -29,6 +29,7 @@ class BoxWidetdew extends StatefulWidget {
   var fontSize;
   var textcolor;
   var fontWeight;
+  var radius;
   @override
   State<BoxWidetdew> createState() => _BoxWidetdewState();
 }
@@ -40,7 +41,9 @@ class _BoxWidetdewState extends State<BoxWidetdew> {
     double _height = MediaQuery.of(context).size.height;
     return Container(
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(100),
+        borderRadius: widget.radius == null
+            ? BorderRadius.circular(100)
+            : BorderRadius.circular(widget.radius),
         color: widget.color == null ? Colors.amber : widget.color,
         boxShadow: [
           BoxShadow(
@@ -59,7 +62,8 @@ class _BoxWidetdewState extends State<BoxWidetdew> {
             : Text(
                 widget.text,
                 style: TextStyle(
-                  fontSize: widget.fontSize == null ? 20 : widget.fontSize,
+                  fontSize:
+                      widget.fontSize == null ? 20 : _width * widget.fontSize,
                   color: widget.textcolor == null
                       ? Colors.black
                       : widget.textcolor,

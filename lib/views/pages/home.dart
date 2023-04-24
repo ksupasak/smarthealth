@@ -201,7 +201,7 @@ class _HomeappState extends State<Homeapp> {
                                         width: 0.3,
                                         text: 'ตกลง',
                                         textcolor: Colors.white,
-                                        fontSize: 18.0))
+                                        fontSize: 0.05))
                                 : Container(
                                     width: MediaQuery.of(context).size.width *
                                         0.07,
@@ -232,6 +232,7 @@ class _HomeappState extends State<Homeapp> {
                                             builder: (BuildContext context) {
                                               return Popup(
                                                   texthead: 'สำเร็จ',
+                                                  fontSize: 0.05,
                                                   pathicon:
                                                       'assets/correct.png');
                                             });
@@ -248,7 +249,7 @@ class _HomeappState extends State<Homeapp> {
                                     width: 0.3,
                                     text: 'Test',
                                     textcolor: Colors.white,
-                                    fontSize: 18.0))
+                                    fontSize: 0.05))
                           ],
                         ),
                       ),

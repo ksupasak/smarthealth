@@ -3,12 +3,19 @@ import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
 
 class Popup extends StatefulWidget {
-  Popup(
-      {super.key, this.texthead, this.textbody, this.pathicon, this.buttonbar});
+  Popup({
+    super.key,
+    this.texthead,
+    this.textbody,
+    this.pathicon,
+    this.buttonbar,
+    this.fontSize,
+  });
   var texthead;
   var textbody;
   var pathicon;
   var buttonbar;
+  var fontSize;
   @override
   State<Popup> createState() => _PopupState();
 }
@@ -21,13 +28,32 @@ class _PopupState extends State<Popup> {
     return AlertDialog(
       icon: widget.pathicon == null
           ? null
-          : Image.asset(
-              "${widget.pathicon}",
-              width: _width * 0.05,
-              height: _height * 0.2,
+          : Container(
+              width: _width * 0.8,
+              child: Center(
+                child: Image.asset(
+                  "${widget.pathicon}",
+                  width: _width * 0.5,
+                  height: _height * 0.2,
+                ),
+              ),
             ),
-      title: widget.texthead == null ? null : Text("${widget.texthead}"),
-      content: widget.textbody == null ? null : Text("${widget.textbody}"),
+      title: widget.texthead == null
+          ? null
+          : Text(
+              "${widget.texthead}",
+              style: TextStyle(
+                  fontSize:
+                      widget.fontSize == null ? 16 : _width * widget.fontSize),
+            ),
+      content: widget.textbody == null
+          ? null
+          : Text(
+              "${widget.textbody}",
+              style: TextStyle(
+                  fontSize:
+                      widget.fontSize == null ? 16 : _width * widget.fontSize),
+            ),
       actions: widget.buttonbar == null ? null : widget.buttonbar,
     );
   }

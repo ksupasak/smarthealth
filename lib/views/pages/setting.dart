@@ -40,24 +40,13 @@ class _SettingState extends State<Setting> {
                   children: [
                     GestureDetector(
                       onTap: () {
-                        //    Get.toNamed('device');
-                      },
-                      child: BoxWidetdew(
-                        color: Colors.grey,
-                        width: 0.4,
-                        height: 0.1,
-                        text: 'PasswordSetting',
-                        textcolor: Colors.white,
-                      ),
-                    ),
-                    GestureDetector(
-                      onTap: () {
                         Get.toNamed('initsetting');
                       },
                       child: BoxWidetdew(
                         color: Colors.green,
                         width: 0.4,
                         height: 0.1,
+                        fontSize: 0.05,
                         text: 'Initsetting',
                         textcolor: Colors.white,
                       ),
@@ -70,7 +59,22 @@ class _SettingState extends State<Setting> {
                         color: Colors.green,
                         width: 0.4,
                         height: 0.1,
+                        fontSize: 0.05,
                         text: 'Device',
+                        textcolor: Colors.white,
+                      ),
+                    ),
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.pop(context);
+                        Get.offNamed('home');
+                      },
+                      child: BoxWidetdew(
+                        color: Colors.green,
+                        width: 0.4,
+                        height: 0.1,
+                        fontSize: 0.05,
+                        text: 'Exit',
                         textcolor: Colors.white,
                       ),
                     ),

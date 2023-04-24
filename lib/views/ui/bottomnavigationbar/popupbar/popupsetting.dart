@@ -70,6 +70,7 @@ class _PopupSettingState extends State<PopupSetting> {
                       obscureText: true,
                       keyboardType: TextInputType.number,
                       textAlign: TextAlign.center,
+                      style: TextStyle(fontSize: _width * 0.08),
                       inputFormatters: [
                         LengthLimitingTextInputFormatter(1),
                         FilteringTextInputFormatter.digitsOnly
@@ -89,6 +90,7 @@ class _PopupSettingState extends State<PopupSetting> {
                       obscureText: true,
                       keyboardType: TextInputType.number,
                       textAlign: TextAlign.center,
+                      style: TextStyle(fontSize: _width * 0.08),
                       inputFormatters: [
                         LengthLimitingTextInputFormatter(1),
                         FilteringTextInputFormatter.digitsOnly
@@ -108,6 +110,7 @@ class _PopupSettingState extends State<PopupSetting> {
                       obscureText: true,
                       keyboardType: TextInputType.number,
                       textAlign: TextAlign.center,
+                      style: TextStyle(fontSize: _width * 0.08),
                       inputFormatters: [
                         LengthLimitingTextInputFormatter(1),
                         FilteringTextInputFormatter.digitsOnly
@@ -127,6 +130,7 @@ class _PopupSettingState extends State<PopupSetting> {
                       obscureText: true,
                       keyboardType: TextInputType.number,
                       textAlign: TextAlign.center,
+                      style: TextStyle(fontSize: _width * 0.08),
                       inputFormatters: [
                         LengthLimitingTextInputFormatter(1),
                         FilteringTextInputFormatter.digitsOnly
@@ -138,17 +142,22 @@ class _PopupSettingState extends State<PopupSetting> {
             ),
             SizedBox(height: _height * 0.2),
             Container(
+              width: _width * 0.5,
+              height: _height * 0.15,
               child: Center(
                 child: GestureDetector(
                   onTap: () {
                     chackpassword();
                   },
-                  child: BoxWidetdew(
-                      text: 'Next',
-                      textcolor: Colors.white,
-                      height: _height * 0.00008,
-                      width: _width * 0.001,
-                      color: Color.fromARGB(255, 12, 231, 205)),
+                  child: Center(
+                    child: BoxWidetdew(
+                        text: 'Next',
+                        fontSize: 0.06,
+                        textcolor: Colors.white,
+                        height: _height * 0.00008,
+                        width: _width * 0.001,
+                        color: Color.fromARGB(255, 12, 231, 205)),
+                  ),
                 ),
               ),
             ),

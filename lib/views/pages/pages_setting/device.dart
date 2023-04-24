@@ -11,6 +11,7 @@ import 'package:smart_health/local/local.dart';
 import 'package:smart_health/provider/provider.dart';
 import 'package:smart_health/views/pages/pages_setting/functionble/ble.dart';
 import 'package:smart_health/views/pages/pages_setting/functionble/scan.dart';
+import 'package:smart_health/views/ui/widgetdew.dart/widgetdew.dart';
 
 class Device extends StatefulWidget {
   const Device({super.key});
@@ -41,12 +42,7 @@ class _DeviceState extends State<Device> {
                   initialData: const [],
                   builder: (c, snapshot) => Column(
                     children: snapshot.data!.map((d) {
-                      if (!context
-                          .read<DataProvider>()
-                          .knownDevice
-                          .contains(d.name)) {
-                        context.read<DataProvider>().knownDevice.add(d.name);
-                      }
+                      //ถ่าไม่มีในรายการไห้ยกเลิกเชื่อมต่อ
                       return ListTile(
                         title: Text(d.name),
                         trailing: StreamBuilder<BluetoothDeviceState>(
@@ -67,13 +63,13 @@ class _DeviceState extends State<Device> {
                 Column(
                   children: context
                       .read<DataProvider>()
-                      .knownDevice
+                      .deviceId
                       .map((d) => Dismissible(
                             key: ValueKey(d),
                             child: Container(
                               height: 50,
                               width: _width,
-                              color: Colors.amber,
+                              color: Colors.green,
                               child: Column(
                                 children: [
                                   Text(d),
@@ -81,27 +77,12 @@ class _DeviceState extends State<Device> {
                               ),
                             ),
                             onDismissed: (direction) {
-                              setState(() async {
-                                //
-                                List<BluetoothDevice> connectedDevices = [];
-                                List<BluetoothDevice> devices =
-                                    await FlutterBluePlus
-                                        .instance.connectedDevices;
-                                connectedDevices = devices;
-                                print('Connected devices: ${devices.length}');
-                                for (BluetoothDevice device in devices) {
-                                  if (device.name == d) {
-                                    device.disconnect();
-                                  }
-                                }
-                                //
-                                context
-                                    .read<DataProvider>()
-                                    .knownDevice
-                                    .remove(d);
+                              setState(() {
+                                context.read<DataProvider>().deviceId.remove(d);
+                                print(context.read<DataProvider>().deviceId);
                               });
                               ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(content: Text('$d dismissed')));
+                                  SnackBar(content: Text('ลบอุปกรณ์ $d')));
                             },
                             confirmDismiss: (direction) async {
                               return await showDialog(
@@ -109,8 +90,7 @@ class _DeviceState extends State<Device> {
                                 builder: (BuildContext context) {
                                   return AlertDialog(
                                     title: const Text("Confirm"),
-                                    content: const Text(
-                                        "เปิดอุปกรณ์เพื่อยกเลิกการเชื่อมต่อ"),
+                                    content: const Text("ยกเลิกการเชื่อมต่อ"),
                                     actions: <Widget>[
                                       TextButton(
                                           onPressed: () =>
@@ -134,37 +114,54 @@ class _DeviceState extends State<Device> {
           ),
         ),
         bottomNavigationBar: Container(
-            height: 50,
-            child: Row(children: [
-              GestureDetector(
-                  onTap: () {
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: ((context) => scanble())));
-                  },
-                  child: Container(
-                      height: 50,
-                      width: 100,
-                      color: Colors.green,
-                      child: Center(child: Text('สลับหน้า')))),
-              GestureDetector(
-                  onTap: () {
-                    print(context.read<DataProvider>().knownDevice);
-                  },
-                  child: Container(
-                      height: 50,
-                      width: 100,
-                      color: Colors.red,
-                      child: Center(child: Text('P')))),
-              GestureDetector(
-                  onTap: () {
-                    setState(() {});
-                  },
-                  child: Container(
-                      height: 50,
-                      width: 100,
-                      color: Colors.pink,
-                      child: Center(child: Text('r')))),
-            ])),
+            height: _height * 0.05,
+            child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  GestureDetector(
+                      onTap: () {
+                        Navigator.pop(context);
+                        addDataInfoToDatabase(DataProvider());
+                      },
+                      child: BoxWidetdew(
+                        color: Colors.yellow,
+                        text: 'บันทึก',
+                        textcolor: Colors.white,
+                        fontSize: 0.05,
+                        width: 0.2,
+                        height: 0.15,
+                        radius: 0.0,
+                      )),
+                  GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: ((context) => scanble())));
+                      },
+                      child: BoxWidetdew(
+                        color: Colors.blue,
+                        text: '+',
+                        textcolor: Colors.white,
+                        fontSize: 0.05,
+                        width: 0.2,
+                        height: 0.15,
+                        radius: 0.0,
+                      )),
+                  GestureDetector(
+                      onTap: () {
+                        Navigator.pop(context);
+                      },
+                      child: BoxWidetdew(
+                        color: Colors.red,
+                        text: 'ออก',
+                        textcolor: Colors.white,
+                        fontSize: 0.05,
+                        width: 0.2,
+                        height: 0.15,
+                        radius: 0.0,
+                      )),
+                ])),
       ),
     );
   }

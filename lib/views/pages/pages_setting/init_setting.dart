@@ -22,6 +22,18 @@ class _InitsettingState extends State<Initsetting> {
   TextEditingController care_unit_id = TextEditingController();
   TextEditingController passwordsetting = TextEditingController();
   late List<RecordSnapshot<int, Map<String, Object?>>> nameHospital;
+  void safe() async {
+    context.read<DataProvider>().name_hospital = name_hospital.text;
+    context.read<DataProvider>().platfromURL = platfromURL.text;
+    context.read<DataProvider>().checkqueueURL = checkqueueURL.text;
+    context.read<DataProvider>().care_unit_id = care_unit_id.text;
+    context.read<DataProvider>().passwordsetting = passwordsetting.text;
+    setState(() {
+      addDataInfoToDatabase(context.read<DataProvider>());
+      Navigator.pop(context);
+    });
+  }
+
   Future<void> printDatabase() async {
     var knownDevice;
 
@@ -32,7 +44,7 @@ class _InitsettingState extends State<Initsetting> {
       checkqueueURL.text = record['checkqueueURL'].toString();
       care_unit_id.text = record['care_unit_id'].toString();
       passwordsetting.text = record['passwordsetting'].toString();
-      knownDevice = record['knownDevice'];
+      knownDevice = record['device'];
       print(name_hospital.text);
       print(platfromURL.text);
       print(checkqueueURL.text);
@@ -53,31 +65,68 @@ class _InitsettingState extends State<Initsetting> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: ListView(
-        children: [
-          Text('name_hospital'),
-          TextField(controller: name_hospital),
-          Text('platfromURL'),
-          TextField(controller: platfromURL),
-          Text('checkqueueURL'),
-          TextField(controller: checkqueueURL),
-          Text('care_unit_id'),
-          TextField(controller: care_unit_id),
-          Text('passwordsetting'),
-          TextField(controller: passwordsetting),
-          GestureDetector(
-              onTap: () {
-                setState(() {
-                  addDataInfoToDatabase(context.read<DataProvider>());
-                });
-              },
-              child: BoxWidetdew(
-                  text: 'บันทึก',
-                  height: 0.2,
-                  width: 0.8,
-                  color: Color.fromARGB(255, 54, 200, 244))),
-        ],
+    double _width = MediaQuery.of(context).size.width;
+    double _height = MediaQuery.of(context).size.height;
+    return GestureDetector(
+      onTap: (() {
+        FocusScope.of(context).requestFocus(FocusNode());
+      }),
+      child: Scaffold(
+        body: ListView(
+          children: [
+            Container(
+              height: _height * 0.8,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text('name_hospital',
+                      style: TextStyle(fontSize: _width * 0.05)),
+                  TextField(
+                      controller: name_hospital,
+                      style: TextStyle(fontSize: _width * 0.05)),
+                  Text('platfromURL',
+                      style: TextStyle(fontSize: _width * 0.05)),
+                  TextField(
+                      controller: platfromURL,
+                      style: TextStyle(fontSize: _width * 0.05)),
+                  Text('checkqueueURL',
+                      style: TextStyle(fontSize: _width * 0.05)),
+                  TextField(
+                      controller: checkqueueURL,
+                      style: TextStyle(fontSize: _width * 0.05)),
+                  Text('care_unit_id',
+                      style: TextStyle(fontSize: _width * 0.05)),
+                  TextField(
+                      controller: care_unit_id,
+                      style: TextStyle(fontSize: _width * 0.05)),
+                  Text('passwordsetting',
+                      style: TextStyle(fontSize: _width * 0.05)),
+                  TextField(
+                      controller: passwordsetting,
+                      style: TextStyle(fontSize: _width * 0.05)),
+                  SizedBox(
+                    height: _height * 0.05,
+                  ),
+                  Container(
+                    child: Center(
+                      child: GestureDetector(
+                          onTap: () {
+                            safe();
+                          },
+                          child: BoxWidetdew(
+                              text: 'บันทึก',
+                              height: 0.15,
+                              width: 0.6,
+                              textcolor: Colors.white,
+                              fontSize: 0.05,
+                              color: Color.fromARGB(255, 54, 200, 244))),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
