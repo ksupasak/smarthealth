@@ -116,8 +116,12 @@ class _HealthRecordState extends State<HealthRecord> {
       "bp_sys": "${sys.text}",
       "bp_dia": "${dia.text}",
       "pulse_rate": "${pulse.text}",
-      // "spo2": "${spo2.text}",
-      // "fbs": "${fbs.text}",
+      "spo2": "${spo2.text}",
+      "fbs": "${fbs.text}",
+      "height": "170",
+      "bmi": "122",
+      "bp": "120/80",
+      "rr": "90",
     });
     var resTojson = json.decode(res.body);
 
