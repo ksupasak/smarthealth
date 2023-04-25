@@ -10,6 +10,7 @@ import 'package:http/http.dart' as http;
 import 'package:smart_health/background/background.dart';
 import 'package:smart_health/background/color/style_color.dart';
 import 'package:smart_health/provider/provider.dart';
+import 'package:smart_health/provider/provider_function.dart';
 import 'package:smart_health/views/ui/widgetdew.dart/popup.dart';
 import 'package:smart_health/views/ui/widgetdew.dart/widgetdew.dart';
 
@@ -77,6 +78,7 @@ class _HealthRecordState extends State<HealthRecord> {
               buttonbar: [
                 GestureDetector(
                     onTap: () {
+                      context.read<Datafunction>().playsound();
                       Navigator.pop(context);
                     },
                     child: MarkCheck(
@@ -87,6 +89,7 @@ class _HealthRecordState extends State<HealthRecord> {
                 GestureDetector(
                     onTap: () {
                       recorddata();
+                      context.read<Datafunction>().playsound();
                       Navigator.pop(context);
                     },
                     child: MarkCheck(
@@ -288,6 +291,7 @@ class _HealthRecordState extends State<HealthRecord> {
             child: prevent == false
                 ? GestureDetector(
                     onTap: () {
+                      context.read<Datafunction>().playsound();
                       chackrecorddata();
                     },
                     child: BoxWidetdew(
@@ -309,6 +313,7 @@ class _HealthRecordState extends State<HealthRecord> {
               child: GestureDetector(
                   onTap: () {
                     stop();
+                    context.read<Datafunction>().playsound();
                     Navigator.pop(context);
                   },
                   child: BoxWidetdew(

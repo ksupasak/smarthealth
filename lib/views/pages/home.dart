@@ -38,7 +38,7 @@ class _HomeappState extends State<Homeapp> {
 
       if (p.toString() == '${context.read<DataProvider>().id[12]}.0') {
         var url = Uri.parse(
-            '${context.read<DataProvider>().platfromURL}get_patient?public_id=${context.read<DataProvider>().idtest}'); //${context.read<stringitem>().uri}
+            '${context.read<DataProvider>().platfromURL}get_patient?public_id=${context.read<DataProvider>().id}'); //${context.read<stringitem>().uri}
         var res = await http.get(url);
         if (res.statusCode == 200) {
           var resTojson = json.decode(res.body);

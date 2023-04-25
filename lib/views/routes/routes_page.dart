@@ -7,6 +7,7 @@ import 'package:smart_health/views/pages/menu.dart';
 import 'package:smart_health/views/pages/pages_setting/functionble/ble.dart';
 import 'package:smart_health/views/pages/pages_setting/device.dart';
 import 'package:smart_health/views/pages/pages_setting/init_setting.dart';
+import 'package:smart_health/views/pages/printqueue.dart';
 import 'package:smart_health/views/pages/setting.dart';
 import 'package:smart_health/views/pages/user_information.dart';
 import 'package:smart_health/views/splash/splash_screen.dart';
@@ -21,7 +22,7 @@ class Routes {
   static const String device = '/device';
   static const String initsetting = '/initsetting';
   static const String user_information = '/user_information';
-
+  static const String printqueue = '/printqueue';
   static final routes = [
     GetPage(name: splash, page: (() => Splash_Screen())),
     GetPage(name: home, page: (() => Homeapp())),
@@ -31,6 +32,7 @@ class Routes {
     GetPage(name: checkqueue, page: (() => CheckQueue())),
     GetPage(name: device, page: (() => Device())),
     GetPage(name: initsetting, page: (() => Initsetting())),
-    GetPage(name: user_information, page: (() => UserInformation()))
+    GetPage(name: user_information, page: (() => UserInformation())),
+    GetPage(name: printqueue, page: (() => PrintQueue()))
   ];
 }
