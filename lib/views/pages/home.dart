@@ -173,7 +173,9 @@ class _HomeappState extends State<Homeapp> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     WidgetNameHospital(),
-                    SizedBox(height: _height * 0.02),
+                    SizedBox(height: _height * 0.01),
+                    BoxRunQueue(),
+                    SizedBox(height: _height * 0.01),
                     Container(
                       width: _width * 0.8,
                       height: _height * 0.5,

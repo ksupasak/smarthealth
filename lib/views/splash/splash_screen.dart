@@ -39,41 +39,32 @@ class _Splash_ScreenState extends State<Splash_Screen> {
     var deviceId;
 
     FlutterBluePlus flutterBlue = FlutterBluePlus.instance;
-
     final Map<String, String> online_devices = HashMap();
     deviceId = DataProvider().deviceId;
     StreamController<Map<String, String>> datas =
         StreamController<Map<String, String>>();
     FlutterBluePlus.instance.scanResults.listen((results) {
-      //2
-      // print(results);
       if (results.length > 0) {
-        //3
-        // print(results.length);
         ScanResult r = results.last;
         if (deviceId.contains(r.device.id.toString())) {
-          print('กำลังconnect');
           r.device.connect();
         }
-      } else {
-        print('object1212121');
-      }
+      } else {}
     });
 
     Stream.periodic(Duration(seconds: 5)).listen((_) {
       FlutterBluePlus.instance.startScan(timeout: const Duration(seconds: 4));
       FlutterBluePlus.instance.scanResults.listen((results) {
-        //  print(results);
         if (results.length > 0) {
-          //   print(results.length);
           ScanResult r = results.last;
+          //  print(r.device.id);
           if (deviceId.contains(r.device.id.toString())) {
-            print('กำลังconnect');
             r.device.connect();
           }
         }
       });
     });
+
     Stream.periodic(Duration(seconds: 4))
         .asyncMap((_) => flutterBlue.connectedDevices)
         .listen((connectedDevices) {
@@ -118,11 +109,7 @@ class _Splash_ScreenState extends State<Splash_Screen> {
                 context.read<DataProvider>().pul = nVal['pul'];
               });
             });
-          } else if (device.name == 'MIBFS' ||
-              context
-                  .read<DataProvider>()
-                  .deviceId
-                  .contains('0C:95:41:17:9C:ED')) {
+          } else if (device.name == 'MIBFS') {
             Mibfs mibfs = Mibfs(device: device);
             mibfs.parse().listen((weight) {
               Map<String, String> val = HashMap();
@@ -175,7 +162,7 @@ class _Splash_ScreenState extends State<Splash_Screen> {
   void initState() {
     printDatabase();
     // scanTimer(4500);
-    // bleScan();
+    bleScan(); //
     //  TODO: implement initState
     super.initState();
   }
@@ -197,6 +184,7 @@ class _Splash_ScreenState extends State<Splash_Screen> {
                 if (snapshot.data == BluetoothState.on) {
                   return Homeapp();
                 } else if (snapshot.data == BluetoothState.off) {
+                  print('กำลังเปิดบลูทูธ');
                   FlutterBluePlus.instance.turnOn();
                 }
                 return const SizedBox.shrink();

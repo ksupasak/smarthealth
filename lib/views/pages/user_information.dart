@@ -24,8 +24,9 @@ class UserInformation extends StatefulWidget {
 
 class _UserInformationState extends State<UserInformation> {
   var resTojson;
+  var resTojsonQueue;
 
-  void Information() async {
+  void information() async {
     var url =
         Uri.parse('https://emr-life.com/clinic_master/clinic/Api/check_q');
     var res = await http.post(url, body: {
@@ -42,43 +43,77 @@ class _UserInformationState extends State<UserInformation> {
   }
 
   Future<void> getqueue() async {
-    var url = Uri.parse('https://emr-life.com/clinic_master/clinic/Api/get_q');
-    var res = await http.post(url, body: {
-      'public_id': context.read<DataProvider>().id,
-    });
-    if (res.statusCode == 200) {
-      setState(() {
-        resTojson = json.decode(res.body);
+    if (resTojson['health_records'].length == 0) {
+      context.read<DataProvider>().status_getqueue = 'false';
+      Get.toNamed('healthrecord');
+    } else {
+      context.read<DataProvider>().status_getqueue = 'true';
+      var url =
+          Uri.parse('https://emr-life.com/clinic_master/clinic/Api/get_q');
+      var res = await http.post(url, body: {
+        'public_id': context.read<DataProvider>().id,
       });
+      if (res.statusCode == 200) {
+        setState(() {
+          resTojson = json.decode(res.body);
+        });
+      }
     }
-    //  print(resTojson['queue_number']);
   }
 
   void checkhealth_records() async {
-    if (resTojson['health_records'].length == 0) {
-      Get.toNamed('healthrecord');
-    } else {
-      context.read<DataProvider>().resTojson = resTojson;
-
-      print('ปริ้นคิว');
-      Get.toNamed('printqueue');
-    }
+    context.read<DataProvider>().resTojson = resTojson;
+    print('ปริ้นคิว');
+    Get.toNamed('printqueue');
   }
 
   void restart() async {
+    if (resTojson != null) {
+      init();
+    } else {
+      information();
+    }
     while (resTojson == null) {
       await Future.delayed(Duration(seconds: 1));
-      setState(() {
-        // print(resTojson);
-        // print(resTojson['health_records'].length.toString());
-      });
+      setState(() {});
     }
+  }
+
+  void init() {
+    if (resTojson['queue_number'] == '' &&
+        resTojson['health_records'].length != 0 &&
+        context.read<DataProvider>().status_getqueue == 'false') {
+      getqueue();
+    }
+  }
+
+  Future<void> check_queue() async {
+    var url = Uri.parse('https://emr-life.com/clinic_master/clinic/Api/list_q');
+    var res = await http.post(url, body: {
+      'care_unit_id': '63d7a282790f9bc85700000e',
+    });
+
+    setState(() {
+      resTojsonQueue = json.decode(res.body);
+    });
+  }
+
+  Timer? _timer;
+  bool lop = false;
+  void voidlop() {
+    _timer = Timer.periodic(Duration(seconds: 1), (timer) {
+      setState(() {
+        lop = true;
+        _timer?.cancel();
+      });
+    });
   }
 
   @override
   void initState() {
-    Information();
     restart();
+    check_queue();
+    voidlop();
     // TODO: implement initState
     super.initState();
   }
@@ -95,365 +130,336 @@ class _UserInformationState extends State<UserInformation> {
                 child: BackGroundSmart_Health(
               BackGroundColor: [
                 StyleColor.backgroundbegin,
+                StyleColor.backgroundend,
                 StyleColor.backgroundend
               ],
             )),
-            resTojson != null
-                ? Positioned(
-                    child: ListView(
-                    children: [
-                      SizedBox(height: _height * 0.02),
-                      BoxDecorate(
-                          color: Color.fromARGB(255, 43, 179, 161),
-                          child: InformationCard(
-                              dataidcard:
-                                  context.read<DataProvider>().dataidcard)),
-                      SizedBox(height: _height * 0.02),
-                      Column(
-                        children: resTojson['todays'].length != 0
-                            ? [
-                                Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Column(
-                                        children: [
-                                          Text(
-                                            'คุณมีนัดวันนี้',
-                                            style: TextStyle(
-                                                color: Colors.white,
-                                                fontWeight: FontWeight.w600,
-                                                fontSize: _width * 0.04),
-                                          ),
-                                          Container(
-                                            width: _width * 0.6,
-                                            height: _height * 0.2,
-                                            child: Container(
-                                              child: Stack(
-                                                children: [
-                                                  Image.asset(
-                                                    'assets/cloud-computing.png',
-                                                    fit: BoxFit.fill,
-                                                    width: _width * 0.6,
-                                                    height: _height * 0.2,
-                                                  ),
-                                                  Positioned(
-                                                      top: 70,
-                                                      left: resTojson[
-                                                                  'queue_number'] !=
-                                                              ''
-                                                          ? 30
-                                                          : 60,
-                                                      child: resTojson[
-                                                                  'queue_number'] !=
-                                                              ''
-                                                          ? Column(
-                                                              children: [
-                                                                Text(
-                                                                  "หมายเลขคิวของท่านคือ ",
-                                                                  style: TextStyle(
-                                                                      color: Colors
-                                                                          .white,
-                                                                      fontWeight:
-                                                                          FontWeight
-                                                                              .w600,
-                                                                      fontSize:
-                                                                          _width *
-                                                                              0.04),
-                                                                ),
-                                                                Text(
-                                                                  "${resTojson['queue_number']} ",
-                                                                  style: TextStyle(
-                                                                      color: Colors
-                                                                          .green,
-                                                                      fontWeight:
-                                                                          FontWeight
-                                                                              .w800,
-                                                                      fontSize:
-                                                                          _width *
-                                                                              0.08),
-                                                                ),
-                                                              ],
-                                                            )
-                                                          : Text(
-                                                              'ยังไม่มีคิว',
-                                                              style: TextStyle(
-                                                                  fontSize:
-                                                                      _width *
-                                                                          0.05,
-                                                                  color: Color
-                                                                      .fromARGB(
-                                                                          255,
-                                                                          16,
-                                                                          138,
-                                                                          128)),
-                                                            )),
-                                                ],
-                                              ),
+            lop == true
+                ? resTojson != null || resTojsonQueue != null
+                    ? Positioned(
+                        child: ListView(
+                        children: [
+                          SizedBox(height: _height * 0.02),
+                          BoxDecorate(
+                              color: Color.fromARGB(255, 43, 179, 161),
+                              child: InformationCard(
+                                  dataidcard:
+                                      context.read<DataProvider>().dataidcard)),
+                          SizedBox(height: _height * 0.02),
+                          Column(
+                            children: resTojson['todays'].length != 0
+                                ? resTojson['message'] == 'completed'
+                                    ? [
+                                        Container(
+                                          height: _height * 0.1,
+                                          width: _width * 0.5,
+                                          child:
+                                              Image.asset('assets/nurse.png'),
+                                        ),
+                                        Text(
+                                          'กรุณาติดต่อพยาบาล',
+                                          style: TextStyle(
+                                              color: Colors.green,
+                                              fontSize: _width * 0.06),
+                                        ),
+                                        SizedBox(height: _height * 0.02)
+                                      ]
+                                    : resTojson['message'] == 'finished'
+                                        ? [
+                                            Text(
+                                              'การทำรายการเสร็จสมบูรณ์',
+                                              style: TextStyle(
+                                                  color: Colors.green,
+                                                  fontSize: _width * 0.06),
                                             ),
-                                          ),
-                                          resTojson['queue_number'] != ''
-                                              ? Container(
-                                                  width: _width,
-                                                  child: Row(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment
-                                                            .spaceAround,
-                                                    children: [
-                                                      SizedBox(
-                                                        width: _width * 0.15,
+                                            SizedBox(height: _height * 0.02)
+                                          ]
+                                        : [
+                                            Column(
+                                              children: resTojson[
+                                                          'queue_number'] !=
+                                                      ''
+                                                  ? [
+                                                      resTojsonQueue['queue_number']
+                                                                  .toString() !=
+                                                              resTojson[
+                                                                      'queue_number']
+                                                                  .toString()
+                                                          ? Container(
+                                                              height:
+                                                                  _height * 0.1,
+                                                              width:
+                                                                  _width * 0.5,
+                                                              child: Image.asset(
+                                                                  'assets/queue.png'),
+                                                            )
+                                                          : Container(
+                                                              height:
+                                                                  _height * 0.1,
+                                                              width:
+                                                                  _width * 0.5,
+                                                              child: Image.asset(
+                                                                  'assets/doctor.png'),
+                                                            ),
+                                                      resTojsonQueue[
+                                                                      'queue_number']
+                                                                  .toString() !=
+                                                              resTojson[
+                                                                      'queue_number']
+                                                                  .toString()
+                                                          ? Text(
+                                                              'กรุณารอเรียกคิว... ',
+                                                              style: TextStyle(
+                                                                  color: Colors
+                                                                      .blue,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w700,
+                                                                  fontSize:
+                                                                      _width *
+                                                                          0.06))
+                                                          : Text(
+                                                              'เข้าตรวจ',
+                                                              style: TextStyle(
+                                                                  color: Colors
+                                                                      .green,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w700,
+                                                                  fontSize:
+                                                                      _width *
+                                                                          0.06)),
+                                                    ]
+                                                  : [
+                                                      Container(
+                                                        height: _height * 0.15,
+                                                        width: _width * 0.5,
+                                                        child: Image.asset(
+                                                            'assets/date.png'),
                                                       ),
-                                                      GestureDetector(
-                                                        onTap: () {
-                                                          context
-                                                              .read<
-                                                                  Datafunction>()
-                                                              .playsound();
-                                                          checkhealth_records();
-                                                        },
-                                                        child: Container(
-                                                          width: _width * 0.18,
-                                                          height:
-                                                              _height * 0.09,
-                                                          child: BoxWidetdew(
-                                                            text: 'ปริ้นคิว',
-                                                            textcolor:
-                                                                Colors.white,
-                                                            color:
-                                                                Color.fromARGB(
-                                                                    100,
-                                                                    42,
-                                                                    208,
-                                                                    20),
-                                                            radius: 500.0,
-                                                          ),
-                                                        ),
-                                                      ),
+                                                      Text(
+                                                          'มีกำหนดการนัดหมายวันนี้',
+                                                          style: TextStyle(
+                                                              color:
+                                                                  Colors.green,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w700,
+                                                              fontSize: _width *
+                                                                  0.06)),
                                                     ],
-                                                  ),
-                                                )
-                                              : Container(
-                                                  width: _width,
-                                                  child: Row(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment
-                                                            .spaceAround,
-                                                    children: [
-                                                      SizedBox(
-                                                        width: _width * 0.15,
-                                                      ),
-                                                      GestureDetector(
-                                                        onTap: () {
-                                                          context
-                                                              .read<
-                                                                  Datafunction>()
-                                                              .playsound();
-                                                          getqueue();
-                                                        },
-                                                        child: Container(
-                                                          width: _width * 0.18,
-                                                          height:
-                                                              _height * 0.09,
-                                                          child: BoxWidetdew(
-                                                            text: 'รับคิว',
-                                                            textcolor:
-                                                                Colors.white,
-                                                            color:
-                                                                Color.fromARGB(
-                                                                    200,
-                                                                    240,
-                                                                    244,
-                                                                    10),
-                                                            radius: 500.0,
-                                                          ),
-                                                        ),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                ),
-                                        ],
-                                      )
-                                    ]),
-                                SizedBox(height: _height * 0.02),
-                                Container(
-                                    child:
-                                        resTojson['health_records'].length != 0
-                                            ? Container(
-                                                child: Column(children: [
-                                                  Text('มีค่าวัด'),
-                                                  Text(
-                                                      'bp ${resTojson['health_records'][0]['bp']}    bp_dia  ${resTojson['health_records'][0]['bp_dia']} '),
-                                                  Text(
-                                                      'bp_sys ${resTojson['health_records'][0]['bp_sys']}    height  ${resTojson['health_records'][0]['height']} weight ${resTojson['health_records'][0]['weight']}'),
-                                                  Text(
-                                                      'pulse_rate ${resTojson['health_records'][0]['pulse_rate']}    rr  ${resTojson['health_records'][0]['rr']} '),
-                                                  Text(
-                                                      'spo2 ${resTojson['health_records'][0]['spo2']}    temp  ${resTojson['health_records'][0]['temp']} '),
-                                                ]),
-                                              )
-                                            : Container(
-                                                child: Text('ไม่มีค่าวัด'),
-                                              )),
-                                SizedBox(height: _height * 0.02),
-                                Container(
-                                    child: Container(
-                                        child: resTojson['appointments']
-                                                    .length !=
-                                                0
-                                            ? Stack(
-                                                children: [
-                                                  Positioned(
-                                                    child: Container(
-                                                      width: _width * 0.8,
-                                                      height: _height * 0.2,
-                                                      child: Image.asset(
-                                                        'assets/note.png',
-                                                        fit: BoxFit.fill,
-                                                      ),
+                                            ),
+                                            SizedBox(height: _height * 0.02),
+                                            resTojson['queue_number'] != ''
+                                                ? resTojsonQueue['queue_number']
+                                                            .toString() !=
+                                                        resTojson[
+                                                                'queue_number']
+                                                            .toString()
+                                                    ? BoxQueue(
+                                                        queue:
+                                                            '${resTojson['queue_number']}')
+                                                    : BoxButtonVideoCall()
+                                                : GestureDetector(
+                                                    onTap: () {
+                                                      context
+                                                          .read<Datafunction>()
+                                                          .playsound();
+
+                                                      getqueue();
+                                                    },
+                                                    child: BoxWidetdew(
+                                                      height: 0.06,
+                                                      width: 0.7,
+                                                      text: 'รับคิว',
+                                                      textcolor: Colors.white,
+                                                      color: Color.fromARGB(
+                                                          100, 42, 208, 20),
+                                                      radius: 0.0,
                                                     ),
                                                   ),
-                                                  Positioned(
+                                            SizedBox(height: _height * 0.01),
+                                            resTojson['queue_number'] != ''
+                                                ? resTojson['message'] !=
+                                                        'completed'
+                                                    ? resTojsonQueue[
+                                                                    'queue_number']
+                                                                .toString() !=
+                                                            resTojson[
+                                                                    'queue_number']
+                                                                .toString()
+                                                        ? resTojson['message'] ==
+                                                                'finished'
+                                                            ? Container()
+                                                            : GestureDetector(
+                                                                onTap: () {
+                                                                  context
+                                                                      .read<
+                                                                          Datafunction>()
+                                                                      .playsound();
+                                                                  setState(() {
+                                                                    context
+                                                                        .read<
+                                                                            DataProvider>()
+                                                                        .resTojson = resTojson;
+                                                                  });
+                                                                  Get.toNamed(
+                                                                      'printqueue');
+                                                                },
+                                                                child: Container(
+                                                                    width: _width,
+                                                                    child: Center(
+                                                                        child: BoxWidetdew(
+                                                                      height:
+                                                                          0.06,
+                                                                      width:
+                                                                          0.35,
+                                                                      color: Colors
+                                                                          .blue,
+                                                                      radius:
+                                                                          5.0,
+                                                                      text:
+                                                                          'ปริ้นคิว',
+                                                                      textcolor:
+                                                                          Colors
+                                                                              .white,
+                                                                    ))),
+                                                              )
+                                                        : Container()
+                                                    : Container()
+                                                : Container(),
+                                            SizedBox(height: _height * 0.01),
+                                            Container(
+                                                child:
+                                                    resTojson['health_records']
+                                                                .length !=
+                                                            0
+                                                        ? Column(
+                                                            children: [
+                                                              BoxShoHealth_Records(
+                                                                height:
+                                                                    '${resTojson['health_records'].last['height']}',
+                                                                weight:
+                                                                    '${resTojson['health_records'].last['weight']}',
+                                                                sys:
+                                                                    '${resTojson['health_records'].last['bp_sys']}',
+                                                                dia:
+                                                                    '${resTojson['health_records'].last['bp_dia']}',
+                                                                pulse_rate:
+                                                                    '${resTojson['health_records'].last['pulse_rate']}',
+                                                                temp:
+                                                                    '${resTojson['health_records'].last['temp']}',
+                                                                spo2: 'null',
+                                                                fbs: 'null',
+                                                                si: 'null',
+                                                                uric: 'null',
+                                                              ),
+                                                              SizedBox(
+                                                                  height:
+                                                                      _height *
+                                                                          0.01),
+                                                            ],
+                                                          )
+                                                        : Container()),
+                                            resTojsonQueue['queue_number']
+                                                        .toString() ==
+                                                    resTojson['queue_number']
+                                                        .toString()
+                                                ? SizedBox()
+                                                : GestureDetector(
+                                                    onTap: () {
+                                                      context
+                                                          .read<Datafunction>()
+                                                          .playsound();
+
+                                                      Get.toNamed(
+                                                          'healthrecord');
+                                                    },
                                                     child: Container(
-                                                      width: _width * 0.8,
-                                                      height: _height * 0.18,
-                                                      child: Column(
-                                                        mainAxisAlignment:
-                                                            MainAxisAlignment
-                                                                .center,
-                                                        children: [
-                                                          Text(
-                                                              'นัดหมายครั้งต่อไปวันที่',
-                                                              style: TextStyle(
-                                                                  color: Colors
-                                                                      .green,
-                                                                  fontSize:
-                                                                      _width *
-                                                                          0.05)),
-                                                          Text(
-                                                              " ${resTojson['appointments'][0]['date']}",
-                                                              style: TextStyle(
-                                                                  color: Colors
-                                                                      .white,
-                                                                  fontSize:
-                                                                      _width *
-                                                                          0.05)),
-                                                          Text("เวลา",
-                                                              style: TextStyle(
-                                                                  color: Colors
-                                                                      .green,
-                                                                  fontSize:
-                                                                      _width *
-                                                                          0.05)),
-                                                          Text(
-                                                              '${resTojson['appointments'][0]['slot']}',
-                                                              style: TextStyle(
-                                                                  color: Colors
-                                                                      .white,
-                                                                  fontSize:
-                                                                      _width *
-                                                                          0.05))
-                                                        ],
-                                                      ),
-                                                    ),
+                                                        width: _width,
+                                                        child: Center(
+                                                            child: resTojson[
+                                                                            'health_records']
+                                                                        .length !=
+                                                                    0
+                                                                ? BoxWidetdew(
+                                                                    height:
+                                                                        0.055,
+                                                                    width: 0.35,
+                                                                    color: Colors
+                                                                        .blue,
+                                                                    radius: 5.0,
+                                                                    text:
+                                                                        'เเก้ใขสุขภาพ',
+                                                                    textcolor:
+                                                                        Colors
+                                                                            .white)
+                                                                : BoxWidetdew(
+                                                                    height:
+                                                                        0.055,
+                                                                    width: 0.35,
+                                                                    color: Colors
+                                                                        .yellow,
+                                                                    radius: 5.0,
+                                                                    text:
+                                                                        'ตรวจสุขภาพ',
+                                                                    textcolor: Color
+                                                                        .fromARGB(
+                                                                            255,
+                                                                            42,
+                                                                            0,
+                                                                            180)))),
                                                   ),
-                                                ],
-                                              )
-                                            : Text(""))),
-                                SizedBox(height: _height * 0.01),
-                              ]
-                            : [
-                                Text(
-                                  'คุณไม่มีนัดหมายในวันนี้',
-                                  style: TextStyle(
-                                      color: Colors.red,
-                                      fontSize: _width * 0.05),
-                                ),
-                                Container(
-                                    child: Container(
-                                        child: resTojson['appointments']
-                                                    .length !=
-                                                0
-                                            ? Stack(
-                                                children: [
-                                                  Positioned(
-                                                    child: Container(
-                                                      width: _width * 0.8,
-                                                      height: _height * 0.2,
-                                                      child: Image.asset(
-                                                        'assets/note.png',
-                                                        fit: BoxFit.fill,
-                                                      ),
-                                                    ),
-                                                  ),
-                                                  Positioned(
-                                                    child: Container(
-                                                      width: _width * 0.8,
-                                                      height: _height * 0.18,
-                                                      child: Column(
-                                                        mainAxisAlignment:
-                                                            MainAxisAlignment
-                                                                .center,
-                                                        children: [
-                                                          Text(
-                                                              'นัดหมายครั้งต่อไปวันที่',
-                                                              style: TextStyle(
-                                                                  color: Colors
-                                                                      .green,
-                                                                  fontSize:
-                                                                      _width *
-                                                                          0.05)),
-                                                          Text(
-                                                              " ${resTojson['appointments'][0]['date']}",
-                                                              style: TextStyle(
-                                                                  color: Colors
-                                                                      .white,
-                                                                  fontSize:
-                                                                      _width *
-                                                                          0.05)),
-                                                          Text("เวลา",
-                                                              style: TextStyle(
-                                                                  color: Colors
-                                                                      .green,
-                                                                  fontSize:
-                                                                      _width *
-                                                                          0.05)),
-                                                          Text(
-                                                              '${resTojson['appointments'][0]['slot']}',
-                                                              style: TextStyle(
-                                                                  color: Colors
-                                                                      .white,
-                                                                  fontSize:
-                                                                      _width *
-                                                                          0.05))
-                                                        ],
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ],
-                                              )
-                                            : Text(""))),
-                              ],
-                      ),
-                      SizedBox(height: _height * 0.02),
-                      GestureDetector(
-                        onTap: () {
-                          context.read<Datafunction>().playsound();
-                          Get.offNamed('home');
-                        },
-                        child: Container(
-                            width: _width,
-                            child: Center(
-                                child: BoxWidetdew(
-                              height: 0.06,
-                              width: 0.35,
-                              color: Colors.red,
-                              radius: 5.0,
-                              text: 'ออก',
-                              textcolor: Colors.white,
-                            ))),
+                                            SizedBox(height: _height * 0.005),
+                                          ]
+                                : [
+                                    Text(
+                                      'คุณไม่มีนัดหมายในวันนี้',
+                                      style: TextStyle(
+                                          color: Colors.red,
+                                          fontSize: _width * 0.05),
+                                    ),
+                                  ],
+                          ),
+
+                          resTojson['appointments'].length != 0
+                              ? Column(
+                                  children: [
+                                    HeadBoxAppointments(),
+                                    BoxAppointments(
+                                      list_appointments:
+                                          resTojson['appointments'],
+                                    ),
+                                  ],
+                                )
+                              : SizedBox(),
+                          SizedBox(height: _height * 0.02),
+                          GestureDetector(
+                            onTap: () {
+                              context.read<Datafunction>().playsound();
+                              Get.offNamed('home');
+                            },
+                            child: Container(
+                                width: _width,
+                                child: Center(
+                                    child: BoxWidetdew(
+                                  height: 0.06,
+                                  width: 0.35,
+                                  color: Colors.red,
+                                  radius: 5.0,
+                                  text: 'ออก',
+                                  textcolor: Colors.white,
+                                ))),
+                          ),
+                          //    BoxButtonVideoCall()
+                        ],
+                      ))
+                    : Container(
+                        width: MediaQuery.of(context).size.width * 0.07,
+                        height: MediaQuery.of(context).size.width * 0.07,
+                        child: CircularProgressIndicator(),
                       )
-                    ],
-                  ))
-                : Container(),
+                : CircularProgressIndicator(),
           ],
         ),
       ),

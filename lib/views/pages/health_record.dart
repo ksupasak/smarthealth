@@ -121,9 +121,9 @@ class _HealthRecordState extends State<HealthRecord> {
       "pulse_rate": "${pulse.text}",
       "spo2": "${spo2.text}",
       "fbs": "${fbs.text}",
-      "height": "170",
+      "height": "160",
       "bmi": "122",
-      "bp": "120/80",
+      "bp": "${sys.text}/${dia.text}",
       "rr": "90",
     });
     var resTojson = json.decode(res.body);
@@ -203,7 +203,7 @@ class _HealthRecordState extends State<HealthRecord> {
   @override
   void initState() {
     clearprovider();
-    // scan(); //
+    scan(); //
     // TODO: implement initState
     super.initState();
   }
@@ -312,6 +312,9 @@ class _HealthRecordState extends State<HealthRecord> {
           Center(
               child: GestureDetector(
                   onTap: () {
+                    setState(() {
+                      context.read<DataProvider>().status_getqueue = 'true';
+                    });
                     stop();
                     context.read<Datafunction>().playsound();
                     Navigator.pop(context);

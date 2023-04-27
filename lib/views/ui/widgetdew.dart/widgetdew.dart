@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -10,6 +11,7 @@ import 'package:provider/provider.dart';
 import 'package:smart_health/provider/provider.dart';
 import 'package:smart_health/provider/provider_function.dart';
 import 'package:smart_health/widget_decorate/WidgetDecorate.dart';
+import 'package:http/http.dart' as http;
 
 class BoxWidetdew extends StatefulWidget {
   BoxWidetdew(
@@ -331,5 +333,421 @@ class _MarkCheckState extends State<MarkCheck> {
                 height: widget.height == null ? 1 : _height * widget.height,
                 width: widget.width == null ? 1 : _width * widget.width,
               ));
+  }
+}
+
+class BoxQueue extends StatefulWidget {
+  BoxQueue({super.key, this.queue});
+  var queue;
+  @override
+  State<BoxQueue> createState() => _BoxQueueState();
+}
+
+class _BoxQueueState extends State<BoxQueue> {
+  @override
+  Widget build(BuildContext context) {
+    double _width = MediaQuery.of(context).size.width;
+    double _height = MediaQuery.of(context).size.height;
+    return Container(
+      decoration: BoxDecoration(
+          boxShadow: [
+            BoxShadow(blurRadius: 5, color: Color.fromARGB(255, 2, 72, 113)),
+          ],
+          color: Color.fromARGB(255, 2, 72, 113),
+          borderRadius: BorderRadius.circular(10)),
+      width: _width * 0.8,
+      height: _height * 0.12,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        children: [
+          Column(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              BoxWidetdew(
+                width: 0.38,
+                height: 0.05,
+                color: Colors.blue,
+                radius: 10.0,
+                fontSize: 0.04,
+                text: 'หมายเลขคิวของคุณ',
+                textcolor: Colors.white,
+              ),
+              BoxWidetdew(
+                width: 0.38,
+                height: 0.05,
+                color: Colors.white,
+                radius: 10.0,
+                fontSize: 0.04,
+                text: widget.queue == null ? '' : widget.queue,
+                textcolor: Color.fromARGB(255, 43, 179, 161),
+              ),
+            ],
+          ),
+          Column(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              BoxWidetdew(
+                width: 0.38,
+                height: 0.05,
+                color: Colors.blue,
+                radius: 10.0,
+                fontSize: 0.04,
+                text: 'รออีก(คิว)',
+                textcolor: Colors.white,
+              ),
+              BoxWidetdew(
+                width: 0.38,
+                height: 0.05,
+                color: Colors.white,
+                radius: 10.0,
+                fontSize: 0.04,
+                text: '',
+                textcolor: Colors.blue,
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class BoxShoHealth_Records extends StatefulWidget {
+  BoxShoHealth_Records({
+    super.key,
+    this.height,
+    this.weight,
+    this.sys,
+    this.dia,
+    this.pulse_rate,
+    this.temp,
+    this.spo2,
+    this.fbs,
+    this.si,
+    this.uric,
+  });
+  var height;
+  var weight;
+  var sys;
+  var dia; //
+  var pulse_rate;
+  var temp; //
+  var spo2;
+  var fbs;
+  var si;
+  var uric;
+
+  @override
+  State<BoxShoHealth_Records> createState() => _BoxShoHealth_RecordsState();
+}
+
+class _BoxShoHealth_RecordsState extends State<BoxShoHealth_Records> {
+  @override
+  Widget build(BuildContext context) {
+    double _width = MediaQuery.of(context).size.width;
+    double _height = MediaQuery.of(context).size.height;
+    TextStyle styletext =
+        TextStyle(color: Colors.white, fontSize: _width * 0.04);
+    TextStyle styletext2 = TextStyle(
+        color: Color.fromARGB(255, 12, 172, 153), fontSize: _width * 0.04);
+    return Container(
+      width: _width,
+      height: _height * 0.08,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        children: [
+          Container(
+            color: Color.fromARGB(255, 95, 182, 167),
+            height: _height * 0.04,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                Text('height', style: styletext),
+                Text('weight', style: styletext),
+                Text('sys.', style: styletext),
+                Text('dia', style: styletext),
+                Text('temp', style: styletext),
+                Text('spo2', style: styletext),
+                Text('fbs', style: styletext),
+                Text('si', style: styletext),
+                Text('uric', style: styletext),
+                Text('pulse_rate.', style: styletext),
+              ],
+            ),
+          ),
+          Container(
+            height: _height * 0.04,
+            color: Color.fromARGB(255, 197, 230, 225),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                widget.height == 'null'
+                    ? Text('-')
+                    : Text('${widget.height}', style: styletext2),
+                widget.weight == 'null'
+                    ? Text('-')
+                    : Text('${widget.weight}', style: styletext2),
+                widget.sys == 'null'
+                    ? Text('-')
+                    : Text('${widget.sys}', style: styletext2),
+                widget.dia == 'null'
+                    ? Text('-')
+                    : Text('${widget.dia}', style: styletext2),
+                widget.temp == 'null'
+                    ? Text('-')
+                    : Text('${widget.temp}', style: styletext2),
+                widget.spo2 == 'null'
+                    ? Text('-')
+                    : Text('${widget.spo2}', style: styletext2),
+                widget.fbs == 'null'
+                    ? Text('-')
+                    : Text('${widget.fbs}', style: styletext2),
+                widget.si == 'null'
+                    ? Text('-')
+                    : Text('${widget.si}', style: styletext2),
+                widget.uric == 'null'
+                    ? Text('-')
+                    : Text('${widget.uric}', style: styletext2),
+                widget.pulse_rate == 'null'
+                    ? Text('-')
+                    : Text('${widget.pulse_rate}', style: styletext2),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class BoxRunQueue extends StatefulWidget {
+  const BoxRunQueue({super.key});
+
+  @override
+  State<BoxRunQueue> createState() => _BoxRunQueueState();
+}
+
+class _BoxRunQueueState extends State<BoxRunQueue> {
+  Timer? _timer;
+  var resTojson;
+  String message = '';
+  String queue = '';
+  Future<void> get_queue() async {
+    var url = Uri.parse('https://emr-life.com/clinic_master/clinic/Api/list_q');
+    var res = await http.post(url, body: {
+      'care_unit_id': '63d7a282790f9bc85700000e',
+    });
+    setState(() {
+      resTojson = json.decode(res.body);
+      queue = resTojson['queue_number'];
+      message = resTojson['message'];
+    });
+  }
+
+  void lop_queue() {
+    _timer = Timer.periodic(Duration(seconds: 2), (timer) {
+      setState(() {
+        get_queue();
+      });
+    });
+  }
+
+  void dispose() {
+    _timer?.cancel();
+    super.dispose();
+  }
+
+  @override
+  void initState() {
+    lop_queue();
+    // TODO: implement initState
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    double _width = MediaQuery.of(context).size.width;
+    double _height = MediaQuery.of(context).size.height;
+    return Container(
+      child: Center(
+          child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                'คิวที่',
+                style: TextStyle(color: Colors.white, fontSize: _width * 0.05),
+              ),
+              SizedBox(
+                width: _width * 0.05,
+              ),
+              message == 'no queue'
+                  ? Text(
+                      '- -',
+                      style: TextStyle(
+                          color: Colors.white, fontSize: _width * 0.05),
+                    )
+                  : Text(
+                      queue,
+                      style: TextStyle(
+                          color: Colors.white, fontSize: _width * 0.05),
+                    ),
+            ],
+          ),
+        ],
+      )),
+    );
+  }
+}
+
+class HeadBoxAppointments extends StatefulWidget {
+  const HeadBoxAppointments({super.key});
+
+  @override
+  State<HeadBoxAppointments> createState() => _HeadBoxAppointmentsState();
+}
+
+class _HeadBoxAppointmentsState extends State<HeadBoxAppointments> {
+  @override
+  Widget build(BuildContext context) {
+    double _width = MediaQuery.of(context).size.width;
+    double _height = MediaQuery.of(context).size.height;
+    TextStyle style = TextStyle(
+        color: Color.fromARGB(255, 39, 0, 129),
+        fontSize: _width * 0.05,
+        fontWeight: FontWeight.w800);
+    TextStyle style2 = TextStyle(
+        color: Color.fromARGB(255, 0, 73, 129),
+        fontSize: _width * 0.045,
+        fontWeight: FontWeight.w600);
+    return Container(
+      child: Column(
+        children: [
+          Text("การนัดหมาย", style: style),
+          Container(
+            color: Color.fromARGB(255, 115, 250, 221),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Container(
+                    width: _width * 0.25,
+                    child: Center(child: Text('วันที่', style: style2))),
+                Container(
+                    width: _width * 0.25,
+                    child: Center(child: Text('เวลา', style: style2))),
+                Container(
+                    width: _width * 0.25,
+                    child: Center(child: Text('สถานที่', style: style2))),
+                Container(
+                    width: _width * 0.25,
+                    child: Center(child: Text('เเพทย์', style: style2))),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class BoxAppointments extends StatefulWidget {
+  BoxAppointments({super.key, this.list_appointments});
+  var list_appointments;
+  @override
+  State<BoxAppointments> createState() => _BoxAppointmentsState();
+}
+
+class _BoxAppointmentsState extends State<BoxAppointments> {
+  @override
+  Widget build(BuildContext context) {
+    double _width = MediaQuery.of(context).size.width;
+    double _height = MediaQuery.of(context).size.height;
+    TextStyle style = TextStyle(
+        color: Color.fromARGB(255, 69, 0, 0),
+        fontSize: _width * 0.035,
+        fontWeight: FontWeight.w800);
+    return Container(
+        width: _width,
+        child: Container(
+          height: _height * 0.12,
+          child: widget.list_appointments != null
+              ? ListView.builder(
+                  itemCount: widget.list_appointments.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    return Container(
+                      color: Color.fromARGB(255, 219, 246, 240),
+                      height: _height * 0.04,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Container(
+                              width: _width * 0.25,
+                              child: Center(
+                                  child: Text(
+                                      widget.list_appointments[index]['date'],
+                                      style: style))),
+                          Container(
+                              width: _width * 0.25,
+                              child: Center(
+                                  child: Text(
+                                      widget.list_appointments[index]['slot'],
+                                      style: style))),
+                          Container(
+                              width: _width * 0.25,
+                              child: Center(
+                                  child: Text(
+                                      widget.list_appointments[index]
+                                          ['care_name'],
+                                      style: style))),
+                          Container(
+                              width: _width * 0.25,
+                              child: Center(
+                                  child: Text(
+                                      widget.list_appointments[index]
+                                          ['doctor_name'],
+                                      style: style))),
+                        ],
+                      ),
+                    );
+                  },
+                )
+              : SizedBox(),
+        ));
+  }
+}
+
+class BoxButtonVideoCall extends StatefulWidget {
+  const BoxButtonVideoCall({super.key});
+
+  @override
+  State<BoxButtonVideoCall> createState() => _BoxButtonVideoCallState();
+}
+
+class _BoxButtonVideoCallState extends State<BoxButtonVideoCall> {
+  @override
+  Widget build(BuildContext context) {
+    double _width = MediaQuery.of(context).size.width;
+    double _height = MediaQuery.of(context).size.height;
+    return GestureDetector(
+      onTap: () {},
+      child: Container(
+        decoration: BoxDecoration(
+            border: Border.all(
+              width: 5,
+              color: Colors.green,
+            ),
+            borderRadius: BorderRadius.circular(50)),
+        child: BoxWidetdew(
+          height: 0.05,
+          width: 0.4,
+          radius: 20.0,
+          color: Color.fromARGB(80, 91, 223, 95),
+          text: 'video call',
+          textcolor: Colors.white,
+        ),
+      ),
+    );
   }
 }

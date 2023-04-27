@@ -63,4 +63,6 @@ class DataProvider with ChangeNotifier {
   }
 
 //  var idtest = '1710501456572';
+
+  var status_getqueue = 'true'; //false
 }
