@@ -13,6 +13,7 @@ import 'package:smart_health/background/color/style_color.dart';
 import 'package:smart_health/provider/provider.dart';
 import 'package:smart_health/provider/provider_function.dart';
 import 'package:smart_health/views/pages/numpad.dart';
+import 'package:smart_health/views/pages/videocall.dart';
 import 'package:smart_health/views/ui/bottomnavigationbar/bottomnavigationbar.dart';
 import 'package:smart_health/views/ui/widgetdew.dart/popup.dart';
 import 'package:smart_health/views/ui/widgetdew.dart/widgetdew.dart';
@@ -47,14 +48,8 @@ class _HomeappState extends State<Homeapp> {
               status = false;
               context.read<DataProvider>().dataidcard = resTojson;
             });
-            showDialog(
-                context: context,
-                builder: (BuildContext context) {
-                  return Popup(
-                      texthead: 'สำเร็จ', pathicon: 'assets/correct.png');
-                });
 
-            Timer(Duration(seconds: 2), () {
+            Timer(Duration(milliseconds: 200), () {
               Get.offNamed('user_information');
             });
           } else if (resTojson['message'] == 'not found') {
@@ -214,36 +209,11 @@ class _HomeappState extends State<Homeapp> {
                             SizedBox(height: _height * 0.01),
                             GestureDetector(
                                 onTap: () {
-                                  setState(() async {
-                                    context.read<DataProvider>().id =
-                                        '1710501456572';
-                                    var url = Uri.parse(
-                                        '${context.read<DataProvider>().platfromURL}get_patient?public_id=${context.read<DataProvider>().id}'); //${context.read<stringitem>().uri}
-                                    var res = await http.get(url);
-                                    if (res.statusCode == 200) {
-                                      var resTojson = json.decode(res.body);
-                                      if (resTojson['message'] == 'success') {
-                                        setState(() {
-                                          status = false;
-                                          context
-                                              .read<DataProvider>()
-                                              .dataidcard = resTojson;
-                                        });
-                                        showDialog(
-                                            context: context,
-                                            builder: (BuildContext context) {
-                                              return Popup(
-                                                  texthead: 'สำเร็จ',
-                                                  fontSize: 0.05,
-                                                  pathicon:
-                                                      'assets/correct.png');
-                                            });
-                                        Timer(Duration(seconds: 2), () {
-                                          Get.offNamed('menu');
-                                        });
-                                      }
-                                    }
-                                  });
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (BuildContext context) =>
+                                              ConnectPage()));
                                 },
                                 child: BoxWidetdew(
                                     color: Colors.red,

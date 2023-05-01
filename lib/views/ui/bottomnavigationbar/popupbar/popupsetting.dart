@@ -143,7 +143,7 @@ class _PopupSettingState extends State<PopupSetting> {
             SizedBox(height: _height * 0.2),
             Container(
               width: _width * 0.5,
-              height: _height * 0.15,
+              height: _height * 0.1,
               child: Center(
                 child: GestureDetector(
                   onTap: () {

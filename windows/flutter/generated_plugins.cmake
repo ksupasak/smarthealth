@@ -4,6 +4,8 @@
 
 list(APPEND FLUTTER_PLUGIN_LIST
   audioplayers_windows
+  flutter_webrtc
+  openvidu_client
   permission_handler_windows
   zego_express_engine
 )

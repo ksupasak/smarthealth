@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:provider/provider.dart';
@@ -52,9 +53,9 @@ class _InitsettingState extends State<Initsetting> {
       print(checkqueueURL.text);
       print(care_unit_id.text);
       print(passwordsetting.text);
-      for (var knownDevices in knownDevice) {
-        print(knownDevices);
-      }
+      // for (var knownDevices in knownDevice) {
+      //   print(knownDevices);
+      // }
     }
   }
 
@@ -70,11 +71,11 @@ class _InitsettingState extends State<Initsetting> {
     double _width = MediaQuery.of(context).size.width;
     double _height = MediaQuery.of(context).size.height;
     return GestureDetector(
-      onTap: (() {
-        FocusScope.of(context).requestFocus(FocusNode());
-      }),
-      child: Scaffold(
-        body: Stack(children: [
+        onTap: (() {
+          FocusScope.of(context).requestFocus(FocusNode());
+        }),
+        child: Scaffold(
+            body: Stack(children: [
           Positioned(
               child: BackGroundSmart_Health(
             BackGroundColor: [
@@ -83,58 +84,30 @@ class _InitsettingState extends State<Initsetting> {
             ],
           )),
           Positioned(
-            child: ListView(
-              children: [
-                Container(
-                  height: _height * 0.8,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              child: ListView(children: [
+            Container(
+                child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
                     children: [
-                      Text('name_hospital',
-                          style: TextStyle(fontSize: _width * 0.05)),
-                      Container(
-                        width: _width * 0.8,
-                        child: TextField(
-                            controller: name_hospital,
-                            style: TextStyle(fontSize: _width * 0.05)),
-                      ),
-                      Text('platfromURL',
-                          style: TextStyle(fontSize: _width * 0.05)),
-                      Container(
-                        width: _width * 0.8,
-                        child: TextField(
-                            controller: platfromURL,
-                            style: TextStyle(fontSize: _width * 0.05)),
-                      ),
-                      Text('checkqueueURL',
-                          style: TextStyle(fontSize: _width * 0.05)),
-                      Container(
-                        width: _width * 0.8,
-                        child: TextField(
-                            controller: checkqueueURL,
-                            style: TextStyle(fontSize: _width * 0.05)),
-                      ),
-                      Text('care_unit_id',
-                          style: TextStyle(fontSize: _width * 0.05)),
-                      Container(
-                        width: _width * 0.8,
-                        child: TextField(
-                            controller: care_unit_id,
-                            style: TextStyle(fontSize: _width * 0.05)),
-                      ),
-                      Text('passwordsetting',
-                          style: TextStyle(fontSize: _width * 0.05)),
-                      Container(
-                        width: _width * 0.8,
-                        child: TextField(
-                            controller: passwordsetting,
-                            style: TextStyle(fontSize: _width * 0.05)),
-                      ),
-                      SizedBox(
-                        height: _height * 0.05,
-                      ),
-                      Container(
-                        child: Center(
+                  BoxTextFieldSetting(
+                      keyvavlue: name_hospital, texthead: 'name_hospital'),
+                  BoxTextFieldSetting(
+                      keyvavlue: platfromURL, texthead: 'platfromURL'),
+                  BoxTextFieldSetting(
+                      keyvavlue: checkqueueURL, texthead: 'checkqueueURL'),
+                  BoxTextFieldSetting(
+                      keyvavlue: care_unit_id, texthead: 'care_unit_id'),
+                  BoxTextFieldSetting(texthead: 'VideoURL'),
+                  BoxTextFieldSetting(
+                      lengthlimitingtextinputformatter: 4,
+                      keyvavlue: passwordsetting,
+                      texthead: 'passwordsetting',
+                      textinputtype: TextInputType.number),
+                  SizedBox(
+                    height: _height * 0.05,
+                  ),
+                  Container(
+                      child: Center(
                           child: GestureDetector(
                               onTap: () {
                                 safe();
@@ -143,20 +116,12 @@ class _InitsettingState extends State<Initsetting> {
                                   text: 'บันทึก',
                                   height: 0.07,
                                   width: 0.6,
-                                  radius: 0.0,
+                                  radius: 2.0,
                                   textcolor: Colors.white,
                                   fontSize: 0.05,
-                                  color: Color.fromARGB(255, 54, 200, 244))),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          )
-        ]),
-      ),
-    );
+                                  color: Color.fromARGB(255, 54, 200, 244)))))
+                ]))
+          ]))
+        ])));
   }
 }

@@ -162,7 +162,7 @@ class _Splash_ScreenState extends State<Splash_Screen> {
   void initState() {
     printDatabase();
     // scanTimer(4500);
-    bleScan(); //
+    // sbleScan(); //
     //  TODO: implement initState
     super.initState();
   }

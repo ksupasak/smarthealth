@@ -360,7 +360,42 @@ class _UserInformationState extends State<UserInformation> {
                                                                           0.01),
                                                             ],
                                                           )
-                                                        : Container()),
+                                                        : Container(
+                                                            child:
+                                                                GestureDetector(
+                                                              onTap: () {
+                                                                context
+                                                                    .read<
+                                                                        Datafunction>()
+                                                                    .playsound();
+
+                                                                Get.toNamed(
+                                                                    'healthrecord');
+                                                              },
+                                                              child: Container(
+                                                                  width: _width,
+                                                                  child: Center(
+                                                                      child: BoxWidetdew(
+                                                                          height:
+                                                                              0.055,
+                                                                          width:
+                                                                              0.35,
+                                                                          color: Color.fromARGB(
+                                                                              100,
+                                                                              42,
+                                                                              208,
+                                                                              20),
+                                                                          radius:
+                                                                              5.0,
+                                                                          text:
+                                                                              'ตรวจสุขภาพ',
+                                                                          textcolor: Color.fromARGB(
+                                                                              255,
+                                                                              255,
+                                                                              255,
+                                                                              255)))),
+                                                            ),
+                                                          )),
                                             resTojsonQueue['queue_number']
                                                         .toString() ==
                                                     resTojson['queue_number']
@@ -394,21 +429,7 @@ class _UserInformationState extends State<UserInformation> {
                                                                     textcolor:
                                                                         Colors
                                                                             .white)
-                                                                : BoxWidetdew(
-                                                                    height:
-                                                                        0.055,
-                                                                    width: 0.35,
-                                                                    color: Colors
-                                                                        .yellow,
-                                                                    radius: 5.0,
-                                                                    text:
-                                                                        'ตรวจสุขภาพ',
-                                                                    textcolor: Color
-                                                                        .fromARGB(
-                                                                            255,
-                                                                            42,
-                                                                            0,
-                                                                            180)))),
+                                                                : SizedBox())),
                                                   ),
                                             SizedBox(height: _height * 0.005),
                                           ]

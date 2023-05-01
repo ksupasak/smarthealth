@@ -10,6 +10,7 @@ import 'package:just_audio/just_audio.dart';
 import 'package:provider/provider.dart';
 import 'package:smart_health/provider/provider.dart';
 import 'package:smart_health/provider/provider_function.dart';
+import 'package:smart_health/views/pages/videocall.dart';
 import 'package:smart_health/widget_decorate/WidgetDecorate.dart';
 import 'package:http/http.dart' as http;
 
@@ -719,7 +720,9 @@ class _BoxAppointmentsState extends State<BoxAppointments> {
 }
 
 class BoxButtonVideoCall extends StatefulWidget {
-  const BoxButtonVideoCall({super.key});
+  BoxButtonVideoCall({
+    super.key,
+  });
 
   @override
   State<BoxButtonVideoCall> createState() => _BoxButtonVideoCallState();
@@ -731,7 +734,10 @@ class _BoxButtonVideoCallState extends State<BoxButtonVideoCall> {
     double _width = MediaQuery.of(context).size.width;
     double _height = MediaQuery.of(context).size.height;
     return GestureDetector(
-      onTap: () {},
+      onTap: () {
+        Navigator.push(
+            context, MaterialPageRoute(builder: (context) => ConnectPage()));
+      },
       child: Container(
         decoration: BoxDecoration(
             border: Border.all(
@@ -747,6 +753,158 @@ class _BoxButtonVideoCallState extends State<BoxButtonVideoCall> {
           text: 'video call',
           textcolor: Colors.white,
         ),
+      ),
+    );
+  }
+}
+
+class BoxSetting extends StatefulWidget {
+  BoxSetting({super.key, this.text, this.textstyle});
+  String? text;
+  TextStyle? textstyle;
+  @override
+  State<BoxSetting> createState() => _BoxSettingState();
+}
+
+class _BoxSettingState extends State<BoxSetting> {
+  @override
+  Widget build(BuildContext context) {
+    double _width = MediaQuery.of(context).size.width;
+    double _height = MediaQuery.of(context).size.height;
+    TextStyle style1 = TextStyle(
+        color: Color.fromARGB(255, 20, 142, 130),
+        fontSize: _width * 0.04,
+        fontWeight: FontWeight.w600);
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(0, 10, 0, 10),
+      child: Container(
+        width: _width * 0.98,
+        height: _height * 0.06,
+        decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(20),
+            color: Color.fromARGB(255, 255, 255, 255),
+            boxShadow: [
+              BoxShadow(
+                  blurRadius: 10.0, color: Color.fromARGB(255, 63, 86, 83))
+            ]),
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              GestureDetector(
+                  onTap: () {},
+                  child: Container(
+                    width: _width * 0.98,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Container(
+                            width: _width * 0.47,
+                            child: Center(
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: [
+                                  widget.text == null
+                                      ? Center(child: Text(''))
+                                      : Center(
+                                          child: Text(
+                                            widget.text.toString(),
+                                            style: widget.textstyle == null
+                                                ? style1
+                                                : widget.textstyle,
+                                          ),
+                                        ),
+                                ],
+                              ),
+                            )),
+                        Container(
+                            width: _width * 0.47,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                Center(
+                                  child: Text(
+                                    '>',
+                                    style: widget.textstyle == null
+                                        ? style1
+                                        : widget.textstyle,
+                                  ),
+                                ),
+                              ],
+                            ))
+                      ],
+                    ),
+                  ))
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class BoxTextFieldSetting extends StatefulWidget {
+  BoxTextFieldSetting(
+      {super.key,
+      this.keyvavlue,
+      this.texthead,
+      this.textinputtype,
+      this.lengthlimitingtextinputformatter});
+  var keyvavlue;
+  String? texthead;
+  TextInputType? textinputtype;
+  int? lengthlimitingtextinputformatter;
+  @override
+  State<BoxTextFieldSetting> createState() => _BoxTextFieldSettingState();
+}
+
+class _BoxTextFieldSettingState extends State<BoxTextFieldSetting> {
+  @override
+  Widget build(BuildContext context) {
+    double _width = MediaQuery.of(context).size.width;
+    double _height = MediaQuery.of(context).size.height;
+    TextStyle style1 = TextStyle(
+        fontSize: _width * 0.05, color: Color.fromARGB(255, 19, 100, 92));
+    TextStyle style2 =
+        TextStyle(fontSize: _width * 0.05, color: Color.fromARGB(255, 0, 0, 0));
+
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(0, 10, 0, 10),
+      child: Container(
+        child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              widget.texthead == null
+                  ? Text('')
+                  : Text(widget.texthead.toString(), style: style1),
+              Container(
+                decoration: BoxDecoration(
+                    color: Colors.white,
+                    boxShadow: [BoxShadow()],
+                    border: Border.all(
+                        color: Color.fromARGB(255, 0, 85, 71), width: 2),
+                    borderRadius: BorderRadius.circular(5)),
+                width: _width * 0.9,
+                child: TextField(
+                    decoration: InputDecoration(
+                      border: InputBorder.none,
+                      focusedBorder: InputBorder.none,
+                    ),
+                    keyboardType: widget.textinputtype,
+                    controller: widget.keyvavlue,
+                    inputFormatters:
+                        widget.lengthlimitingtextinputformatter == null
+                            ? []
+                            : [
+                                LengthLimitingTextInputFormatter(
+                                    widget.lengthlimitingtextinputformatter),
+                              ],
+                    style: style2),
+              ),
+            ]),
       ),
     );
   }
