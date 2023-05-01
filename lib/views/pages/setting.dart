@@ -26,13 +26,7 @@ class _SettingState extends State<Setting> {
           }),
           child: Stack(
             children: [
-              Positioned(
-                  child: BackGroundSmart_Health(
-                BackGroundColor: [
-                  StyleColor.backgroundbegin,
-                  StyleColor.backgroundend
-                ],
-              )),
+              backgrund(),
               Positioned(
                 child: Container(
                   width: _width,

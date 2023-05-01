@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
+import 'package:smart_health/background/color/style_color.dart';
 import 'package:smart_health/views/ui/bottomnavigationbar/menubottombar.dart';
 
 class BottomNavigationBarApp extends StatefulWidget {
@@ -17,6 +18,7 @@ class _BottomNavigationBarAppState extends State<BottomNavigationBarApp> {
     double _height = MediaQuery.of(context).size.height;
     return Container(
       width: _width,
+      color: StyleColor.backgroundbegin,
       height: _height * 0.08,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.start,

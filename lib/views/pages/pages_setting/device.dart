@@ -36,13 +36,7 @@ class _DeviceState extends State<Device> {
       child: Scaffold(
         body: Stack(
           children: [
-            Positioned(
-                child: BackGroundSmart_Health(
-              BackGroundColor: [
-                StyleColor.backgroundbegin,
-                StyleColor.backgroundend
-              ],
-            )),
+            backgrund(),
             Positioned(
               child: SafeArea(
                 child: SingleChildScrollView(
@@ -140,6 +134,7 @@ class _DeviceState extends State<Device> {
           ],
         ),
         bottomNavigationBar: Container(
+            color: StyleColor.backgroundbegin,
             height: _height * 0.05,
             child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,

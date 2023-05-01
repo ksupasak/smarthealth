@@ -8,11 +8,33 @@ import 'package:flutter/src/widgets/framework.dart';
 
 import 'package:just_audio/just_audio.dart';
 import 'package:provider/provider.dart';
+import 'package:smart_health/background/background.dart';
+import 'package:smart_health/background/color/style_color.dart';
 import 'package:smart_health/provider/provider.dart';
 import 'package:smart_health/provider/provider_function.dart';
 import 'package:smart_health/views/pages/videocall.dart';
 import 'package:smart_health/widget_decorate/WidgetDecorate.dart';
 import 'package:http/http.dart' as http;
+
+class backgrund extends StatefulWidget {
+  const backgrund({super.key});
+
+  @override
+  State<backgrund> createState() => _backgrundState();
+}
+
+class _backgrundState extends State<backgrund> {
+  @override
+  Widget build(BuildContext context) {
+    return Positioned(
+        child: BackGroundSmart_Health(
+      BackGroundColor: [
+        StyleColor.backgroundend,
+        StyleColor.backgroundbegin,
+      ],
+    ));
+  }
+}
 
 class BoxWidetdew extends StatefulWidget {
   BoxWidetdew(
@@ -820,7 +842,7 @@ class _BoxSettingState extends State<BoxSetting> {
                               ),
                             )),
                         Container(
-                            width: _width * 0.47,
+                            width: _width * 0.45,
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.end,
                               children: [

@@ -118,13 +118,7 @@ class _PrintQueueState extends State<PrintQueue> {
     return SafeArea(
       child: Scaffold(
         body: Stack(children: [
-          Positioned(
-              child: BackGroundSmart_Health(
-            BackGroundColor: [
-              StyleColor.backgroundbegin,
-              StyleColor.backgroundend
-            ],
-          )),
+          backgrund(),
           Positioned(
               child: Center(
                   child: Container(
@@ -206,15 +200,15 @@ class _PrintQueueState extends State<PrintQueue> {
               ],
             ),
           )))),
-          ElevatedButton(
-            onPressed: () async {
-              final pdfFile = await generatePdf();
-              setState(() {
-                safe();
-              });
-            },
-            child: Text('testปริ้น'),
-          )
+          // ElevatedButton(
+          //   onPressed: () async {
+          //     final pdfFile = await generatePdf();
+          //     setState(() {
+          //       safe();
+          //     });
+          //   },
+          //   child: Text('testปริ้น'),
+          // )
         ]),
       ),
     );

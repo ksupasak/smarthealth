@@ -126,14 +126,7 @@ class _UserInformationState extends State<UserInformation> {
       child: Scaffold(
         body: Stack(
           children: [
-            Positioned(
-                child: BackGroundSmart_Health(
-              BackGroundColor: [
-                StyleColor.backgroundbegin,
-                StyleColor.backgroundend,
-                StyleColor.backgroundend
-              ],
-            )),
+            backgrund(),
             lop == true
                 ? resTojson != null || resTojsonQueue != null
                     ? Positioned(

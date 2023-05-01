@@ -76,13 +76,7 @@ class _InitsettingState extends State<Initsetting> {
         }),
         child: Scaffold(
             body: Stack(children: [
-          Positioned(
-              child: BackGroundSmart_Health(
-            BackGroundColor: [
-              StyleColor.backgroundbegin,
-              StyleColor.backgroundend
-            ],
-          )),
+          backgrund(),
           Positioned(
               child: ListView(children: [
             Container(
@@ -93,8 +87,6 @@ class _InitsettingState extends State<Initsetting> {
                       keyvavlue: name_hospital, texthead: 'name_hospital'),
                   BoxTextFieldSetting(
                       keyvavlue: platfromURL, texthead: 'platfromURL'),
-                  BoxTextFieldSetting(
-                      keyvavlue: checkqueueURL, texthead: 'checkqueueURL'),
                   BoxTextFieldSetting(
                       keyvavlue: care_unit_id, texthead: 'care_unit_id'),
                   BoxTextFieldSetting(texthead: 'VideoURL'),

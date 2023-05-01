@@ -21,10 +21,7 @@ class _MenuState extends State<Menu> {
     double _height = MediaQuery.of(context).size.height;
     return Scaffold(
         body: Stack(children: [
-      Positioned(
-          child: BackGroundSmart_Health(
-        BackGroundColor: [StyleColor.backgroundbegin, StyleColor.backgroundend],
-      )),
+      backgrund(),
       Positioned(
         child: Center(
             child: Container(

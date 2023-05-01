@@ -149,13 +149,7 @@ class _HomeappState extends State<Homeapp> {
     return Scaffold(
       body: Stack(
         children: [
-          Positioned(
-              child: BackGroundSmart_Health(
-            BackGroundColor: [
-              StyleColor.backgroundbegin,
-              StyleColor.backgroundend
-            ],
-          )),
+          backgrund(),
           Positioned(
               child: SafeArea(
             child: ListView(children: [

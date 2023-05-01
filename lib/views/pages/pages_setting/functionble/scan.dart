@@ -41,13 +41,7 @@ class _scanbleState extends State<scanble> {
     return Scaffold(
       body: Stack(
         children: [
-          Positioned(
-              child: BackGroundSmart_Health(
-            BackGroundColor: [
-              StyleColor.backgroundbegin,
-              StyleColor.backgroundend
-            ],
-          )),
+          backgrund(),
           Positioned(
             child: Container(
               // onRefresh: () => ,
@@ -125,6 +119,7 @@ class _scanbleState extends State<scanble> {
         ],
       ),
       bottomNavigationBar: Container(
+          color: StyleColor.backgroundbegin,
           height: _height * 0.05,
           child: Row(mainAxisAlignment: MainAxisAlignment.end, children: [
             GestureDetector(

@@ -6,6 +6,7 @@ import 'package:smart_health/background/background.dart';
 import 'package:smart_health/background/color/style_color.dart';
 import 'package:smart_health/local/local.dart';
 import 'package:smart_health/provider/provider.dart';
+import 'package:smart_health/views/ui/widgetdew.dart/widgetdew.dart';
 
 class CheckQueue extends StatefulWidget {
   const CheckQueue({super.key});
@@ -19,13 +20,7 @@ class _CheckQueueState extends State<CheckQueue> {
   Widget build(BuildContext context) {
     return Stack(
       children: [
-        Positioned(
-            child: BackGroundSmart_Health(
-          BackGroundColor: [
-            StyleColor.backgroundbegin,
-            StyleColor.backgroundend
-          ],
-        )),
+        backgrund(),
         Positioned(
             child: ListView(
           children: [

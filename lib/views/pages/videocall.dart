@@ -193,6 +193,7 @@ class _RoomPageState extends State<RoomPage> {
   Future<void> _onConnect() async {
     logger.e("start on Connect");
     dynamic connectstring = widget.data;
+
     if (true) {
       final connection = Connection.fromJson(connectstring);
       logger.i(connection.token!);

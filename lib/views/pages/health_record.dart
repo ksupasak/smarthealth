@@ -219,13 +219,7 @@ class _HealthRecordState extends State<HealthRecord> {
     return SafeArea(
       child: Scaffold(
           body: Stack(children: [
-        Positioned(
-            child: BackGroundSmart_Health(
-          BackGroundColor: [
-            StyleColor.backgroundbegin,
-            StyleColor.backgroundend
-          ],
-        )),
+        backgrund(),
         Positioned(
             child: ListView(children: [
           WidgetNameHospital(),
