@@ -103,7 +103,8 @@ class _MyAppState extends State<MyApp> {
         ElevatedButton(
           child: const Text('hasPermission'),
           onPressed: () async {
-            var hasPermission = await QuickUsb.hasPermission(_deviceList!.first);
+            var hasPermission =
+                await QuickUsb.hasPermission(_deviceList!.first);
             log('hasPermission $hasPermission');
           },
         ),

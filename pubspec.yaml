@@ -32,8 +32,6 @@ dependencies:
   flutter:
     sdk: flutter
 
-  openvidu_client:
-    path: "lib/flutter_openvidu_client"
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.2
@@ -53,7 +51,15 @@ dependencies:
   eva_icons_flutter: ^3.1.0
   logger: ^1.3.0
   dio: ^5.0.1
+  flutter_webrtc: ^0.9.26
+  meta: ^1.8.0
+  plugin_platform_interface: ^2.0.2
+  web_socket_channel: ^2.3.0
 
+  
+  flutter_pos_printer_platform: ^1.3.1
+  openvidu_client:
+    path: "vendors/flutter_openvidu_client"
   quick_usb:
     path: "vendors/quick_usb" 
   

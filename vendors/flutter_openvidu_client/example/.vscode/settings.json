@@ -1,0 +1,7 @@
+{
+  "editor.codeActionsOnSave": {
+    "source.fixAll": true,
+    "source.organizeImports": true
+  },
+  "cmake.sourceDirectory": "C:/Users/Deweiei/Desktop/eiepapaya/flutter_openvidu_client/example/linux"
+}

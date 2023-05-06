@@ -6,6 +6,7 @@ list(APPEND FLUTTER_PLUGIN_LIST
   audioplayers_linux
   flutter_webrtc
   openvidu_client
+  quick_usb
 )
 
 list(APPEND FLUTTER_FFI_PLUGIN_LIST

@@ -6,18 +6,18 @@ import 'package:http/http.dart' as http;
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:openvidu_client/openvidu_client.dart';
+
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:smart_health/app/models/connection.dart';
+import 'package:smart_health/app/utils/extensions.dart';
+import 'package:smart_health/app/utils/logger.dart';
+import 'package:smart_health/app/widgets/config_view.dart';
+import 'package:smart_health/app/widgets/controls.dart';
+import 'package:smart_health/app/widgets/media_stream_view.dart';
 import 'package:smart_health/background/background.dart';
 import 'package:smart_health/background/color/style_color.dart';
-import 'package:smart_health/flutter_openvidu_client/example/lib/app/models/connection.dart';
-import 'package:smart_health/flutter_openvidu_client/example/lib/app/models/session.dart';
-import 'package:smart_health/flutter_openvidu_client/example/lib/app/utils/extensions.dart';
-import 'package:smart_health/flutter_openvidu_client/example/lib/app/utils/logger.dart';
-import 'package:smart_health/flutter_openvidu_client/example/lib/app/widgets/config_view.dart';
-import 'package:smart_health/flutter_openvidu_client/example/lib/app/widgets/controls.dart';
-import 'package:smart_health/flutter_openvidu_client/example/lib/app/widgets/media_stream_view.dart';
-import 'package:smart_health/flutter_openvidu_client/example/lib/app/widgets/text_field.dart';
+
 import 'package:smart_health/provider/provider.dart';
 import 'package:smart_health/views/pages/home.dart';
 

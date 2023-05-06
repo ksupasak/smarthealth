@@ -4,9 +4,12 @@
 
 list(APPEND FLUTTER_PLUGIN_LIST
   audioplayers_windows
+  flutter_pos_printer_platform
   flutter_webrtc
+  network_info_plus
   openvidu_client
   permission_handler_windows
+  quick_usb
   zego_express_engine
 )
 
