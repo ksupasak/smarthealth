@@ -18,6 +18,7 @@ import 'package:pdf/widgets.dart' as pw;
 import 'package:path_provider/path_provider.dart';
 import 'package:smart_health/provider/provider_function.dart';
 import 'package:smart_health/views/ui/widgetdew.dart/widgetdew.dart';
+import 'package:http/http.dart' as http;
 
 class PrintQueue extends StatefulWidget {
   const PrintQueue({super.key});
@@ -28,6 +29,16 @@ class PrintQueue extends StatefulWidget {
 
 class _PrintQueueState extends State<PrintQueue> {
   var resTojson;
+  Future<void> checkt_queue() async {
+    var url =
+        Uri.parse('https://emr-life.com/clinic_master/clinic/Api/check_q');
+    var res = await http.post(url, body: {
+      'public_id': context.read<DataProvider>().id,
+    });
+    setState(() {
+      resTojson = json.decode(res.body);
+    });
+  }
 
   Future<File> generatePdf() async {
     final pdf = pw.Document();
@@ -140,10 +151,10 @@ class _PrintQueueState extends State<PrintQueue> {
                             Container(
                               width: _width * 0.1,
                             ),
-                            Text(
-                              '${resTojson['todays'][0]['care_name'].toString()} ',
-                              style: TextStyle(fontSize: _width * 0.07),
-                            ),
+                            // Text(
+                            //   '${resTojson['todays'][0]['care_name'].toString()} ',
+                            //   style: TextStyle(fontSize: _width * 0.07),
+                            // ),
                             Container(
                                 width: _width * 0.1,
                                 height: _height * 0.05,
@@ -156,10 +167,10 @@ class _PrintQueueState extends State<PrintQueue> {
                                 )),
                           ],
                         ),
-                        Text(
-                          '${resTojson['todays'][0]['queue_number'].toString()}',
-                          style: TextStyle(fontSize: _width * 0.2),
-                        ),
+                        // Text(
+                        //   '${resTojson['todays'][0]['queue_number'].toString()}',
+                        //   style: TextStyle(fontSize: _width * 0.2),
+                        // ),
                         Container(
                           width: _width * 0.8,
                           child: Padding(
@@ -167,16 +178,16 @@ class _PrintQueueState extends State<PrintQueue> {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text(
-                                    ' น้ำหนัก ${resTojson['health_records'][0]['weight']} '),
-                                Text(
-                                    ' อุณหภูมิ ${resTojson['health_records'][0]['temp']} '),
-                                Text(
-                                    ' SYS. ${resTojson['health_records'][0]['bp_sys']} '),
-                                Text(
-                                    ' DIA. ${resTojson['health_records'][0]['bp_dia']} '),
-                                Text(
-                                    ' PUL. ${resTojson['health_records'][0]['pulse_rate']} '),
+                                // Text(
+                                //     ' น้ำหนัก ${resTojson['health_records'][0]['weight']} '),
+                                // Text(
+                                //     ' อุณหภูมิ ${resTojson['health_records'][0]['temp']} '),
+                                // Text(
+                                //     ' SYS. ${resTojson['health_records'][0]['bp_sys']} '),
+                                // Text(
+                                //     ' DIA. ${resTojson['health_records'][0]['bp_dia']} '),
+                                // Text(
+                                //     ' PUL. ${resTojson['health_records'][0]['pulse_rate']} '),
                               ],
                             ),
                           ),

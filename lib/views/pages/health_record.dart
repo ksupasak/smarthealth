@@ -1,14 +1,20 @@
 import 'dart:async';
+import 'dart:collection';
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
+import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 
 import 'package:http/http.dart' as http;
 import 'package:smart_health/background/background.dart';
 import 'package:smart_health/background/color/style_color.dart';
+import 'package:smart_health/device/ad_ua651ble.dart';
+import 'package:smart_health/device/hc08.dart';
+import 'package:smart_health/device/hj_narigmed.dart';
+import 'package:smart_health/device/mibfs.dart';
 import 'package:smart_health/provider/provider.dart';
 import 'package:smart_health/provider/provider_function.dart';
 import 'package:smart_health/views/ui/widgetdew.dart/popup.dart';
@@ -34,7 +40,6 @@ class _HealthRecordState extends State<HealthRecord> {
   TextEditingController fbs = TextEditingController();
   TextEditingController si = TextEditingController();
   TextEditingController uric = TextEditingController();
-
   void scan() {
     timer = Timer.periodic(const Duration(seconds: 2), (_) {
       setState(() {
@@ -203,7 +208,7 @@ class _HealthRecordState extends State<HealthRecord> {
   @override
   void initState() {
     clearprovider();
-    scan(); //
+    //  scan();
     // TODO: implement initState
     super.initState();
   }

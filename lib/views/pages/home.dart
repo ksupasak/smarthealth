@@ -143,6 +143,13 @@ class _HomeappState extends State<Homeapp> {
   }
 
   @override
+  void initState() {
+    context.read<DataProvider>().status_getqueue == 'true';
+    // TODO: implement initState
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     double _width = MediaQuery.of(context).size.width;
     double _height = MediaQuery.of(context).size.height;
@@ -153,18 +160,20 @@ class _HomeappState extends State<Homeapp> {
           Positioned(
               child: SafeArea(
             child: ListView(children: [
+              BoxTime(),
               Container(
                 width: _width,
-                height: _height,
+                height: _height * 0.8,
                 child: Center(
                     child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    WidgetNameHospital(),
                     SizedBox(height: _height * 0.01),
                     BoxRunQueue(),
-                    SizedBox(height: _height * 0.01),
+                    SizedBox(height: _height * 0.02),
+                    BoxText(text: 'กรุณากรอกเลขบัตร XX'),
+                    SizedBox(height: _height * 0.02),
                     Container(
                       width: _width * 0.8,
                       height: _height * 0.5,
@@ -201,21 +210,6 @@ class _HomeappState extends State<Homeapp> {
                                     child: CircularProgressIndicator(),
                                   ),
                             SizedBox(height: _height * 0.01),
-                            GestureDetector(
-                                onTap: () {
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (BuildContext context) =>
-                                              ConnectPage()));
-                                },
-                                child: BoxWidetdew(
-                                    color: Colors.red,
-                                    height: 0.05,
-                                    width: 0.3,
-                                    text: 'Test',
-                                    textcolor: Colors.white,
-                                    fontSize: 0.05))
                           ],
                         ),
                       ),

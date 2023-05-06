@@ -12,6 +12,7 @@ import 'package:smart_health/background/color/style_color.dart';
 import 'package:smart_health/provider/provider.dart';
 import 'package:http/http.dart' as http;
 import 'package:smart_health/provider/provider_function.dart';
+import 'package:smart_health/views/pages/user_information2.dart';
 import 'package:smart_health/views/ui/widgetdew.dart/popup.dart';
 import 'package:smart_health/views/ui/widgetdew.dart/widgetdew.dart';
 
@@ -250,8 +251,9 @@ class _UserInformationState extends State<UserInformation> {
                                                                 'queue_number']
                                                             .toString()
                                                     ? BoxQueue(
-                                                        queue:
-                                                            '${resTojson['queue_number']}')
+                                                        // queue:
+                                                        //     '${resTojson['queue_number']}'
+                                                        )
                                                     : BoxButtonVideoCall()
                                                 : GestureDetector(
                                                     onTap: () {
@@ -322,6 +324,20 @@ class _UserInformationState extends State<UserInformation> {
                                                     : Container()
                                                 : Container(),
                                             SizedBox(height: _height * 0.01),
+                                            resTojson['appointments'].length !=
+                                                    0
+                                                ? Column(
+                                                    children: [
+                                                      HeadBoxAppointments(),
+                                                      BoxAppointments(
+                                                          // list_appointments:
+                                                          //     resTojson[
+                                                          //         'appointments']
+                                                          ),
+                                                    ],
+                                                  )
+                                                : SizedBox(),
+                                            SizedBox(height: _height * 0.02),
                                             Container(
                                                 child:
                                                     resTojson['health_records']
@@ -329,24 +345,7 @@ class _UserInformationState extends State<UserInformation> {
                                                             0
                                                         ? Column(
                                                             children: [
-                                                              BoxShoHealth_Records(
-                                                                height:
-                                                                    '${resTojson['health_records'].last['height']}',
-                                                                weight:
-                                                                    '${resTojson['health_records'].last['weight']}',
-                                                                sys:
-                                                                    '${resTojson['health_records'].last['bp_sys']}',
-                                                                dia:
-                                                                    '${resTojson['health_records'].last['bp_dia']}',
-                                                                pulse_rate:
-                                                                    '${resTojson['health_records'].last['pulse_rate']}',
-                                                                temp:
-                                                                    '${resTojson['health_records'].last['temp']}',
-                                                                spo2: 'null',
-                                                                fbs: 'null',
-                                                                si: 'null',
-                                                                uric: 'null',
-                                                              ),
+                                                              BoxShoHealth_Records(),
                                                               SizedBox(
                                                                   height:
                                                                       _height *
@@ -436,18 +435,10 @@ class _UserInformationState extends State<UserInformation> {
                                   ],
                           ),
 
-                          resTojson['appointments'].length != 0
-                              ? Column(
-                                  children: [
-                                    HeadBoxAppointments(),
-                                    BoxAppointments(
-                                      list_appointments:
-                                          resTojson['appointments'],
-                                    ),
-                                  ],
-                                )
-                              : SizedBox(),
-                          SizedBox(height: _height * 0.02),
+                          //    BoxButtonVideoCall()
+
+                          ///
+                          ///
                           GestureDetector(
                             onTap: () {
                               context.read<Datafunction>().playsound();
@@ -465,7 +456,27 @@ class _UserInformationState extends State<UserInformation> {
                                   textcolor: Colors.white,
                                 ))),
                           ),
-                          //    BoxButtonVideoCall()
+                          GestureDetector(
+                            onTap: () {
+                              context.read<Datafunction>().playsound();
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          UserInformation2()));
+                            },
+                            child: Container(
+                                width: _width,
+                                child: Center(
+                                    child: BoxWidetdew(
+                                  height: 0.06,
+                                  width: 0.35,
+                                  color: Color.fromARGB(255, 147, 147, 147),
+                                  radius: 5.0,
+                                  text: 'test',
+                                  textcolor: Colors.white,
+                                ))),
+                          ),
                         ],
                       ))
                     : Container(

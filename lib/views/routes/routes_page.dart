@@ -10,6 +10,7 @@ import 'package:smart_health/views/pages/pages_setting/init_setting.dart';
 import 'package:smart_health/views/pages/printqueue.dart';
 import 'package:smart_health/views/pages/setting.dart';
 import 'package:smart_health/views/pages/user_information.dart';
+import 'package:smart_health/views/pages/user_information2.dart';
 import 'package:smart_health/views/splash/splash_screen.dart';
 
 class Routes {
@@ -32,7 +33,7 @@ class Routes {
     GetPage(name: checkqueue, page: (() => CheckQueue())),
     GetPage(name: device, page: (() => Device())),
     GetPage(name: initsetting, page: (() => Initsetting())),
-    GetPage(name: user_information, page: (() => UserInformation())),
+    GetPage(name: user_information, page: (() => UserInformation2())),
     GetPage(name: printqueue, page: (() => PrintQueue()))
   ];
 }

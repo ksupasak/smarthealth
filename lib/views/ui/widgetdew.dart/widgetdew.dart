@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
+import 'package:get/get.dart';
 
 import 'package:just_audio/just_audio.dart';
 import 'package:provider/provider.dart';
@@ -29,10 +30,52 @@ class _backgrundState extends State<backgrund> {
     return Positioned(
         child: BackGroundSmart_Health(
       BackGroundColor: [
-        StyleColor.backgroundend,
+        Color.fromARGB(255, 255, 255, 255),
+        StyleColor.backgroundbegin,
         StyleColor.backgroundbegin,
       ],
     ));
+  }
+}
+
+class BoxTime extends StatefulWidget {
+  BoxTime({super.key, this.time});
+  var time;
+  @override
+  State<BoxTime> createState() => _BoxTimeState();
+}
+
+class _BoxTimeState extends State<BoxTime> {
+  DateTime dateTime = DateTime.parse('0000-00-00 00:00');
+
+  @override
+  void initState() {
+    Timer.periodic(Duration(seconds: 1), (Timer t) {
+      setState(() {
+        dateTime = DateTime.now();
+      });
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    double _width = MediaQuery.of(context).size.width;
+    double _height = MediaQuery.of(context).size.height;
+    TextStyle style = TextStyle(
+        color: Color.fromARGB(255, 20, 142, 130),
+        fontSize: _width * 0.04,
+        fontWeight: FontWeight.w600);
+    return Container(
+      height: _height * 0.08,
+      width: _width,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        children: [
+          Text('Care Unit', style: style),
+          Text(dateTime.toString(), style: style)
+        ],
+      ),
+    );
   }
 }
 
@@ -85,7 +128,7 @@ class _BoxWidetdewState extends State<BoxWidetdew> {
         child: widget.text == null
             ? null
             : Text(
-                widget.text,
+                widget.text.toString(),
                 style: TextStyle(
                   fontSize:
                       widget.fontSize == null ? 20 : _width * widget.fontSize,
@@ -360,111 +403,132 @@ class _MarkCheckState extends State<MarkCheck> {
 }
 
 class BoxQueue extends StatefulWidget {
-  BoxQueue({super.key, this.queue});
-  var queue;
+  BoxQueue({super.key});
+
   @override
   State<BoxQueue> createState() => _BoxQueueState();
 }
 
 class _BoxQueueState extends State<BoxQueue> {
+  var resTojson;
+  String? textqueue;
+  Future<void> checkt_queue() async {
+    var url =
+        Uri.parse('https://emr-life.com/clinic_master/clinic/Api/check_q');
+    var res = await http.post(url, body: {
+      'public_id': context.read<DataProvider>().id,
+    });
+    setState(() {
+      resTojson = json.decode(res.body);
+      textqueue = resTojson["queue_number"];
+    });
+  }
+
+  @override
+  void initState() {
+    checkt_queue();
+
+    // TODO: implement initState
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     double _width = MediaQuery.of(context).size.width;
     double _height = MediaQuery.of(context).size.height;
-    return Container(
-      decoration: BoxDecoration(
-          boxShadow: [
-            BoxShadow(blurRadius: 5, color: Color.fromARGB(255, 2, 72, 113)),
-          ],
-          color: Color.fromARGB(255, 2, 72, 113),
-          borderRadius: BorderRadius.circular(10)),
-      width: _width * 0.8,
-      height: _height * 0.12,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
-        children: [
-          Column(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              BoxWidetdew(
-                width: 0.38,
-                height: 0.05,
-                color: Colors.blue,
-                radius: 10.0,
-                fontSize: 0.04,
-                text: 'หมายเลขคิวของคุณ',
-                textcolor: Colors.white,
-              ),
-              BoxWidetdew(
-                width: 0.38,
-                height: 0.05,
-                color: Colors.white,
-                radius: 10.0,
-                fontSize: 0.04,
-                text: widget.queue == null ? '' : widget.queue,
-                textcolor: Color.fromARGB(255, 43, 179, 161),
-              ),
-            ],
-          ),
-          Column(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              BoxWidetdew(
-                width: 0.38,
-                height: 0.05,
-                color: Colors.blue,
-                radius: 10.0,
-                fontSize: 0.04,
-                text: 'รออีก(คิว)',
-                textcolor: Colors.white,
-              ),
-              BoxWidetdew(
-                width: 0.38,
-                height: 0.05,
-                color: Colors.white,
-                radius: 10.0,
-                fontSize: 0.04,
-                text: '',
-                textcolor: Colors.blue,
-              ),
-            ],
-          ),
-        ],
-      ),
-    );
+    return resTojson != null
+        ? resTojson["queue_number"] != ""
+            ? Container(
+                decoration: BoxDecoration(
+                    color: Color.fromARGB(149, 18, 42, 253),
+                    borderRadius: BorderRadius.circular(20)),
+                width: _width * 0.8,
+                height: _height * 0.10,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        BoxWidetdew(
+                          width: 0.39,
+                          height: 0.045,
+                          color: Colors.blue,
+                          radius: 10.0,
+                          fontSize: 0.025,
+                          text: 'หมายเลขคิวของคุณ',
+                          textcolor: Colors.white,
+                        ),
+                        BoxWidetdew(
+                          width: 0.39,
+                          height: 0.045,
+                          color: Colors.white,
+                          radius: 10.0,
+                          fontSize: 0.025,
+                          text: textqueue,
+                          textcolor: Color.fromARGB(255, 43, 179, 161),
+                        ),
+                      ],
+                    ),
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        BoxWidetdew(
+                          width: 0.39,
+                          height: 0.045,
+                          color: Colors.blue,
+                          radius: 10.0,
+                          fontSize: 0.025,
+                          text: 'รออีก(คิว)',
+                          textcolor: Colors.white,
+                        ),
+                        BoxWidetdew(
+                          width: 0.39,
+                          height: 0.045,
+                          color: Colors.white,
+                          radius: 10.0,
+                          fontSize: 0.025,
+                          text: '',
+                          textcolor: Colors.blue,
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              )
+            : Container()
+        : Container();
   }
 }
 
 class BoxShoHealth_Records extends StatefulWidget {
-  BoxShoHealth_Records({
-    super.key,
-    this.height,
-    this.weight,
-    this.sys,
-    this.dia,
-    this.pulse_rate,
-    this.temp,
-    this.spo2,
-    this.fbs,
-    this.si,
-    this.uric,
-  });
-  var height;
-  var weight;
-  var sys;
-  var dia; //
-  var pulse_rate;
-  var temp; //
-  var spo2;
-  var fbs;
-  var si;
-  var uric;
+  BoxShoHealth_Records({super.key});
 
   @override
   State<BoxShoHealth_Records> createState() => _BoxShoHealth_RecordsState();
 }
 
 class _BoxShoHealth_RecordsState extends State<BoxShoHealth_Records> {
+  var resTojson;
+  void information() async {
+    var url =
+        Uri.parse('https://emr-life.com/clinic_master/clinic/Api/check_q');
+    var res = await http.post(url, body: {
+      // 'care_unit_id': '63d7a282790f9bc85700000e',
+      'public_id': context.read<DataProvider>().id,
+    });
+    setState(() {
+      resTojson = json.decode(res.body);
+    });
+  }
+
+  @override
+  void initState() {
+    information();
+    // TODO: implement initState
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     double _width = MediaQuery.of(context).size.width;
@@ -473,12 +537,19 @@ class _BoxShoHealth_RecordsState extends State<BoxShoHealth_Records> {
         TextStyle(color: Colors.white, fontSize: _width * 0.04);
     TextStyle styletext2 = TextStyle(
         color: Color.fromARGB(255, 12, 172, 153), fontSize: _width * 0.04);
+    TextStyle styletext3 = TextStyle(
+        color: Color.fromARGB(255, 39, 0, 129),
+        fontSize: _width * 0.04,
+        fontWeight: FontWeight.w600);
+    TextStyle styletext4 = TextStyle(
+        color: Color.fromARGB(255, 28, 1, 91), fontSize: _width * 0.03);
     return Container(
       width: _width,
-      height: _height * 0.08,
+      height: _height * 0.16,
       child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        mainAxisAlignment: MainAxisAlignment.start,
         children: [
+          Text('ข้อมูลสุขภาพ', style: styletext3),
           Container(
             color: Color.fromARGB(255, 95, 182, 167),
             height: _height * 0.04,
@@ -491,52 +562,71 @@ class _BoxShoHealth_RecordsState extends State<BoxShoHealth_Records> {
                 Text('dia', style: styletext),
                 Text('temp', style: styletext),
                 Text('spo2', style: styletext),
-                Text('fbs', style: styletext),
-                Text('si', style: styletext),
-                Text('uric', style: styletext),
-                Text('pulse_rate.', style: styletext),
+                // Text('fbs', style: styletext),
+                // Text('si', style: styletext),
+                // Text('uric', style: styletext),
+                // Text('pulse_rate.', style: styletext),
               ],
             ),
           ),
-          Container(
-            height: _height * 0.04,
-            color: Color.fromARGB(255, 197, 230, 225),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                widget.height == 'null'
-                    ? Text('-')
-                    : Text('${widget.height}', style: styletext2),
-                widget.weight == 'null'
-                    ? Text('-')
-                    : Text('${widget.weight}', style: styletext2),
-                widget.sys == 'null'
-                    ? Text('-')
-                    : Text('${widget.sys}', style: styletext2),
-                widget.dia == 'null'
-                    ? Text('-')
-                    : Text('${widget.dia}', style: styletext2),
-                widget.temp == 'null'
-                    ? Text('-')
-                    : Text('${widget.temp}', style: styletext2),
-                widget.spo2 == 'null'
-                    ? Text('-')
-                    : Text('${widget.spo2}', style: styletext2),
-                widget.fbs == 'null'
-                    ? Text('-')
-                    : Text('${widget.fbs}', style: styletext2),
-                widget.si == 'null'
-                    ? Text('-')
-                    : Text('${widget.si}', style: styletext2),
-                widget.uric == 'null'
-                    ? Text('-')
-                    : Text('${widget.uric}', style: styletext2),
-                widget.pulse_rate == 'null'
-                    ? Text('-')
-                    : Text('${widget.pulse_rate}', style: styletext2),
-              ],
-            ),
-          ),
+          resTojson != null
+              ? resTojson['health_records'].length != 0
+                  ? Container(
+                      height: _height * 0.08,
+                      color: Color.fromARGB(255, 197, 230, 225),
+                      child: ListView.builder(
+                        itemCount: resTojson['health_records'].length,
+                        itemBuilder: (BuildContext context, int index) {
+                          return GestureDetector(
+                            onTap: () {
+                              context.read<Datafunction>().playsound();
+                              print(index);
+                            },
+                            child: Container(
+                              color: Color.fromARGB(255, 219, 246, 240),
+                              height: _height * 0.04,
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceAround,
+                                children: [
+                                  Text(
+                                      '${resTojson['health_records'][index]['height']}',
+                                      style: styletext2),
+                                  Text(
+                                      '${resTojson['health_records'][index]['weight']}',
+                                      style: styletext2),
+                                  Text(
+                                      '${resTojson['health_records'][index]['bp_sys']}',
+                                      style: styletext2),
+                                  Text(
+                                      '${resTojson['health_records'][index]['bp_dia']}',
+                                      style: styletext2),
+                                  Text(
+                                      '${resTojson['health_records'][index]['pulse_rate']}',
+                                      style: styletext2),
+                                  Text(
+                                      '${resTojson['health_records'][index]['temp']}',
+                                      style: styletext2),
+                                  // Container(
+                                  //  width: _width * 0.2,
+                                  //   child: TextButton(
+                                  //     child: Text('เพิ่มเติม'),
+                                  //     onPressed: () {},
+                                  //   ),
+                                  // )
+                                ],
+                              ),
+                            ),
+                          );
+                        },
+                      ))
+                  : Container(
+                      height: _height * 0.04,
+                      color: Color.fromARGB(100, 255, 255, 255),
+                      child: Center(
+                          child: Text('ไม่มีข้อมูลสุขภาพ', style: styletext4)),
+                    )
+              : Container()
         ],
       ),
     );
@@ -593,33 +683,43 @@ class _BoxRunQueueState extends State<BoxRunQueue> {
     double _height = MediaQuery.of(context).size.height;
     return Container(
       child: Center(
-          child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                'คิวที่',
-                style: TextStyle(color: Colors.white, fontSize: _width * 0.05),
-              ),
-              SizedBox(
-                width: _width * 0.05,
-              ),
-              message == 'no queue'
-                  ? Text(
-                      '- -',
-                      style: TextStyle(
-                          color: Colors.white, fontSize: _width * 0.05),
-                    )
-                  : Text(
-                      queue,
-                      style: TextStyle(
-                          color: Colors.white, fontSize: _width * 0.05),
-                    ),
-            ],
-          ),
-        ],
+          child: Container(
+        width: _width * 0.7,
+        height: _height * 0.08,
+        decoration: BoxDecoration(
+            color: Color.fromARGB(255, 232, 200, 73),
+            borderRadius: BorderRadius.circular(10),
+            border:
+                Border.all(width: 2, color: Color.fromARGB(255, 82, 82, 82))),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  'คิวที่',
+                  style:
+                      TextStyle(color: Colors.white, fontSize: _width * 0.05),
+                ),
+                SizedBox(
+                  width: _width * 0.05,
+                ),
+                message == 'no queue'
+                    ? Text(
+                        '- -',
+                        style: TextStyle(
+                            color: Colors.white, fontSize: _width * 0.05),
+                      )
+                    : Text(
+                        queue,
+                        style: TextStyle(
+                            color: Colors.white, fontSize: _width * 0.05),
+                      ),
+              ],
+            ),
+          ],
+        ),
       )),
     );
   }
@@ -639,7 +739,7 @@ class _HeadBoxAppointmentsState extends State<HeadBoxAppointments> {
     double _height = MediaQuery.of(context).size.height;
     TextStyle style = TextStyle(
         color: Color.fromARGB(255, 39, 0, 129),
-        fontSize: _width * 0.05,
+        fontSize: _width * 0.04,
         fontWeight: FontWeight.w800);
     TextStyle style2 = TextStyle(
         color: Color.fromARGB(255, 0, 73, 129),
@@ -648,7 +748,7 @@ class _HeadBoxAppointmentsState extends State<HeadBoxAppointments> {
     return Container(
       child: Column(
         children: [
-          Text("การนัดหมาย", style: style),
+          Text("การนัดหมายครั้งถัดไป", style: style),
           Container(
             color: Color.fromARGB(255, 115, 250, 221),
             child: Row(
@@ -676,67 +776,105 @@ class _HeadBoxAppointmentsState extends State<HeadBoxAppointments> {
 }
 
 class BoxAppointments extends StatefulWidget {
-  BoxAppointments({super.key, this.list_appointments});
-  var list_appointments;
+  BoxAppointments({
+    super.key,
+  });
+
   @override
   State<BoxAppointments> createState() => _BoxAppointmentsState();
 }
 
 class _BoxAppointmentsState extends State<BoxAppointments> {
+  var resTojson;
+  void information() async {
+    var url =
+        Uri.parse('https://emr-life.com/clinic_master/clinic/Api/check_q');
+    var res = await http.post(url, body: {
+      // 'care_unit_id': '63d7a282790f9bc85700000e',
+      'public_id': context.read<DataProvider>().id,
+    });
+    setState(() {
+      resTojson = json.decode(res.body);
+    });
+  }
+
+  @override
+  void initState() {
+    information();
+    // TODO: implement initState
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     double _width = MediaQuery.of(context).size.width;
     double _height = MediaQuery.of(context).size.height;
-    TextStyle style = TextStyle(
-        color: Color.fromARGB(255, 69, 0, 0),
-        fontSize: _width * 0.035,
-        fontWeight: FontWeight.w800);
+    TextStyle style =
+        TextStyle(fontSize: _width * 0.03, fontWeight: FontWeight.w600);
     return Container(
         width: _width,
         child: Container(
           height: _height * 0.12,
-          child: widget.list_appointments != null
-              ? ListView.builder(
-                  itemCount: widget.list_appointments.length,
-                  itemBuilder: (BuildContext context, int index) {
-                    return Container(
-                      color: Color.fromARGB(255, 219, 246, 240),
-                      height: _height * 0.04,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Container(
-                              width: _width * 0.25,
-                              child: Center(
-                                  child: Text(
-                                      widget.list_appointments[index]['date'],
-                                      style: style))),
-                          Container(
-                              width: _width * 0.25,
-                              child: Center(
-                                  child: Text(
-                                      widget.list_appointments[index]['slot'],
-                                      style: style))),
-                          Container(
-                              width: _width * 0.25,
-                              child: Center(
-                                  child: Text(
-                                      widget.list_appointments[index]
-                                          ['care_name'],
-                                      style: style))),
-                          Container(
-                              width: _width * 0.25,
-                              child: Center(
-                                  child: Text(
-                                      widget.list_appointments[index]
-                                          ['doctor_name'],
-                                      style: style))),
-                        ],
-                      ),
-                    );
-                  },
-                )
-              : SizedBox(),
+          child: resTojson != null
+              ? resTojson['appointments'].length != 0
+                  ? ListView.builder(
+                      itemCount: resTojson['appointments'].length,
+                      itemBuilder: (BuildContext context, int index) {
+                        return GestureDetector(
+                          onTap: () {
+                            context.read<Datafunction>().playsound();
+                            print(index);
+                          },
+                          child: Container(
+                            color: Color.fromARGB(255, 219, 246, 240),
+                            height: _height * 0.04,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Container(
+                                    width: _width * 0.2,
+                                    child: Center(
+                                        child: Text(
+                                            resTojson['appointments'][index]
+                                                ['date'],
+                                            style: style))),
+                                Container(
+                                    width: _width * 0.2,
+                                    child: Center(
+                                        child: Text(
+                                            resTojson['appointments'][index]
+                                                ['slot'],
+                                            style: style))),
+                                Container(
+                                    width: _width * 0.2,
+                                    child: Center(
+                                        child: Text(
+                                            resTojson['appointments'][index]
+                                                ['care_name'],
+                                            style: style))),
+                                Container(
+                                    width: _width * 0.2,
+                                    child: Center(
+                                        child: Text(
+                                            resTojson['appointments'][index]
+                                                ['doctor_name'],
+                                            style: style))),
+                              ],
+                            ),
+                          ),
+                        );
+                      },
+                    )
+                  : Container(
+                      child: Column(children: [
+                      Container(
+                          width: _height,
+                          height: _height * 0.04,
+                          color: Color.fromARGB(100, 255, 255, 255),
+                          child:
+                              Center(child: Text('ไม่มีรายการ', style: style)))
+                    ]))
+              : Container(),
         ));
   }
 }
@@ -929,5 +1067,304 @@ class _BoxTextFieldSettingState extends State<BoxTextFieldSetting> {
             ]),
       ),
     );
+  }
+}
+
+class BoxText extends StatefulWidget {
+  BoxText({super.key, this.text});
+  String? text;
+  @override
+  State<BoxText> createState() => _BoxTextState();
+}
+
+class _BoxTextState extends State<BoxText> {
+  @override
+  Widget build(BuildContext context) {
+    double _width = MediaQuery.of(context).size.width;
+    double _height = MediaQuery.of(context).size.height;
+    TextStyle style = TextStyle(
+        fontSize: _width * 0.04,
+        color: Colors.white,
+        //fontFamily: 'UTF-8',
+        fontWeight: FontWeight.w600);
+    return widget.text == null
+        ? Text('')
+        : Text(
+            widget.text.toString(),
+            style: style,
+          );
+  }
+}
+
+class BoxToDay extends StatefulWidget {
+  const BoxToDay({super.key});
+
+  @override
+  State<BoxToDay> createState() => _BoxToDayState();
+}
+
+class _BoxToDayState extends State<BoxToDay> {
+  var resTojson;
+  Future<void> checkt_queue() async {
+    var url =
+        Uri.parse('https://emr-life.com/clinic_master/clinic/Api/check_q');
+    var res = await http.post(url, body: {
+      'public_id': context.read<DataProvider>().id,
+    });
+    setState(() {
+      resTojson = json.decode(res.body);
+    });
+  }
+
+  @override
+  void initState() {
+    checkt_queue();
+
+    // TODO: implement initState
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    double _width = MediaQuery.of(context).size.width;
+    double _height = MediaQuery.of(context).size.height;
+    TextStyle styletext = TextStyle(
+        color: Colors.green,
+        fontSize: _width * 0.03,
+        fontWeight: FontWeight.w600);
+    TextStyle styletext2 =
+        TextStyle(color: Colors.red, fontSize: _width * 0.04);
+    TextStyle styletext3 = TextStyle(
+        color: Color.fromARGB(255, 39, 0, 129),
+        fontSize: _width * 0.035,
+        fontWeight: FontWeight.w600);
+    TextStyle styletext4 = TextStyle(
+        color: Color.fromARGB(255, 28, 1, 91), fontSize: _width * 0.03);
+    TextStyle style =
+        TextStyle(fontSize: _width * 0.035, fontWeight: FontWeight.w800);
+    TextStyle style2 = TextStyle(
+        color: Color.fromARGB(255, 0, 73, 129),
+        fontSize: _width * 0.045,
+        fontWeight: FontWeight.w600);
+    return Container(
+        height: _height * 0.2,
+        width: _width,
+        child: resTojson != null
+            ? resTojson['todays'].length != 0
+                ? Center(
+                    child: Container(
+                      height: _height * 0.15,
+                      width: _width * 0.8,
+                      decoration: BoxDecoration(
+                          color: Color.fromARGB(150, 222, 255, 248),
+                          borderRadius: BorderRadius.circular(20)),
+                      child: Column(
+                        children: [
+                          Text('การนัดหมายวันนี้', style: styletext3),
+                          Container(
+                            color: Color.fromARGB(255, 115, 250, 221),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Container(
+                                    width: _width * 0.2,
+                                    child: Center(
+                                        child: Text('วันที่', style: style2))),
+                                Container(
+                                    width: _width * 0.2,
+                                    child: Center(
+                                        child: Text('เวลา', style: style2))),
+                                Container(
+                                    width: _width * 0.2,
+                                    child: Center(
+                                        child: Text('สถานที่', style: style2))),
+                                Container(
+                                    width: _width * 0.2,
+                                    child: Center(
+                                        child: Text('เเพทย์', style: style2))),
+                              ],
+                            ),
+                          ),
+                          Container(
+                            color: Color.fromARGB(255, 100, 202, 131),
+                            height: _height * 0.04,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Container(
+                                    width: _width * 0.2,
+                                    child: Center(
+                                        child: Text(
+                                            resTojson['todays'][0]['date'],
+                                            style: style))),
+                                Container(
+                                    width: _width * 0.2,
+                                    child: Center(
+                                        child: Text(
+                                            resTojson['todays'][0]['slot'],
+                                            style: style))),
+                                Container(
+                                    width: _width * 0.2,
+                                    child: Center(
+                                        child: Text(
+                                            resTojson['todays'][0]['care_name'],
+                                            style: style))),
+                                Container(
+                                    width: _width * 0.2,
+                                    child: Center(
+                                        child: Text(
+                                            resTojson['todays'][0]
+                                                ['doctor_name'],
+                                            style: style))),
+                              ],
+                            ),
+                          ),
+                          // Container(
+                          //   width: _width * 0.7,
+                          //   child:
+                          //   Row(
+                          //     children: [
+                          //       Container(
+                          //         width: _width * 0.35,
+                          //         child: Column(
+                          //           crossAxisAlignment:
+                          //               CrossAxisAlignment.start,
+                          //           children: [
+                          //             BorDer(
+                          //                 child: Text("โรงพยาบาล",
+                          //                     style: styletext4)),
+                          //             BorDer(
+                          //                 child: Text("วันที่",
+                          //                     style: styletext4)),
+                          //             BorDer(
+                          //                 child: Text("คุณหมอ",
+                          //                     style: styletext4)),
+                          //             BorDer(
+                          //                 child:
+                          //                     Text("เวลา", style: styletext4)),
+                          //           ],
+                          //         ),
+                          //       ),
+                          //       Container(
+                          //         width: _width * 0.35,
+                          //         child: Column(
+                          //           crossAxisAlignment: CrossAxisAlignment.end,
+                          //           children: [
+                          //             BorDer(
+                          //               child: Text(
+                          //                   "${resTojson['todays'][0]['care_name']}",
+                          //                   style: styletext),
+                          //             ),
+                          //             BorDer(
+                          //               child: Text(
+                          //                   "${resTojson['todays'][0]['date']}",
+                          //                   style: styletext),
+                          //             ),
+                          //             BorDer(
+                          //               child: Text(
+                          //                   "${resTojson['todays'][0]['doctor_name']}",
+                          //                   style: styletext),
+                          //             ),
+                          //             BorDer(
+                          //               child: Text(
+                          //                   "${resTojson['todays'][0]['slot']}",
+                          //                   style: styletext),
+                          //             ),
+                          //           ],
+                          //         ),
+                          //       ),
+                          //     ],
+                          //   ),
+
+                          // )
+                        ],
+                      ),
+                    ),
+                  )
+                : Center(
+                    child: Text(
+                      'คุณไม่มีนัดหมายในวันนี้',
+                      style: styletext2,
+                    ),
+                  )
+            : Container());
+  }
+}
+
+class BorDer extends StatefulWidget {
+  BorDer({super.key, this.child, this.height, this.width});
+  var child;
+  var height;
+  var width;
+  @override
+  State<BorDer> createState() => _BorDerState();
+}
+
+class _BorDerState extends State<BorDer> {
+  @override
+  Widget build(BuildContext context) {
+    double _width = MediaQuery.of(context).size.width;
+    double _height = MediaQuery.of(context).size.height;
+    return Container(
+      child: Center(child: widget.child),
+      height: widget.height == null ? _height * 0.025 : widget.height,
+      width: widget.height == null ? _width * 0.35 : widget.height,
+      decoration: BoxDecoration(border: Border.all()),
+    );
+  }
+}
+
+class PrePareVideo extends StatefulWidget {
+  const PrePareVideo({super.key});
+
+  @override
+  State<PrePareVideo> createState() => _PrePareVideoState();
+}
+
+class _PrePareVideoState extends State<PrePareVideo> {
+  var data;
+  var resTojson;
+  Future<void> get_path_video() async {
+    var url =
+        Uri.parse('https://emr-life.com/clinic_master/clinic/Api/get_video');
+    var res = await http
+        .post(url, body: {'public_id': context.read<DataProvider>().id});
+    resTojson = json.decode(res.body);
+    setState(() {
+      data = resTojson['data'];
+    });
+  }
+
+  @override
+  void initState() {
+    get_path_video();
+    // TODO: implement initState
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    double _width = MediaQuery.of(context).size.width;
+    double _height = MediaQuery.of(context).size.height;
+    return resTojson != null
+        ? resTojson['data'][0] == null
+            ? Container(
+                height: _height * 0.7,
+                child: Center(
+                    child: Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    // color: Color.fromARGB(255, 255, 255, 255),
+                  ),
+                  width: _width * 0.9,
+                  height: _height * 0.5,
+                  child: RoomPage(
+                    userName: ' UserName ',
+                    data: data,
+                  ),
+                )),
+              )
+            : Container()
+        : Container();
   }
 }
