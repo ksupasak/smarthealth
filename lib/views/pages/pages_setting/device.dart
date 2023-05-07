@@ -141,14 +141,10 @@ class _DeviceState extends State<Device> {
                 children: [
                   GestureDetector(
                       onTap: () {
-                        Navigator.pop(context);
                         addDataInfoToDatabase(DataProvider());
                       },
                       child: BoxWidetdew(
-                        color: Colors.yellow,
-                        text: 'บันทึก',
-                        textcolor: Colors.white,
-                        fontSize: 0.05,
+                        color: Color.fromARGB(0, 255, 255, 255),
                         width: 0.2,
                         height: 0.15,
                         radius: 0.0,
@@ -172,6 +168,7 @@ class _DeviceState extends State<Device> {
                   GestureDetector(
                       onTap: () {
                         Navigator.pop(context);
+                        addDataInfoToDatabase(DataProvider());
                       },
                       child: BoxWidetdew(
                         color: Colors.red,

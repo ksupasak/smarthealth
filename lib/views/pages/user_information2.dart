@@ -242,57 +242,155 @@ class _choiceState extends State<choice> {
             child: Center(
                 child: Container(
               width: _width * 0.8,
-              height: _height * 0.07,
-              child: Row(
+              height: _height * 0.15,
+              child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
-                  GestureDetector(
-                    onTap: resTojson['queue_number'] == ''
-                        ? () {
-                            context.read<Datafunction>().playsound();
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      GestureDetector(
+                        onTap: resTojson['queue_number'] == ''
+                            ? () {
+                                context.read<Datafunction>().playsound();
 
-                            getqueue();
-                          }
-                        : () {
-                            Get.toNamed('printqueue');
-                          },
-                    child: Container(
-                        child: Center(
-                            child: BoxWidetdew(
-                      height: 0.06,
-                      width: 0.35,
-                      color: resTojson['todays'].length != 0
-                          ? Colors.green
-                          : Color.fromARGB(150, 175, 76, 76),
-                      radius: 5.0,
-                      text: resTojson['queue_number'] == ''
-                          ? 'รับคิว'
-                          : 'ปริ้นคิว',
-                      fontSize: 0.04,
-                      textcolor: resTojson['todays'].length != 0
-                          ? Colors.white
-                          : Color.fromARGB(150, 255, 255, 255),
-                    ))),
+                                getqueue();
+                              }
+                            : () {
+                                Get.toNamed('printqueue');
+                              },
+                        child: Container(
+                            child: Center(
+                                child: BoxWidetdew(
+                          height: 0.06,
+                          width: 0.35,
+                          color: resTojson['todays'].length != 0
+                              ? Colors.green
+                              : Color.fromARGB(150, 175, 76, 76),
+                          radius: 5.0,
+                          text: resTojson['queue_number'] == ''
+                              ? 'รับคิว'
+                              : 'ปริ้นคิว',
+                          fontSize: 0.04,
+                          textcolor: resTojson['todays'].length != 0
+                              ? Colors.white
+                              : Color.fromARGB(150, 255, 255, 255),
+                        ))),
+                      ),
+                      GestureDetector(
+                        onTap: () {
+                          dispose();
+                          context.read<Datafunction>().playsound();
+                          Get.toNamed('healthrecord');
+                        },
+                        child: Container(
+                            child: Center(
+                                child: BoxWidetdew(
+                          height: 0.06,
+                          width: 0.35,
+                          color: Colors.green,
+                          radius: 5.0,
+                          fontSize: 0.04,
+                          text: resTojson['health_records'].length != 0
+                              ? 'ตรวจสุขภาพซ้ำ'
+                              : 'ตรวจสุขภาพ',
+                          textcolor: Colors.white,
+                        ))),
+                      ),
+                    ],
                   ),
-                  GestureDetector(
-                    onTap: () {
-                      dispose();
-                      context.read<Datafunction>().playsound();
-                      Get.toNamed('healthrecord');
-                    },
-                    child: Container(
-                        child: Center(
-                            child: BoxWidetdew(
-                      height: 0.06,
-                      width: 0.35,
-                      color: Colors.green,
-                      radius: 5.0,
-                      fontSize: 0.04,
-                      text: resTojson['health_records'].length != 0
-                          ? 'ตรวจสุขภาพซ้ำ'
-                          : 'ตรวจสุขภาพ',
-                      textcolor: Colors.white,
-                    ))),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      GestureDetector(
+                        onTap: () {
+                          showModalBottomSheet(
+                            backgroundColor: Color.fromARGB(0, 255, 255, 255),
+                            isScrollControlled: true,
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.vertical(
+                                    top: Radius.circular(10))),
+                            context: context,
+                            builder: (context) => Container(
+                              height: _height * 0.5,
+                              decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.only(
+                                      topLeft: Radius.circular(20),
+                                      topRight: Radius.circular(20))),
+                              child: Column(children: [
+                                Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Container(
+                                      height: _height * 0.01,
+                                      width: _width * 0.4,
+                                      decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(50),
+                                          color: Colors.grey)),
+                                ),
+                                HeadBoxAppointments(),
+                                BoxAppointments(),
+                              ]),
+                            ),
+                          );
+                        },
+                        child: Container(
+                            child: Center(
+                                child: BoxWidetdew(
+                                    height: 0.06,
+                                    width: 0.35,
+                                    color: Colors.green,
+                                    radius: 5.0,
+                                    text: 'การนัดหมาย',
+                                    fontSize: 0.04,
+                                    textcolor: Colors.white))),
+                      ),
+                      GestureDetector(
+                        onTap: () {
+                          showModalBottomSheet(
+                            backgroundColor: Color.fromARGB(0, 255, 255, 255),
+                            isScrollControlled: true,
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.vertical(
+                                    top: Radius.circular(10))),
+                            context: context,
+                            builder: (context) => Container(
+                              height: _height * 0.5,
+                              decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.only(
+                                      topLeft: Radius.circular(20),
+                                      topRight: Radius.circular(20))),
+                              child: Column(children: [
+                                Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Container(
+                                      height: _height * 0.01,
+                                      width: _width * 0.4,
+                                      decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(50),
+                                          color: Colors.grey)),
+                                ),
+                                BoxShoHealth_Records(),
+                              ]),
+                            ),
+                          );
+                        },
+                        child: Container(
+                            child: Center(
+                                child: BoxWidetdew(
+                          height: 0.06,
+                          width: 0.35,
+                          color: Colors.green,
+                          radius: 5.0,
+                          fontSize: 0.04,
+                          text: 'ประวัติสุขภาพ',
+                          textcolor: Colors.white,
+                        ))),
+                      ),
+                    ],
                   ),
                 ],
               ),

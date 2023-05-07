@@ -228,6 +228,9 @@ class _HealthRecordState extends State<HealthRecord> {
         Positioned(
             child: ListView(children: [
           WidgetNameHospital(),
+          Container(
+            height: _height * 0.1,
+          ),
           BoxDecorate(
               color: Color.fromARGB(255, 43, 179, 161),
               child: InformationCard(

@@ -545,7 +545,6 @@ class _BoxShoHealth_RecordsState extends State<BoxShoHealth_Records> {
         color: Color.fromARGB(255, 28, 1, 91), fontSize: _width * 0.03);
     return Container(
       width: _width,
-      height: _height * 0.16,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
@@ -572,8 +571,7 @@ class _BoxShoHealth_RecordsState extends State<BoxShoHealth_Records> {
           resTojson != null
               ? resTojson['health_records'].length != 0
                   ? Container(
-                      height: _height * 0.08,
-                      color: Color.fromARGB(255, 197, 230, 225),
+                      height: _height * 0.35,
                       child: ListView.builder(
                         itemCount: resTojson['health_records'].length,
                         itemBuilder: (BuildContext context, int index) {
@@ -739,7 +737,7 @@ class _HeadBoxAppointmentsState extends State<HeadBoxAppointments> {
     double _height = MediaQuery.of(context).size.height;
     TextStyle style = TextStyle(
         color: Color.fromARGB(255, 39, 0, 129),
-        fontSize: _width * 0.04,
+        fontSize: _width * 0.05,
         fontWeight: FontWeight.w800);
     TextStyle style2 = TextStyle(
         color: Color.fromARGB(255, 0, 73, 129),
@@ -814,7 +812,7 @@ class _BoxAppointmentsState extends State<BoxAppointments> {
     return Container(
         width: _width,
         child: Container(
-          height: _height * 0.12,
+          height: _height * 0.4,
           child: resTojson != null
               ? resTojson['appointments'].length != 0
                   ? ListView.builder(
