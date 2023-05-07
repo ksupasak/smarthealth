@@ -50,5 +50,19 @@
         <meta-data
             android:name="flutterEmbedding"
             android:value="2" />
+
+ <receiver
+        android:name="com.sersoluciones.flutter_pos_printer_platform.usb.UsbReceiver"
+        android:exported="false">
+
+        <intent-filter>
+            <action android:name="android.hardware.usb.action.ACTION_USB_PERMISSION" />
+            <action android:name="android.hardware.usb.action.USB_DEVICE_DETACHED" />
+            <action android:name="com.flutter_pos_printer.USB_PERMISSION" />
+            <action android:name="android.hardware.usb.action.USB_DEVICE_ATTACHED" />
+            
+        </intent-filter>
+    </receiver>
+
     </application>
 </manifest>

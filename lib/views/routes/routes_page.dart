@@ -13,6 +13,9 @@ import 'package:smart_health/views/pages/user_information.dart';
 import 'package:smart_health/views/pages/user_information2.dart';
 import 'package:smart_health/views/splash/splash_screen.dart';
 
+import 'test_routes.dart';
+
+
 class Routes {
   static const String splash = '/splash';
   static const String home = '/home';
@@ -34,6 +37,7 @@ class Routes {
     GetPage(name: device, page: (() => Device())),
     GetPage(name: initsetting, page: (() => Initsetting())),
     GetPage(name: user_information, page: (() => UserInformation2())),
-    GetPage(name: printqueue, page: (() => PrintQueue()))
-  ];
+    GetPage(name: printqueue, page: (() => PrintQueue())),
+  
+  ]+TestRoutes.routes;
 }
