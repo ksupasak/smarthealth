@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:math' as math;
 import 'dart:math';
+import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
@@ -14,97 +15,67 @@ import 'package:smart_health/app/utils/extensions.dart';
 import 'package:smart_health/app/utils/logger.dart';
 import 'package:smart_health/app/widgets/config_view.dart';
 import 'package:smart_health/app/widgets/controls.dart';
+import 'package:smart_health/app/widgets/drop_down.dart';
 import 'package:smart_health/app/widgets/media_stream_view.dart';
+import 'package:smart_health/app/widgets/text_field.dart';
 import 'package:smart_health/background/background.dart';
 import 'package:smart_health/background/color/style_color.dart';
 
 import 'package:smart_health/provider/provider.dart';
 import 'package:smart_health/views/pages/home.dart';
 
-class ConnectPage extends StatefulWidget {
-  ConnectPage({
-    super.key,
-  });
+class PrePareVideo extends StatefulWidget {
+  const PrePareVideo({super.key});
 
   @override
-  State<ConnectPage> createState() => _ConnectPageState();
+  State<PrePareVideo> createState() => _PrePareVideoState();
 }
 
-class _ConnectPageState extends State<ConnectPage> {
-  final bool _busy = false;
+class _PrePareVideoState extends State<PrePareVideo> {
   var data;
-  final TextEditingController _textUserNameController = TextEditingController();
-
-  final Dio _dio = Dio();
-
-  _connect(BuildContext ctx) async {
-    await Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(
-            builder: (context) => RoomPage(
-                  userName: _textUserNameController.text,
-                  data: data,
-                )));
-  }
-
+  var resTojson;
   Future<void> get_path_video() async {
     var url =
         Uri.parse('https://emr-life.com/clinic_master/clinic/Api/get_video');
     var res = await http
         .post(url, body: {'public_id': context.read<DataProvider>().id});
-    var resTojson = json.decode(res.body);
-    data = resTojson['data'];
-    if (data != null) {
-      Timer(Duration(seconds: 1), () {
-        setState(() {
-          _connect(context);
-        });
-      });
-    }
+    resTojson = json.decode(res.body);
+    setState(() {
+      data = resTojson['data'];
+    });
   }
 
   @override
   void initState() {
-    super.initState();
-
-    _textUserNameController.text = 'Participante${Random().nextInt(1000)}';
     get_path_video();
+    // TODO: implement initState
+    super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     double _width = MediaQuery.of(context).size.width;
     double _height = MediaQuery.of(context).size.height;
-    return Scaffold(
-        body: Stack(
-      children: [
-        Positioned(
-            child: BackGroundSmart_Health(
-          BackGroundColor: [
-            StyleColor.backgroundbegin,
-            StyleColor.backgroundend
-          ],
-        )),
-        Positioned(
-          child: Container(
-            width: _width,
-            height: _height,
-            child: Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text('กำลังโหลด'),
-                  Container(
-                      width: _width * 0.2,
-                      height: _width * 0.2,
-                      child: CircularProgressIndicator()),
-                ],
-              ),
-            ),
-          ),
-        ),
-      ],
-    ));
+    return resTojson != null
+        ? resTojson['data'][0] == null
+            ? Container(
+                height: _height * 0.5,
+                child: Center(
+                    child: Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    // color: Color.fromARGB(255, 255, 255, 255),
+                  ),
+                  width: _width * 0.9,
+                  height: _height * 0.5,
+                  child: RoomPage(
+                    userName: ' UserName ',
+                    data: data,
+                  ),
+                )),
+              )
+            : Container()
+        : Container();
   }
 }
 
@@ -200,7 +171,7 @@ class _RoomPageState extends State<RoomPage> {
       localParticipant = await _openvidu.publishLocalStream(
           token: connection.token!, userName: widget.userName);
       setState(() {
-        // isInside = true;
+        isInside = true;
       });
     }
   }
@@ -216,7 +187,6 @@ class _RoomPageState extends State<RoomPage> {
               ? ConfigView(
                   participant: localParticipant!,
                   onConnect: _onConnect,
-                  userName: 'dew',
                 )
               : Column(
                   children: [
@@ -258,6 +228,93 @@ class _RoomPageState extends State<RoomPage> {
                   ],
                 ),
     );
+  }
+}
+
+class ConnectPage extends StatefulWidget {
+  ConnectPage({
+    super.key,
+  });
+
+  @override
+  State<ConnectPage> createState() => _ConnectPageState();
+}
+
+class _ConnectPageState extends State<ConnectPage> {
+  final bool _busy = false;
+  var data;
+  final TextEditingController _textUserNameController = TextEditingController();
+
+  final Dio _dio = Dio();
+
+  _connect(BuildContext ctx) async {
+    await Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+            builder: (context) => RoomPage(
+                  userName: _textUserNameController.text,
+                  data: data,
+                )));
+  }
+
+  Future<void> get_path_video() async {
+    var url =
+        Uri.parse('https://emr-life.com/clinic_master/clinic/Api/get_video');
+    var res = await http
+        .post(url, body: {'public_id': context.read<DataProvider>().id});
+    var resTojson = json.decode(res.body);
+    data = resTojson['data'];
+    if (data != null) {
+      Timer(Duration(seconds: 1), () {
+        setState(() {
+          _connect(context);
+        });
+      });
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+
+    _textUserNameController.text = 'Participante${Random().nextInt(1000)}';
+    get_path_video();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    double _width = MediaQuery.of(context).size.width;
+    double _height = MediaQuery.of(context).size.height;
+    return Scaffold(
+        body: Stack(
+      children: [
+        Positioned(
+            child: BackGroundSmart_Health(
+          BackGroundColor: [
+            StyleColor.backgroundbegin,
+            StyleColor.backgroundend
+          ],
+        )),
+        Positioned(
+          child: Container(
+            width: _width,
+            height: _height,
+            child: Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text('กำลังโหลด'),
+                  Container(
+                      width: _width * 0.2,
+                      height: _width * 0.2,
+                      child: CircularProgressIndicator()),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ],
+    ));
   }
 }
 

@@ -30,10 +30,10 @@ class _Splash_ScreenState extends State<Splash_Screen> {
   var care_unit_id;
   var passwordsetting;
   late List<RecordSnapshot<int, Map<String, Object?>>> init;
-  Timer scanTimer([int milliseconds = 6]) =>
-      Timer.periodic(Duration(seconds: milliseconds), (Timer timer) {
-        FlutterBluePlus.instance.startScan(timeout: Duration(seconds: 5));
-      });
+  // Timer scanTimer([int milliseconds = 6]) =>
+  //     Timer.periodic(Duration(seconds: milliseconds), (Timer timer) {
+  //       FlutterBluePlus.instance.startScan(timeout: Duration(seconds: 5));
+  //     });
 
   // void bleScan() {
   //   var deviceId;
@@ -172,50 +172,52 @@ class _Splash_ScreenState extends State<Splash_Screen> {
     double _width = MediaQuery.of(context).size.width;
     double _height = MediaQuery.of(context).size.height;
     return Scaffold(
-      body: ListView(
-        children: [
-          Container(
-            width: _width,
-            height: _height * 0.95,
-            child: StreamBuilder<BluetoothState>(
-              stream: FlutterBluePlus.instance.state,
-              initialData: BluetoothState.unknown,
-              builder: ((context, snapshot) {
-                if (snapshot.data == BluetoothState.on) {
-                  return Homeapp();
-                } else if (snapshot.data == BluetoothState.off) {
-                  print('กำลังเปิดบลูทูธ');
-                  FlutterBluePlus.instance.turnOn();
-                }
-                return const SizedBox.shrink();
-              }),
-            ),
-          ),
-          Container(
-            width: _width,
-            height: _height * 0.0000000001,
-            child: StreamBuilder<List<ScanResult>>(
-              stream: FlutterBluePlus.instance.scanResults,
-              initialData: const [],
-              builder: (c, snapshot) => SafeArea(
-                child: ListView(
-                  children: snapshot.data!.map((r) {
-                    if (context
-                        .read<DataProvider>()
-                        .namescan
-                        .toString()
-                        .contains(r.device.name)) {
-                      r.device.connect();
-                      return Container();
-                    }
-                    return Container();
-                  }).toList(),
-                ),
-              ),
-            ),
-          ),
-        ],
-      ),
+      body: Homeapp(),
+
+      // ListView(
+      //   children: [
+      //     Container(
+      //       width: _width,
+      //       height: _height * 0.95,
+      //       child: StreamBuilder<BluetoothState>(
+      //         stream: FlutterBluePlus.instance.state,
+      //         initialData: BluetoothState.unknown,
+      //         builder: ((context, snapshot) {
+      //           if (snapshot.data == BluetoothState.on) {
+      //             return Homeapp();
+      //           } else if (snapshot.data == BluetoothState.off) {
+      //             print('กำลังเปิดบลูทูธ');
+      //             FlutterBluePlus.instance.turnOn();
+      //           }
+      //           return const SizedBox.shrink();
+      //         }),
+      //       ),
+      //     ),
+      //     Container(
+      //       width: _width,
+      //       height: _height * 0.0000000001,
+      //       child: StreamBuilder<List<ScanResult>>(
+      //         stream: FlutterBluePlus.instance.scanResults,
+      //         initialData: const [],
+      //         builder: (c, snapshot) => SafeArea(
+      //           child: ListView(
+      //             children: snapshot.data!.map((r) {
+      //               if (context
+      //                   .read<DataProvider>()
+      //                   .namescan
+      //                   .toString()
+      //                   .contains(r.device.name)) {
+      //                 r.device.connect();
+      //                 return Container();
+      //               }
+      //               return Container();
+      //             }).toList(),
+      //           ),
+      //         ),
+      //       ),
+      //     ),
+      //   ],
+      // ),
     );
   }
 }

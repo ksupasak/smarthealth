@@ -30,6 +30,7 @@ class HealthRecord extends StatefulWidget {
 class _HealthRecordState extends State<HealthRecord> {
   Timer? timer;
   bool prevent = false;
+  bool ble = true;
   TextEditingController temp = TextEditingController();
   TextEditingController weight = TextEditingController();
   TextEditingController sys = TextEditingController();
@@ -40,8 +41,8 @@ class _HealthRecordState extends State<HealthRecord> {
   TextEditingController fbs = TextEditingController();
   TextEditingController si = TextEditingController();
   TextEditingController uric = TextEditingController();
-  void scan() {
-    timer = Timer.periodic(const Duration(seconds: 2), (_) {
+  void restartdata() {
+    timer = Timer.periodic(const Duration(seconds: 1), (_) {
       setState(() {
         temp.text = context.read<DataProvider>().temp;
         weight.text = context.read<DataProvider>().weight;
@@ -205,10 +206,106 @@ class _HealthRecordState extends State<HealthRecord> {
     });
   }
 
+  void bleScan() {
+    var namescan;
+
+    FlutterBluePlus flutterBlue = FlutterBluePlus.instance;
+    final Map<String, String> online_devices = HashMap();
+    namescan = DataProvider().namescan;
+    StreamController<Map<String, String>> datas =
+        StreamController<Map<String, String>>();
+    FlutterBluePlus.instance.scanResults.listen((results) {
+      if (results.length > 0) {
+        ScanResult r = results.last;
+        // print(r);
+        if (namescan.contains(r.device.name.toString())) {
+          r.device.connect();
+        }
+      } else {}
+    });
+
+    Stream.periodic(Duration(seconds: 5)).listen((_) {
+      FlutterBluePlus.instance.startScan(timeout: const Duration(seconds: 4));
+      FlutterBluePlus.instance.scanResults.listen((results) {
+        if (results.length > 0) {
+          ScanResult r = results.last;
+          //  print(r.device.id);
+          if (namescan.contains(r.device.id.toString())) {
+            r.device.connect();
+          }
+        }
+      });
+    });
+
+    Stream.periodic(Duration(seconds: 4))
+        .asyncMap((_) => flutterBlue.connectedDevices)
+        .listen((connectedDevices) {
+      connectedDevices.forEach((device) {
+        if (online_devices.containsKey(device.id.toString()) == false) {
+          online_devices[device.id.toString()] = device.name;
+          if (device.name == 'HC-08') {
+            Hc08 hc08 = Hc08(device: device);
+            hc08.parse().listen((temp) {
+              if (temp != null && temp != '') {
+                Map<String, String> val = HashMap();
+                val['temp'] = temp;
+                datas.add(val);
+                setState(() {
+                  context.read<DataProvider>().temp = temp;
+                });
+              }
+            });
+          } else if (device.name == 'HJ-Narigmed') {
+            HjNarigmed hjNarigmed = HjNarigmed(device: device);
+            hjNarigmed.parse().listen((mVal) {
+              Map<String, String> val = HashMap();
+              val['spo2'] = mVal['spo2'];
+              val['pr'] = mVal['pr'];
+              datas.add(val);
+              setState(() {
+                context.read<DataProvider>().spo2 = mVal['spo2'];
+                context.read<DataProvider>().pr = mVal['pr'];
+              });
+            });
+          } else if (device.name == 'A&D_UA-651BLE_D57B3F') {
+            AdUa651ble adUa651ble = AdUa651ble(device: device);
+            adUa651ble.parse().listen((nVal) {
+              Map<String, String> val = HashMap();
+              val['sys'] = nVal['sys'];
+              val['dia'] = nVal['dia'];
+              val['pul'] = nVal['pul'];
+              datas.add(val);
+              setState(() {
+                context.read<DataProvider>().sys = nVal['sys'];
+                context.read<DataProvider>().dia = nVal['dia'];
+                context.read<DataProvider>().pul = nVal['pul'];
+              });
+            });
+          } else if (device.name == 'MIBFS') {
+            Mibfs mibfs = Mibfs(device: device);
+            mibfs.parse().listen((weight) {
+              Map<String, String> val = HashMap();
+              val['weight'] = weight;
+              setState(() {
+                context.read<DataProvider>().weight = weight;
+              });
+            });
+          }
+        }
+      });
+    });
+  }
+
+  Timer scanTimer([int milliseconds = 6]) =>
+      Timer.periodic(Duration(seconds: milliseconds), (Timer timer) {
+        FlutterBluePlus.instance.startScan(timeout: Duration(seconds: 5));
+      });
   @override
   void initState() {
     clearprovider();
-    //  scan();
+    restartdata();
+    //scanTimer();
+    // bleScan();
     // TODO: implement initState
     super.initState();
   }
@@ -229,12 +326,44 @@ class _HealthRecordState extends State<HealthRecord> {
             child: ListView(children: [
           WidgetNameHospital(),
           Container(
-            height: _height * 0.1,
+            height: _height * 0.01,
           ),
           BoxDecorate(
               color: Color.fromARGB(255, 43, 179, 161),
               child: InformationCard(
                   dataidcard: context.read<DataProvider>().dataidcard)),
+          SizedBox(height: heightsizedbox),
+          // Container(
+          //   width: _width,
+          //   child: Row(
+          //     mainAxisAlignment: MainAxisAlignment.spaceAround,
+          //     children: [
+          //       SizedBox(width: _width * 0.2),
+          //       GestureDetector(
+          //         onTap: () {
+          //           setState(() {
+          //             if (ble == true) {
+          //               ble = false;
+          //               stop();
+          //             } else {
+          //               ble = true;
+          //               restartdata();
+          //             }
+          //           });
+          //         },
+          //         child: Container(
+          //           width: _width * 0.2,
+          //           height: _height * 0.04,
+          //           child: ble == true
+          //               ? Icon(Icons.abc,
+          //                   color: Colors.green, size: _width * 0.12)
+          //               : Icon(Icons.abc,
+          //                   color: Colors.black, size: _width * 0.12),
+          //         ),
+          //       )
+          //     ],
+          //   ),
+          // ),
           SizedBox(height: heightsizedbox),
           BoxDecorate(
               color: Colors.white,
@@ -294,6 +423,7 @@ class _HealthRecordState extends State<HealthRecord> {
                 ? GestureDetector(
                     onTap: () {
                       context.read<Datafunction>().playsound();
+                      stop();
                       chackrecorddata();
                     },
                     child: BoxWidetdew(
@@ -319,7 +449,8 @@ class _HealthRecordState extends State<HealthRecord> {
                     });
                     stop();
                     context.read<Datafunction>().playsound();
-                    Navigator.pop(context);
+                    Get.offAllNamed('user_information');
+                    // Navigator.pop(context);
                   },
                   child: BoxWidetdew(
                       height: 0.055,

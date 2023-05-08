@@ -47,12 +47,15 @@ class BoxTime extends StatefulWidget {
 
 class _BoxTimeState extends State<BoxTime> {
   DateTime dateTime = DateTime.parse('0000-00-00 00:00');
-
+  String data = "";
   @override
   void initState() {
     Timer.periodic(Duration(seconds: 1), (Timer t) {
       setState(() {
         dateTime = DateTime.now();
+        data = "เวลา ${dateTime.hour}:" +
+            "${dateTime.minute}:" +
+            "${dateTime.second}";
       });
     });
   }
@@ -72,7 +75,7 @@ class _BoxTimeState extends State<BoxTime> {
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
           Text('Care Unit', style: style),
-          Text(dateTime.toString(), style: style)
+          Text(data.toString(), style: style)
         ],
       ),
     );
@@ -439,59 +442,71 @@ class _BoxQueueState extends State<BoxQueue> {
     return resTojson != null
         ? resTojson["queue_number"] != ""
             ? Container(
-                decoration: BoxDecoration(
-                    color: Color.fromARGB(149, 18, 42, 253),
-                    borderRadius: BorderRadius.circular(20)),
                 width: _width * 0.8,
-                height: _height * 0.10,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                height: _height * 0.15,
+                child: Column(
                   children: [
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: [
-                        BoxWidetdew(
-                          width: 0.39,
-                          height: 0.045,
-                          color: Colors.blue,
-                          radius: 10.0,
-                          fontSize: 0.025,
-                          text: 'หมายเลขคิวของคุณ',
-                          textcolor: Colors.white,
-                        ),
-                        BoxWidetdew(
-                          width: 0.39,
-                          height: 0.045,
-                          color: Colors.white,
-                          radius: 10.0,
-                          fontSize: 0.025,
-                          text: textqueue,
-                          textcolor: Color.fromARGB(255, 43, 179, 161),
-                        ),
-                      ],
+                    Text(
+                      'กรุณารอเรียกคิว',
+                      style: TextStyle(fontSize: _width * 0.04),
                     ),
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: [
-                        BoxWidetdew(
-                          width: 0.39,
-                          height: 0.045,
-                          color: Colors.blue,
-                          radius: 10.0,
-                          fontSize: 0.025,
-                          text: 'รออีก(คิว)',
-                          textcolor: Colors.white,
-                        ),
-                        BoxWidetdew(
-                          width: 0.39,
-                          height: 0.045,
-                          color: Colors.white,
-                          radius: 10.0,
-                          fontSize: 0.025,
-                          text: '',
-                          textcolor: Colors.blue,
-                        ),
-                      ],
+                    Container(
+                      decoration: BoxDecoration(
+                          color: Color.fromARGB(149, 18, 42, 253),
+                          borderRadius: BorderRadius.circular(20)),
+                      width: _width * 0.8,
+                      height: _height * 0.10,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [
+                          Column(
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            children: [
+                              BoxWidetdew(
+                                width: 0.39,
+                                height: 0.045,
+                                color: Colors.blue,
+                                radius: 10.0,
+                                fontSize: 0.025,
+                                text: 'หมายเลขคิวของคุณ',
+                                textcolor: Colors.white,
+                              ),
+                              BoxWidetdew(
+                                width: 0.39,
+                                height: 0.045,
+                                color: Colors.white,
+                                radius: 10.0,
+                                fontSize: 0.025,
+                                text: textqueue,
+                                textcolor: Color.fromARGB(255, 43, 179, 161),
+                              ),
+                            ],
+                          ),
+                          Column(
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            children: [
+                              BoxWidetdew(
+                                width: 0.39,
+                                height: 0.045,
+                                color: Colors.blue,
+                                radius: 10.0,
+                                fontSize: 0.025,
+                                text: 'รออีก(คิว)',
+                                textcolor: Colors.white,
+                              ),
+                              BoxWidetdew(
+                                width: 0.39,
+                                height: 0.045,
+                                color: Colors.white,
+                                radius: 10.0,
+                                fontSize: 0.025,
+                                text: '',
+                                textcolor: Colors.blue,
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
                     ),
                   ],
                 ),
@@ -1309,60 +1324,5 @@ class _BorDerState extends State<BorDer> {
       width: widget.height == null ? _width * 0.35 : widget.height,
       decoration: BoxDecoration(border: Border.all()),
     );
-  }
-}
-
-class PrePareVideo extends StatefulWidget {
-  const PrePareVideo({super.key});
-
-  @override
-  State<PrePareVideo> createState() => _PrePareVideoState();
-}
-
-class _PrePareVideoState extends State<PrePareVideo> {
-  var data;
-  var resTojson;
-  Future<void> get_path_video() async {
-    var url =
-        Uri.parse('https://emr-life.com/clinic_master/clinic/Api/get_video');
-    var res = await http
-        .post(url, body: {'public_id': context.read<DataProvider>().id});
-    resTojson = json.decode(res.body);
-    setState(() {
-      data = resTojson['data'];
-    });
-  }
-
-  @override
-  void initState() {
-    get_path_video();
-    // TODO: implement initState
-    super.initState();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    double _width = MediaQuery.of(context).size.width;
-    double _height = MediaQuery.of(context).size.height;
-    return resTojson != null
-        ? resTojson['data'][0] == null
-            ? Container(
-                height: _height * 0.7,
-                child: Center(
-                    child: Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                    // color: Color.fromARGB(255, 255, 255, 255),
-                  ),
-                  width: _width * 0.9,
-                  height: _height * 0.5,
-                  child: RoomPage(
-                    userName: ' UserName ',
-                    data: data,
-                  ),
-                )),
-              )
-            : Container()
-        : Container();
   }
 }

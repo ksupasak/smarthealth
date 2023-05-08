@@ -81,8 +81,9 @@ class _ConfigViewState extends State<ConfigView> {
   }
 
   Widget _controlsWidget() {
+    double _width = MediaQuery.of(context).size.width;
+    double _height = MediaQuery.of(context).size.height;
     return Container(
-      color: Colors.amber,
       padding: const EdgeInsets.symmetric(
         horizontal: 20,
         vertical: 20,
@@ -92,31 +93,17 @@ class _ConfigViewState extends State<ConfigView> {
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          Padding(
-            padding: const EdgeInsets.only(bottom: 25),
-            child: OVTextField(
-              label: 'Username',
-              ctrl: _textUserNameController,
-              enabled: false,
-            ),
+          OVDropDown(
+            label: 'Input',
+            devices: _audioInputs ?? [],
+            selectDevice: selectedAudioInput,
+            onChanged: _selectAudioInput,
           ),
-          Padding(
-            padding: const EdgeInsets.only(bottom: 25),
-            child: OVDropDown(
-              label: 'Input',
-              devices: _audioInputs ?? [],
-              selectDevice: selectedAudioInput,
-              onChanged: _selectAudioInput,
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(bottom: 25),
-            child: OVDropDown(
-              label: 'Video',
-              devices: _videoInputs ?? [],
-              selectDevice: selectedVideoInput,
-              onChanged: _selectVideoInput,
-            ),
+          OVDropDown(
+            label: 'Video',
+            devices: _videoInputs ?? [],
+            selectDevice: selectedVideoInput,
+            onChanged: _selectVideoInput,
           ),
           ElevatedButton(
             onPressed: widget.onConnect,
@@ -152,42 +139,20 @@ class _ConfigViewState extends State<ConfigView> {
 
   @override
   Widget build(BuildContext context) {
+    double _width = MediaQuery.of(context).size.width;
+    double _height = MediaQuery.of(context).size.height;
     return Scaffold(
-      body: LayoutBuilder(
-          builder: (BuildContext context, BoxConstraints constraints) {
-        if (constraints.maxWidth > 600) {
-          return Row(
-            children: [
-              Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.only(
-                      top: 80, left: 60, bottom: 30, right: 30),
-                  child: _streamWidget(),
-                ),
-              ),
-              Expanded(child: _controlsWidget()),
-            ],
-          );
-        } else {
-          return SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                SizedBox(
-                  height: 500,
-                  width: double.infinity,
-                  child: Padding(
-                    padding: const EdgeInsets.only(
-                        top: 80, left: 30, bottom: 30, right: 30),
-                    child: _streamWidget(),
-                  ),
-                ),
-                _controlsWidget()
-              ],
-            ),
-          );
-        }
-      }),
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          SizedBox(
+            height: _height * 0.35,
+            width: _width * 0.7,
+            child: _streamWidget(),
+          ),
+          _controlsWidget()
+        ],
+      ),
     );
   }
 }

@@ -16,65 +16,55 @@ class OVDropDown extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Padding(
-          padding: const EdgeInsets.only(bottom: 10),
-          child: Text(
+    double _width = MediaQuery.of(context).size.width;
+    double _height = MediaQuery.of(context).size.height;
+    return Container(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
             label,
             style: const TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.bold,
             ),
           ),
-        ),
-        Container(
-            padding: const EdgeInsets.symmetric(
-              vertical: 15,
-              horizontal: 15,
-            ),
-            decoration: BoxDecoration(
-              border: Border.all(
-                width: 1,
-                color: Colors.white.withOpacity(.3),
-              ),
-              borderRadius: BorderRadius.circular(8),
-            ),
-            child: DropdownButtonFormField<MediaDevice>(
-              isExpanded: true,
-              items: devices
-                  .map(
-                    (device) => DropdownMenuItem(
-                      value: device,
-                      child: ListTile(
-                        leading: (selectDevice?.deviceId == device.deviceId)
-                            ? const Icon(
-                                EvaIcons.checkmarkSquare,
-                                color: Colors.white,
-                              )
-                            : const Icon(
-                                EvaIcons.square,
-                                color: Colors.white,
-                              ),
-                        title: Text(device.label),
-                      ),
+          Container(
+              child: DropdownButtonFormField<MediaDevice>(
+            isExpanded: true,
+            items: devices
+                .map(
+                  (device) => DropdownMenuItem(
+                    value: device,
+                    child: ListTile(
+                      leading: (selectDevice?.deviceId == device.deviceId)
+                          ? const Icon(
+                              EvaIcons.checkmarkSquare,
+                              color: Colors.white,
+                            )
+                          : const Icon(
+                              EvaIcons.square,
+                              color: Colors.white,
+                            ),
+                      title: Text(device.label),
                     ),
-                  )
-                  .toList(),
-              onChanged: onChanged,
-              value: selectDevice,
-              decoration: const InputDecoration(
-                prefixIcon: Icon(
-                  Icons.videocam,
-                ),
-                contentPadding: EdgeInsets.symmetric(
-                  horizontal: 0,
-                  vertical: 0,
-                ),
+                  ),
+                )
+                .toList(),
+            onChanged: onChanged,
+            value: selectDevice,
+            decoration: const InputDecoration(
+              prefixIcon: Icon(
+                Icons.videocam,
               ),
-            )),
-      ],
+              contentPadding: EdgeInsets.symmetric(
+                horizontal: 0,
+                vertical: 0,
+              ),
+            ),
+          )),
+        ],
+      ),
     );
   }
 }
