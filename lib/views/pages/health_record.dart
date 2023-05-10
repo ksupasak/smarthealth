@@ -31,6 +31,9 @@ class _HealthRecordState extends State<HealthRecord> {
   Timer? timer;
   bool prevent = false;
   bool ble = true;
+
+  StreamSubscription? _streamSubscription;
+  StreamSubscription? _functionSubscription;
   TextEditingController temp = TextEditingController();
   TextEditingController weight = TextEditingController();
   TextEditingController sys = TextEditingController();
@@ -41,6 +44,7 @@ class _HealthRecordState extends State<HealthRecord> {
   TextEditingController fbs = TextEditingController();
   TextEditingController si = TextEditingController();
   TextEditingController uric = TextEditingController();
+  TextEditingController height = TextEditingController();
   void restartdata() {
     timer = Timer.periodic(const Duration(seconds: 1), (_) {
       setState(() {
@@ -58,8 +62,30 @@ class _HealthRecordState extends State<HealthRecord> {
     });
   }
 
+  @override
+  void dispose() {
+    _streamSubscription
+        ?.cancel(); // แนะนำเรียก cancel() ใน dispose() เพื่อป้องกัน memory leak
+    super.dispose();
+  }
+
   void stop() {
-    timer?.cancel();
+    setState(() {
+      timer?.cancel();
+      _streamSubscription?.cancel();
+      _functionSubscription?.cancel();
+      Get.offAllNamed('user_information');
+    });
+    ; // ยกเลิก StreamSubscription ถ้ามีการติดตาม Stream อยู่
+  }
+
+  void stop2() {
+    setState(() {
+      timer?.cancel();
+      _streamSubscription?.cancel();
+      _functionSubscription?.cancel();
+    });
+    ; // ยกเลิก StreamSubscription ถ้ามีการติดตาม Stream อยู่
   }
 
   void chackrecorddata() async {
@@ -95,8 +121,9 @@ class _HealthRecordState extends State<HealthRecord> {
                 GestureDetector(
                     onTap: () {
                       recorddata();
+                      context.read<DataProvider>().status_getqueue = 'true';
+                      stop();
                       context.read<Datafunction>().playsound();
-                      Navigator.pop(context);
                     },
                     child: MarkCheck(
                         pathicon: 'assets/check.png',
@@ -151,9 +178,6 @@ class _HealthRecordState extends State<HealthRecord> {
             Timer(Duration(seconds: 2), () {
               Navigator.pop(context);
               Get.toNamed('user_information');
-              //  Get.offNamed('menu');
-              //    Navigator.pushReplacement(
-              //     context, MaterialPageRoute(builder: (context) => Menu()));
             });
           });
         } else {
@@ -217,19 +241,20 @@ class _HealthRecordState extends State<HealthRecord> {
     FlutterBluePlus.instance.scanResults.listen((results) {
       if (results.length > 0) {
         ScanResult r = results.last;
-        // print(r);
+
         if (namescan.contains(r.device.name.toString())) {
           r.device.connect();
         }
       } else {}
     });
 
-    Stream.periodic(Duration(seconds: 5)).listen((_) {
+    _streamSubscription = Stream.periodic(Duration(seconds: 5)).listen((_) {
       FlutterBluePlus.instance.startScan(timeout: const Duration(seconds: 4));
       FlutterBluePlus.instance.scanResults.listen((results) {
+        print('streamtimeกำลังทำงาน');
         if (results.length > 0) {
           ScanResult r = results.last;
-          //  print(r.device.id);
+
           if (namescan.contains(r.device.id.toString())) {
             r.device.connect();
           }
@@ -237,10 +262,11 @@ class _HealthRecordState extends State<HealthRecord> {
       });
     });
 
-    Stream.periodic(Duration(seconds: 4))
+    _functionSubscription = Stream.periodic(Duration(seconds: 4))
         .asyncMap((_) => flutterBlue.connectedDevices)
         .listen((connectedDevices) {
       connectedDevices.forEach((device) {
+        print('functionstreamtimeกำลังทำงาน');
         if (online_devices.containsKey(device.id.toString()) == false) {
           online_devices[device.id.toString()] = device.name;
           if (device.name == 'HC-08') {
@@ -296,16 +322,16 @@ class _HealthRecordState extends State<HealthRecord> {
     });
   }
 
-  Timer scanTimer([int milliseconds = 6]) =>
-      Timer.periodic(Duration(seconds: milliseconds), (Timer timer) {
-        FlutterBluePlus.instance.startScan(timeout: Duration(seconds: 5));
-      });
+  // Timer scanTimer([int milliseconds = 6]) =>
+  //     Timer.periodic(Duration(seconds: milliseconds), (Timer timer) {
+  //       FlutterBluePlus.instance.startScan(timeout: Duration(seconds: 5));
+  //     });
   @override
   void initState() {
     clearprovider();
     restartdata();
-    //scanTimer();
-    // bleScan();
+    //   scanTimer();
+    bleScan();
     // TODO: implement initState
     super.initState();
   }
@@ -344,7 +370,7 @@ class _HealthRecordState extends State<HealthRecord> {
           //           setState(() {
           //             if (ble == true) {
           //               ble = false;
-          //               stop();
+          //               stop2();
           //             } else {
           //               ble = true;
           //               restartdata();
@@ -372,7 +398,9 @@ class _HealthRecordState extends State<HealthRecord> {
                   children: [
                     BoxRecord(texthead: 'TEMP', keyvavlue: temp),
                     Line(height: heightline, color: teamcolor),
-                    BoxRecord(texthead: 'WEIGHT', keyvavlue: weight)
+                    BoxRecord(texthead: 'WEIGHT', keyvavlue: weight),
+                    Line(height: heightline, color: teamcolor),
+                    BoxRecord(texthead: 'height', keyvavlue: height)
                   ])),
           SizedBox(height: heightsizedbox),
           BoxDecorate(
@@ -423,7 +451,7 @@ class _HealthRecordState extends State<HealthRecord> {
                 ? GestureDetector(
                     onTap: () {
                       context.read<Datafunction>().playsound();
-                      stop();
+
                       chackrecorddata();
                     },
                     child: BoxWidetdew(
@@ -444,13 +472,10 @@ class _HealthRecordState extends State<HealthRecord> {
           Center(
               child: GestureDetector(
                   onTap: () {
-                    setState(() {
-                      context.read<DataProvider>().status_getqueue = 'true';
-                    });
                     stop();
                     context.read<Datafunction>().playsound();
-                    Get.offAllNamed('user_information');
-                    // Navigator.pop(context);
+
+                    //  Navigator.pop(context);
                   },
                   child: BoxWidetdew(
                       height: 0.055,

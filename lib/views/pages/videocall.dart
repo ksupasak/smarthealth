@@ -23,6 +23,7 @@ import 'package:smart_health/background/color/style_color.dart';
 
 import 'package:smart_health/provider/provider.dart';
 import 'package:smart_health/views/pages/home.dart';
+import 'package:smart_health/views/ui/widgetdew.dart/widgetdew.dart';
 
 class PrePareVideo extends StatefulWidget {
   const PrePareVideo({super.key});
@@ -59,23 +60,44 @@ class _PrePareVideoState extends State<PrePareVideo> {
     return resTojson != null
         ? resTojson['data'][0] == null
             ? Container(
-                height: _height * 0.5,
                 child: Center(
-                    child: Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                    // color: Color.fromARGB(255, 255, 255, 255),
-                  ),
-                  width: _width * 0.9,
-                  height: _height * 0.5,
                   child: RoomPage(
                     userName: ' UserName ',
                     data: data,
                   ),
-                )),
+                ),
+                height: _height * 0.7,
+                // child: Center(
+                //     child: Container(
+                //   decoration:
+                //       BoxDecoration(borderRadius: BorderRadius.circular(10)),
+                //   width: _width * 0.9,
+                //   height: _height * 0.5,
+
+                // )),
               )
             : Container()
-        : Container();
+        : Scaffold(
+            body: Stack(
+              children: [
+                backgrund(),
+                Positioned(
+                  child: Container(
+                      width: _width,
+                      child: Center(
+                          child: BoxWidetdew(
+                              height: 0.06,
+                              width: _width,
+                              color: Color.fromARGB(0, 255, 255, 255),
+                              radius: 5.0,
+                              fontSize: 0.05,
+                              fontWeight: FontWeight.w500,
+                              text: 'กำลังเชื่อมต่อVideo',
+                              textcolor: Color.fromARGB(255, 9, 106, 0)))),
+                ),
+              ],
+            ),
+          );
   }
 }
 
@@ -96,11 +118,12 @@ class _RoomPageState extends State<RoomPage> {
   MediaDeviceInfo? input;
   bool isInside = false;
   late OpenViduClient _openvidu;
-
+  var resTojson;
   LocalParticipant? localParticipant;
-
+  Timer? _timer;
   @override
   void initState() {
+    //  lop();
     super.initState();
     initOpenVidu();
     _listenSessionEvents();
@@ -176,58 +199,163 @@ class _RoomPageState extends State<RoomPage> {
     }
   }
 
+  void _onTapDisconnect() async {
+    final nav = Navigator.of(context);
+    final result = await context.showDisconnectDialog();
+    if (result == true) {
+      await _openvidu.disconnect();
+      nav.pop();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     double _width = MediaQuery.of(context).size.width;
     double _height = MediaQuery.of(context).size.height;
     return Scaffold(
-      body: localParticipant == null
-          ? Container()
-          : !isInside
-              ? ConfigView(
-                  participant: localParticipant!,
-                  onConnect: _onConnect,
-                )
-              : Column(
-                  children: [
-                    Expanded(
-                      child: ListView.builder(
-                          //  scrollDirection: Axis.horizontal,
-                          itemCount: math.max(0, remoteParticipants.length),
-                          itemBuilder: (BuildContext context, int index) {
-                            final remote =
-                                remoteParticipants.values.elementAt(index);
-                            return Container(
-                              width: _width /
-                                  math.max(1, remoteParticipants.length),
-                              height: _height /
-                                  math.max(1, remoteParticipants.length),
-                              child: Expanded(
-                                child: MediaStreamView(
-                                  borderRadius: BorderRadius.circular(5),
-                                  participant: remote,
-                                ),
-                              ),
-                            );
-                          }),
-                    ),
-                    Container(
-                      //flutter overlay widget example
-                      height: 100,
-                      width: 100,
-                      child: MediaStreamView(
-                        borderRadius: BorderRadius.circular(5),
-                        participant: localParticipant!,
+        body: Stack(children: [
+      backgrund(),
+      Positioned(
+        child: localParticipant == null
+            ? Container()
+            : !isInside
+                ? Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      BoxWidetdew(
+                          height: 0.06,
+                          width: _width,
+                          color: Color.fromARGB(0, 255, 255, 255),
+                          radius: 5.0,
+                          fontSize: 0.05,
+                          fontWeight: FontWeight.w500,
+                          text: 'เตรียมความพร้อม',
+                          textcolor: Color.fromARGB(255, 9, 106, 0)),
+                      Center(
+                        child: ConfigView(
+                          participant: localParticipant!,
+                          onConnect: _onConnect,
+                        ),
                       ),
-                    ),
-                    if (localParticipant != null)
-                      SafeArea(
-                        top: false,
-                        child: ControlsWidget(_openvidu, localParticipant!),
+                    ],
+                  )
+                : Container(
+                    child: Stack(children: [
+                      Positioned(
+                        child: Container(
+                          child: ListView.builder(
+                              //  scrollDirection: Axis.horizontal,
+                              itemCount: math.max(0, remoteParticipants.length),
+                              itemBuilder: (BuildContext context, int index) {
+                                final remote =
+                                    remoteParticipants.values.elementAt(index);
+                                return Container(
+                                  width: _width /
+                                      math.max(1, remoteParticipants.length),
+                                  height: _height /
+                                      math.max(1, remoteParticipants.length),
+                                  child: Expanded(
+                                    child: MediaStreamView(
+                                      borderRadius: BorderRadius.circular(5),
+                                      participant: remote,
+                                    ),
+                                  ),
+                                );
+                              }),
+                        ),
                       ),
-                  ],
-                ),
-    );
+                      Positioned(
+                        bottom: 50,
+                        left: 50,
+                        child: Container(
+                          height: _height * 0.15,
+                          width: _width * 0.15,
+                          child: MediaStreamView(
+                            borderRadius: BorderRadius.circular(5),
+                            participant: localParticipant!,
+                          ),
+                        ),
+                      ),
+                      // Positioned(
+                      //   bottom: 10,
+                      //   right: 10,
+                      //   child: localParticipant != null
+                      //       ? SafeArea(
+                      //           top: false,
+                      //           child: Container(
+                      //             color: Colors.white,
+                      //             height: _height * 0.03,
+                      //             child: Center(
+                      //               child: ControlsWidget(
+                      //                   _openvidu, localParticipant!),
+                      //             ),
+                      //           ),
+                      //         )
+                      //       : Container(),
+                      // ),
+                      Positioned(
+                        bottom: 10,
+                        child: GestureDetector(
+                          onTap: () {
+                            _onTapDisconnect();
+                          },
+                          child: Container(
+                              width: _width,
+                              child: Center(
+                                  child: BoxWidetdew(
+                                height: 0.04,
+                                width: 0.2,
+                                color: Colors.red,
+                                radius: 5.0,
+                                fontSize: 0.04,
+                                text: 'ออก',
+                                textcolor: Colors.white,
+                              ))),
+                        ),
+                      )
+                    ]),
+                    // child: Column(
+                    //   children: [
+                    //     Expanded(
+                    //       child: ListView.builder(
+                    //           //  scrollDirection: Axis.horizontal,
+                    //           itemCount: math.max(0, remoteParticipants.length),
+                    //           itemBuilder: (BuildContext context, int index) {
+                    //             final remote =
+                    //                 remoteParticipants.values.elementAt(index);
+                    //             return Container(
+                    //               width: _width /
+                    //                   math.max(1, remoteParticipants.length),
+                    //               height: _height /
+                    //                   math.max(1, remoteParticipants.length),
+                    //               child: Expanded(
+                    //                 child: MediaStreamView(
+                    //                   borderRadius: BorderRadius.circular(5),
+                    //                   participant: remote,
+                    //                 ),
+                    //               ),
+                    //             );
+                    //           }),
+                    //     ),
+                    //     Container(
+                    //       height: 100,
+                    //       width: 100,
+                    //       child: MediaStreamView(
+                    //         borderRadius: BorderRadius.circular(5),
+                    //         participant: localParticipant!,
+                    //       ),
+                    //     ),
+                    //     if (localParticipant != null)
+                    //       SafeArea(
+                    //         top: false,
+                    //         child: ControlsWidget(_openvidu, localParticipant!),
+                    //       ),
+                    //   ],
+                    // ),
+                  ),
+      )
+    ]));
   }
 }
 
@@ -315,158 +443,5 @@ class _ConnectPageState extends State<ConnectPage> {
         ),
       ],
     ));
-  }
-}
-
-class Videocall2 extends StatefulWidget {
-  Videocall2({
-    super.key,
-    required this.userName,
-    this.data,
-  });
-  final String userName;
-  var data;
-  @override
-  State<Videocall2> createState() => _Videocall2State();
-}
-
-class _Videocall2State extends State<Videocall2> {
-  Map<String, RemoteParticipant> remoteParticipants = {};
-  MediaDeviceInfo? input;
-  bool isInside = true;
-  late OpenViduClient _openvidu;
-
-  LocalParticipant? localParticipant;
-
-  @override
-  void initState() {
-    super.initState();
-    initOpenVidu();
-    _listenSessionEvents();
-    logger.e("finish init");
-    _onConnect();
-  }
-
-  void _listenSessionEvents() {
-    _openvidu.on(OpenViduEvent.userJoined, (params) async {
-      await _openvidu.subscribeRemoteStream(params["id"]);
-    });
-    _openvidu.on(OpenViduEvent.userPublished, (params) {
-      logger.e("userPublished");
-
-      _openvidu.subscribeRemoteStream(params["id"],
-          video: params["videoActive"], audio: params["audioActive"]);
-    });
-
-    _openvidu.on(OpenViduEvent.addStream, (params) {
-      remoteParticipants = {..._openvidu.participants};
-      setState(() {});
-    });
-
-    _openvidu.on(OpenViduEvent.removeStream, (params) {
-      remoteParticipants = {..._openvidu.participants};
-      setState(() {});
-    });
-
-    _openvidu.on(OpenViduEvent.publishVideo, (params) {
-      remoteParticipants = {..._openvidu.participants};
-      setState(() {});
-    });
-    _openvidu.on(OpenViduEvent.publishAudio, (params) {
-      remoteParticipants = {..._openvidu.participants};
-      setState(() {});
-    });
-    _openvidu.on(OpenViduEvent.updatedLocal, (params) {
-      localParticipant = params['localParticipant'];
-      setState(() {});
-    });
-    _openvidu.on(OpenViduEvent.reciveMessage, (params) {
-      context.showMessageRecivedDialog(params["data"] ?? '');
-    });
-    _openvidu.on(OpenViduEvent.userUnpublished, (params) {
-      remoteParticipants = {..._openvidu.participants};
-      setState(() {});
-    });
-
-    _openvidu.on(OpenViduEvent.error, (params) {
-      context.showErrorDialog(params["error"]);
-    });
-  }
-
-  Future<void> initOpenVidu() async {
-    _openvidu = OpenViduClient('https://pcm-life.com:4443/openvidu');
-    localParticipant =
-        await _openvidu.startLocalPreview(context, StreamMode.frontCamera);
-    setState(() {});
-  }
-
-  Future<void> _onConnect() async {
-    logger.e("start on Connect");
-    dynamic connectstring = widget.data;
-
-    if (true) {
-      final connection = Connection.fromJson(connectstring);
-      logger.i(connection.token!);
-      localParticipant = await _openvidu.publishLocalStream(
-          token: connection.token!, userName: widget.userName);
-      setState(() {
-        // isInside = true;
-      });
-    }
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    double _width = MediaQuery.of(context).size.width;
-    double _height = MediaQuery.of(context).size.height;
-    return Scaffold(
-      body: localParticipant == null
-          ? Container()
-          : !isInside
-              ? ConfigView(
-                  participant: localParticipant!,
-                  onConnect: _onConnect,
-                  userName: 'dew',
-                )
-              : Column(
-                  children: [
-                    Expanded(
-                      child: ListView.builder(
-                          //  scrollDirection: Axis.horizontal,
-                          itemCount: math.max(0, remoteParticipants.length),
-                          itemBuilder: (BuildContext context, int index) {
-                            final remote =
-                                remoteParticipants.values.elementAt(index);
-                            return Container(
-                              width: _width /
-                                  math.max(1, remoteParticipants.length),
-                              height: _height /
-                                  math.max(1, remoteParticipants.length),
-                              child: Expanded(
-                                child: MediaStreamView(
-                                  borderRadius: BorderRadius.circular(5),
-                                  participant: remote,
-                                ),
-                              ),
-                            );
-                          }),
-                    ),
-                    Container(
-                      //flutter overlay widget example
-                      height: 100,
-                      width: 100,
-                      child: MediaStreamView(
-                        borderRadius: BorderRadius.circular(5),
-                        participant: localParticipant!,
-                      ),
-                    ),
-                    if (localParticipant != null)
-                      SafeArea(
-                        top: false,
-                        child: ControlsWidget(_openvidu, localParticipant!),
-                      ),
-                  ],
-                ),
-    );
   }
 }

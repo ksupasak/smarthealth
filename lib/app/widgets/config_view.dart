@@ -141,15 +141,14 @@ class _ConfigViewState extends State<ConfigView> {
   Widget build(BuildContext context) {
     double _width = MediaQuery.of(context).size.width;
     double _height = MediaQuery.of(context).size.height;
-    return Scaffold(
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
+    return Container(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
           SizedBox(
-            height: _height * 0.35,
-            width: _width * 0.7,
-            child: _streamWidget(),
-          ),
+              height: _height * 0.5,
+              width: _width * 0.7,
+              child: _streamWidget()),
           _controlsWidget()
         ],
       ),

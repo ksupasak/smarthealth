@@ -39,8 +39,8 @@ class _backgrundState extends State<backgrund> {
 }
 
 class BoxTime extends StatefulWidget {
-  BoxTime({super.key, this.time});
-  var time;
+  BoxTime({super.key});
+
   @override
   State<BoxTime> createState() => _BoxTimeState();
 }
@@ -48,15 +48,26 @@ class BoxTime extends StatefulWidget {
 class _BoxTimeState extends State<BoxTime> {
   DateTime dateTime = DateTime.parse('0000-00-00 00:00');
   String data = "";
+  Timer? timer;
   @override
   void initState() {
-    Timer.periodic(Duration(seconds: 1), (Timer t) {
+    start();
+  }
+
+  void start() {
+    timer = Timer.periodic(Duration(seconds: 1), (Timer t) {
       setState(() {
         dateTime = DateTime.now();
         data = "เวลา ${dateTime.hour}:" +
             "${dateTime.minute}:" +
             "${dateTime.second}";
       });
+    });
+  }
+
+  void stop() {
+    setState(() {
+      timer?.cancel();
     });
   }
 
@@ -512,7 +523,11 @@ class _BoxQueueState extends State<BoxQueue> {
                 ),
               )
             : Container()
-        : Container();
+        : Container(
+            width: MediaQuery.of(context).size.width * 0.07,
+            height: MediaQuery.of(context).size.width * 0.07,
+            child: CircularProgressIndicator(),
+          );
   }
 }
 
@@ -534,6 +549,7 @@ class _BoxShoHealth_RecordsState extends State<BoxShoHealth_Records> {
     });
     setState(() {
       resTojson = json.decode(res.body);
+      print(resTojson);
     });
   }
 
@@ -570,12 +586,12 @@ class _BoxShoHealth_RecordsState extends State<BoxShoHealth_Records> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                Text('height', style: styletext),
-                Text('weight', style: styletext),
-                Text('sys.', style: styletext),
-                Text('dia', style: styletext),
-                Text('temp', style: styletext),
-                Text('spo2', style: styletext),
+                BoxDataHealth(child: Text('height', style: styletext)),
+                BoxDataHealth(child: Text('weight', style: styletext)),
+                BoxDataHealth(child: Text('temp', style: styletext)),
+                BoxDataHealth(child: Text('sys.', style: styletext)),
+                BoxDataHealth(child: Text('dia', style: styletext)),
+                BoxDataHealth(child: Text('spo2', style: styletext)),
                 // Text('fbs', style: styletext),
                 // Text('si', style: styletext),
                 // Text('uric', style: styletext),
@@ -595,40 +611,73 @@ class _BoxShoHealth_RecordsState extends State<BoxShoHealth_Records> {
                               context.read<Datafunction>().playsound();
                               print(index);
                             },
-                            child: Container(
-                              color: Color.fromARGB(255, 219, 246, 240),
-                              height: _height * 0.04,
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceAround,
-                                children: [
-                                  Text(
-                                      '${resTojson['health_records'][index]['height']}',
-                                      style: styletext2),
-                                  Text(
-                                      '${resTojson['health_records'][index]['weight']}',
-                                      style: styletext2),
-                                  Text(
-                                      '${resTojson['health_records'][index]['bp_sys']}',
-                                      style: styletext2),
-                                  Text(
-                                      '${resTojson['health_records'][index]['bp_dia']}',
-                                      style: styletext2),
-                                  Text(
-                                      '${resTojson['health_records'][index]['pulse_rate']}',
-                                      style: styletext2),
-                                  Text(
-                                      '${resTojson['health_records'][index]['temp']}',
-                                      style: styletext2),
-                                  // Container(
-                                  //  width: _width * 0.2,
-                                  //   child: TextButton(
-                                  //     child: Text('เพิ่มเติม'),
-                                  //     onPressed: () {},
-                                  //   ),
-                                  // )
-                                ],
-                              ),
+                            child: Column(
+                              children: [
+                                Container(height: 1, color: Colors.white),
+                                Container(
+                                  color: Color.fromARGB(255, 219, 246, 240),
+                                  height: _height * 0.04,
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceAround,
+                                    children: [
+                                      resTojson['health_records'][index]
+                                                  ['height'] ==
+                                              null
+                                          ? BoxDataHealth(child: Text(' - '))
+                                          : BoxDataHealth(
+                                              child: Text(
+                                                  '${resTojson['health_records'][index]['height']}',
+                                                  style: styletext2)),
+                                      resTojson['health_records'][index]
+                                                  ['weight'] ==
+                                              null
+                                          ? BoxDataHealth(child: Text(' - '))
+                                          : BoxDataHealth(
+                                              child: Text(
+                                                  '${resTojson['health_records'][index]['weight']}',
+                                                  style: styletext2),
+                                            ),
+                                      resTojson['health_records'][index]
+                                                  ['temp'] ==
+                                              null
+                                          ? BoxDataHealth(child: Text(' - '))
+                                          : BoxDataHealth(
+                                              child: Text(
+                                                  '${resTojson['health_records'][index]['temp']}',
+                                                  style: styletext2),
+                                            ),
+                                      resTojson['health_records'][index]
+                                                  ['bp_dia'] ==
+                                              null
+                                          ? BoxDataHealth(child: Text(' - '))
+                                          : BoxDataHealth(
+                                              child: Text(
+                                                  '${resTojson['health_records'][index]['bp_dia']}',
+                                                  style: styletext2),
+                                            ),
+                                      resTojson['health_records'][index]
+                                                  ['bp_sys'] ==
+                                              null
+                                          ? BoxDataHealth(child: Text(' - '))
+                                          : BoxDataHealth(
+                                              child: Text(
+                                                  '${resTojson['health_records'][index]['bp_sys']}',
+                                                  style: styletext2),
+                                            ),
+                                      resTojson['health_records'][index]
+                                                  ['spo2'] ==
+                                              null
+                                          ? BoxDataHealth(child: Text(' - '))
+                                          : BoxDataHealth(
+                                              child: Text(
+                                                  '${resTojson['health_records'][index]['spo2']}',
+                                                  style: styletext2),
+                                            ),
+                                    ],
+                                  ),
+                                ),
+                              ],
                             ),
                           );
                         },
@@ -642,6 +691,25 @@ class _BoxShoHealth_RecordsState extends State<BoxShoHealth_Records> {
               : Container()
         ],
       ),
+    );
+  }
+}
+
+class BoxDataHealth extends StatefulWidget {
+  BoxDataHealth({super.key, required this.child});
+  Widget child;
+  @override
+  State<BoxDataHealth> createState() => _BoxDataHealthState();
+}
+
+class _BoxDataHealthState extends State<BoxDataHealth> {
+  @override
+  Widget build(BuildContext context) {
+    double _width = MediaQuery.of(context).size.width;
+    double _height = MediaQuery.of(context).size.height;
+    return Container(
+      width: _width * 0.15,
+      child: Center(child: widget.child),
     );
   }
 }
@@ -700,7 +768,11 @@ class _BoxRunQueueState extends State<BoxRunQueue> {
         width: _width * 0.7,
         height: _height * 0.08,
         decoration: BoxDecoration(
-            color: Color.fromARGB(255, 232, 200, 73),
+            color: resTojson == null
+                ? Color.fromARGB(255, 233, 233, 233)
+                : message != 'no queue'
+                    ? Color.fromARGB(255, 232, 200, 73)
+                    : Color.fromARGB(255, 233, 233, 233),
             borderRadius: BorderRadius.circular(10),
             border:
                 Border.all(width: 2, color: Color.fromARGB(255, 82, 82, 82))),
@@ -710,11 +782,23 @@ class _BoxRunQueueState extends State<BoxRunQueue> {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text(
-                  'คิวที่',
-                  style:
-                      TextStyle(color: Colors.white, fontSize: _width * 0.05),
-                ),
+                resTojson == null
+                    ? Text(
+                        '- -',
+                        style: TextStyle(
+                            color: Colors.white, fontSize: _width * 0.05),
+                      )
+                    : message != 'no queue'
+                        ? Text(
+                            'คิวที่',
+                            style: TextStyle(
+                                color: Colors.white, fontSize: _width * 0.05),
+                          )
+                        : Text(
+                            '- -',
+                            style: TextStyle(
+                                color: Colors.white, fontSize: _width * 0.05),
+                          ),
                 SizedBox(
                   width: _width * 0.05,
                 ),

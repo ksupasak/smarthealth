@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:get/get.dart';
+import 'package:openvidu_client/openvidu_client.dart';
 import 'package:provider/provider.dart';
 import 'package:smart_health/provider/provider.dart';
 import 'package:smart_health/provider/provider_function.dart';
@@ -51,9 +52,12 @@ class UserInformation2 extends StatefulWidget {
 
 class _UserInformation2State extends State<UserInformation2> {
   Timer? _timer;
+  Timer? _timer2;
+  var resTojson3;
   var resTojson2;
   var resTojson;
   bool video = false;
+  late OpenViduClient _openvidu;
   Future<void> checkt_queue() async {
     var url =
         Uri.parse('https://emr-life.com/clinic_master/clinic/Api/check_q');
@@ -70,30 +74,6 @@ class _UserInformation2State extends State<UserInformation2> {
     });
   }
 
-  Future<void> get_queue() async {
-    var url = Uri.parse('https://emr-life.com/clinic_master/clinic/Api/list_q');
-    var res = await http.post(url, body: {
-      'care_unit_id': '63d7a282790f9bc85700000e',
-    });
-    setState(() {
-      resTojson2 = json.decode(res.body);
-      if (resTojson2 != null) {
-        if (resTojson['queue_number'].toString() ==
-            resTojson2['queue_number'].toString()) {
-          setState(() {
-            print('ถึงคิว');
-            _timer?.cancel();
-            video = true;
-          });
-        } else {
-          print('ยังไม่ถึงคิว');
-          print(resTojson['queue_number'].toString());
-          print(resTojson2['queue_number'].toString());
-        }
-      }
-    });
-  }
-
   void lop_queue() {
     _timer = Timer.periodic(Duration(seconds: 2), (timer) {
       setState(() {
@@ -101,6 +81,68 @@ class _UserInformation2State extends State<UserInformation2> {
       });
     });
   }
+
+  Future<void> get_queue() async {
+    var url = Uri.parse('https://emr-life.com/clinic_master/clinic/Api/list_q');
+    var res = await http.post(url, body: {
+      'care_unit_id': '63d7a282790f9bc85700000e',
+    });
+    setState(() {
+      resTojson2 = json.decode(res.body);
+
+      if (resTojson2 != null) {
+        setState(() {});
+        if (resTojson['queue_number'].toString() ==
+            resTojson2['queue_number'].toString()) {
+          setState(() {
+            print('ถึงคิว');
+            _timer?.cancel();
+
+            Navigator.push(context,
+                MaterialPageRoute(builder: (context) => PrePareVideo()));
+            video = true;
+          });
+        } else {
+          print('ยังไม่ถึงคิว');
+          print("คิวผู้ใช้        ${resTojson['queue_number'].toString()}");
+          print("คิวที่กำลังเรียก  ${resTojson2['queue_number'].toString()}");
+        }
+      }
+    });
+  }
+
+  void stop() {
+    setState(() {
+      _timer?.cancel();
+    });
+  }
+
+  // Future<void> statusvideo() async {
+  //   var url = Uri.parse(
+  //       'https://emr-life.com/clinic_master/clinic/Api/get_video_status');
+  //   var res = await http.post(url, body: {
+  //     'public_id': context.read<DataProvider>().id,
+  //   });
+  //   setState(() async {
+  //     resTojson3 = json.decode(res.body);
+  //     if (resTojson3 != null) {
+  //       if (resTojson3['message'] == 'end') {
+  //         _timer2?.cancel();
+  //         final nav = Navigator.of(context);
+  //         await _openvidu.disconnect();
+  //         nav.pop();
+  //       }
+  //     }
+  //   });
+  // }
+
+  // void lop() {
+  //   _timer2 = Timer.periodic(Duration(seconds: 2), (timer) {
+  //     setState(() {
+  //       statusvideo();
+  //     });
+  //   });
+  // }
 
   @override
   void initState() {
@@ -129,21 +171,44 @@ class _UserInformation2State extends State<UserInformation2> {
                       dataidcard: context.read<DataProvider>().dataidcard)),
               SizedBox(height: _height * 0.01),
               Column(
-                children: video == false
+                children: video != false
                     ? [
+                        SizedBox(height: _height * 0.05),
+                        GestureDetector(
+                          onTap: () {
+                            _timer?.cancel();
+                            //  dispose();
+                            context.read<Datafunction>().playsound();
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => PrePareVideo()));
+                          },
+                          child: Container(
+                              width: _width,
+                              child: Center(
+                                  child: BoxWidetdew(
+                                height: 0.06,
+                                width: 0.35,
+                                color: Colors.blue,
+                                radius: 5.0,
+                                fontSize: 0.04,
+                                text: 'เข้าห้องตรวจ',
+                                textcolor: Colors.white,
+                              ))),
+                        ),
+                        SizedBox(height: _height * 0.02),
+                      ]
+                    : [
                         Container(child: Center(child: BoxQueue())),
                         BoxToDay(),
-                        choice(),
-                      ]
-                    : [PrePareVideo()],
+                        choice(cancel: stop),
+                      ],
               ),
-              // BoxShoHealth_Records(),    \
-              //   HeadBoxAppointments(),    > ใส้ที่ป๊อบอัพ
-              // BoxAppointments(),         /
-
               GestureDetector(
                 onTap: () {
-                  dispose();
+                  _timer?.cancel();
+                  //  dispose();
                   context.read<Datafunction>().playsound();
                   Get.offNamed('home');
                 },
@@ -169,8 +234,8 @@ class _UserInformation2State extends State<UserInformation2> {
 }
 
 class choice extends StatefulWidget {
-  const choice({super.key});
-
+  choice({super.key, this.cancel});
+  final VoidCallback? cancel;
   @override
   State<choice> createState() => _choiceState();
 }
@@ -192,8 +257,7 @@ class _choiceState extends State<choice> {
         setState(() {
           resTojson = json.decode(res.body);
           context.read<DataProvider>().status_getqueue == 'true';
-          Navigator.pop(context);
-          Get.toNamed('user_information');
+          Get.offAllNamed('user_information');
         });
       }
     }
@@ -209,11 +273,7 @@ class _choiceState extends State<choice> {
       resTojson = json.decode(res.body);
       if (resTojson != null) {
         init();
-        if (resTojson['queue_number'] != '') {
-          //  lop_queue();
-        }
       }
-      // var g = resTojson['health_records'][0]['updated_at'];
     });
   }
 
@@ -280,9 +340,10 @@ class _choiceState extends State<choice> {
                       ),
                       GestureDetector(
                         onTap: () {
-                          dispose();
+                          //  dispose();
+                          widget.cancel;
                           context.read<Datafunction>().playsound();
-                          Get.toNamed('healthrecord');
+                          Get.offNamed('healthrecord');
                         },
                         child: Container(
                             child: Center(
