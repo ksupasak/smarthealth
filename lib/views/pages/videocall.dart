@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'dart:math' as math;
 import 'dart:math';
 import 'package:flutter/foundation.dart';
+import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
@@ -35,6 +36,9 @@ class PrePareVideo extends StatefulWidget {
 class _PrePareVideoState extends State<PrePareVideo> {
   var data;
   var resTojson;
+  Timer? _timer;
+  String? status;
+  late OpenViduClient _openvidu;
   Future<void> get_path_video() async {
     var url =
         Uri.parse('https://emr-life.com/clinic_master/clinic/Api/get_video');
@@ -60,21 +64,13 @@ class _PrePareVideoState extends State<PrePareVideo> {
     return resTojson != null
         ? resTojson['data'][0] == null
             ? Container(
+                height: _height * 0.7,
                 child: Center(
                   child: RoomPage(
                     userName: ' UserName ',
                     data: data,
                   ),
                 ),
-                height: _height * 0.7,
-                // child: Center(
-                //     child: Container(
-                //   decoration:
-                //       BoxDecoration(borderRadius: BorderRadius.circular(10)),
-                //   width: _width * 0.9,
-                //   height: _height * 0.5,
-
-                // )),
               )
             : Container()
         : Scaffold(
@@ -119,9 +115,12 @@ class _RoomPageState extends State<RoomPage> {
   bool isInside = false;
   late OpenViduClient _openvidu;
   var resTojson;
+  var resTojson2;
+  String? status;
   LocalParticipant? localParticipant;
+
   Timer? _timer;
-  @override
+
   void initState() {
     //  lop();
     super.initState();
@@ -129,6 +128,7 @@ class _RoomPageState extends State<RoomPage> {
     _listenSessionEvents();
     logger.e("finish init");
     _onConnect();
+    lop();
   }
 
   void _listenSessionEvents() {
@@ -206,6 +206,33 @@ class _RoomPageState extends State<RoomPage> {
       await _openvidu.disconnect();
       nav.pop();
     }
+  }
+
+  Future<void> status_video() async {
+    var url = Uri.parse(
+        'https://emr-life.com/clinic_master/clinic/Api/get_video_status');
+    var res = await http
+        .post(url, body: {'public_id': context.read<DataProvider>().id});
+    resTojson2 = json.decode(res.body);
+    if (resTojson2 != null) {
+      status = resTojson2['message'];
+      if (status == 'completed' || status == 'finished' || status == 'end') {
+        print('คุยเสร็จเเล้ว');
+        _timer?.cancel();
+        await _openvidu.disconnect();
+        Get.offAllNamed('user_information');
+      } else {
+        print('คุยยังไม่เสร็จ');
+        print(status);
+      }
+    }
+  }
+
+  void lop() {
+    _timer = Timer.periodic(Duration(seconds: 2), (timer) {
+      print('เช็คstatus');
+      status_video();
+    });
   }
 
   @override
@@ -294,26 +321,59 @@ class _RoomPageState extends State<RoomPage> {
                       //         )
                       //       : Container(),
                       // ),
+
                       Positioned(
-                        bottom: 10,
-                        child: GestureDetector(
-                          onTap: () {
-                            _onTapDisconnect();
-                          },
-                          child: Container(
-                              width: _width,
-                              child: Center(
-                                  child: BoxWidetdew(
-                                height: 0.04,
-                                width: 0.2,
-                                color: Colors.red,
-                                radius: 5.0,
-                                fontSize: 0.04,
-                                text: 'ออก',
-                                textcolor: Colors.white,
-                              ))),
+                        bottom: -10,
+                        right: 1,
+                        child: Column(
+                          children: [
+                            GestureDetector(
+                              onTap: () {
+                                _onTapDisconnect();
+                              },
+                              child: Container(
+                                  width: _width,
+                                  child: Center(
+                                      child: BoxWidetdew(
+                                    height: 0.04,
+                                    width: 0.3,
+                                    color: Colors.red,
+                                    radius: 5.0,
+                                    fontSize: 0.04,
+                                    text: 'ออก',
+                                    textcolor: Colors.white,
+                                  ))),
+                            ),
+                            SizedBox(height: _height * 0.01),
+                            GestureDetector(
+                              onTap: () {
+                                // _onTapDisconnect();
+                                showModalBottomSheet(
+                                    backgroundColor:
+                                        Color.fromARGB(255, 255, 255, 255),
+                                    isScrollControlled: true,
+                                    shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.vertical(
+                                            top: Radius.circular(10))),
+                                    context: context,
+                                    builder: (context) => ControlsWidget(
+                                        _openvidu, localParticipant!));
+                              },
+                              child: Container(
+                                  width: _width,
+                                  child: Center(
+                                      child: BoxWidetdew(
+                                    height: 0.016,
+                                    width: 0.2,
+                                    color: Colors.white,
+                                    radius: 5.0,
+                                    fontSize: 0.04,
+                                    textcolor: Colors.white,
+                                  ))),
+                            ),
+                          ],
                         ),
-                      )
+                      ),
                     ]),
                     // child: Column(
                     //   children: [

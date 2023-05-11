@@ -18,6 +18,15 @@ import 'package:smart_health/views/ui/bottomnavigationbar/bottomnavigationbar.da
 import 'package:smart_health/views/ui/widgetdew.dart/popup.dart';
 import 'package:smart_health/views/ui/widgetdew.dart/widgetdew.dart';
 
+class MyWidget extends StatelessWidget {
+  const MyWidget({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return const Placeholder();
+  }
+}
+
 class Homeapp extends StatefulWidget {
   const Homeapp({super.key});
   @override
@@ -26,6 +35,17 @@ class Homeapp extends StatefulWidget {
 
 class _HomeappState extends State<Homeapp> {
   bool status = false;
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+  }
+
+  @override
+  void deactivate() {
+    // TODO: implement deactivate
+    super.deactivate();
+  }
 
   void check() async {
     setState(() {
@@ -144,7 +164,6 @@ class _HomeappState extends State<Homeapp> {
 
   @override
   void initState() {
-    context.read<DataProvider>().status_getqueue == 'true';
     // TODO: implement initState
     super.initState();
   }

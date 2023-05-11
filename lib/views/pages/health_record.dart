@@ -121,7 +121,7 @@ class _HealthRecordState extends State<HealthRecord> {
                 GestureDetector(
                     onTap: () {
                       recorddata();
-                      context.read<DataProvider>().status_getqueue = 'true';
+
                       stop();
                       context.read<Datafunction>().playsound();
                     },
@@ -176,8 +176,7 @@ class _HealthRecordState extends State<HealthRecord> {
                       pathicon: 'assets/correct.png');
                 });
             Timer(Duration(seconds: 2), () {
-              Navigator.pop(context);
-              Get.toNamed('user_information');
+              Get.offAllNamed('user_information');
             });
           });
         } else {

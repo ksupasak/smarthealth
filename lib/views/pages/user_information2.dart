@@ -53,11 +53,16 @@ class UserInformation2 extends StatefulWidget {
 class _UserInformation2State extends State<UserInformation2> {
   Timer? _timer;
   Timer? _timer2;
+  var resTojson4;
   var resTojson3;
   var resTojson2;
   var resTojson;
+  String status = '';
   bool video = false;
   late OpenViduClient _openvidu;
+
+  PrePareVideo? _prePareVideo;
+
   Future<void> checkt_queue() async {
     var url =
         Uri.parse('https://emr-life.com/clinic_master/clinic/Api/check_q');
@@ -67,6 +72,7 @@ class _UserInformation2State extends State<UserInformation2> {
     setState(() {
       resTojson = json.decode(res.body);
       if (resTojson != null) {
+        check_status();
         if (resTojson['queue_number'] != '') {
           lop_queue();
         }
@@ -111,38 +117,54 @@ class _UserInformation2State extends State<UserInformation2> {
     });
   }
 
+  Future<void> check_status() async {
+    var url = Uri.parse(
+        'https://emr-life.com/clinic_master/clinic/Api/get_video_status');
+    var res = await http.post(url, body: {
+      'public_id': context.read<DataProvider>().id,
+    });
+    setState(() {
+      resTojson4 = json.decode(res.body);
+      if (resTojson4 != null) {
+        if (resTojson4['message'] == 'end') {
+          setState(() {
+            status = 'end';
+            stop();
+          });
+        } else if (resTojson4['message'] == 'finished') {
+          setState(() {
+            status = 'finished';
+            stop();
+          });
+          print('รายาการวันนี้เสร็จสิ้นเเล้ว');
+        } else if (resTojson4['message'] == 'completed') {
+          print('คุยเสร็จเเล้ว');
+          setState(() {
+            status = 'completed';
+            stop();
+          });
+        } else if (resTojson4['message'] == 'processing') {
+          print('ถึงคิวเเล้ว');
+        } else if (resTojson4['message'] == 'waiting') {
+          print('ยังไม่ถึงคิว');
+        } else if (resTojson4['message'] == 'no queue') {
+          print('มีตรวจ/ยังไม่มีคิว');
+        } else if (resTojson4['message'] == 'not found today appointment') {
+          print('วันนี้ไม่มีรายการ');
+        } else {
+          print('resTojson4= ${resTojson4['message']}');
+        }
+      } else {
+        print('resTojson = null');
+      }
+    });
+  }
+
   void stop() {
     setState(() {
       _timer?.cancel();
     });
   }
-
-  // Future<void> statusvideo() async {
-  //   var url = Uri.parse(
-  //       'https://emr-life.com/clinic_master/clinic/Api/get_video_status');
-  //   var res = await http.post(url, body: {
-  //     'public_id': context.read<DataProvider>().id,
-  //   });
-  //   setState(() async {
-  //     resTojson3 = json.decode(res.body);
-  //     if (resTojson3 != null) {
-  //       if (resTojson3['message'] == 'end') {
-  //         _timer2?.cancel();
-  //         final nav = Navigator.of(context);
-  //         await _openvidu.disconnect();
-  //         nav.pop();
-  //       }
-  //     }
-  //   });
-  // }
-
-  // void lop() {
-  //   _timer2 = Timer.periodic(Duration(seconds: 2), (timer) {
-  //     setState(() {
-  //       statusvideo();
-  //     });
-  //   });
-  // }
 
   @override
   void initState() {
@@ -179,10 +201,16 @@ class _UserInformation2State extends State<UserInformation2> {
                             _timer?.cancel();
                             //  dispose();
                             context.read<Datafunction>().playsound();
+                            if (_prePareVideo == null) {
+                              PrePareVideo video = PrePareVideo();
+                              print("init video pareare");
+                              _prePareVideo = video;
+                            }
+
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => PrePareVideo()));
+                                    builder: (context) => _prePareVideo!));
                           },
                           child: Container(
                               width: _width,
@@ -200,8 +228,15 @@ class _UserInformation2State extends State<UserInformation2> {
                         SizedBox(height: _height * 0.02),
                       ]
                     : [
-                        Container(child: Center(child: BoxQueue())),
-                        BoxToDay(),
+                        status != ''
+                            ? Text('การตรวจเสร็จสิ้นกรุณารอ',
+                                style: TextStyle(fontSize: _width * 0.04))
+                            : Column(
+                                children: [
+                                  Container(child: Center(child: BoxQueue())),
+                                  BoxToDay(),
+                                ],
+                              ),
                         choice(cancel: stop),
                       ],
               ),
@@ -242,6 +277,8 @@ class choice extends StatefulWidget {
 
 class _choiceState extends State<choice> {
   var resTojson;
+  var resTojson2;
+  String status = '';
   Future<void> getqueue() async {
     if (resTojson['health_records'].length == 0) {
       context.read<DataProvider>().status_getqueue = 'false';
@@ -282,13 +319,52 @@ class _choiceState extends State<choice> {
         resTojson['health_records'].length != 0 &&
         context.read<DataProvider>().status_getqueue == 'false') {
       getqueue();
+    } else {
+      print('ไม่ผ่าน');
+      print(resTojson['queue_number']);
+      print(resTojson['health_records']);
+      print(context.read<DataProvider>().status_getqueue);
     }
+  }
+
+  Future<void> check_status() async {
+    var url = Uri.parse(
+        'https://emr-life.com/clinic_master/clinic/Api/get_video_status');
+    var res = await http.post(url, body: {
+      'public_id': context.read<DataProvider>().id,
+    });
+    setState(() {
+      resTojson2 = json.decode(res.body);
+      if (resTojson2 != null) {
+        if (resTojson2['message'] == 'finished') {
+          setState(() {
+            status = 'finished';
+          });
+          print('รายาการวันนี้เสร็จสิ้นเเล้ว');
+        } else if (resTojson2['message'] == 'completed') {
+          print('คุยเสร็จเเล้ว');
+          setState(() {
+            status = 'completed';
+          });
+        } else if (resTojson2['message'] == 'processing') {
+          print('ถึงคิวเเล้ว');
+        } else if (resTojson2['message'] == 'waiting') {
+          print('ยังไม่ถึงคิว');
+        } else if (resTojson2['message'] == 'no queue') {
+          print('มีตรวจ/ยังไม่มีคิว');
+        } else if (resTojson2['message'] == 'not found today appointment') {
+          print('วันนี้ไม่มีรายการ');
+        } else {
+          print('resTojson2= ${resTojson2['message']}');
+        }
+      }
+    });
   }
 
   @override
   void initState() {
     checkt_queue();
-
+    check_status();
     // TODO: implement initState
     super.initState();
   }
@@ -325,7 +401,7 @@ class _choiceState extends State<choice> {
                                 child: BoxWidetdew(
                           height: 0.06,
                           width: 0.35,
-                          color: resTojson['todays'].length != 0
+                          color: resTojson['todays'].length != 0 && status == ''
                               ? Colors.green
                               : Color.fromARGB(150, 175, 76, 76),
                           radius: 5.0,
