@@ -429,8 +429,10 @@ class _HealthRecordState extends State<HealthRecord> {
             child: Column(
               children: [
                 Text('ค่าน้ำตาล',
-                    style:
-                        TextStyle(fontSize: _width * 0.04, color: teamcolor)),
+                    style: TextStyle(
+                        fontFamily: context.read<DataProvider>().fontFamily,
+                        fontSize: _width * 0.04,
+                        color: teamcolor)),
                 SizedBox(height: heightsizedbox),
                 Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,

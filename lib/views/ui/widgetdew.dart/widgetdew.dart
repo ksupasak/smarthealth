@@ -76,6 +76,7 @@ class _BoxTimeState extends State<BoxTime> {
     double _width = MediaQuery.of(context).size.width;
     double _height = MediaQuery.of(context).size.height;
     TextStyle style = TextStyle(
+        fontFamily: context.read<DataProvider>().fontFamily,
         color: Color.fromARGB(255, 20, 142, 130),
         fontSize: _width * 0.04,
         fontWeight: FontWeight.w600);
@@ -144,6 +145,7 @@ class _BoxWidetdewState extends State<BoxWidetdew> {
             : Text(
                 widget.text.toString(),
                 style: TextStyle(
+                  fontFamily: context.read<DataProvider>().fontFamily,
                   fontSize:
                       widget.fontSize == null ? 20 : _width * widget.fontSize,
                   color: widget.textcolor == null
@@ -217,7 +219,10 @@ class _BoxRecordState extends State<BoxRecord> {
           widget.texthead == null
               ? Text('')
               : Text('${widget.texthead}',
-                  style: TextStyle(fontSize: _width * 0.03, color: teamcolor)),
+                  style: TextStyle(
+                      fontFamily: context.read<DataProvider>().fontFamily,
+                      fontSize: _width * 0.03,
+                      color: teamcolor)),
           TextField(
             cursorColor: teamcolor,
             onChanged: (value) {
@@ -234,6 +239,7 @@ class _BoxRecordState extends State<BoxRecord> {
               //   border: InputBorder.none, //เส้นไต้
             ),
             style: TextStyle(
+              fontFamily: context.read<DataProvider>().fontFamily,
               color: teamcolor,
               fontSize: _height * 0.03,
             ),
@@ -334,6 +340,7 @@ class _InformationCardState extends State<InformationCard> {
                         '  ' +
                         "${widget.dataidcard['data']['last_name']}",
                     style: TextStyle(
+                      fontFamily: context.read<DataProvider>().fontFamily,
                       fontSize: MediaQuery.of(context).size.width * 0.035,
                       color: Colors.white,
                       shadows: [
@@ -350,6 +357,7 @@ class _InformationCardState extends State<InformationCard> {
                   Text(
                     "${widget.dataidcard['data']['public_id']}",
                     style: TextStyle(
+                      fontFamily: context.read<DataProvider>().fontFamily,
                       fontSize: MediaQuery.of(context).size.width * 0.03,
                       color: Colors.white,
                       shadows: [
@@ -459,7 +467,9 @@ class _BoxQueueState extends State<BoxQueue> {
                   children: [
                     Text(
                       'กรุณารอเรียกคิว',
-                      style: TextStyle(fontSize: _width * 0.04),
+                      style: TextStyle(
+                          fontFamily: context.read<DataProvider>().fontFamily,
+                          fontSize: _width * 0.04),
                     ),
                     Container(
                       decoration: BoxDecoration(
@@ -564,16 +574,23 @@ class _BoxShoHealth_RecordsState extends State<BoxShoHealth_Records> {
   Widget build(BuildContext context) {
     double _width = MediaQuery.of(context).size.width;
     double _height = MediaQuery.of(context).size.height;
-    TextStyle styletext =
-        TextStyle(color: Colors.white, fontSize: _width * 0.04);
+    TextStyle styletext = TextStyle(
+        fontFamily: context.read<DataProvider>().fontFamily,
+        color: Colors.white,
+        fontSize: _width * 0.04);
     TextStyle styletext2 = TextStyle(
-        color: Color.fromARGB(255, 12, 172, 153), fontSize: _width * 0.04);
+        fontFamily: context.read<DataProvider>().fontFamily,
+        color: Color.fromARGB(255, 12, 172, 153),
+        fontSize: _width * 0.04);
     TextStyle styletext3 = TextStyle(
+        fontFamily: context.read<DataProvider>().fontFamily,
         color: Color.fromARGB(255, 39, 0, 129),
         fontSize: _width * 0.04,
         fontWeight: FontWeight.w600);
     TextStyle styletext4 = TextStyle(
-        color: Color.fromARGB(255, 28, 1, 91), fontSize: _width * 0.03);
+        fontFamily: context.read<DataProvider>().fontFamily,
+        color: Color.fromARGB(255, 28, 1, 91),
+        fontSize: _width * 0.03);
     return Container(
       width: _width,
       child: Column(
@@ -786,18 +803,26 @@ class _BoxRunQueueState extends State<BoxRunQueue> {
                     ? Text(
                         '- -',
                         style: TextStyle(
-                            color: Colors.white, fontSize: _width * 0.05),
+                            fontFamily: context.read<DataProvider>().fontFamily,
+                            color: Colors.white,
+                            fontSize: _width * 0.05),
                       )
                     : message != 'no queue'
                         ? Text(
                             'คิวที่',
                             style: TextStyle(
-                                color: Colors.white, fontSize: _width * 0.05),
+                                fontFamily:
+                                    context.read<DataProvider>().fontFamily,
+                                color: Colors.white,
+                                fontSize: _width * 0.05),
                           )
                         : Text(
                             '- -',
                             style: TextStyle(
-                                color: Colors.white, fontSize: _width * 0.05),
+                                fontFamily:
+                                    context.read<DataProvider>().fontFamily,
+                                color: Colors.white,
+                                fontSize: _width * 0.05),
                           ),
                 SizedBox(
                   width: _width * 0.05,
@@ -806,12 +831,16 @@ class _BoxRunQueueState extends State<BoxRunQueue> {
                     ? Text(
                         '- -',
                         style: TextStyle(
-                            color: Colors.white, fontSize: _width * 0.05),
+                            fontFamily: context.read<DataProvider>().fontFamily,
+                            color: Colors.white,
+                            fontSize: _width * 0.05),
                       )
                     : Text(
                         queue,
                         style: TextStyle(
-                            color: Colors.white, fontSize: _width * 0.05),
+                            fontFamily: context.read<DataProvider>().fontFamily,
+                            color: Colors.white,
+                            fontSize: _width * 0.05),
                       ),
               ],
             ),
@@ -835,10 +864,12 @@ class _HeadBoxAppointmentsState extends State<HeadBoxAppointments> {
     double _width = MediaQuery.of(context).size.width;
     double _height = MediaQuery.of(context).size.height;
     TextStyle style = TextStyle(
+        fontFamily: context.read<DataProvider>().fontFamily,
         color: Color.fromARGB(255, 39, 0, 129),
         fontSize: _width * 0.05,
         fontWeight: FontWeight.w800);
     TextStyle style2 = TextStyle(
+        fontFamily: context.read<DataProvider>().fontFamily,
         color: Color.fromARGB(255, 0, 73, 129),
         fontSize: _width * 0.045,
         fontWeight: FontWeight.w600);
@@ -906,8 +937,10 @@ class _BoxAppointmentsState extends State<BoxAppointments> {
   Widget build(BuildContext context) {
     double _width = MediaQuery.of(context).size.width;
     double _height = MediaQuery.of(context).size.height;
-    TextStyle style =
-        TextStyle(fontSize: _width * 0.03, fontWeight: FontWeight.w600);
+    TextStyle style = TextStyle(
+        fontFamily: context.read<DataProvider>().fontFamily,
+        fontSize: _width * 0.03,
+        fontWeight: FontWeight.w600);
     return Container(
         width: _width,
         child: Container(
@@ -1029,6 +1062,7 @@ class _BoxSettingState extends State<BoxSetting> {
     double _width = MediaQuery.of(context).size.width;
     double _height = MediaQuery.of(context).size.height;
     TextStyle style1 = TextStyle(
+        fontFamily: context.read<DataProvider>().fontFamily,
         color: Color.fromARGB(255, 20, 142, 130),
         fontSize: _width * 0.04,
         fontWeight: FontWeight.w600);
@@ -1123,9 +1157,13 @@ class _BoxTextFieldSettingState extends State<BoxTextFieldSetting> {
     double _width = MediaQuery.of(context).size.width;
     double _height = MediaQuery.of(context).size.height;
     TextStyle style1 = TextStyle(
-        fontSize: _width * 0.05, color: Color.fromARGB(255, 19, 100, 92));
-    TextStyle style2 =
-        TextStyle(fontSize: _width * 0.05, color: Color.fromARGB(255, 0, 0, 0));
+        fontFamily: context.read<DataProvider>().fontFamily,
+        fontSize: _width * 0.05,
+        color: Color.fromARGB(255, 19, 100, 92));
+    TextStyle style2 = TextStyle(
+        fontFamily: context.read<DataProvider>().fontFamily,
+        fontSize: _width * 0.05,
+        color: Color.fromARGB(255, 0, 0, 0));
 
     return Padding(
       padding: const EdgeInsets.fromLTRB(0, 10, 0, 10),
@@ -1180,9 +1218,10 @@ class _BoxTextState extends State<BoxText> {
     double _width = MediaQuery.of(context).size.width;
     double _height = MediaQuery.of(context).size.height;
     TextStyle style = TextStyle(
+        fontFamily: context.read<DataProvider>().fontFamily,
         fontSize: _width * 0.04,
         color: Colors.white,
-        //fontFamily: 'UTF-8',
+        // fontFamily: 'Prompt',
         fontWeight: FontWeight.w600);
     return widget.text == null
         ? Text('')
@@ -1226,20 +1265,29 @@ class _BoxToDayState extends State<BoxToDay> {
     double _width = MediaQuery.of(context).size.width;
     double _height = MediaQuery.of(context).size.height;
     TextStyle styletext = TextStyle(
+        fontFamily: context.read<DataProvider>().fontFamily,
         color: Colors.green,
         fontSize: _width * 0.03,
         fontWeight: FontWeight.w600);
-    TextStyle styletext2 =
-        TextStyle(color: Colors.red, fontSize: _width * 0.04);
+    TextStyle styletext2 = TextStyle(
+        fontFamily: context.read<DataProvider>().fontFamily,
+        color: Colors.red,
+        fontSize: _width * 0.04);
     TextStyle styletext3 = TextStyle(
+        fontFamily: context.read<DataProvider>().fontFamily,
         color: Color.fromARGB(255, 39, 0, 129),
         fontSize: _width * 0.035,
         fontWeight: FontWeight.w600);
     TextStyle styletext4 = TextStyle(
-        color: Color.fromARGB(255, 28, 1, 91), fontSize: _width * 0.03);
-    TextStyle style =
-        TextStyle(fontSize: _width * 0.035, fontWeight: FontWeight.w800);
+        fontFamily: context.read<DataProvider>().fontFamily,
+        color: Color.fromARGB(255, 28, 1, 91),
+        fontSize: _width * 0.03);
+    TextStyle style = TextStyle(
+        fontFamily: context.read<DataProvider>().fontFamily,
+        fontSize: _width * 0.035,
+        fontWeight: FontWeight.w800);
     TextStyle style2 = TextStyle(
+        fontFamily: context.read<DataProvider>().fontFamily,
         color: Color.fromARGB(255, 0, 73, 129),
         fontSize: _width * 0.045,
         fontWeight: FontWeight.w600);

@@ -101,12 +101,16 @@ class _CheckQueueState extends State<CheckQueue> {
                     ? Text(
                         'กำลังโหลด...',
                         style: TextStyle(
-                            color: Colors.white, fontSize: _height * 0.03),
+                            fontFamily: context.read<DataProvider>().fontFamily,
+                            color: Colors.white,
+                            fontSize: _height * 0.03),
                       )
                     : Text(
                         '${resTojson['message']}',
                         style: TextStyle(
-                            color: Colors.white, fontSize: _height * 0.03),
+                            fontFamily: context.read<DataProvider>().fontFamily,
+                            color: Colors.white,
+                            fontSize: _height * 0.03),
                       ),
                 SizedBox(height: _height * 0.02),
                 MarkCheck(

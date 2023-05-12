@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:smart_health/provider/provider.dart';
 
 class OVTextField extends StatelessWidget {
   final String label;
@@ -19,7 +21,8 @@ class OVTextField extends StatelessWidget {
             padding: const EdgeInsets.only(bottom: 10),
             child: Text(
               label,
-              style: const TextStyle(
+              style: TextStyle(
+                fontFamily: context.read<DataProvider>().fontFamily,
                 fontSize: 16,
                 fontWeight: FontWeight.bold,
               ),

@@ -1,6 +1,8 @@
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:openvidu_client/openvidu_client.dart';
+import 'package:provider/provider.dart';
+import 'package:smart_health/provider/provider.dart';
 
 class OVDropDown extends StatelessWidget {
   final String label;
@@ -24,7 +26,8 @@ class OVDropDown extends StatelessWidget {
         children: [
           Text(
             label,
-            style: const TextStyle(
+            style: TextStyle(
+              fontFamily: context.read<DataProvider>().fontFamily,
               fontSize: 16,
               fontWeight: FontWeight.bold,
             ),

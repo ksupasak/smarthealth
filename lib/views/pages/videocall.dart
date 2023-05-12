@@ -23,6 +23,7 @@ import 'package:smart_health/background/background.dart';
 import 'package:smart_health/background/color/style_color.dart';
 
 import 'package:smart_health/provider/provider.dart';
+import 'package:smart_health/provider/provider_function.dart';
 import 'package:smart_health/views/pages/home.dart';
 import 'package:smart_health/views/ui/widgetdew.dart/widgetdew.dart';
 
@@ -264,6 +265,26 @@ class _RoomPageState extends State<RoomPage> {
                           participant: localParticipant!,
                           onConnect: _onConnect,
                         ),
+                      ),
+                      GestureDetector(
+                        onTap: () async {
+                          _timer?.cancel();
+                          await _openvidu.disconnect();
+                          context.read<Datafunction>().playsound();
+                          Navigator.pop(context);
+                        },
+                        child: Container(
+                            width: _width,
+                            child: Center(
+                                child: BoxWidetdew(
+                              height: 0.06,
+                              width: 0.35,
+                              color: Colors.red,
+                              radius: 5.0,
+                              fontSize: 0.04,
+                              text: 'ออก',
+                              textcolor: Colors.white,
+                            ))),
                       ),
                     ],
                   )

@@ -180,6 +180,7 @@ class _HomeappState extends State<Homeapp> {
               child: SafeArea(
             child: ListView(children: [
               BoxTime(),
+              WidgetNameHospital(),
               Container(
                 width: _width,
                 height: _height * 0.8,

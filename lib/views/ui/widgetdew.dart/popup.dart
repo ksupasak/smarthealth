@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
+import 'package:provider/provider.dart';
+import 'package:smart_health/provider/provider.dart';
 
 class Popup extends StatefulWidget {
   Popup({
@@ -43,6 +45,7 @@ class _PopupState extends State<Popup> {
           : Text(
               "${widget.texthead}",
               style: TextStyle(
+                  fontFamily: context.read<DataProvider>().fontFamily,
                   fontSize:
                       widget.fontSize == null ? 16 : _width * widget.fontSize),
             ),
@@ -51,6 +54,7 @@ class _PopupState extends State<Popup> {
           : Text(
               "${widget.textbody}",
               style: TextStyle(
+                  fontFamily: context.read<DataProvider>().fontFamily,
                   fontSize:
                       widget.fontSize == null ? 16 : _width * widget.fontSize),
             ),

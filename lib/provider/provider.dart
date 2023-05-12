@@ -12,6 +12,7 @@ class DataProvider with ChangeNotifier {
       'https://emr-life.com/clinic_master/clinic/Api/check_q';
   String care_unit_id = '63d79d61790f9bc857000006';
   String passwordsetting = '';
+  String fontFamily = 'Prompt';
   var dataidcard;
   var checkqueue = '';
   Color color_name_hospital = Color.fromARGB(255, 255, 255, 255);

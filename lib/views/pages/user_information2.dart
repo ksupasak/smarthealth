@@ -58,7 +58,7 @@ class _UserInformation2State extends State<UserInformation2> {
   var resTojson2;
   var resTojson;
   String status = '';
-  bool video = false;
+  bool status2 = false;
   late OpenViduClient _openvidu;
 
   PrePareVideo? _prePareVideo;
@@ -75,6 +75,10 @@ class _UserInformation2State extends State<UserInformation2> {
         check_status();
         if (resTojson['queue_number'] != '') {
           lop_queue();
+        } else {
+          setState(() {
+            status2 = true;
+          });
         }
       }
     });
@@ -89,6 +93,7 @@ class _UserInformation2State extends State<UserInformation2> {
   }
 
   Future<void> get_queue() async {
+    print("object");
     var url = Uri.parse('https://emr-life.com/clinic_master/clinic/Api/list_q');
     var res = await http.post(url, body: {
       'care_unit_id': '63d7a282790f9bc85700000e',
@@ -99,20 +104,25 @@ class _UserInformation2State extends State<UserInformation2> {
       if (resTojson2 != null) {
         setState(() {});
         if (resTojson['queue_number'].toString() ==
-            resTojson2['queue_number'].toString()) {
+                resTojson2['queue_number'].toString() &&
+            resTojson['queue_number'] != '') {
           setState(() {
             print('ถึงคิว');
             _timer?.cancel();
 
             Navigator.push(context,
                 MaterialPageRoute(builder: (context) => PrePareVideo()));
-            video = true;
+            status2 = true;
           });
         } else {
           print('ยังไม่ถึงคิว');
           print("คิวผู้ใช้        ${resTojson['queue_number'].toString()}");
           print("คิวที่กำลังเรียก  ${resTojson2['queue_number'].toString()}");
         }
+      } else {
+        setState(() {
+          status2 = true;
+        });
       }
     });
   }
@@ -185,52 +195,23 @@ class _UserInformation2State extends State<UserInformation2> {
           backgrund(),
           Positioned(
               child: ListView(
-            children: [
-              BoxTime(),
-              BoxDecorate(
-                  color: Color.fromARGB(255, 43, 179, 161),
-                  child: InformationCard(
-                      dataidcard: context.read<DataProvider>().dataidcard)),
-              SizedBox(height: _height * 0.01),
-              Column(
-                children: video != false
-                    ? [
-                        SizedBox(height: _height * 0.05),
-                        GestureDetector(
-                          onTap: () {
-                            _timer?.cancel();
-                            //  dispose();
-                            context.read<Datafunction>().playsound();
-                            if (_prePareVideo == null) {
-                              PrePareVideo video = PrePareVideo();
-                              print("init video pareare");
-                              _prePareVideo = video;
-                            }
-
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => _prePareVideo!));
-                          },
-                          child: Container(
-                              width: _width,
-                              child: Center(
-                                  child: BoxWidetdew(
-                                height: 0.06,
-                                width: 0.35,
-                                color: Colors.blue,
-                                radius: 5.0,
-                                fontSize: 0.04,
-                                text: 'เข้าห้องตรวจ',
-                                textcolor: Colors.white,
-                              ))),
-                        ),
-                        SizedBox(height: _height * 0.02),
-                      ]
-                    : [
+            children: resTojson != null
+                ? [
+                    BoxTime(),
+                    BoxDecorate(
+                        color: Color.fromARGB(255, 43, 179, 161),
+                        child: InformationCard(
+                            dataidcard:
+                                context.read<DataProvider>().dataidcard)),
+                    SizedBox(height: _height * 0.01),
+                    Column(
+                      children: [
                         status != ''
                             ? Text('การตรวจเสร็จสิ้นกรุณารอ',
-                                style: TextStyle(fontSize: _width * 0.04))
+                                style: TextStyle(
+                                    fontFamily:
+                                        context.read<DataProvider>().fontFamily,
+                                    fontSize: _width * 0.04))
                             : Column(
                                 children: [
                                   Container(child: Center(child: BoxQueue())),
@@ -239,28 +220,61 @@ class _UserInformation2State extends State<UserInformation2> {
                               ),
                         choice(cancel: stop),
                       ],
-              ),
-              GestureDetector(
-                onTap: () {
-                  _timer?.cancel();
-                  //  dispose();
-                  context.read<Datafunction>().playsound();
-                  Get.offNamed('home');
-                },
-                child: Container(
-                    width: _width,
-                    child: Center(
-                        child: BoxWidetdew(
-                      height: 0.06,
-                      width: 0.35,
-                      color: Colors.red,
-                      radius: 5.0,
-                      fontSize: 0.04,
-                      text: 'ออก',
-                      textcolor: Colors.white,
-                    ))),
-              ),
-            ],
+                    ),
+                    GestureDetector(
+                      onTap: () {
+                        _timer?.cancel();
+                        //  dispose();
+                        context.read<Datafunction>().playsound();
+                        Get.offNamed('home');
+                      },
+                      child: Container(
+                          width: _width,
+                          child: Center(
+                              child: BoxWidetdew(
+                            height: 0.06,
+                            width: 0.35,
+                            color: Colors.red,
+                            radius: 5.0,
+                            fontSize: 0.04,
+                            text: 'ออก',
+                            textcolor: Colors.white,
+                          ))),
+                    ),
+                  ]
+                : [
+                    //  SizedBox(height: _height * 0.05),
+                    //   GestureDetector(
+                    //     onTap: () {
+                    //       _timer?.cancel();
+                    //       //  dispose();
+                    //       context.read<Datafunction>().playsound();
+                    //       if (_prePareVideo == null) {
+                    //         PrePareVideo video = PrePareVideo();
+                    //         print("init video pareare");
+                    //         _prePareVideo = video;
+                    //       }
+
+                    //       Navigator.push(
+                    //           context,
+                    //           MaterialPageRoute(
+                    //               builder: (context) => _prePareVideo!));
+                    //     },
+                    //     child: Container(
+                    //         width: _width,
+                    //         child: Center(
+                    //             child: BoxWidetdew(
+                    //           height: 0.06,
+                    //           width: 0.35,
+                    //           color: Colors.blue,
+                    //           radius: 5.0,
+                    //           fontSize: 0.04,
+                    //           text: 'เข้าห้องตรวจ',
+                    //           textcolor: Colors.white,
+                    //         ))),
+                    //   ),
+                    //   SizedBox(height: _height * 0.02),
+                  ],
           ))
         ],
       ),
@@ -279,9 +293,20 @@ class _choiceState extends State<choice> {
   var resTojson;
   var resTojson2;
   String status = '';
+
   Future<void> getqueue() async {
     if (resTojson['health_records'].length == 0) {
       context.read<DataProvider>().status_getqueue = 'false';
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Container(
+              width: MediaQuery.of(context).size.width,
+              child: Center(
+                  child: Text(
+                'ตรวจสุขภาพก่อนรับคิว',
+                style: TextStyle(
+                    fontFamily: context.read<DataProvider>().fontFamily,
+                    fontSize: MediaQuery.of(context).size.width * 0.03),
+              )))));
       Get.toNamed('healthrecord');
     } else {
       context.read<DataProvider>().status_getqueue = 'true';
@@ -373,7 +398,7 @@ class _choiceState extends State<choice> {
   Widget build(BuildContext context) {
     double _width = MediaQuery.of(context).size.width;
     double _height = MediaQuery.of(context).size.height;
-    return resTojson != null
+    return resTojson2 != null && resTojson != null
         ? Container(
             width: _width,
             child: Center(
