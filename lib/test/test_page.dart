@@ -28,17 +28,7 @@ class TestPage extends StatefulWidget {
 }
 
 class _TestPageState extends State<TestPage> {
-  ESMPrinter? printer;
 
-<<<<<<< HEAD
-  @override
-  void initState() {
-    printer = ESMPrinter([
-      {'vendor_id': '1137', 'product_id': '85'}
-    ]);
-    print('จุดที่1');
-  }
-=======
 ESMPrinter? printer;
 ESMIDCard? reader;
 
@@ -62,10 +52,8 @@ void checkCard(){
     reader?.readAuto();
 }
 
-void printPOS() async{
->>>>>>> 8d0bf263f98f8960770381e18d25a76b5d2668b4
 
-  void print2() async {
+  void printPOS() async {
     List<int> bytes = [];
 
 // Xprinter XP-N160I
@@ -112,35 +100,6 @@ void printPOS() async{
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-<<<<<<< HEAD
-        home: Scaffold(
-            appBar: AppBar(
-              title: const Text('Flutter Pos Plugin Platform example app'),
-            ),
-            body: Center(
-                child: Container(
-                    height: double.infinity,
-                    constraints: const BoxConstraints(maxWidth: 400),
-                    child: SingleChildScrollView(
-                        padding: EdgeInsets.zero,
-                        child: Column(children: [
-                          Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Row(children: [
-                                Expanded(
-                                  child: ElevatedButton(
-                                    onPressed: () {
-                                      print2();
-                                      //  printer?.printTest();
-                                    },
-                                    child: const Text("Connect",
-                                        textAlign: TextAlign.center),
-                                  ),
-                                ),
-                              ]))
-                        ]))))));
-  }
-=======
       home: Scaffold(
         appBar: AppBar(
           title: const Text('Flutter Pos Plugin Platform example app'),
@@ -193,7 +152,7 @@ void printPOS() async{
     );
     
 
+  }
+
 }
 
->>>>>>> 8d0bf263f98f8960770381e18d25a76b5d2668b4
-}
