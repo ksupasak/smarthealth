@@ -20,8 +20,8 @@ class _TestMenuBarState extends State<TestMenuBar> {
     return GestureDetector(
         onTap: () {
           context.read<Datafunction>().playsound();
-          Get.offNamed('test_page');
-
+          //Get.toNamed('test_page');
+          Get.toNamed('printqueue');
         },
         child: Image.asset('assets/doctor.png'));
   }

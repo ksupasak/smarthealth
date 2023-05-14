@@ -5,7 +5,6 @@ import 'package:smart_health/background/color/style_color.dart';
 import 'package:smart_health/views/ui/bottomnavigationbar/menubottombar.dart';
 import 'package:smart_health/views/ui/bottomnavigationbar/test_menu_bar.dart';
 
-
 class BottomNavigationBarApp extends StatefulWidget {
   const BottomNavigationBarApp({super.key});
 
@@ -24,7 +23,7 @@ class _BottomNavigationBarAppState extends State<BottomNavigationBarApp> {
       height: _height * 0.08,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.start,
-        children: [Settingbar(),TestMenuBar()],
+        children: [Settingbar(), TestMenuBar()],
       ),
     );
   }

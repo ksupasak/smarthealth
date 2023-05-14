@@ -866,7 +866,7 @@ class _HeadBoxAppointmentsState extends State<HeadBoxAppointments> {
     TextStyle style = TextStyle(
         fontFamily: context.read<DataProvider>().fontFamily,
         color: Color.fromARGB(255, 39, 0, 129),
-        fontSize: _width * 0.05,
+        fontSize: _width * 0.04,
         fontWeight: FontWeight.w800);
     TextStyle style2 = TextStyle(
         fontFamily: context.read<DataProvider>().fontFamily,

@@ -415,7 +415,6 @@ class _choiceState extends State<choice> {
                         onTap: resTojson['queue_number'] == ''
                             ? () {
                                 context.read<Datafunction>().playsound();
-
                                 getqueue();
                               }
                             : () {
