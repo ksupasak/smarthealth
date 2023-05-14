@@ -12,7 +12,8 @@ import 'package:image/image.dart' as img;
 import 'image_utils.dart';
 
 import 'esm_printer.dart';
-
+import 'esm_idcard.dart';
+import 'data-service.dart';
 import 'dart:async';
 import 'dart:developer';
 import 'dart:io';
@@ -29,16 +30,29 @@ class TestPage extends StatefulWidget {
 class _TestPageState extends State<TestPage> {
 
 ESMPrinter? printer;
+ESMIDCard? reader;
+
 
 @override
 void initState(){
+   
+  //  ESMIDCard.instance.configureChannel(); 
 
-   printer = ESMPrinter([{'vendor_id':'1137','product_id':'85'}]);
+  printer = ESMPrinter([{'vendor_id':'1137','product_id':'85'}]);
+  reader = ESMIDCard.instance;
+   
 
+  const oneSec = Duration(seconds:1);
+  Timer.periodic(oneSec, (Timer t) => checkCard());
 
 }
 
-void print() async{
+void checkCard(){
+    print('ok');
+    reader?.readAuto();
+}
+
+void printPOS() async{
 
     List<int> bytes = [];
 
@@ -108,12 +122,25 @@ void print() async{
                           child: ElevatedButton(
                             onPressed: () {
 
-                                    print();
+                                    printPOS();
                                       // printer?.printTest();
                                    
                                   },
                             child: const Text("Connect", textAlign: TextAlign.center),
                           ),
+                          
+                        ),
+                         Expanded(
+                          child: ElevatedButton(
+                            onPressed: () {
+
+                                  
+                                    reader?.read();
+                                   
+                                  },
+                            child: const Text("Reader", textAlign: TextAlign.center),
+                          ),
+                          
                         ),
                       ]
                     )

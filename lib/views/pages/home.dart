@@ -18,6 +18,9 @@ import 'package:smart_health/views/ui/bottomnavigationbar/bottomnavigationbar.da
 import 'package:smart_health/views/ui/widgetdew.dart/popup.dart';
 import 'package:smart_health/views/ui/widgetdew.dart/widgetdew.dart';
 
+import 'package:smart_health/test/esm_idcard.dart';
+
+
 class MyWidget extends StatelessWidget {
   const MyWidget({super.key});
 
@@ -35,6 +38,10 @@ class Homeapp extends StatefulWidget {
 
 class _HomeappState extends State<Homeapp> {
   bool status = false;
+  final idcard = Numpad();
+  ESMIDCard? reader;
+  Stream<String>? entry;
+
   @override
   void dispose() {
     // TODO: implement dispose
@@ -166,6 +173,57 @@ class _HomeappState extends State<Homeapp> {
   void initState() {
     // TODO: implement initState
     super.initState();
+
+    try {
+    
+
+    Future.delayed(const Duration(milliseconds: 5000), () {
+
+
+
+
+
+
+    reader = ESMIDCard.instance;
+    entry = reader?.getEntry();
+
+    // idcard = Numpad();
+
+
+    if(entry!=null){
+
+ 
+    entry?.listen((String data) {
+
+      List<String> splitted = data.split('#');
+        
+      print("IDCard " +data);
+
+      // idcard?.setValue(splitted[0]);
+      idcard?.setValue(splitted[0]);
+
+    },
+    onError: (error) {
+        print(error);
+    },
+    onDone: () {
+        print('Stream closed!');
+    });
+       }
+    const oneSec = Duration(seconds:1);
+    Timer.periodic(oneSec, (Timer t) => checkCard());
+    
+});
+
+    } on Exception catch (e) {
+
+      print(e.toString());
+
+    }
+  }
+
+  void checkCard(){
+    reader?.readAuto();
   }
 
   @override
@@ -207,7 +265,7 @@ class _HomeappState extends State<Homeapp> {
                       child: Center(
                         child: Column(
                           children: [
-                            numpad(),
+                            idcard,
                             SizedBox(height: _height * 0.01),
                             status == false
                                 ? GestureDetector(
