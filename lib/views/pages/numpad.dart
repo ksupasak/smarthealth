@@ -5,17 +5,43 @@ import 'package:flutter/src/widgets/framework.dart';
 import 'package:provider/provider.dart';
 import 'package:smart_health/provider/provider.dart';
 import 'package:smart_health/provider/provider_function.dart';
+import 'dart:async';
+class Numpad extends StatefulWidget {
+  Numpad({super.key});
 
-class numpad extends StatefulWidget {
-  const numpad({super.key});
 
   @override
-  State<numpad> createState() => _numpadState();
+  State<Numpad> createState() => _NumpadState();
+
+  // final Stream<String> entry;
+  StreamController<String> ?entry;
+ 
+  void setValue(String val){
+      // setState(() {
+      //  passwordslogin = val;
+      // context.read<Datafunction>().playsound();
+      // });
+
+      
+      entry?.sink.add(val);
+      
+      // state.setValue(val);
+      
+
+  } 
 }
 
-class _numpadState extends State<numpad> {
+class _NumpadState extends State<Numpad> {
   String passwordslogin = '';
   String colortexts = 'back';
+  StreamController<String> entry=StreamController<String>();
+  
+  void setValue(String val){
+     entry.sink.add(val);
+  }
+
+  
+
   void chakepasswordslogin() {
     context.read<Datafunction>().playsound();
     if (passwordslogin.length >= 14) {
@@ -65,8 +91,21 @@ class _numpadState extends State<numpad> {
 
   @override
   void initState() {
-    passwordslogin = '3102100818892';
+    passwordslogin = '';
     // TODO: implement initState
+    
+    this.widget.entry = entry;
+
+    entry.stream.listen((String data) {
+
+       setState(() {
+
+          passwordslogin = data;
+
+      });
+
+    });
+
     super.initState();
   }
 

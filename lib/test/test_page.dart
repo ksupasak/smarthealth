@@ -14,7 +14,8 @@ import 'package:image/image.dart' as img;
 import 'image_utils.dart';
 
 import 'esm_printer.dart';
-
+import 'esm_idcard.dart';
+import 'data-service.dart';
 import 'dart:async';
 import 'dart:developer';
 import 'dart:io';
@@ -29,6 +30,7 @@ class TestPage extends StatefulWidget {
 class _TestPageState extends State<TestPage> {
   ESMPrinter? printer;
 
+<<<<<<< HEAD
   @override
   void initState() {
     printer = ESMPrinter([
@@ -36,6 +38,32 @@ class _TestPageState extends State<TestPage> {
     ]);
     print('จุดที่1');
   }
+=======
+ESMPrinter? printer;
+ESMIDCard? reader;
+
+
+@override
+void initState(){
+   
+  //  ESMIDCard.instance.configureChannel(); 
+
+  printer = ESMPrinter([{'vendor_id':'1137','product_id':'85'}]);
+  reader = ESMIDCard.instance;
+   
+
+  const oneSec = Duration(seconds:1);
+  Timer.periodic(oneSec, (Timer t) => checkCard());
+
+}
+
+void checkCard(){
+    print('ok');
+    reader?.readAuto();
+}
+
+void printPOS() async{
+>>>>>>> 8d0bf263f98f8960770381e18d25a76b5d2668b4
 
   void print2() async {
     List<int> bytes = [];
@@ -84,6 +112,7 @@ class _TestPageState extends State<TestPage> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+<<<<<<< HEAD
         home: Scaffold(
             appBar: AppBar(
               title: const Text('Flutter Pos Plugin Platform example app'),
@@ -111,4 +140,60 @@ class _TestPageState extends State<TestPage> {
                               ]))
                         ]))))));
   }
+=======
+      home: Scaffold(
+        appBar: AppBar(
+          title: const Text('Flutter Pos Plugin Platform example app'),
+        ),
+        body: Center(
+          child: Container(
+            height: double.infinity,
+            constraints: const BoxConstraints(maxWidth: 400),
+            child: SingleChildScrollView(
+              padding: EdgeInsets.zero,
+              child: Column(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: ElevatedButton(
+                            onPressed: () {
+
+                                    printPOS();
+                                      // printer?.printTest();
+                                   
+                                  },
+                            child: const Text("Connect", textAlign: TextAlign.center),
+                          ),
+                          
+                        ),
+                         Expanded(
+                          child: ElevatedButton(
+                            onPressed: () {
+
+                                  
+                                    reader?.read();
+                                   
+                                  },
+                            child: const Text("Reader", textAlign: TextAlign.center),
+                          ),
+                          
+                        ),
+                      ]
+                    )
+                  )
+                ]
+              )
+            )
+          )
+        )
+      )
+    );
+    
+
+}
+
+>>>>>>> 8d0bf263f98f8960770381e18d25a76b5d2668b4
 }
