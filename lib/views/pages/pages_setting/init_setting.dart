@@ -23,14 +23,26 @@ class _InitsettingState extends State<Initsetting> {
   TextEditingController platfromURL = TextEditingController();
   TextEditingController checkqueueURL = TextEditingController();
   TextEditingController care_unit_id = TextEditingController();
+  TextEditingController care_unit = TextEditingController();
   TextEditingController passwordsetting = TextEditingController();
   late List<RecordSnapshot<int, Map<String, Object?>>> nameHospital;
+  void test() async {
+    name_hospital.text = 'NAME OF HOSPITAL';
+    care_unit.text = 'Care Unit';
+    platfromURL.text = 'https://emr-life.com/clinic_master/clinic/Api/';
+    checkqueueURL.text =
+        'https://emr-life.com/clinic_master/clinic/Api/check_q';
+    care_unit_id.text = '63d7a282790f9bc85700000e'; //63d79d61790f9bc857000006
+    passwordsetting.text = '';
+  }
+
   void safe() async {
     context.read<DataProvider>().name_hospital = name_hospital.text;
     context.read<DataProvider>().platfromURL = platfromURL.text;
     context.read<DataProvider>().checkqueueURL = checkqueueURL.text;
     context.read<DataProvider>().care_unit_id = care_unit_id.text;
     context.read<DataProvider>().passwordsetting = passwordsetting.text;
+    context.read<DataProvider>().care_unit = care_unit.text;
     setState(() {
       addDataInfoToDatabase(context.read<DataProvider>());
       Navigator.pop(context);
@@ -46,6 +58,7 @@ class _InitsettingState extends State<Initsetting> {
       platfromURL.text = record['platfromURL'].toString();
       checkqueueURL.text = record['checkqueueURL'].toString();
       care_unit_id.text = record['care_unit_id'].toString();
+      care_unit.text = record['care_unit'].toString();
       passwordsetting.text = record['passwordsetting'].toString();
       knownDevice = record['device'];
       print(name_hospital.text);
@@ -86,6 +99,10 @@ class _InitsettingState extends State<Initsetting> {
                   BoxTextFieldSetting(
                       keyvavlue: name_hospital, texthead: 'name_hospital'),
                   BoxTextFieldSetting(
+                    keyvavlue: care_unit,
+                    texthead: 'Care_Unit',
+                  ),
+                  BoxTextFieldSetting(
                       keyvavlue: platfromURL, texthead: 'platfromURL'),
                   BoxTextFieldSetting(
                       keyvavlue: care_unit_id, texthead: 'care_unit_id'),
@@ -111,7 +128,21 @@ class _InitsettingState extends State<Initsetting> {
                                   radius: 2.0,
                                   textcolor: Colors.white,
                                   fontSize: 0.05,
-                                  color: Color.fromARGB(255, 54, 200, 244)))))
+                                  color: Color.fromARGB(255, 54, 200, 244))))),
+                  Container(
+                      child: Center(
+                          child: GestureDetector(
+                              onTap: () {
+                                test();
+                              },
+                              child: BoxWidetdew(
+                                  text: 'Test',
+                                  height: 0.07,
+                                  width: 0.6,
+                                  radius: 2.0,
+                                  textcolor: Colors.black,
+                                  fontSize: 0.05,
+                                  color: Color.fromARGB(255, 255, 255, 255)))))
                 ]))
           ]))
         ])));

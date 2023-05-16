@@ -16,9 +16,9 @@ class Datafunction with ChangeNotifier {
   // }
 
   void playsound() async {
-    late AudioPlayer _audioPlayer;
-    _audioPlayer = AudioPlayer()..setAsset('assets/sounds/Sin2.mp3');
-    await _audioPlayer.play();
+    // late AudioPlayer _audioPlayer;
+    // _audioPlayer = AudioPlayer()..setAsset('assets/sounds/Sin2.mp3');
+    // await _audioPlayer.play();
   }
 
   double checkDigit(String id) {

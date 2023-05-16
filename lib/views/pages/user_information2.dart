@@ -9,6 +9,7 @@ import 'package:openvidu_client/openvidu_client.dart';
 import 'package:provider/provider.dart';
 import 'package:smart_health/provider/provider.dart';
 import 'package:smart_health/provider/provider_function.dart';
+import 'package:smart_health/views/pages/home.dart';
 import 'package:smart_health/views/pages/videocall.dart';
 import 'package:smart_health/views/ui/widgetdew.dart/widgetdew.dart';
 import 'package:http/http.dart' as http;
@@ -93,10 +94,9 @@ class _UserInformation2State extends State<UserInformation2> {
   }
 
   Future<void> get_queue() async {
-    print("object");
     var url = Uri.parse('https://emr-life.com/clinic_master/clinic/Api/list_q');
     var res = await http.post(url, body: {
-      'care_unit_id': '63d7a282790f9bc85700000e',
+      'care_unit_id':context.read<DataProvider>().care_unit_id,//1
     });
     setState(() {
       resTojson2 = json.decode(res.body);
@@ -226,7 +226,11 @@ class _UserInformation2State extends State<UserInformation2> {
                         _timer?.cancel();
                         //  dispose();
                         context.read<Datafunction>().playsound();
+
                         Get.offNamed('home');
+                        // Navigator.pushReplacement(context,
+                        //    MaterialPageRoute(builder: (context) => Homeapp()));
+                        //  Navigator.pop(context);
                       },
                       child: Container(
                           width: _width,
@@ -319,7 +323,7 @@ class _choiceState extends State<choice> {
         setState(() {
           resTojson = json.decode(res.body);
           context.read<DataProvider>().status_getqueue == 'true';
-          Get.offAllNamed('user_information');
+          Get.offNamed('user_information');
         });
       }
     }
@@ -418,7 +422,8 @@ class _choiceState extends State<choice> {
                                 getqueue();
                               }
                             : () {
-                                Get.toNamed('printqueue');
+                                Get.offNamed('printqueue');
+                                widget.cancel;
                               },
                         child: Container(
                             child: Center(

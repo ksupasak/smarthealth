@@ -41,6 +41,7 @@ Future<void> addDataInfoToDatabase(DataProvider data) async {
     'care_unit_id': data.care_unit_id,
     'device': '1234',
     'passwordsetting': data.passwordsetting,
+    'care_unit': data.care_unit,
   });
 
   await db.close();

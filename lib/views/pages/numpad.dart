@@ -6,41 +6,36 @@ import 'package:provider/provider.dart';
 import 'package:smart_health/provider/provider.dart';
 import 'package:smart_health/provider/provider_function.dart';
 import 'dart:async';
+
 class Numpad extends StatefulWidget {
   Numpad({super.key});
-
 
   @override
   State<Numpad> createState() => _NumpadState();
 
   // final Stream<String> entry;
-  StreamController<String> ?entry;
- 
-  void setValue(String val){
-      // setState(() {
-      //  passwordslogin = val;
-      // context.read<Datafunction>().playsound();
-      // });
+  StreamController<String>? entry;
 
-      
-      entry?.sink.add(val);
-      
-      // state.setValue(val);
-      
+  void setValue(String val) {
+    // setState(() {
+    //   passwordslogin = val;
+    //   context.read<Datafunction>().playsound();
+    // });
 
-  } 
+    entry?.sink.add(val);
+
+    //  state.setValue(val);
+  }
 }
 
 class _NumpadState extends State<Numpad> {
   String passwordslogin = '';
   String colortexts = 'back';
-  StreamController<String> entry=StreamController<String>();
-  
-  void setValue(String val){
-     entry.sink.add(val);
-  }
+  StreamController<String> entry = StreamController<String>();
 
-  
+  void setValue(String val) {
+    entry.sink.add(val);
+  }
 
   void chakepasswordslogin() {
     context.read<Datafunction>().playsound();
@@ -93,17 +88,13 @@ class _NumpadState extends State<Numpad> {
   void initState() {
     passwordslogin = '';
     // TODO: implement initState
-    
+
     this.widget.entry = entry;
 
     entry.stream.listen((String data) {
-
-       setState(() {
-
-          passwordslogin = data;
-
+      setState(() {
+        passwordslogin = data;
       });
-
     });
 
     super.initState();

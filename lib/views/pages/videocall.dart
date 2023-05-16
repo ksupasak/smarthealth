@@ -221,7 +221,7 @@ class _RoomPageState extends State<RoomPage> {
         print('คุยเสร็จเเล้ว');
         _timer?.cancel();
         await _openvidu.disconnect();
-        Get.offAllNamed('user_information');
+        Get.offNamed('user_information');
       } else {
         print('คุยยังไม่เสร็จ');
         print(status);

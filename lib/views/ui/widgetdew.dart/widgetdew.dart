@@ -86,7 +86,7 @@ class _BoxTimeState extends State<BoxTime> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
-          Text('Care Unit', style: style),
+          Text(context.read<DataProvider>().care_unit, style: style),
           Text(data.toString(), style: style)
         ],
       ),
@@ -175,21 +175,24 @@ class _WidgetNameHospitalState extends State<WidgetNameHospital> {
     double _height = MediaQuery.of(context).size.height;
 
     return Container(
-      width: _width * 0.9,
-      height: _height * 0.1,
+      width: _width,
       child: Center(
-        child: Text(
-          context.read<DataProvider>().name_hospital,
-          style: style_text(
-              sized: _width * context.read<DataProvider>().sized_name_hospital,
-              colors: context.read<DataProvider>().color_name_hospital,
-              fontWeight: context.read<DataProvider>().fontWeight_name_hospital,
-              shadow: [
-                Shadow(
-                  color: context.read<DataProvider>().shadow_name_hospital,
-                  blurRadius: 10,
-                )
-              ]),
+        child: Container(
+          child: Text(
+            context.read<DataProvider>().name_hospital,
+            style: style_text(
+                sized:
+                    _width * context.read<DataProvider>().sized_name_hospital,
+                colors: context.read<DataProvider>().color_name_hospital,
+                fontWeight:
+                    context.read<DataProvider>().fontWeight_name_hospital,
+                shadow: [
+                  Shadow(
+                    color: context.read<DataProvider>().shadow_name_hospital,
+                    blurRadius: 10,
+                  )
+                ]),
+          ),
         ),
       ),
     );
@@ -746,7 +749,7 @@ class _BoxRunQueueState extends State<BoxRunQueue> {
   Future<void> get_queue() async {
     var url = Uri.parse('https://emr-life.com/clinic_master/clinic/Api/list_q');
     var res = await http.post(url, body: {
-      'care_unit_id': '63d7a282790f9bc85700000e',
+      'care_unit_id': context.read<DataProvider>().care_unit_id,
     });
     setState(() {
       resTojson = json.decode(res.body);

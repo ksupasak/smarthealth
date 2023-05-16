@@ -9,6 +9,7 @@ import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_pos_printer_platform/esc_pos_utils_platform/esc_pos_utils_platform.dart';
 import 'package:flutter_pos_printer_platform/flutter_pos_printer_platform.dart';
+import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:smart_health/background/background.dart';
@@ -37,12 +38,13 @@ class PrintQueue extends StatefulWidget {
 
 class _PrintQueueState extends State<PrintQueue> {
   var resTojson;
-  BluetoothPrinter? selectedPrinter;
+
   DateTime dateTime = DateTime.parse('0000-00-00 00:00');
   String datatime = "";
   ESMPrinter? printer;
   var devices = <BluetoothPrinter>[];
   List default_deivces = [];
+  BluetoothPrinter? selectedPrinter;
   Future<void> checkt_queue() async {
     var url =
         Uri.parse('https://emr-life.com/clinic_master/clinic/Api/check_q');
@@ -51,6 +53,7 @@ class _PrintQueueState extends State<PrintQueue> {
     });
     setState(() {
       resTojson = json.decode(res.body);
+      Deviceprint();
     });
   }
 
@@ -99,22 +102,30 @@ class _PrintQueueState extends State<PrintQueue> {
 
     // PaperSize.mm80 or PaperSize.mm58
     final generator = Generator(PaperSize.mm58, profile);
-    bytes += generator.setGlobalCodeTable('CP1252');
+    // bytes += generator.setGlobalCodeTable('CP1252');
     bytes += generator.text(context.read<DataProvider>().name_hospital,
         styles: const PosStyles(align: PosAlign.center));
 
-    bytes += generator.text('Queue',
-        styles: const PosStyles(
-            align: PosAlign.center,
-            width: PosTextSize.size2,
-            height: PosTextSize.size2,
-            fontType: PosFontType.fontA));
-    bytes += generator.text(resTojson['queue_number'],
+    // bytes += generator.text('Queue',
+    //     styles: const PosStyles(
+    //         align: PosAlign.center,
+    //         width: PosTextSize.size2,
+    //         height: PosTextSize.size2,
+    //         fontType: PosFontType.fontA));
+    bytes += generator.text('');
+    bytes += generator.text("Q ${resTojson['queue_number']}",
         styles: const PosStyles(
             align: PosAlign.center,
             width: PosTextSize.size3,
             height: PosTextSize.size3,
             fontType: PosFontType.fontA));
+    bytes += generator.text('\n');
+    bytes += generator.text('Doctor :ก  pairot tanyajasesn');
+    bytes += generator.text(
+        'Care   :  ${resTojson['todays'][0]['care_name']} / ( ${resTojson['todays'][0]['slot']} )');
+    bytes += generator.text('\n');
+    bytes += generator.text('Health Information',
+        styles: const PosStyles(align: PosAlign.center));
     bytes += generator.row([
       PosColumn(
           width: 2,
@@ -141,11 +152,38 @@ class _PrintQueueState extends State<PrintQueue> {
           text: 'spo2',
           styles: const PosStyles(align: PosAlign.center, codeTable: 'CP1252')),
     ]);
+    bytes += generator.row([
+      PosColumn(
+          width: 2,
+          text: '${resTojson['health_records'][0]['height']}',
+          styles: const PosStyles(align: PosAlign.center, codeTable: 'CP1252')),
+      PosColumn(
+          width: 2,
+          text: '${resTojson['health_records'][0]['weight']}',
+          styles: const PosStyles(align: PosAlign.center, codeTable: 'CP1252')),
+      PosColumn(
+          width: 2,
+          text: '${resTojson['health_records'][0]['temp']}',
+          styles: const PosStyles(align: PosAlign.center, codeTable: 'CP1252')),
+      PosColumn(
+          width: 2,
+          text: '${resTojson['health_records'][0]['bp_sys']}',
+          styles: const PosStyles(align: PosAlign.center, codeTable: 'CP1252')),
+      PosColumn(
+          width: 2,
+          text: '${resTojson['health_records'][0]['bp_dia']}',
+          styles: const PosStyles(align: PosAlign.center, codeTable: 'CP1252')),
+      PosColumn(
+          width: 2,
+          text: '${resTojson['health_records'][0]['spo2']}',
+          styles: const PosStyles(align: PosAlign.center, codeTable: 'CP1252')),
+    ]);
     // bytes += generator.text(
     //     '${resTojson['personal']['first_name']}   ${resTojson['personal']['last_name']}',
     //     styles: const PosStyles(align: PosAlign.center, codeTable: '255'));
-    //  printer?.printTest();
-    printer?.printEscPos(bytes, generator);
+    //  bytes += generator.text('$datatime');
+    printer?.printTest(bytes);
+    // printer?.printEscPos(bytes, generator);
   }
 
   @override
@@ -156,7 +194,8 @@ class _PrintQueueState extends State<PrintQueue> {
     checkt_queue();
     setState(() {
       dateTime = DateTime.now();
-      datatime = "เวลา ${dateTime.hour}: " + "${dateTime.minute}";
+      datatime = "${dateTime.hour}: " +
+          "${dateTime.minute}  ${dateTime.day}/${dateTime.month}/${dateTime.year}";
     });
     super.initState();
   }
@@ -327,7 +366,7 @@ class _PrintQueueState extends State<PrintQueue> {
                 GestureDetector(
                   onTap: () {
                     context.read<Datafunction>().playsound();
-                    Navigator.pop(context);
+                    Get.offNamed('user_information');
                   },
                   child: BoxWidetdew(
                       radius: 10.0,

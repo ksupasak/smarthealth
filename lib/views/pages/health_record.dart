@@ -74,7 +74,7 @@ class _HealthRecordState extends State<HealthRecord> {
       timer?.cancel();
       _streamSubscription?.cancel();
       _functionSubscription?.cancel();
-      Get.offAllNamed('user_information');
+      Get.offNamed('user_information');
     });
     ; // ยกเลิก StreamSubscription ถ้ามีการติดตาม Stream อยู่
   }
@@ -166,7 +166,7 @@ class _HealthRecordState extends State<HealthRecord> {
         if (resTojson['message'] == "success") {
           setState(() {
             prevent = false;
-            stop();
+
             showDialog(
                 context: context,
                 builder: (BuildContext context) {
@@ -175,8 +175,11 @@ class _HealthRecordState extends State<HealthRecord> {
                       texthead: 'สำเร็จ',
                       pathicon: 'assets/correct.png');
                 });
-            Timer(Duration(seconds: 2), () {
-              Get.offAllNamed('user_information');
+            Timer(Duration(seconds: 1), () {
+              Navigator.pop(context);
+              Timer(Duration(seconds: 1), () {
+                stop();
+              });
             });
           });
         } else {
