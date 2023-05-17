@@ -13,6 +13,7 @@ import 'package:smart_health/background/background.dart';
 import 'package:smart_health/background/color/style_color.dart';
 import 'package:smart_health/provider/provider.dart';
 import 'package:smart_health/provider/provider_function.dart';
+import 'package:smart_health/views/pages/print_exam.dart';
 import 'package:smart_health/views/pages/videocall.dart';
 import 'package:smart_health/widget_decorate/WidgetDecorate.dart';
 import 'package:http/http.dart' as http;
@@ -437,6 +438,7 @@ class BoxQueue extends StatefulWidget {
 class _BoxQueueState extends State<BoxQueue> {
   var resTojson;
   String? textqueue;
+  bool q = false;
   Future<void> checkt_queue() async {
     var url =
         Uri.parse('https://emr-life.com/clinic_master/clinic/Api/check_q');
@@ -446,6 +448,14 @@ class _BoxQueueState extends State<BoxQueue> {
     setState(() {
       resTojson = json.decode(res.body);
       textqueue = resTojson["queue_number"];
+      if (!q) {
+        Future.delayed(const Duration(seconds: 2), () {
+          checkt_queue();
+          setState(() {
+            q = true;
+          });
+        });
+      }
     });
   }
 
@@ -535,7 +545,9 @@ class _BoxQueueState extends State<BoxQueue> {
                   ],
                 ),
               )
-            : Container()
+            : Container(
+                child: Text(resTojson["queue_number"]),
+              )
         : Container(
             width: MediaQuery.of(context).size.width * 0.07,
             height: MediaQuery.of(context).size.width * 0.07,
@@ -1459,5 +1471,120 @@ class _BorDerState extends State<BorDer> {
       width: widget.height == null ? _width * 0.35 : widget.height,
       decoration: BoxDecoration(border: Border.all()),
     );
+  }
+}
+
+class BoxStatusinform extends StatefulWidget {
+  BoxStatusinform({super.key, this.status});
+  var status;
+
+  @override
+  State<BoxStatusinform> createState() => _BoxStatusinformState();
+}
+
+class _BoxStatusinformState extends State<BoxStatusinform> {
+  @override
+  Widget build(BuildContext context) {
+    double _width = MediaQuery.of(context).size.width;
+    double _height = MediaQuery.of(context).size.height;
+    TextStyle style = TextStyle(
+        color: Colors.green,
+        fontFamily: context.read<DataProvider>().fontFamily,
+        fontSize: _width * 0.04);
+    return widget.status != null
+        ? Container(
+            child: widget.status == 'processing'
+                ? Container(
+                    child: Column(
+                      children: [
+                        Text('ถึงคิวเเล้ว', style: style),
+                        GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => PrePareVideo()));
+                          },
+                          child: BoxWidetdew(
+                            radius: 2.0,
+                            color: Colors.blue,
+                            width: 0.3,
+                            height: 0.05,
+                            text: 'Video',
+                            textcolor: Colors.white,
+                            fontWeight: FontWeight.w500,
+                            fontSize: 0.04,
+                          ),
+                        )
+                      ],
+                    ),
+                  )
+                : widget.status == 'end'
+                    ? Container(
+                        child: Column(
+                        children: [
+                          Text('การตรวจเสร็จสิ้นกรุณารอผลตรวจ', style: style),
+                          Container(
+                            width: MediaQuery.of(context).size.width * 0.07,
+                            height: MediaQuery.of(context).size.width * 0.07,
+                            child: CircularProgressIndicator(),
+                          )
+                        ],
+                      ))
+                    : widget.status == 'completed'
+                        ? Container(
+                            child: Column(
+                              children: [
+                                Text('รับผลตรวจ', style: style),
+                                GestureDetector(
+                                  onTap: () {
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                Print_Exam()));
+                                  },
+                                  child: BoxWidetdew(
+                                    radius: 2.0,
+                                    color: Colors.green,
+                                    width: 0.3,
+                                    height: 0.05,
+                                    text: 'ปริ้นผลตรวจ',
+                                    textcolor: Colors.white,
+                                    fontWeight: FontWeight.w500,
+                                    fontSize: 0.04,
+                                  ),
+                                )
+                              ],
+                            ),
+                          )
+                        : widget.status == 'finished'
+                            ? Container(
+                                child: Column(
+                                children: [
+                                  Text('รายการวันนี้เสร็จสิ้น', style: style),
+                                  GestureDetector(
+                                    onTap: () {
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  Print_Exam()));
+                                    },
+                                    child: BoxWidetdew(
+                                      radius: 2.0,
+                                      color: Colors.green,
+                                      width: 0.3,
+                                      height: 0.05,
+                                      text: 'ปริ้นผลตรวจ',
+                                      textcolor: Colors.white,
+                                      fontWeight: FontWeight.w500,
+                                      fontSize: 0.04,
+                                    ),
+                                  )
+                                ],
+                              ))
+                            : Text('--', style: style))
+        : Container();
   }
 }

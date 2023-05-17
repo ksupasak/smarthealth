@@ -73,7 +73,6 @@ class _UserInformation2State extends State<UserInformation2> {
     setState(() {
       resTojson = json.decode(res.body);
       if (resTojson != null) {
-        check_status();
         if (resTojson['queue_number'] != '') {
           lop_queue();
         } else {
@@ -82,6 +81,7 @@ class _UserInformation2State extends State<UserInformation2> {
           });
         }
       }
+      check_status();
     });
   }
 
@@ -96,7 +96,7 @@ class _UserInformation2State extends State<UserInformation2> {
   Future<void> get_queue() async {
     var url = Uri.parse('https://emr-life.com/clinic_master/clinic/Api/list_q');
     var res = await http.post(url, body: {
-      'care_unit_id':context.read<DataProvider>().care_unit_id,//1
+      'care_unit_id': context.read<DataProvider>().care_unit_id, //1
     });
     setState(() {
       resTojson2 = json.decode(res.body);
@@ -133,6 +133,7 @@ class _UserInformation2State extends State<UserInformation2> {
     var res = await http.post(url, body: {
       'public_id': context.read<DataProvider>().id,
     });
+
     setState(() {
       resTojson4 = json.decode(res.body);
       if (resTojson4 != null) {
@@ -154,6 +155,9 @@ class _UserInformation2State extends State<UserInformation2> {
             stop();
           });
         } else if (resTojson4['message'] == 'processing') {
+          setState(() {
+            status = 'processing';
+          });
           print('ถึงคิวเเล้ว');
         } else if (resTojson4['message'] == 'waiting') {
           print('ยังไม่ถึงคิว');
@@ -203,23 +207,23 @@ class _UserInformation2State extends State<UserInformation2> {
                         child: InformationCard(
                             dataidcard:
                                 context.read<DataProvider>().dataidcard)),
-                    SizedBox(height: _height * 0.01),
+                    SizedBox(height: _height * 0.02),
                     Column(
                       children: [
                         status != ''
-                            ? Text('การตรวจเสร็จสิ้นกรุณารอ',
-                                style: TextStyle(
-                                    fontFamily:
-                                        context.read<DataProvider>().fontFamily,
-                                    fontSize: _width * 0.04))
+                            ? BoxStatusinform(status: status)
                             : Column(
                                 children: [
                                   Container(child: Center(child: BoxQueue())),
                                   BoxToDay(),
                                 ],
                               ),
+                        SizedBox(height: _height * 0.02),
                         choice(cancel: stop),
                       ],
+                    ),
+                    SizedBox(
+                      height: _height * 0.1,
                     ),
                     GestureDetector(
                       onTap: () {
@@ -479,7 +483,7 @@ class _choiceState extends State<choice> {
                                     top: Radius.circular(10))),
                             context: context,
                             builder: (context) => Container(
-                              height: _height * 0.5,
+                              height: _height * 0.6,
                               decoration: BoxDecoration(
                                   color: Colors.white,
                                   borderRadius: BorderRadius.only(
@@ -523,7 +527,7 @@ class _choiceState extends State<choice> {
                                     top: Radius.circular(10))),
                             context: context,
                             builder: (context) => Container(
-                              height: _height * 0.5,
+                              height: _height * 0.6,
                               decoration: BoxDecoration(
                                   color: Colors.white,
                                   borderRadius: BorderRadius.only(

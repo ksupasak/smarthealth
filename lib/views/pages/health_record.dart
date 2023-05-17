@@ -64,8 +64,7 @@ class _HealthRecordState extends State<HealthRecord> {
 
   @override
   void dispose() {
-    _streamSubscription
-        ?.cancel(); // แนะนำเรียก cancel() ใน dispose() เพื่อป้องกัน memory leak
+    _streamSubscription?.cancel();
     super.dispose();
   }
 
@@ -122,7 +121,6 @@ class _HealthRecordState extends State<HealthRecord> {
                     onTap: () {
                       recorddata();
 
-                      stop();
                       context.read<Datafunction>().playsound();
                     },
                     child: MarkCheck(
@@ -175,11 +173,9 @@ class _HealthRecordState extends State<HealthRecord> {
                       texthead: 'สำเร็จ',
                       pathicon: 'assets/correct.png');
                 });
+            Navigator.pop(context);
             Timer(Duration(seconds: 1), () {
-              Navigator.pop(context);
-              Timer(Duration(seconds: 1), () {
-                stop();
-              });
+              stop();
             });
           });
         } else {

@@ -45,6 +45,12 @@ class _PrintQueueState extends State<PrintQueue> {
   var devices = <BluetoothPrinter>[];
   List default_deivces = [];
   BluetoothPrinter? selectedPrinter;
+  String height = '';
+  String weight = '';
+  String temp = '';
+  String bp_sys = '';
+  String bp_dia = '';
+  String spo2 = '';
   Future<void> checkt_queue() async {
     var url =
         Uri.parse('https://emr-life.com/clinic_master/clinic/Api/check_q');
@@ -90,6 +96,26 @@ class _PrintQueueState extends State<PrintQueue> {
     }
 
     if (selectDevice != null) {
+      setState(() {
+        resTojson['health_records'][0]['height'] == null
+            ? height = ''
+            : height = resTojson['health_records'][0]['height'];
+        resTojson['health_records'][0]['weight'] == null
+            ? weight = ''
+            : weight = resTojson['health_records'][0]['weight'];
+        resTojson['health_records'][0]['temp'] == null
+            ? temp = ''
+            : temp = resTojson['health_records'][0]['temp'];
+        resTojson['health_records'][0]['bp_sys'] == null
+            ? bp_sys = ''
+            : bp_sys = resTojson['health_records'][0]['bp_sys'];
+        resTojson['health_records'][0]['bp_dia'] == null
+            ? bp_dia = ''
+            : bp_dia = resTojson['health_records'][0]['bp_dia'];
+        resTojson['health_records'][0]['spo2'] == null
+            ? spo2 = ''
+            : spo2 = resTojson['health_records'][0]['spo2'];
+      });
       printqueue();
     }
   }
@@ -120,7 +146,7 @@ class _PrintQueueState extends State<PrintQueue> {
             height: PosTextSize.size3,
             fontType: PosFontType.fontA));
     bytes += generator.text('\n');
-    bytes += generator.text('Doctor :ก  pairot tanyajasesn');
+    bytes += generator.text('Doctor :  pairot tanyajasesn');
     bytes += generator.text(
         'Care   :  ${resTojson['todays'][0]['care_name']} / ( ${resTojson['todays'][0]['slot']} )');
     bytes += generator.text('\n');
@@ -175,7 +201,7 @@ class _PrintQueueState extends State<PrintQueue> {
           styles: const PosStyles(align: PosAlign.center, codeTable: 'CP1252')),
       PosColumn(
           width: 2,
-          text: '${resTojson['health_records'][0]['spo2']}',
+          text: '$spo2',
           styles: const PosStyles(align: PosAlign.center, codeTable: 'CP1252')),
     ]);
     // bytes += generator.text(

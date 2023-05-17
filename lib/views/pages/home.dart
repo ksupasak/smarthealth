@@ -60,6 +60,7 @@ class _HomeappState extends State<Homeapp> {
             Timer(Duration(milliseconds: 200), () {
               // readingtime?.cancel();
               // reading?.cancel();
+              // reading?.cancel();
               Get.toNamed('user_information');
               // Navigator.push(
               //     context,
@@ -182,7 +183,8 @@ class _HomeappState extends State<Homeapp> {
   void readerID() {
     try {
       //   // Future.delayed(const Duration(seconds: 1), ()
-      readingtime = Timer.periodic(const Duration(seconds: 1), (_) {
+      // readingtime = Timer.periodic(const Duration(seconds: 1), (_)
+      Future.delayed(const Duration(seconds: 1), () {
         reader = ESMIDCard.instance;
         entry = reader?.getEntry();
 
