@@ -6,14 +6,13 @@ import 'package:flutter_blue_plus/gen/flutterblueplus.pb.dart';
 import 'package:just_audio/just_audio.dart';
 
 class DataProvider with ChangeNotifier {
-  String name_hospital = 'NAME OF HOSPITAL';
-  String care_unit = 'Care Unit';
-  String platfromURL = 'https://emr-life.com/clinic_master/clinic/Api/';
-  String checkqueueURL =
-      'https://emr-life.com/clinic_master/clinic/Api/check_q';
-  String care_unit_id = '63d79d61790f9bc857000006';
-  String passwordsetting = '';
-  String fontFamily = 'Prompt';
+  String name_hospital = ''; //NAME OF HOSPITAL
+  String care_unit = ''; //Care Unit
+  String platfromURL = ''; //https://emr-life.com/clinic_master/clinic/Api/
+
+  String care_unit_id = ''; //63d79d61790f9bc857000006
+  String passwordsetting = ''; //
+  String fontFamily = 'Prompt'; //
 
   var dataidcard;
   var checkqueue = '';
@@ -68,8 +67,6 @@ class DataProvider with ChangeNotifier {
 //  var idtest = '1710501456572';
 
   var status_getqueue; //false
-  String regter_id = '';
-  String regter_first_name = '';
-  String regter_last_name = '';
-  String regter_prefix_name = '';
+
+  List<String>? regter_data;
 }

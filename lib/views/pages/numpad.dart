@@ -93,6 +93,7 @@ class _NumpadState extends State<Numpad> {
 
     entry.stream.listen((String data) {
       setState(() {
+        colortexts = 'green';
         passwordslogin = data;
       });
     });
@@ -102,6 +103,17 @@ class _NumpadState extends State<Numpad> {
 
   @override
   Widget build(BuildContext context) {
+    Decoration decoration = BoxDecoration(boxShadow: [
+      BoxShadow(
+          color: Color.fromARGB(255, 170, 170, 170),
+          offset: Offset(1, 1),
+          blurRadius: 2)
+    ], color: Colors.white, borderRadius: BorderRadius.circular(5));
+    TextStyle style = TextStyle(
+        fontSize: (MediaQuery.of(context).size.width +
+                MediaQuery.of(context).size.height) *
+            0.012,
+        fontWeight: FontWeight.w600);
     return Column(
       children: [
         Container(
@@ -136,353 +148,245 @@ class _NumpadState extends State<Numpad> {
           height: MediaQuery.of(context).size.height * 0.005,
         ),
         Container(
-          height: MediaQuery.of(context).size.height * 0.25,
-          width: MediaQuery.of(context).size.width * 0.7,
-          decoration: BoxDecoration(boxShadow: [
-            BoxShadow(
-                color: Color.fromARGB(255, 170, 170, 170),
-                offset: Offset(0, 0),
-                blurRadius: 2)
-          ], color: Colors.white, borderRadius: BorderRadius.circular(5)),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
+            height: MediaQuery.of(context).size.height * 0.25,
+            width: MediaQuery.of(context).size.width * 0.7,
+            decoration: BoxDecoration(boxShadow: [
+              BoxShadow(
+                  color: Color.fromARGB(255, 170, 170, 170),
+                  offset: Offset(0, 0),
+                  blurRadius: 2)
+            ], color: Colors.white, borderRadius: BorderRadius.circular(5)),
+            child:
+                Column(mainAxisAlignment: MainAxisAlignment.center, children: [
               Padding(
-                padding: const EdgeInsets.all(2.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.all(2.0),
-                      child: GestureDetector(
-                        onTap: () {
-                          setState(() {
-                            passwordslogin = passwordslogin + '7';
-                            chakepasswordslogin();
-                          });
-                        },
-                        child: Container(
-                          color: Colors.white,
-                          width: MediaQuery.of(context).size.width * 0.18,
-                          height: MediaQuery.of(context).size.height * 0.05,
-                          child: Center(
-                            child: Text(
-                              '7',
-                              style: TextStyle(
-                                  fontSize: (MediaQuery.of(context).size.width +
-                                          MediaQuery.of(context).size.height) *
-                                      0.012,
-                                  fontWeight: FontWeight.w600),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(2.0),
-                      child: GestureDetector(
-                        onTap: () {
-                          setState(() {
-                            passwordslogin = passwordslogin + '8';
-                            chakepasswordslogin();
-                          });
-                        },
-                        child: Container(
-                          color: Colors.white,
-                          width: MediaQuery.of(context).size.width * 0.18,
-                          height: MediaQuery.of(context).size.height * 0.05,
-                          child: Center(
-                            child: Text(
-                              '8',
-                              style: TextStyle(
-                                  fontSize: (MediaQuery.of(context).size.width +
-                                          MediaQuery.of(context).size.height) *
-                                      0.012,
-                                  fontWeight: FontWeight.w600),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(2.0),
-                      child: GestureDetector(
-                        onTap: () {
-                          setState(() {
-                            passwordslogin = passwordslogin + '9';
-                            chakepasswordslogin();
-                          });
-                        },
-                        child: Container(
-                          color: Colors.white,
-                          width: MediaQuery.of(context).size.width * 0.18,
-                          height: MediaQuery.of(context).size.height * 0.05,
-                          child: Center(
-                            child: Text(
-                              '9',
-                              style: TextStyle(
-                                  fontSize: (MediaQuery.of(context).size.width +
-                                          MediaQuery.of(context).size.height) *
-                                      0.012,
-                                  fontWeight: FontWeight.w600),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
+                  padding: const EdgeInsets.all(2.0),
+                  child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Padding(
+                            padding: const EdgeInsets.all(2.0),
+                            child: GestureDetector(
+                                onTap: () {
+                                  setState(() {
+                                    passwordslogin = passwordslogin + '7';
+                                    chakepasswordslogin();
+                                  });
+                                },
+                                child: Container(
+                                    decoration: decoration,
+                                    width: MediaQuery.of(context).size.width *
+                                        0.18,
+                                    height: MediaQuery.of(context).size.height *
+                                        0.05,
+                                    child: Center(
+                                        child: Text('7', style: style))))),
+                        Padding(
+                            padding: const EdgeInsets.all(2.0),
+                            child: GestureDetector(
+                                onTap: () {
+                                  setState(() {
+                                    passwordslogin = passwordslogin + '8';
+                                    chakepasswordslogin();
+                                  });
+                                },
+                                child: Container(
+                                    decoration: decoration,
+                                    width: MediaQuery.of(context).size.width *
+                                        0.18,
+                                    height: MediaQuery.of(context).size.height *
+                                        0.05,
+                                    child: Center(
+                                        child: Text('8', style: style))))),
+                        Padding(
+                            padding: const EdgeInsets.all(2.0),
+                            child: GestureDetector(
+                                onTap: () {
+                                  setState(() {
+                                    passwordslogin = passwordslogin + '9';
+                                    chakepasswordslogin();
+                                  });
+                                },
+                                child: Container(
+                                    decoration: decoration,
+                                    width: MediaQuery.of(context).size.width *
+                                        0.18,
+                                    height: MediaQuery.of(context).size.height *
+                                        0.05,
+                                    child: Center(
+                                        child: Text('9', style: style)))))
+                      ])),
               Padding(
-                padding: const EdgeInsets.all(2.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.all(2.0),
-                      child: GestureDetector(
-                        onTap: () {
-                          setState(() {
-                            passwordslogin = passwordslogin + '4';
-                            chakepasswordslogin();
-                          });
-                        },
-                        child: Container(
-                          color: Colors.white,
-                          width: MediaQuery.of(context).size.width * 0.18,
-                          height: MediaQuery.of(context).size.height * 0.05,
-                          child: Center(
-                            child: Text(
-                              '4',
-                              style: TextStyle(
-                                  fontSize: (MediaQuery.of(context).size.width +
-                                          MediaQuery.of(context).size.height) *
-                                      0.012,
-                                  fontWeight: FontWeight.w600),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(2.0),
-                      child: GestureDetector(
-                        onTap: () {
-                          setState(() {
-                            passwordslogin = passwordslogin + '5';
-                            chakepasswordslogin();
-                          });
-                        },
-                        child: Container(
-                          color: Colors.white,
-                          width: MediaQuery.of(context).size.width * 0.18,
-                          height: MediaQuery.of(context).size.height * 0.05,
-                          child: Center(
-                            child: Text(
-                              '5',
-                              style: TextStyle(
-                                  fontSize: (MediaQuery.of(context).size.width +
-                                          MediaQuery.of(context).size.height) *
-                                      0.012,
-                                  fontWeight: FontWeight.w600),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(2.0),
-                      child: GestureDetector(
-                        onTap: () {
-                          setState(() {
-                            passwordslogin = passwordslogin + '6';
-                            chakepasswordslogin();
-                          });
-                        },
-                        child: Container(
-                          color: Colors.white,
-                          width: MediaQuery.of(context).size.width * 0.18,
-                          height: MediaQuery.of(context).size.height * 0.05,
-                          child: Center(
-                            child: Text(
-                              '6',
-                              style: TextStyle(
-                                  fontSize: (MediaQuery.of(context).size.width +
-                                          MediaQuery.of(context).size.height) *
-                                      0.012,
-                                  fontWeight: FontWeight.w600),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
+                  padding: const EdgeInsets.all(2.0),
+                  child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Padding(
+                            padding: const EdgeInsets.all(2.0),
+                            child: GestureDetector(
+                                onTap: () {
+                                  setState(() {
+                                    passwordslogin = passwordslogin + '4';
+                                    chakepasswordslogin();
+                                  });
+                                },
+                                child: Container(
+                                    decoration: decoration,
+                                    width: MediaQuery.of(context).size.width *
+                                        0.18,
+                                    height: MediaQuery.of(context).size.height *
+                                        0.05,
+                                    child: Center(
+                                        child: Text('4', style: style))))),
+                        Padding(
+                            padding: const EdgeInsets.all(2.0),
+                            child: GestureDetector(
+                                onTap: () {
+                                  setState(() {
+                                    passwordslogin = passwordslogin + '5';
+                                    chakepasswordslogin();
+                                  });
+                                },
+                                child: Container(
+                                    decoration: decoration,
+                                    width: MediaQuery.of(context).size.width *
+                                        0.18,
+                                    height: MediaQuery.of(context).size.height *
+                                        0.05,
+                                    child: Center(
+                                        child: Text('5', style: style))))),
+                        Padding(
+                            padding: const EdgeInsets.all(2.0),
+                            child: GestureDetector(
+                                onTap: () {
+                                  setState(() {
+                                    passwordslogin = passwordslogin + '6';
+                                    chakepasswordslogin();
+                                  });
+                                },
+                                child: Container(
+                                    decoration: decoration,
+                                    width: MediaQuery.of(context).size.width *
+                                        0.18,
+                                    height: MediaQuery.of(context).size.height *
+                                        0.05,
+                                    child: Center(
+                                        child: Text('6', style: style)))))
+                      ])),
               Padding(
-                padding: const EdgeInsets.all(2.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.all(2.0),
-                      child: GestureDetector(
-                        onTap: () {
-                          setState(() {
-                            passwordslogin = passwordslogin + '1';
-                            chakepasswordslogin();
-                          });
-                        },
-                        child: Container(
-                          color: Colors.white,
-                          width: MediaQuery.of(context).size.width * 0.18,
-                          height: MediaQuery.of(context).size.height * 0.05,
-                          child: Center(
-                            child: Text(
-                              '1',
-                              style: TextStyle(
-                                  fontSize: (MediaQuery.of(context).size.width +
-                                          MediaQuery.of(context).size.height) *
-                                      0.012,
-                                  fontWeight: FontWeight.w600),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(2.0),
-                      child: GestureDetector(
-                        onTap: () {
-                          setState(() {
-                            passwordslogin = passwordslogin + '2';
-                            chakepasswordslogin();
-                          });
-                        },
-                        child: Container(
-                          color: Colors.white,
-                          width: MediaQuery.of(context).size.width * 0.18,
-                          height: MediaQuery.of(context).size.height * 0.05,
-                          child: Center(
-                            child: Text(
-                              '2',
-                              style: TextStyle(
-                                  fontSize: (MediaQuery.of(context).size.width +
-                                          MediaQuery.of(context).size.height) *
-                                      0.012,
-                                  fontWeight: FontWeight.w600),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(2.0),
-                      child: GestureDetector(
-                        onTap: () {
-                          setState(() {
-                            passwordslogin = passwordslogin + '3';
-                            chakepasswordslogin();
-                          });
-                        },
-                        child: Container(
-                          color: Colors.white,
-                          width: MediaQuery.of(context).size.width * 0.18,
-                          height: MediaQuery.of(context).size.height * 0.05,
-                          child: Center(
-                            child: Text(
-                              '3',
-                              style: TextStyle(
-                                  fontSize: (MediaQuery.of(context).size.width +
-                                          MediaQuery.of(context).size.height) *
-                                      0.012,
-                                  fontWeight: FontWeight.w600),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
+                  padding: const EdgeInsets.all(2.0),
+                  child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Padding(
+                            padding: const EdgeInsets.all(2.0),
+                            child: GestureDetector(
+                                onTap: () {
+                                  setState(() {
+                                    passwordslogin = passwordslogin + '1';
+                                    chakepasswordslogin();
+                                  });
+                                },
+                                child: Container(
+                                    decoration: decoration,
+                                    width: MediaQuery.of(context).size.width *
+                                        0.18,
+                                    height: MediaQuery.of(context).size.height *
+                                        0.05,
+                                    child: Center(
+                                        child: Text('1', style: style))))),
+                        Padding(
+                            padding: const EdgeInsets.all(2.0),
+                            child: GestureDetector(
+                                onTap: () {
+                                  setState(() {
+                                    passwordslogin = passwordslogin + '2';
+                                    chakepasswordslogin();
+                                  });
+                                },
+                                child: Container(
+                                    decoration: decoration,
+                                    width: MediaQuery.of(context).size.width *
+                                        0.18,
+                                    height: MediaQuery.of(context).size.height *
+                                        0.05,
+                                    child: Center(
+                                        child: Text('2', style: style))))),
+                        Padding(
+                            padding: const EdgeInsets.all(2.0),
+                            child: GestureDetector(
+                                onTap: () {
+                                  setState(() {
+                                    passwordslogin = passwordslogin + '3';
+                                    chakepasswordslogin();
+                                  });
+                                },
+                                child: Container(
+                                    decoration: decoration,
+                                    width: MediaQuery.of(context).size.width *
+                                        0.18,
+                                    height: MediaQuery.of(context).size.height *
+                                        0.05,
+                                    child: Center(
+                                        child: Text('3', style: style)))))
+                      ])),
               Padding(
-                padding: const EdgeInsets.all(2.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.all(2.0),
-                      child: GestureDetector(
-                        onTap: () {},
-                        child: Container(
-                          color: Colors.white,
-                          width: MediaQuery.of(context).size.width * 0.18,
-                          height: MediaQuery.of(context).size.height * 0.05,
-                        ),
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(2.0),
-                      child: GestureDetector(
-                        onTap: () {
-                          setState(() {
-                            passwordslogin = passwordslogin + '0';
-                            chakepasswordslogin();
-                          });
-                        },
-                        child: Container(
-                          color: Colors.white,
-                          width: MediaQuery.of(context).size.width * 0.18,
-                          height: MediaQuery.of(context).size.height * 0.05,
-                          child: Center(
-                            child: Text(
-                              '0',
-                              style: TextStyle(
-                                  fontSize: (MediaQuery.of(context).size.width +
-                                          MediaQuery.of(context).size.height) *
-                                      0.012,
-                                  fontWeight: FontWeight.w600),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(2.0),
-                      child: GestureDetector(
-                        onTap: () {
-                          setState(() {
-                            context.read<Datafunction>().playsound();
-                            colortexts = 'back';
-                            passwordslogin.substring(0, 1);
-                            int g = passwordslogin.length - 1;
-                            passwordslogin = passwordslogin.substring(0, g);
-                            context.read<DataProvider>().id = passwordslogin;
-                          });
-                        },
-                        child: Container(
-                          color: Colors.white,
-                          width: MediaQuery.of(context).size.width * 0.18,
-                          height: MediaQuery.of(context).size.height * 0.05,
-                          child: Center(
-                            child: Text(
-                              'ลบ',
-                              style: TextStyle(
-                                  fontSize: (MediaQuery.of(context).size.width +
-                                          MediaQuery.of(context).size.height) *
-                                      0.012,
-                                  fontWeight: FontWeight.w600),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-        )
+                  padding: const EdgeInsets.all(2.0),
+                  child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Padding(
+                            padding: const EdgeInsets.all(2.0),
+                            child: GestureDetector(
+                                onTap: () {},
+                                child: Container(
+                                  color: Colors.white,
+                                  width:
+                                      MediaQuery.of(context).size.width * 0.18,
+                                  height:
+                                      MediaQuery.of(context).size.height * 0.05,
+                                ))),
+                        Padding(
+                            padding: const EdgeInsets.all(2.0),
+                            child: GestureDetector(
+                                onTap: () {
+                                  setState(() {
+                                    passwordslogin = passwordslogin + '0';
+                                    chakepasswordslogin();
+                                  });
+                                },
+                                child: Container(
+                                    decoration: decoration,
+                                    width: MediaQuery.of(context).size.width *
+                                        0.18,
+                                    height: MediaQuery.of(context).size.height *
+                                        0.05,
+                                    child: Center(
+                                        child: Text('0', style: style))))),
+                        Padding(
+                            padding: const EdgeInsets.all(2.0),
+                            child: GestureDetector(
+                                onTap: () {
+                                  setState(() {
+                                    context.read<Datafunction>().playsound();
+                                    colortexts = 'back';
+                                    passwordslogin.substring(0, 1);
+                                    int g = passwordslogin.length - 1;
+                                    passwordslogin =
+                                        passwordslogin.substring(0, g);
+                                    context.read<DataProvider>().id =
+                                        passwordslogin;
+                                  });
+                                },
+                                child: Container(
+                                    decoration: decoration,
+                                    width: MediaQuery.of(context).size.width *
+                                        0.18,
+                                    height: MediaQuery.of(context).size.height *
+                                        0.05,
+                                    child: Center(
+                                        child: Text('ลบ', style: style)))))
+                      ]))
+            ]))
       ],
     );
   }

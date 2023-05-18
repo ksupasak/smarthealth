@@ -53,7 +53,7 @@ class _PrintQueueState extends State<PrintQueue> {
   String spo2 = '';
   Future<void> checkt_queue() async {
     var url =
-        Uri.parse('https://emr-life.com/clinic_master/clinic/Api/check_q');
+        Uri.parse('${context.read<DataProvider>().platfromURL}/Api/check_q');
     var res = await http.post(url, body: {
       'public_id': context.read<DataProvider>().id,
     });
@@ -121,6 +121,16 @@ class _PrintQueueState extends State<PrintQueue> {
   }
 
   void printqueue() async {
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Container(
+            width: MediaQuery.of(context).size.width,
+            child: Center(
+                child: Text(
+              'ปริ้นผลตรวจ',
+              style: TextStyle(
+                  fontFamily: context.read<DataProvider>().fontFamily,
+                  fontSize: MediaQuery.of(context).size.width * 0.03),
+            )))));
     List<int> bytes = [];
 
     // Xprinter XP-N160I
@@ -146,7 +156,7 @@ class _PrintQueueState extends State<PrintQueue> {
             height: PosTextSize.size3,
             fontType: PosFontType.fontA));
     bytes += generator.text('\n');
-    bytes += generator.text('Doctor :  pairot tanyajasesn');
+    bytes += generator.text('Doctor :  ');
     bytes += generator.text(
         'Care   :  ${resTojson['todays'][0]['care_name']} / ( ${resTojson['todays'][0]['slot']} )');
     bytes += generator.text('\n');
@@ -181,23 +191,23 @@ class _PrintQueueState extends State<PrintQueue> {
     bytes += generator.row([
       PosColumn(
           width: 2,
-          text: '${resTojson['health_records'][0]['height']}',
+          text: '${height}',
           styles: const PosStyles(align: PosAlign.center, codeTable: 'CP1252')),
       PosColumn(
           width: 2,
-          text: '${resTojson['health_records'][0]['weight']}',
+          text: '${weight}',
           styles: const PosStyles(align: PosAlign.center, codeTable: 'CP1252')),
       PosColumn(
           width: 2,
-          text: '${resTojson['health_records'][0]['temp']}',
+          text: '${temp}',
           styles: const PosStyles(align: PosAlign.center, codeTable: 'CP1252')),
       PosColumn(
           width: 2,
-          text: '${resTojson['health_records'][0]['bp_sys']}',
+          text: '${bp_sys}',
           styles: const PosStyles(align: PosAlign.center, codeTable: 'CP1252')),
       PosColumn(
           width: 2,
-          text: '${resTojson['health_records'][0]['bp_dia']}',
+          text: '${bp_dia}',
           styles: const PosStyles(align: PosAlign.center, codeTable: 'CP1252')),
       PosColumn(
           width: 2,

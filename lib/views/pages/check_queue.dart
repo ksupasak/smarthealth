@@ -27,7 +27,7 @@ class _CheckQueueState extends State<CheckQueue> {
   bool statusbottom = false;
   void checkqueue() async {
     var url = Uri.parse(
-        '${context.read<DataProvider>().checkqueueURL}'); //${context.read<stringitem>().uri}
+        '${context.read<DataProvider>().platfromURL}/check_q'); //${context.read<stringitem>().uri}
     var res = await http.post(url, body: {
       'public_id': '${context.read<DataProvider>().id}',
     });

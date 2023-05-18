@@ -141,7 +141,7 @@ class _HealthRecordState extends State<HealthRecord> {
     setState(() {
       prevent = true;
     });
-    var url = Uri.parse('${context.read<DataProvider>().platfromURL}add_hr');
+    var url = Uri.parse('${context.read<DataProvider>().platfromURL}/add_hr');
     var res = await http.post(url, body: {
       "public_id": context.read<DataProvider>().id,
       "care_unit_id": context.read<DataProvider>().care_unit_id,

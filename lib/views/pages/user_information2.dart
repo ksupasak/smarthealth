@@ -65,8 +65,7 @@ class _UserInformation2State extends State<UserInformation2> {
   PrePareVideo? _prePareVideo;
 
   Future<void> checkt_queue() async {
-    var url =
-        Uri.parse('https://emr-life.com/clinic_master/clinic/Api/check_q');
+    var url = Uri.parse('${context.read<DataProvider>().platfromURL}/check_q');
     var res = await http.post(url, body: {
       'public_id': context.read<DataProvider>().id,
     });
@@ -94,7 +93,7 @@ class _UserInformation2State extends State<UserInformation2> {
   }
 
   Future<void> get_queue() async {
-    var url = Uri.parse('https://emr-life.com/clinic_master/clinic/Api/list_q');
+    var url = Uri.parse('h${context.read<DataProvider>().platfromURL}/list_q');
     var res = await http.post(url, body: {
       'care_unit_id': context.read<DataProvider>().care_unit_id, //1
     });
@@ -129,7 +128,7 @@ class _UserInformation2State extends State<UserInformation2> {
 
   Future<void> check_status() async {
     var url = Uri.parse(
-        'https://emr-life.com/clinic_master/clinic/Api/get_video_status');
+        '${context.read<DataProvider>().platfromURL}/get_video_status');
     var res = await http.post(url, body: {
       'public_id': context.read<DataProvider>().id,
     });
@@ -318,8 +317,7 @@ class _choiceState extends State<choice> {
       Get.toNamed('healthrecord');
     } else {
       context.read<DataProvider>().status_getqueue = 'true';
-      var url =
-          Uri.parse('https://emr-life.com/clinic_master/clinic/Api/get_q');
+      var url = Uri.parse('${context.read<DataProvider>().platfromURL}/get_q');
       var res = await http.post(url, body: {
         'public_id': context.read<DataProvider>().id,
       });
@@ -334,8 +332,7 @@ class _choiceState extends State<choice> {
   }
 
   Future<void> checkt_queue() async {
-    var url =
-        Uri.parse('https://emr-life.com/clinic_master/clinic/Api/check_q');
+    var url = Uri.parse('${context.read<DataProvider>().platfromURL}/check_q');
     var res = await http.post(url, body: {
       'public_id': context.read<DataProvider>().id,
     });
@@ -362,7 +359,7 @@ class _choiceState extends State<choice> {
 
   Future<void> check_status() async {
     var url = Uri.parse(
-        'https://emr-life.com/clinic_master/clinic/Api/get_video_status');
+        '${context.read<DataProvider>().platfromURL}/get_video_status');
     var res = await http.post(url, body: {
       'public_id': context.read<DataProvider>().id,
     });

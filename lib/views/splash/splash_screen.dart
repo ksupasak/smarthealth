@@ -33,7 +33,6 @@ class Splash_Screen extends StatefulWidget {
 class _Splash_ScreenState extends State<Splash_Screen> {
   var name_hospital;
   var platfromURL;
-  var checkqueueURL;
   var care_unit_id;
   var passwordsetting;
   late List<RecordSnapshot<int, Map<String, Object?>>> init;
@@ -50,26 +49,20 @@ class _Splash_ScreenState extends State<Splash_Screen> {
     for (RecordSnapshot<int, Map<String, Object?>> record in init) {
       name_hospital = record['name_hospital'].toString();
       platfromURL = record['platfromURL'].toString();
-      checkqueueURL = record['checkqueueURL'].toString();
       care_unit_id = record['care_unit_id'].toString();
       passwordsetting = record['passwordsetting'].toString();
       device = record['device'];
       print(name_hospital);
       print(platfromURL);
-      print(checkqueueURL);
       print(care_unit_id);
       print(passwordsetting);
-      // for (var devices in device) {
-      // print(devices);
-      // }
+      safe();
     }
-    safe();
   }
 
   void safe() async {
     context.read<DataProvider>().name_hospital = name_hospital;
     context.read<DataProvider>().platfromURL = platfromURL;
-    context.read<DataProvider>().checkqueueURL = checkqueueURL;
     context.read<DataProvider>().care_unit_id = care_unit_id;
     context.read<DataProvider>().passwordsetting = passwordsetting;
     setState(() {

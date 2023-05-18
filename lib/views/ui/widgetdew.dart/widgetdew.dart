@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 
 import 'package:just_audio/just_audio.dart';
@@ -28,14 +29,34 @@ class backgrund extends StatefulWidget {
 class _backgrundState extends State<backgrund> {
   @override
   Widget build(BuildContext context) {
+    double _width = MediaQuery.of(context).size.width;
+    double _height = MediaQuery.of(context).size.height;
     return Positioned(
-        child: BackGroundSmart_Health(
-      BackGroundColor: [
-        Color.fromARGB(255, 255, 255, 255),
-        StyleColor.backgroundbegin,
-        StyleColor.backgroundbegin,
-      ],
-    ));
+        child: Container(
+      width: _width,
+      height: _height,
+      color: Colors.white,
+      child: Column(
+        children: [
+          Container(
+            height: _height * 0.2,
+            width: _width,
+            child: SvgPicture.asset(
+              'assets/tghjk.svg',
+              fit: BoxFit.fill,
+            ),
+          ),
+        ],
+      ),
+    )
+        //      BackGroundSmart_Health(
+        //   BackGroundColor: [
+        //     Color.fromARGB(255, 255, 255, 255),
+        //     StyleColor.backgroundbegin,
+        //     StyleColor.backgroundbegin,
+        //   ],
+        // )
+        );
   }
 }
 
@@ -307,6 +328,12 @@ class InformationCard extends StatefulWidget {
 
 class _InformationCardState extends State<InformationCard> {
   @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Row(
       children: [
@@ -326,10 +353,14 @@ class _InformationCardState extends State<InformationCard> {
               borderRadius: BorderRadius.circular(
                 MediaQuery.of(context).size.width * 0.03,
               ),
-              child: Image.network(
-                '${widget.dataidcard['data']['picture_url']}',
-                fit: BoxFit.fill,
-              ),
+              child: widget.dataidcard['data']['picture_url'] == ''
+                  ? Container(
+                      color: Color.fromARGB(255, 240, 240, 240),
+                      child: Image.asset('assets/user (1).png'))
+                  : Image.network(
+                      '${widget.dataidcard['data']['picture_url']}',
+                      fit: BoxFit.fill,
+                    ),
             )
             // : Icon(Icons.person)
             ),
@@ -440,8 +471,7 @@ class _BoxQueueState extends State<BoxQueue> {
   String? textqueue;
   bool q = false;
   Future<void> checkt_queue() async {
-    var url =
-        Uri.parse('https://emr-life.com/clinic_master/clinic/Api/check_q');
+    var url = Uri.parse('${context.read<DataProvider>().platfromURL}/check_q');
     var res = await http.post(url, body: {
       'public_id': context.read<DataProvider>().id,
     });
@@ -566,8 +596,7 @@ class BoxShoHealth_Records extends StatefulWidget {
 class _BoxShoHealth_RecordsState extends State<BoxShoHealth_Records> {
   var resTojson;
   void information() async {
-    var url =
-        Uri.parse('https://emr-life.com/clinic_master/clinic/Api/check_q');
+    var url = Uri.parse('${context.read<DataProvider>().platfromURL}/check_q');
     var res = await http.post(url, body: {
       // 'care_unit_id': '63d7a282790f9bc85700000e',
       'public_id': context.read<DataProvider>().id,
@@ -759,7 +788,7 @@ class _BoxRunQueueState extends State<BoxRunQueue> {
   String message = '';
   String queue = '';
   Future<void> get_queue() async {
-    var url = Uri.parse('https://emr-life.com/clinic_master/clinic/Api/list_q');
+    var url = Uri.parse('${context.read<DataProvider>().platfromURL}/list_q');
     var res = await http.post(url, body: {
       'care_unit_id': context.read<DataProvider>().care_unit_id,
     });
@@ -930,8 +959,7 @@ class BoxAppointments extends StatefulWidget {
 class _BoxAppointmentsState extends State<BoxAppointments> {
   var resTojson;
   void information() async {
-    var url =
-        Uri.parse('https://emr-life.com/clinic_master/clinic/Api/check_q');
+    var url = Uri.parse('${context.read<DataProvider>().platfromURL}/check_q');
     var res = await http.post(url, body: {
       // 'care_unit_id': '63d7a282790f9bc85700000e',
       'public_id': context.read<DataProvider>().id,
@@ -1235,7 +1263,7 @@ class _BoxTextState extends State<BoxText> {
     TextStyle style = TextStyle(
         fontFamily: context.read<DataProvider>().fontFamily,
         fontSize: _width * 0.04,
-        color: Colors.white,
+        color: Color.fromARGB(255, 0, 138, 115),
         // fontFamily: 'Prompt',
         fontWeight: FontWeight.w600);
     return widget.text == null
@@ -1257,8 +1285,7 @@ class BoxToDay extends StatefulWidget {
 class _BoxToDayState extends State<BoxToDay> {
   var resTojson;
   Future<void> checkt_queue() async {
-    var url =
-        Uri.parse('https://emr-life.com/clinic_master/clinic/Api/check_q');
+    var url = Uri.parse('${context.read<DataProvider>().platfromURL}/check_q');
     var res = await http.post(url, body: {
       'public_id': context.read<DataProvider>().id,
     });
@@ -1483,6 +1510,51 @@ class BoxStatusinform extends StatefulWidget {
 }
 
 class _BoxStatusinformState extends State<BoxStatusinform> {
+  String? status;
+  Timer? _timer;
+  var resTojson;
+  Future<void> check_status() async {
+    var url = Uri.parse(
+        '${context.read<DataProvider>().platfromURL}/get_video_status');
+    var res = await http.post(url, body: {
+      'public_id': context.read<DataProvider>().id,
+    });
+
+    resTojson = json.decode(res.body);
+    if (resTojson['message'] == 'finished' ||
+        resTojson['message'] == 'completed') {
+      setState(() {
+        status = resTojson['message'];
+        stop();
+      });
+    }
+  }
+
+  void lop() {
+    _timer = Timer.periodic(Duration(seconds: 2), (timer) {
+      setState(() {
+        check_status();
+        print('รอผลตรวจ');
+      });
+    });
+  }
+
+  void stop() {
+    setState(() {
+      _timer?.cancel();
+    });
+  }
+
+  @override
+  void initState() {
+    status = widget.status;
+    if (status == 'end') {
+      lop();
+    }
+    // TODO: implement initState
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     double _width = MediaQuery.of(context).size.width;
@@ -1493,7 +1565,7 @@ class _BoxStatusinformState extends State<BoxStatusinform> {
         fontSize: _width * 0.04);
     return widget.status != null
         ? Container(
-            child: widget.status == 'processing'
+            child: status == 'processing'
                 ? Container(
                     child: Column(
                       children: [
@@ -1519,7 +1591,7 @@ class _BoxStatusinformState extends State<BoxStatusinform> {
                       ],
                     ),
                   )
-                : widget.status == 'end'
+                : status == 'end'
                     ? Container(
                         child: Column(
                         children: [
@@ -1531,7 +1603,7 @@ class _BoxStatusinformState extends State<BoxStatusinform> {
                           )
                         ],
                       ))
-                    : widget.status == 'completed'
+                    : status == 'completed'
                         ? Container(
                             child: Column(
                               children: [
@@ -1558,7 +1630,7 @@ class _BoxStatusinformState extends State<BoxStatusinform> {
                               ],
                             ),
                           )
-                        : widget.status == 'finished'
+                        : status == 'finished'
                             ? Container(
                                 child: Column(
                                 children: [
@@ -1576,7 +1648,7 @@ class _BoxStatusinformState extends State<BoxStatusinform> {
                                       color: Colors.green,
                                       width: 0.3,
                                       height: 0.05,
-                                      text: 'ปริ้นผลตรวจ',
+                                      text: 'ปริ้นผลตรวจซ้ำ',
                                       textcolor: Colors.white,
                                       fontWeight: FontWeight.w500,
                                       fontSize: 0.04,

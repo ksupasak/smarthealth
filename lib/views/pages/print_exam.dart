@@ -36,7 +36,7 @@ class _Print_ExamState extends State<Print_Exam> {
   List default_deivces = [];
   Future<void> get_exam() async {
     var url = Uri.parse(
-        'https://emr-life.com/clinic_master/clinic/Api/get_doctor_exam');
+        '${context.read<DataProvider>().platfromURL}/get_doctor_exam');
     var res = await http.post(url, body: {
       'public_id': context.read<DataProvider>().id,
     });

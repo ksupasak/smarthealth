@@ -42,7 +42,7 @@ class _PrePareVideoState extends State<PrePareVideo> {
   late OpenViduClient _openvidu;
   Future<void> get_path_video() async {
     var url =
-        Uri.parse('https://emr-life.com/clinic_master/clinic/Api/get_video');
+        Uri.parse('${context.read<DataProvider>().platfromURL}/get_video');
     var res = await http
         .post(url, body: {'public_id': context.read<DataProvider>().id});
     resTojson = json.decode(res.body);
@@ -211,7 +211,7 @@ class _RoomPageState extends State<RoomPage> {
 
   Future<void> status_video() async {
     var url = Uri.parse(
-        'https://emr-life.com/clinic_master/clinic/Api/get_video_status');
+        '${context.read<DataProvider>().platfromURL}/get_video_status');
     var res = await http
         .post(url, body: {'public_id': context.read<DataProvider>().id});
     resTojson2 = json.decode(res.body);
@@ -468,7 +468,7 @@ class _ConnectPageState extends State<ConnectPage> {
 
   Future<void> get_path_video() async {
     var url =
-        Uri.parse('https://emr-life.com/clinic_master/clinic/Api/get_video');
+        Uri.parse('${context.read<DataProvider>().platfromURL}/get_video');
     var res = await http
         .post(url, body: {'public_id': context.read<DataProvider>().id});
     var resTojson = json.decode(res.body);

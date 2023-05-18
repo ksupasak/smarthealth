@@ -47,7 +47,7 @@ class _HomeappState extends State<Homeapp> {
 
       if (p.toString() == '${context.read<DataProvider>().id[12]}.0') {
         var url = Uri.parse(
-            '${context.read<DataProvider>().platfromURL}get_patient?public_id=${context.read<DataProvider>().id}'); //${context.read<stringitem>().uri}
+            '${context.read<DataProvider>().platfromURL}/get_patient?public_id=${context.read<DataProvider>().id}'); //${context.read<stringitem>().uri}
         var res = await http.get(url);
         if (res.statusCode == 200) {
           var resTojson = json.decode(res.body);
@@ -57,22 +57,12 @@ class _HomeappState extends State<Homeapp> {
               context.read<DataProvider>().dataidcard = resTojson;
             });
 
-            Timer(Duration(milliseconds: 200), () {
+            Timer(Duration(seconds: 1), () {
               // readingtime?.cancel();
               // reading?.cancel();
-              // reading?.cancel();
               Get.toNamed('user_information');
-              // Navigator.push(
-              //     context,
-              //     MaterialPageRoute(
-              //       builder: (context) => UserInformation2(),
-              //     ));
             });
           } else if (resTojson['message'] == 'not found') {
-            print("${context.read<DataProvider>().regter_id}");
-            print("${context.read<DataProvider>().regter_prefix_name}");
-            print("${context.read<DataProvider>().regter_first_name}");
-            print("${context.read<DataProvider>().regter_last_name}");
             showDialog(
                 context: context,
                 builder: (BuildContext context) {
@@ -83,7 +73,7 @@ class _HomeappState extends State<Homeapp> {
                       GestureDetector(
                           onTap: () {
                             Navigator.pop(context);
-                            Timer(Duration(seconds: 1), () {
+                            Timer(Duration(seconds: 2), () {
                               setState(() {
                                 Get.toNamed('regter');
                               });
@@ -93,7 +83,7 @@ class _HomeappState extends State<Homeapp> {
                               color: Colors.green,
                               height: 0.05,
                               width: 0.2,
-                              text: 'สมัค',
+                              text: 'สมัคร',
                               radius: 0.0,
                               textcolor: Colors.white)),
                       GestureDetector(
@@ -195,14 +185,7 @@ class _HomeappState extends State<Homeapp> {
             List<String> splitted = data.split('#');
             print("IDCard " + data);
             setState(() {
-              context.read<DataProvider>().id = splitted[0].toString();
-              context.read<DataProvider>().regter_id = splitted[0].toString();
-              context.read<DataProvider>().regter_prefix_name =
-                  splitted[1].toString();
-              context.read<DataProvider>().regter_first_name =
-                  splitted[2].toString();
-              context.read<DataProvider>().regter_last_name =
-                  splitted[4].toString();
+              context.read<DataProvider>().regter_data = splitted;
             });
             print(
                 "${context.read<DataProvider>().id} / ${splitted[0].toString()}");
@@ -271,13 +254,13 @@ class _HomeappState extends State<Homeapp> {
                           SizedBox(height: _height * 0.01),
                           BoxRunQueue(),
                           SizedBox(height: _height * 0.02),
-                          BoxText(text: 'กรุณากรอกเลขบัตร XX'),
+                          BoxText(text: 'กรุณากรอกเลขบัตร/เสียบบัตร'),
                           SizedBox(height: _height * 0.02),
                           Container(
                             width: _width * 0.8,
                             height: _height * 0.5,
                             decoration: BoxDecoration(
-                              color: Colors.white,
+                              color: Color.fromARGB(255, 255, 255, 255),
                               borderRadius: BorderRadius.circular(20),
                               boxShadow: [
                                 BoxShadow(blurRadius: 10, color: Colors.white),

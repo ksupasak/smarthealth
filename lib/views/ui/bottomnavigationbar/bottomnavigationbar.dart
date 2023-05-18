@@ -19,11 +19,14 @@ class _BottomNavigationBarAppState extends State<BottomNavigationBarApp> {
     double _height = MediaQuery.of(context).size.height;
     return Container(
       width: _width,
-      color: StyleColor.backgroundbegin,
+      //   color: StyleColor.backgroundbegin,
       height: _height * 0.08,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.start,
-        children: [Settingbar(), TestMenuBar()],
+        children: [
+          Settingbar(),
+          //TestMenuBar()
+        ],
       ),
     );
   }

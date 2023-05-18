@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/src/widgets/container.dart';
@@ -10,6 +12,7 @@ import 'package:smart_health/local/classlocal.dart';
 import 'package:smart_health/local/local.dart';
 import 'package:smart_health/provider/provider.dart';
 import 'package:smart_health/views/ui/widgetdew.dart/widgetdew.dart';
+import 'package:http/http.dart' as http;
 
 class Initsetting extends StatefulWidget {
   const Initsetting({super.key});
@@ -21,17 +24,17 @@ class Initsetting extends StatefulWidget {
 class _InitsettingState extends State<Initsetting> {
   TextEditingController name_hospital = TextEditingController();
   TextEditingController platfromURL = TextEditingController();
-  TextEditingController checkqueueURL = TextEditingController();
+
   TextEditingController care_unit_id = TextEditingController();
   TextEditingController care_unit = TextEditingController();
   TextEditingController passwordsetting = TextEditingController();
   late List<RecordSnapshot<int, Map<String, Object?>>> nameHospital;
+  var resTojson;
   void test() async {
-    name_hospital.text = 'NAME OF HOSPITAL';
-    care_unit.text = 'Care Unit';
-    platfromURL.text = 'https://emr-life.com/clinic_master/clinic/Api/';
-    checkqueueURL.text =
-        'https://emr-life.com/clinic_master/clinic/Api/check_q';
+    name_hospital.text = 'โรงพยาบาลจุฬาลงกรณ์';
+    care_unit.text = 'ห้องตรวจ 01';
+    platfromURL.text = 'https://emr-life.com/clinic_master/clinic/Api';
+
     care_unit_id.text = '63d7a282790f9bc85700000e'; //63d79d61790f9bc857000006
     passwordsetting.text = '';
   }
@@ -39,7 +42,6 @@ class _InitsettingState extends State<Initsetting> {
   void safe() async {
     context.read<DataProvider>().name_hospital = name_hospital.text;
     context.read<DataProvider>().platfromURL = platfromURL.text;
-    context.read<DataProvider>().checkqueueURL = checkqueueURL.text;
     context.read<DataProvider>().care_unit_id = care_unit_id.text;
     context.read<DataProvider>().passwordsetting = passwordsetting.text;
     context.read<DataProvider>().care_unit = care_unit.text;
@@ -56,25 +58,60 @@ class _InitsettingState extends State<Initsetting> {
     for (RecordSnapshot<int, Map<String, Object?>> record in nameHospital) {
       name_hospital.text = record['name_hospital'].toString();
       platfromURL.text = record['platfromURL'].toString();
-      checkqueueURL.text = record['checkqueueURL'].toString();
       care_unit_id.text = record['care_unit_id'].toString();
       care_unit.text = record['care_unit'].toString();
       passwordsetting.text = record['passwordsetting'].toString();
       knownDevice = record['device'];
       print(name_hospital.text);
       print(platfromURL.text);
-      print(checkqueueURL.text);
       print(care_unit_id.text);
       print(passwordsetting.text);
       // for (var knownDevices in knownDevice) {
       //   print(knownDevices);
       // }
     }
+    print('เช็คapi');
+    check_api();
+  }
+
+  void check_api() async {
+    var url = Uri.parse('${platfromURL.text}/check_connect');
+    var res = await http.post(url, body: {
+      'care_unit_id': care_unit_id.text,
+    });
+    resTojson = json.decode(res.body);
+    print(resTojson);
+    if (resTojson['message'] == 'success') {
+      print('เชื่อมต่อapiได้');
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Container(
+              width: MediaQuery.of(context).size.width,
+              child: Center(
+                  child: Text(
+                'เชื่อมต่อURLสำเร็จ',
+                style: TextStyle(
+                    fontFamily: context.read<DataProvider>().fontFamily,
+                    fontSize: MediaQuery.of(context).size.width * 0.03),
+              )))));
+    } else {
+      print('เชื่อมต่อapiไม่ได้');
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Container(
+              width: MediaQuery.of(context).size.width,
+              child: Center(
+                  child: Text(
+                'เชื่อมต่อURLไม่สำเร็จ',
+                style: TextStyle(
+                    fontFamily: context.read<DataProvider>().fontFamily,
+                    fontSize: MediaQuery.of(context).size.width * 0.03),
+              )))));
+    }
   }
 
   @override
   void initState() {
     printDatabase();
+
     // TODO: implement initState
     super.initState();
   }
@@ -106,7 +143,6 @@ class _InitsettingState extends State<Initsetting> {
                       keyvavlue: platfromURL, texthead: 'platfromURL'),
                   BoxTextFieldSetting(
                       keyvavlue: care_unit_id, texthead: 'care_unit_id'),
-                  BoxTextFieldSetting(texthead: 'VideoURL'),
                   BoxTextFieldSetting(
                       lengthlimitingtextinputformatter: 4,
                       keyvavlue: passwordsetting,

@@ -37,7 +37,6 @@ Future<void> addDataInfoToDatabase(DataProvider data) async {
   final key = await store.add(db, {
     'name_hospital': data.name_hospital,
     'platfromURL': data.platfromURL,
-    'checkqueueURL': data.checkqueueURL,
     'care_unit_id': data.care_unit_id,
     'device': '1234',
     'passwordsetting': data.passwordsetting,
