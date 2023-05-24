@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:get/get.dart';
+import 'package:provider/provider.dart';
 import 'package:smart_health/background/background.dart';
 import 'package:smart_health/background/color/style_color.dart';
+import 'package:smart_health/provider/provider_function.dart';
 import 'package:smart_health/views/ui/widgetdew.dart/widgetdew.dart';
 
 class Setting extends StatefulWidget {
@@ -35,16 +37,19 @@ class _SettingState extends State<Setting> {
                     children: [
                       GestureDetector(
                           onTap: () {
+                            context.read<Datafunction>().playsound();
                             Get.toNamed('initsetting');
                           },
                           child: BoxSetting(text: 'Initsetting')),
                       GestureDetector(
                           onTap: () {
+                            context.read<Datafunction>().playsound();
                             Get.toNamed('device');
                           },
                           child: BoxSetting(text: 'Device')),
                       GestureDetector(
                           onTap: () {
+                            context.read<Datafunction>().playsound();
                             Get.offNamed('home');
                           },
                           child: BoxSetting(text: 'Exit')),

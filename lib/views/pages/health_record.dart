@@ -103,7 +103,7 @@ class _HealthRecordState extends State<HealthRecord> {
           builder: (BuildContext context) {
             return Popup(
               texthead: 'ข้อมูลไม่ครบ',
-              textbody: 'ต่องการส่งข้อมูลหรือไม่',
+              textbody: 'ต้องการส่งข้อมูลหรือไม่',
               fontSize: 0.05,
               pathicon: 'assets/warning.png',
               buttonbar: [
@@ -173,9 +173,10 @@ class _HealthRecordState extends State<HealthRecord> {
                       texthead: 'สำเร็จ',
                       pathicon: 'assets/correct.png');
                 });
-            Navigator.pop(context);
+
             Timer(Duration(seconds: 1), () {
               stop();
+              Get.offNamed('user_information');
             });
           });
         } else {
@@ -348,15 +349,14 @@ class _HealthRecordState extends State<HealthRecord> {
         backgrund(),
         Positioned(
             child: ListView(children: [
+          BoxTime(),
           WidgetNameHospital(),
-          Container(
-            height: _height * 0.01,
-          ),
+          Container(height: _height * 0.01),
           BoxDecorate(
               color: Color.fromARGB(255, 43, 179, 161),
               child: InformationCard(
                   dataidcard: context.read<DataProvider>().dataidcard)),
-          SizedBox(height: heightsizedbox),
+          //   SizedBox(height: heightsizedbox),
           // Container(
           //   width: _width,
           //   child: Row(
@@ -390,41 +390,42 @@ class _HealthRecordState extends State<HealthRecord> {
           // ),
           SizedBox(height: heightsizedbox),
           BoxDecorate(
-              color: Colors.white,
+
+              //  color: Color.fromARGB(255, 0, 0, 0),
               child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
-                    BoxRecord(texthead: 'TEMP', keyvavlue: temp),
-                    Line(height: heightline, color: teamcolor),
-                    BoxRecord(texthead: 'WEIGHT', keyvavlue: weight),
-                    Line(height: heightline, color: teamcolor),
-                    BoxRecord(texthead: 'height', keyvavlue: height)
-                  ])),
+                BoxRecord(texthead: 'TEMP', keyvavlue: temp),
+                Line(height: heightline, color: teamcolor),
+                BoxRecord(texthead: 'WEIGHT', keyvavlue: weight),
+                Line(height: heightline, color: teamcolor),
+                BoxRecord(texthead: 'height', keyvavlue: height)
+              ])),
           SizedBox(height: heightsizedbox),
           BoxDecorate(
-              color: Colors.white,
+              //   color: Colors.white,
               child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
-                    BoxRecord(texthead: 'SYS', keyvavlue: sys),
-                    Line(height: heightline, color: teamcolor),
-                    BoxRecord(texthead: 'DIA', keyvavlue: dia),
-                    Line(height: heightline, color: teamcolor),
-                    BoxRecord(texthead: 'PULSE', keyvavlue: pulse)
-                  ])),
+                BoxRecord(texthead: 'SYS', keyvavlue: sys),
+                Line(height: heightline, color: teamcolor),
+                BoxRecord(texthead: 'DIA', keyvavlue: dia),
+                Line(height: heightline, color: teamcolor),
+                BoxRecord(texthead: 'PULSE', keyvavlue: pulse)
+              ])),
           SizedBox(height: heightsizedbox),
           BoxDecorate(
-              color: Colors.white,
+              //   color: Colors.white,
               child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
-                    BoxRecord(texthead: 'PR', keyvavlue: pr),
-                    Line(height: heightline, color: teamcolor),
-                    BoxRecord(texthead: 'SPO2', keyvavlue: spo2),
-                  ])),
+                BoxRecord(texthead: 'PR', keyvavlue: pr),
+                Line(height: heightline, color: teamcolor),
+                BoxRecord(texthead: 'SPO2', keyvavlue: spo2),
+              ])),
           SizedBox(height: heightsizedbox),
           BoxDecorate(
-            color: Colors.white,
+//color: Colors.white,
             child: Column(
               children: [
                 Text('ค่าน้ำตาล',

@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 import 'package:smart_health/provider/provider.dart';
+import 'package:smart_health/provider/provider_function.dart';
 import 'package:smart_health/views/ui/widgetdew.dart/popup.dart';
 import 'package:smart_health/views/ui/widgetdew.dart/widgetdew.dart';
 
@@ -25,6 +26,7 @@ class _PopupSettingState extends State<PopupSetting> {
     String password = p1.text + p2.text + p3.text + p4.text;
     if (password == '9544' ||
         password == context.read<DataProvider>().passwordsetting) {
+      context.read<Datafunction>().playsound();
       Get.offNamed('setting');
     } else {
       showDialog(

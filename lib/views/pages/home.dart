@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 
@@ -34,6 +35,8 @@ class _HomeappState extends State<Homeapp> {
   Stream<String>? entry;
   Timer? readingtime;
   Timer? reading;
+  bool shownumpad = false;
+  Timer? _timer;
   @override
   void check() async {
     setState(() {
@@ -186,6 +189,7 @@ class _HomeappState extends State<Homeapp> {
             print("IDCard " + data);
             setState(() {
               context.read<DataProvider>().regter_data = splitted;
+              context.read<DataProvider>().id = splitted[0].toString();
             });
             print(
                 "${context.read<DataProvider>().id} / ${splitted[0].toString()}");
@@ -193,7 +197,7 @@ class _HomeappState extends State<Homeapp> {
             idcard.setValue(splitted[0]);
             if (context.read<DataProvider>().id == splitted[0].toString()) {
               check();
-            }
+            } else {}
           }, onError: (error) {
             print(error);
           }, onDone: () {
@@ -215,15 +219,40 @@ class _HomeappState extends State<Homeapp> {
 
   @override
   void dispose() {
-    // readingtime?.cancel();
-    // reading?.cancel();
+    readingtime?.cancel();
+    reading?.cancel();
+    _timer?.cancel();
     // TODO: implement dispose
     super.dispose();
   }
 
+  void lop() {
+    _timer = Timer.periodic(Duration(seconds: 5), (timer) {
+      setState(() {
+        if (context.read<DataProvider>().platfromURL == '') {
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+              content: Container(
+                  width: MediaQuery.of(context).size.width,
+                  child: Center(
+                      child: Text(
+                    'ยังไม่ได้ตั่งค่าplatfromURL',
+                    style: TextStyle(
+                        fontFamily: context.read<DataProvider>().fontFamily,
+                        fontSize: MediaQuery.of(context).size.width * 0.03),
+                  )))));
+        } else {
+          readerID();
+        }
+      });
+    });
+  }
+
   @override
   void initState() {
-    readerID();
+    setState(() {
+      context.read<DataProvider>().id = '';
+    });
+    lop();
     // TODO: implement initState
     super.initState();
   }
@@ -242,62 +271,103 @@ class _HomeappState extends State<Homeapp> {
                     child: SafeArea(
                   child: ListView(children: [
                     BoxTime(),
-                    WidgetNameHospital(),
+                    BoxRunQueue2(),
                     Container(
                       width: _width,
-                      height: _height * 0.8,
+                      height: _height * 0.7,
                       child: Center(
                           child: Column(
                         mainAxisAlignment: MainAxisAlignment.start,
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          SizedBox(height: _height * 0.01),
-                          BoxRunQueue(),
-                          SizedBox(height: _height * 0.02),
-                          BoxText(text: 'กรุณากรอกเลขบัตร/เสียบบัตร'),
                           SizedBox(height: _height * 0.02),
                           Container(
-                            width: _width * 0.8,
-                            height: _height * 0.5,
+                              width: _width * 0.6,
+                              child: BoxText(
+                                  text: 'กรุณาเสียบบัตรประชาชนหรือกรอกรหัส')),
+                          Container(
+                              width: _width * 0.6,
+                              child: BoxText(
+                                  text: 'บัตรประชาชน เพื่อทำการเข้าสู่ระบบ')),
+                          SizedBox(height: _height * 0.02),
+                          Container(
+                            width: _width * 0.7,
+                            height: _height * 0.07,
                             decoration: BoxDecoration(
-                              color: Color.fromARGB(255, 255, 255, 255),
-                              borderRadius: BorderRadius.circular(20),
-                              boxShadow: [
-                                BoxShadow(blurRadius: 10, color: Colors.white),
+                                color: Color.fromARGB(255, 235, 235, 235),
+                                borderRadius: BorderRadius.circular(15)),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                BoxID(),
+                                GestureDetector(
+                                  onTap: () {
+                                    if (shownumpad == false) {
+                                      setState(() {
+                                        shownumpad = true;
+                                      });
+                                    } else {
+                                      setState(() {
+                                        shownumpad = false;
+                                      });
+                                    }
+                                  },
+                                  child: Container(
+                                    height: _width * 0.08,
+                                    width: _width * 0.08,
+                                    child: SvgPicture.asset(
+                                      'assets/Frame 9128.svg',
+                                      fit: BoxFit.fill,
+                                    ),
+                                  ),
+                                ),
                               ],
                             ),
-                            child: Center(
-                              child: Column(
-                                children: [
-                                  idcard,
-                                  SizedBox(height: _height * 0.01),
-                                  status == false
-                                      ? GestureDetector(
-                                          onTap: () {
-                                            check();
-                                          },
-                                          child: BoxWidetdew(
-                                              color: Color.fromARGB(
-                                                  255, 12, 231, 205),
-                                              height: 0.05,
-                                              width: 0.3,
-                                              text: 'ตกลง',
-                                              textcolor: Colors.white,
-                                              fontSize: 0.05))
-                                      : Container(
-                                          width: MediaQuery.of(context)
-                                                  .size
-                                                  .width *
-                                              0.07,
-                                          height: MediaQuery.of(context)
-                                                  .size
-                                                  .width *
-                                              0.07,
-                                          child: CircularProgressIndicator(),
-                                        ),
-                                  SizedBox(height: _height * 0.01),
-                                ],
-                              ),
+                          ),
+                          Center(
+                            child: Column(
+                              children: [
+                                SizedBox(
+                                    height: MediaQuery.of(context).size.height *
+                                        0.005),
+                                shownumpad == true
+                                    ? Column(
+                                        children: [
+                                          idcard,
+                                          SizedBox(height: _height * 0.01),
+                                          status == false
+                                              ? GestureDetector(
+                                                  onTap: () {
+                                                    check();
+                                                  },
+                                                  child: BoxWidetdew(
+                                                      color: Color(0xff00A3FF),
+                                                      height: 0.05,
+                                                      width: 0.3,
+                                                      text: 'ตกลง',
+                                                      radius: 10.0,
+                                                      textcolor: Colors.white,
+                                                      fontSize: 0.05))
+                                              : Container(
+                                                  width: MediaQuery.of(context)
+                                                          .size
+                                                          .width *
+                                                      0.05,
+                                                  height: MediaQuery.of(context)
+                                                          .size
+                                                          .width *
+                                                      0.05,
+                                                  child:
+                                                      CircularProgressIndicator(),
+                                                ),
+                                        ],
+                                      )
+                                    : Container(
+                                        height: _height * 0.3,
+                                        width: _width * 0.5,
+                                        child: Image.asset('assets/ppasc.png'),
+                                      )
+                              ],
                             ),
                           ),
                         ],
@@ -307,7 +377,7 @@ class _HomeappState extends State<Homeapp> {
                 ))
               ],
             ),
-      bottomNavigationBar: BottomNavigationBarApp(),
+      //  bottomNavigationBar: BottomNavigationBarApp(),
     );
   }
 }

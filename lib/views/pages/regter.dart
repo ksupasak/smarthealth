@@ -25,6 +25,7 @@ class _RegterState extends State<Regter> {
   // String? imagename;
   // String? imagedata;
   // ImagePicker imagePicker = new ImagePicker();
+  TextEditingController hn = TextEditingController();
   void regter() async {
     var url =
         Uri.parse('${context.read<DataProvider>().platfromURL}/add_patient');
@@ -33,7 +34,8 @@ class _RegterState extends State<Regter> {
       'public_id': context.read<DataProvider>().regter_data![0],
       'prefix_name': context.read<DataProvider>().regter_data![1],
       'first_name': context.read<DataProvider>().regter_data![2],
-      'last_name': context.read<DataProvider>().regter_data![4]
+      'last_name': context.read<DataProvider>().regter_data![4],
+      'hn': hn.text
     });
 
     var resTojson2 = json.decode(res.body);
@@ -61,7 +63,7 @@ class _RegterState extends State<Regter> {
   //   });
   // }
 
-  Widget BoxData({required String child}) {
+  Widget BoxData({String? child}) {
     double _width = MediaQuery.of(context).size.width;
     double _height = MediaQuery.of(context).size.height;
     return Container(
@@ -69,11 +71,13 @@ class _RegterState extends State<Regter> {
         height: _height * 0.027,
         decoration: BoxDecoration(
             border: Border.all(color: Color.fromARGB(255, 0, 0, 0))),
-        child: Text(child,
-            style: TextStyle(
-              color: Color.fromARGB(255, 0, 28, 155),
-              fontFamily: context.read<DataProvider>().fontFamily,
-            )));
+        child: child != null
+            ? Text("$child",
+                style: TextStyle(
+                  color: Color.fromARGB(255, 0, 28, 155),
+                  fontFamily: context.read<DataProvider>().fontFamily,
+                ))
+            : Text('-'));
   }
 
   Widget Boxheab({required String child}) {
@@ -145,66 +149,85 @@ class _RegterState extends State<Regter> {
                             ],
                           ),
                         ),
-                        Container(
-                          height: _height * 0.6,
-                          width: _width * 0.4,
-                          child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                BoxData(
-                                    child: context
-                                        .read<DataProvider>()
-                                        .regter_data![0]),
-                                BoxData(
-                                    child: context
-                                        .read<DataProvider>()
-                                        .regter_data![1]),
-                                BoxData(
-                                    child: context
-                                        .read<DataProvider>()
-                                        .regter_data![2]),
-                                BoxData(
-                                    child: context
-                                        .read<DataProvider>()
-                                        .regter_data![4]),
-                                BoxData(
-                                    child: context
-                                        .read<DataProvider>()
-                                        .regter_data![5]),
-                                BoxData(
-                                    child: context
-                                        .read<DataProvider>()
-                                        .regter_data![6]),
-                                BoxData(
-                                    child: context
-                                        .read<DataProvider>()
-                                        .regter_data![8]),
-                                BoxData(
-                                    child: context
-                                        .read<DataProvider>()
-                                        .regter_data![9]),
-                                BoxData(
-                                    child: context
-                                        .read<DataProvider>()
-                                        .regter_data![10]),
-                                BoxData(
-                                    child: context
-                                        .read<DataProvider>()
-                                        .regter_data![12]),
-                                BoxData(
-                                    child: context
-                                        .read<DataProvider>()
-                                        .regter_data![14]),
-                                BoxData(
-                                    child: context
-                                        .read<DataProvider>()
-                                        .regter_data![15]),
-                                BoxData(
-                                    child: context
-                                        .read<DataProvider>()
-                                        .regter_data![16]),
-                              ]),
-                        ),
+                        context.read<DataProvider>().regter_data != null
+                            ? Container(
+                                height: _height * 0.6,
+                                width: _width * 0.4,
+                                child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      BoxData(
+                                          child: context
+                                              .read<DataProvider>()
+                                              .regter_data![0]),
+                                      BoxData(
+                                          child: context
+                                              .read<DataProvider>()
+                                              .regter_data![1]),
+                                      BoxData(
+                                          child: context
+                                              .read<DataProvider>()
+                                              .regter_data![2]),
+                                      BoxData(
+                                          child: context
+                                              .read<DataProvider>()
+                                              .regter_data![4]),
+                                      BoxData(
+                                          child: context
+                                              .read<DataProvider>()
+                                              .regter_data![5]),
+                                      BoxData(
+                                          child: context
+                                              .read<DataProvider>()
+                                              .regter_data![6]),
+                                      BoxData(
+                                          child: context
+                                              .read<DataProvider>()
+                                              .regter_data![8]),
+                                      BoxData(
+                                          child: context
+                                              .read<DataProvider>()
+                                              .regter_data![9]),
+                                      BoxData(
+                                          child: context
+                                              .read<DataProvider>()
+                                              .regter_data![10]),
+                                      BoxData(
+                                          child: context
+                                              .read<DataProvider>()
+                                              .regter_data![12]),
+                                      BoxData(
+                                          child: context
+                                              .read<DataProvider>()
+                                              .regter_data![14]),
+                                      BoxData(
+                                          child: context
+                                              .read<DataProvider>()
+                                              .regter_data![15]),
+                                      BoxData(
+                                          child: context
+                                              .read<DataProvider>()
+                                              .regter_data![16]),
+                                    ]),
+                              )
+                            : Container(
+                                child: Column(children: [
+                                  BoxData(),
+                                  BoxData(),
+                                  BoxData(),
+                                  BoxData(),
+                                  BoxData(),
+                                  BoxData(),
+                                  BoxData(),
+                                  BoxData(),
+                                  BoxData(),
+                                  BoxData(),
+                                  BoxData(),
+                                  BoxData(),
+                                  BoxData(),
+                                ]),
+                              )
                       ],
                     ),
                   ),
@@ -217,6 +240,9 @@ class _RegterState extends State<Regter> {
                         GestureDetector(
                             onTap: () {
                               //  regter();
+                              setState(() {
+                                context.read<DataProvider>().id = '';
+                              });
                             },
                             child: BoxWidetdew(
                                 color: Colors.green,
@@ -230,6 +256,9 @@ class _RegterState extends State<Regter> {
                         ),
                         GestureDetector(
                             onTap: () {
+                              setState(() {
+                                context.read<DataProvider>().id = '';
+                              });
                               Navigator.pop(context);
                             },
                             child: BoxWidetdew(

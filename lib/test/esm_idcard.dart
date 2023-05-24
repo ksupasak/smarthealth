@@ -11,16 +11,16 @@ import 'dart:io';
 import 'dart:io' as IO;
 
 class ESMIDCard {
-  
-   static const platform = const MethodChannel('flutter.native/helper');
+  static const platform = const MethodChannel('flutter.native/helper');
 
   //  static const platform = MethodChannel('esm.flutter.dev/idcard');
 
-   static const channelName = 'channel'; // this channel name needs to match the one in Native method channel
-   
-   MethodChannel? methodChannel;
+  static const channelName =
+      'channel'; // this channel name needs to match the one in Native method channel
 
-   static final ESMIDCard instance = ESMIDCard();
+  MethodChannel? methodChannel;
+
+  static final ESMIDCard instance = ESMIDCard();
   //  ESMIDCard._init();
 
   // void configureChannel() {
@@ -81,7 +81,6 @@ class ESMIDCard {
   bool isReading = false;
   bool isBusy = false;
 
-
   StreamController<String> entry = StreamController<String>();
 
 //  _currentEntries.listen((listOfStrings) {
@@ -93,45 +92,37 @@ class ESMIDCard {
 //     }
 //  });
 
-Future<void> methodHandler(MethodCall call) async {
+  Future<void> methodHandler(MethodCall call) async {
     final String idea = call.arguments;
 
     switch (call.method) {
       case "showNewIdea": // this method name needs to be the same from invokeMethod in Android
         print("call init reader ${idea}");
-        DataService.instance.addIdea(idea); // you can handle the data here. In this example, we will simply update the view via a data service
+        DataService.instance.addIdea(
+            idea); // you can handle the data here. In this example, we will simply update the view via a data service
         break;
       default:
         print('no method handler for method ${call.method}');
     }
   }
 
-    ESMIDCard() {
-       
+  ESMIDCard() {
     print("call init reader");
-        
+
     platform.setMethodCallHandler(_fromNative);
-    
 
     initAndroid();
+  }
 
+  void read() async {
+    print("call read");
+    buttonRead();
+  }
 
-
-    }
-
-    void read() async {
-
-      print("call read");
-      buttonRead();
-
-    }
-
-    void readAuto() async{
-
-        print("call check");
-        autoReadProcess();
-
-    }
+  void readAuto() async {
+    print("call check");
+    autoReadProcess();
+  }
 
   //////////////////////////////// Initialize for Android ////////////////////////////////
   void initAndroid() async {
@@ -151,13 +142,13 @@ Future<void> methodHandler(MethodCall call) async {
     requestPermission();
 
     // setState(() {
-      isEnabled = true;
+    isEnabled = true;
     // });
 
     buttonFindReader();
   }
 
-   ///////////////////////////////// Response from native /////////////////////////////////
+  ///////////////////////////////// Response from native /////////////////////////////////
   Future<void> _fromNative(MethodCall call) async {
     if (call.method == 'callTestResuls') {
       print('callTest result = ${call.arguments}');
@@ -171,8 +162,6 @@ Future<void> methodHandler(MethodCall call) async {
     exit(0);
   }
 
-  
-  
   //////////////////////////////// Get File Directory ////////////////////////////////
   Future<void> getFilesDirDF() async {
     try {
@@ -185,7 +174,7 @@ Future<void> methodHandler(MethodCall call) async {
     } on PlatformException catch (e) {
       String text = "Failed to Invoke: '${e.message}'.";
       // setState(() {
-        textResult = text;
+      textResult = text;
       // });
     }
   }
@@ -199,19 +188,18 @@ Future<void> methodHandler(MethodCall call) async {
           data.buffer.asUint8List(data.offsetInBytes, data.lengthInBytes);
 
       // setState(() {
-        bytesPhoto = bytesAppPhoto;
-        isVisible = true;
+      bytesPhoto = bytesAppPhoto;
+      isVisible = true;
       // });
     } on PlatformException catch (e) {
       String text = "Failed to Invoke: '${e.message}'.";
 
       // setState(() {
-        isVisible = true;
-        textResult = text;
+      isVisible = true;
+      textResult = text;
       // });
     }
   }
-
 
   //////////////////////////////// Set Listener ////////////////////////////////
   Future<bool> setListenerDF() async {
@@ -222,14 +210,14 @@ Future<void> methodHandler(MethodCall call) async {
         return true;
       } else {
         // setState(() {
-          textResult = this.checkException(returnCode);
+        textResult = this.checkException(returnCode);
         // });
         return false;
       }
     } on PlatformException catch (e) {
       String text = "Failed to Invoke: '${e.message}'.";
       // setState(() {
-        textResult = text;
+      textResult = text;
       // });
       return false;
     }
@@ -239,7 +227,7 @@ Future<void> methodHandler(MethodCall call) async {
   void requestPermission() async {
     // var androidInfo = await DeviceInfoPlugin().androidInfo;
     // var sdkInt = androidInfo.version.sdkInt;
-    var sdkInt = 31 ;
+    var sdkInt = 31;
 
     if (sdkInt >= 31) {
       await Permission.bluetoothScan.request();
@@ -253,7 +241,7 @@ Future<void> methodHandler(MethodCall call) async {
     }
 
     // setState(() {
-      textResult = textResult;
+    textResult = textResult;
     // });
   }
 
@@ -268,13 +256,13 @@ Future<void> methodHandler(MethodCall call) async {
         text = "License file is already has been.";
 
         // setState(() {
-          textResult = text;
+        textResult = text;
         // });
         return true;
       } else if (returnCode != 0) {
         text = "Write License file failed.";
         // setState(() {
-          textResult = text;
+        textResult = text;
         // });
         return false;
       } else {
@@ -283,7 +271,7 @@ Future<void> methodHandler(MethodCall call) async {
     } on PlatformException catch (e) {
       text += "\n" + "Failed to Invoke: '${e.message}'.";
       // setState(() {
-        textResult = text;
+      textResult = text;
       // });
       return false;
     }
@@ -297,7 +285,7 @@ Future<void> methodHandler(MethodCall call) async {
           'setPermissionsMC', pms); // Call native method setPermissionsMC
       if (returnCode < 0) {
         // setState(() {
-          textResult = checkException(returnCode);
+        textResult = checkException(returnCode);
         // });
         return false;
       }
@@ -305,7 +293,7 @@ Future<void> methodHandler(MethodCall call) async {
     } on PlatformException catch (e) {
       String result = "\n" + "Failed to Invoke: '${e.message}'.";
       // setState(() {
-        textResult = result;
+      textResult = result;
       // });
       return false;
     }
@@ -320,23 +308,23 @@ Future<void> methodHandler(MethodCall call) async {
       if (returnCode == 0) {
         text = text + "\n" + "Opened the library successfully.";
         // setState(() {
-          textResult = text;
-          readerName = 'Reader: ';
+        textResult = text;
+        readerName = 'Reader: ';
         // });
         return true;
       } else {
         text = "Opened the library failed, Please restart app.";
         // setState(() {
-          textResult = text;
-          readerName = 'Reader: ';
+        textResult = text;
+        readerName = 'Reader: ';
         // });
         return false;
       }
     } on PlatformException catch (e) {
       text = "Failed to Invoke: '${e.message}'.";
       // setState(() {
-        textResult = text;
-        readerName = 'Reader: ';
+      textResult = text;
+      readerName = 'Reader: ';
       // });
       return false;
     }
@@ -392,7 +380,6 @@ Future<void> methodHandler(MethodCall call) async {
 
         result = await platform.invokeMethod('getReaderListMC',
             listOption); // Call native method getReaderListMC
-
       } else if (IO.Platform.isIOS) {
         result = await platform.invokeMethod(
             'getReaderListMC'); // Call native method getReaderListMC
@@ -403,8 +390,8 @@ Future<void> methodHandler(MethodCall call) async {
       String text = "Failed to Invoke: '${e.message}'.";
 
       // setState(() {
-        textResult = text;
-        isEnabled = true;
+      textResult = text;
+      isEnabled = true;
       // });
       return null;
     }
@@ -418,20 +405,20 @@ Future<void> methodHandler(MethodCall call) async {
 
       if (returnCode != NA_SUCCESS) {
         // setState(() {
-          textResult = checkException(returnCode);
+        textResult = checkException(returnCode);
         // });
 
         if (returnCode != NA_INVALID_LICENSE &&
             returnCode != NA_LICENSE_FILE_ERROR) {
           // setState(() {
-            isEnabled = true;
-            readerName = 'Reader: ';
+          isEnabled = true;
+          readerName = 'Reader: ';
           // });
         } else if (returnCode == NA_INVALID_LICENSE ||
             returnCode == NA_LICENSE_FILE_ERROR) {
           // setState(() {
-            isEnabled = true;
-            readerName = 'Reader: ' + textReaderName;
+          isEnabled = true;
+          readerName = 'Reader: ' + textReaderName;
           // });
         }
 
@@ -439,7 +426,7 @@ Future<void> methodHandler(MethodCall call) async {
       } else if (returnCode == NA_SUCCESS) {
         isReaderConnected = true;
         // setState(() {
-          readerName = 'Reader: ' + textReaderName;
+        readerName = 'Reader: ' + textReaderName;
         // });
       }
       return true;
@@ -447,8 +434,8 @@ Future<void> methodHandler(MethodCall call) async {
       String text = "Failed to Invoke: '${e.message}'.";
 
       // setState(() {
-        textResult = text;
-        isEnabled = true;
+      textResult = text;
+      isEnabled = true;
       // });
       return false;
     }
@@ -459,8 +446,8 @@ Future<void> methodHandler(MethodCall call) async {
     String readerInfo = "";
     if (isReaderConnected == false) {
       // setState(() {
-        textResult = "";
-        isEnabled = true;
+      textResult = "";
+      isEnabled = true;
       // });
       return;
     }
@@ -476,12 +463,12 @@ Future<void> methodHandler(MethodCall call) async {
         result = checkException(returnCode);
       }
       // setState(() {
-        textResult = result;
+      textResult = result;
       // });
     } on PlatformException catch (e) {
       String text = "Failed to Invoke: '${e.message}'.";
       // setState(() {
-        textResult = text;
+      textResult = text;
       // });
     }
   }
@@ -598,13 +585,13 @@ Future<void> methodHandler(MethodCall call) async {
       text = await platform.invokeMethod(
           'getSoftwareInfoMC'); // Call native method getSoftwareInfoMC
       // setState(() {
-        sSoftwareInfo = text;
+      sSoftwareInfo = text;
       // });
       return true;
     } on PlatformException catch (e) {
       String text = "Failed to Invoke: '${e.message}'.";
       // setState(() {
-        textResult = text;
+      textResult = text;
       // });
       return false;
     }
@@ -617,7 +604,7 @@ Future<void> methodHandler(MethodCall call) async {
       result = await platform.invokeMethod(
           'getLicenseInfoMC'); // Call native method getLicenseInfoMC
       // setState(() {
-        sLicenseInfo = result;
+      sLicenseInfo = result;
       // });
       return true;
     } on PlatformException {
@@ -686,43 +673,41 @@ Future<void> methodHandler(MethodCall call) async {
     }
   }
 
-
-  
   //////////////////////////////// Button Find Reader ////////////////////////////////
   Future<void> buttonFindReader() async {
     isReaderConnected = false;
     String text = "Reader scanning...";
     // setState(() {
-      isEnabled = false;
-      textResult = "";
-      readerName = text;
-      bytesPhoto = bytesAppPhoto;
+    isEnabled = false;
+    textResult = "";
+    readerName = text;
+    bytesPhoto = bytesAppPhoto;
     // });
 
     // ===================== Get Reader List ======================== //
     var parts = await getReaderListDF();
     var returnCode = int.parse(parts[0].trim());
-     print("call getReaderListDF "+parts.toString());
+    print("call getReaderListDF " + parts.toString());
 
     if (parts == null || returnCode == 0 || returnCode == -3) {
       // setState(() {
-        readerName = 'Reader: ';
-        isEnabled = true;
-        textResult = "-3 Reader not found.";
+      readerName = 'Reader: ';
+      isEnabled = true;
+      textResult = "-3 Reader not found.";
       // });
     } else if (returnCode < 0) {
       // setState(() {
-        isEnabled = true;
-        readerName = 'Reader: ';
-        textResult = checkException(returnCode);
+      isEnabled = true;
+      readerName = 'Reader: ';
+      textResult = checkException(returnCode);
       // });
     } else if (returnCode > 0) {
       String textReaderName = parts[1].trim();
       // setState(() {
-        readerName = "Reader selecting...";
+      readerName = "Reader selecting...";
       // });
 
-      print("call selectReaderDFxx "+textReaderName.toString());
+      print("call selectReaderDFxx " + textReaderName.toString());
 
       // ===================== Select Reader ======================== //
       if (await selectReaderDF(textReaderName) == true) {
@@ -734,23 +719,19 @@ Future<void> methodHandler(MethodCall call) async {
       }
     }
     // setState(() {
-      isEnabled = true;
+    isEnabled = true;
     // });
   }
 
-
-
   //////////////////////////////// Button Read Card ////////////////////////////////
   Future<void> buttonRead() async {
-
-
     isReading = true;
 
     String text = "Reading...";
     // setState(() {
-      isEnabled = false;
-      bytesPhoto = bytesAppPhoto;
-      textResult = text;
+    isEnabled = false;
+    bytesPhoto = bytesAppPhoto;
+    textResult = text;
     // });
 
     try {
@@ -764,8 +745,8 @@ Future<void> methodHandler(MethodCall call) async {
             text = "-3 Reader not found.";
           }
           // setState(() {
-            textResult = text;
-            isEnabled = true;
+          textResult = text;
+          isEnabled = true;
           // });
           isReading = false;
           return;
@@ -776,18 +757,18 @@ Future<void> methodHandler(MethodCall call) async {
       int startTime = new DateTime.now().millisecondsSinceEpoch;
       int resConnect = await connectCardDF();
       if (resConnect != NA_SUCCESS) {
-          print("connect card error");
+        print("connect card error");
         // setState(() {
-          textResult = checkException(resConnect);
-          isEnabled = true;
-          isReading = false;
+        textResult = checkException(resConnect);
+        isEnabled = true;
+        isReading = false;
         // });
         return;
       }
 
       // ===================== Get Text ======================== //
       int returnCode = -1;
-       print("get text");
+      print("get text P ok");
       var parts = await getTextDF();
       int endTime = new DateTime.now().millisecondsSinceEpoch;
       double readTextTime = ((endTime - startTime) / 1000);
@@ -800,21 +781,21 @@ Future<void> methodHandler(MethodCall call) async {
       }
 
       if (returnCode != NA_SUCCESS) {
-          print("get error");
+        print("get error");
         // setState(() {
-          textResult = checkException(returnCode);
-          isEnabled = true;
+        textResult = checkException(returnCode);
+        isEnabled = true;
         // });
         // ===================== Disconnect Card ======================== //
         await disconnectCardDF();
         isReading = false;
         return;
       }
-
+      print('---------->1 ${text}');
       text += "\n\nRead Text: " + readTextTime.toStringAsFixed(2) + " s";
       print(text);
       // setState(() {
-        textResult = text;
+      textResult = text;
       // });
 
       entry.sink.add(text);
@@ -834,8 +815,8 @@ Future<void> methodHandler(MethodCall call) async {
           textResult = textResult + "\n" + checkException(returnCode);
         }
         // setState(() {
-          textResult = textResult;
-          isEnabled = true;
+        textResult = textResult;
+        isEnabled = true;
         // });
 
         // ===================== Disconnect Card ======================== //
@@ -848,7 +829,7 @@ Future<void> methodHandler(MethodCall call) async {
       var resBytesPhoto = base64Decode(photo);
 
       // setState(() {
-        bytesPhoto = resBytesPhoto;
+      bytesPhoto = resBytesPhoto;
       // });
 
       // ===================== Disconnect Card ======================== //
@@ -857,20 +838,20 @@ Future<void> methodHandler(MethodCall call) async {
       double readPhotoTime = ((endTime - startTime) / 1000);
 
       // setState(() {
-        textResult = textResult +
-            "\nRead Text+Photo: " +
-            readPhotoTime.toStringAsFixed(2) +
-            " s";
-        isEnabled = true;
+      textResult = textResult +
+          "\nRead Text+Photo: " +
+          readPhotoTime.toStringAsFixed(2) +
+          " s";
+      isEnabled = true;
 
-       print(textResult); 
+      print(textResult);
       // });
     } on PlatformException catch (e) {
       String text = "Failed to Invoke: '${e.message}'.";
 
       // setState(() {
-        textResult = text;
-        isEnabled = true;
+      textResult = text;
+      isEnabled = true;
       // });
     }
     isReading = false;
@@ -879,112 +860,96 @@ Future<void> methodHandler(MethodCall call) async {
   //////////////////////////////// Button Get Card Status ////////////////////////////////
   Future<void> buttonGetCardStatus() async {
     String text = "Checking card in reader...";
-    if(isReading==false){
-
-    
-    // setState(() {
+    if (isReading == false) {
+      // setState(() {
       isEnabled = false;
       bytesPhoto = bytesAppPhoto;
       textResult = text;
-    // });
+      // });
 
-    try {
-      // ===================== Check Card Status ======================== //
-      int returnCode =
-          await getCardStatusDF(); // Call native method getCardStatusMC
+      try {
+        // ===================== Check Card Status ======================== //
+        int returnCode =
+            await getCardStatusDF(); // Call native method getCardStatusMC
 
-      if (returnCode == 1) {
-        text = "Card Status: Present";
-      } else if (returnCode == -16) {
-        text = "Card Status: Absent (card not found)";
-      } else {
-        text = checkException(returnCode);
-        if (IO.Platform.isIOS) {
-          if (isReaderConnected != true) {
-            text = "-3 Reader not found.";
+        if (returnCode == 1) {
+          text = "Card Status: Present";
+        } else if (returnCode == -16) {
+          text = "Card Status: Absent (card not found)";
+        } else {
+          text = checkException(returnCode);
+          if (IO.Platform.isIOS) {
+            if (isReaderConnected != true) {
+              text = "-3 Reader not found.";
+            }
           }
         }
+        print(text);
+
+        // setState(() {
+        isEnabled = true;
+        textResult = text;
+        // });
+      } on PlatformException catch (e) {
+        String text = "Failed to Invoke: '${e.message}'.";
+        // setState(() {
+        textResult = text;
+        isEnabled = true;
+        // });
       }
-        print(text);   
-
-      // setState(() {
-        isEnabled = true;
-        textResult = text;
-      // });
-    } on PlatformException catch (e) {
-      String text = "Failed to Invoke: '${e.message}'.";
-      // setState(() {
-        textResult = text;
-        isEnabled = true;
-      // });
     }
-
-}
-
   }
-   
-
-
 
   //////////////////////////////// Button Get Card Status ////////////////////////////////
   Future<void> autoReadProcess() async {
     String text = "Checking card in reader...";
-    if(isReading==false){
-
-    
-    // setState(() {
+    if (isReading == false) {
+      // setState(() {
       isEnabled = false;
       bytesPhoto = bytesAppPhoto;
       textResult = text;
-    // });
+      // });
 
-    try {
-      // ===================== Check Card Status ======================== //
-      int returnCode =
-          await getCardStatusDF(); // Call native method getCardStatusMC
+      try {
+        // ===================== Check Card Status ======================== //
+        int returnCode =
+            await getCardStatusDF(); // Call native method getCardStatusMC
 
-      if (returnCode == 1) {
-        text = "Card Status: Present";
-        
-        if(isBusy==false){
-          read();
-          isBusy = true;
-        }
-       
+        if (returnCode == 1) {
+          text = "Card Status: Present";
 
-      } else if (returnCode == -16) {
-        text = "Card Status: Absent (card not found)";
+          if (isBusy == false) {
+            read();
+            isBusy = true;
+          }
+        } else if (returnCode == -16) {
+          text = "Card Status: Absent (card not found)";
           isBusy = false;
-      } else {
-        text = checkException(returnCode);
-        if (IO.Platform.isIOS) {
-          if (isReaderConnected != true) {
-            text = "-3 Reader not found.";
+        } else {
+          text = checkException(returnCode);
+          if (IO.Platform.isIOS) {
+            if (isReaderConnected != true) {
+              text = "-3 Reader not found.";
+            }
           }
         }
+        print(text);
+
+        // setState(() {
+        isEnabled = true;
+        textResult = text;
+        // });
+      } on PlatformException catch (e) {
+        String text = "Failed to Invoke: '${e.message}'.";
+        // setState(() {
+        textResult = text;
+        isEnabled = true;
+        // });
       }
-        print(text);   
-
-      // setState(() {
-        isEnabled = true;
-        textResult = text;
-      // });
-    } on PlatformException catch (e) {
-      String text = "Failed to Invoke: '${e.message}'.";
-      // setState(() {
-        textResult = text;
-        isEnabled = true;
-      // });
     }
-
-}
-
   }
 
-
-  Stream<String> getEntry(){
+  Stream<String> getEntry() {
     return entry.stream;
-  } 
-   
-
+  }
 }

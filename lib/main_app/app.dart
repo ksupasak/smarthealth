@@ -33,7 +33,8 @@ class _AppState extends State<App> {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: ((context) => DataProvider())),
-        ChangeNotifierProvider(create: ((context) => Datafunction()))
+        ChangeNotifierProvider(create: ((context) => Datafunction())),
+        ChangeNotifierProvider(create: ((context) => StyleColorsApp()))
       ],
       child: GetMaterialApp(
         debugShowCheckedModeBanner: false,

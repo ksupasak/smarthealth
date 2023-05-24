@@ -93,7 +93,7 @@ class _UserInformation2State extends State<UserInformation2> {
   }
 
   Future<void> get_queue() async {
-    var url = Uri.parse('h${context.read<DataProvider>().platfromURL}/list_q');
+    var url = Uri.parse('${context.read<DataProvider>().platfromURL}/list_q');
     var res = await http.post(url, body: {
       'care_unit_id': context.read<DataProvider>().care_unit_id, //1
     });
@@ -201,6 +201,10 @@ class _UserInformation2State extends State<UserInformation2> {
             children: resTojson != null
                 ? [
                     BoxTime(),
+                    WidgetNameHospital(),
+                    SizedBox(
+                      height: _height * 0.01,
+                    ),
                     BoxDecorate(
                         color: Color.fromARGB(255, 43, 179, 161),
                         child: InformationCard(
@@ -229,8 +233,11 @@ class _UserInformation2State extends State<UserInformation2> {
                         _timer?.cancel();
                         //  dispose();
                         context.read<Datafunction>().playsound();
+                        setState(() {
+                          context.read<DataProvider>().id = '';
+                          Get.offNamed('home');
+                        });
 
-                        Get.offNamed('home');
                         // Navigator.pushReplacement(context,
                         //    MaterialPageRoute(builder: (context) => Homeapp()));
                         //  Navigator.pop(context);
@@ -322,10 +329,13 @@ class _choiceState extends State<choice> {
         'public_id': context.read<DataProvider>().id,
       });
       if (res.statusCode == 200) {
+        print('รับคิว รีเซ็ท');
         setState(() {
           resTojson = json.decode(res.body);
           context.read<DataProvider>().status_getqueue == 'true';
-          Get.offNamed('user_information');
+          Navigator.pop(context);
+          Navigator.push(context,
+              MaterialPageRoute(builder: (context) => UserInformation2()));
         });
       }
     }
@@ -428,20 +438,34 @@ class _choiceState extends State<choice> {
                               },
                         child: Container(
                             child: Center(
-                                child: BoxWidetdew(
-                          height: 0.06,
-                          width: 0.35,
-                          color: resTojson['todays'].length != 0 && status == ''
-                              ? Colors.green
-                              : Color.fromARGB(150, 175, 76, 76),
-                          radius: 5.0,
-                          text: resTojson['queue_number'] == ''
-                              ? 'รับคิว'
-                              : 'ปริ้นคิว',
-                          fontSize: 0.04,
-                          textcolor: resTojson['todays'].length != 0
-                              ? Colors.white
-                              : Color.fromARGB(150, 255, 255, 255),
+                                child: Container(
+                          height: _height * 0.06,
+                          width: _width * 0.35,
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(15),
+                              color: Color.fromARGB(255, 249, 249, 249),
+                              boxShadow: [
+                                BoxShadow(
+                                    blurRadius: 1,
+                                    color: Color.fromARGB(255, 76, 175, 150),
+                                    spreadRadius: 0.8,
+                                    offset: Offset(0, 3)),
+                              ]),
+                          child: Row(
+                            children: [
+                              Container(
+                                height: _height * 0.06,
+                                width: _width * 0.1,
+                                decoration: BoxDecoration(
+                                    color: Color.fromARGB(100, 76, 175, 150),
+                                    borderRadius: BorderRadius.only(
+                                        topLeft: Radius.circular(15),
+                                        bottomLeft: Radius.circular(15))),
+                              ),
+                              SizedBox(width: _width * 0.01),
+                              Text('ปริ้นคิว')
+                            ],
+                          ),
                         ))),
                       ),
                       GestureDetector(
@@ -457,6 +481,9 @@ class _choiceState extends State<choice> {
                           height: 0.06,
                           width: 0.35,
                           color: Colors.green,
+                          // colorborder: resTojson['health_records'].length != 0
+                          //     ? null
+                          //     : Colors.yellow,
                           radius: 5.0,
                           fontSize: 0.04,
                           text: resTojson['health_records'].length != 0

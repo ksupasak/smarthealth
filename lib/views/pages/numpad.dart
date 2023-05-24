@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
+import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 import 'package:smart_health/provider/provider.dart';
 import 'package:smart_health/provider/provider_function.dart';
@@ -51,19 +52,23 @@ class _NumpadState extends State<Numpad> {
       String ids = id.toString();
       if (ids == passwordslogin[12]) {
         colortexts = 'green';
+
         setState(() {
+          context.read<DataProvider>().colortexts = 'green';
           context.read<DataProvider>().id = passwordslogin;
           //  print(context.read<DataProvider>().id);
         });
       } else {
         setState(() {
           colortexts = 'red';
+          context.read<DataProvider>().colortexts = 'red';
           context.read<DataProvider>().id = passwordslogin;
           //  print(context.read<DataProvider>().id);
         });
       }
     } else {
       colortexts = 'back';
+      context.read<DataProvider>().colortexts = 'back';
       setState(() {
         context.read<DataProvider>().id = passwordslogin;
         //  print(context.read<DataProvider>().id);
@@ -93,6 +98,7 @@ class _NumpadState extends State<Numpad> {
 
     entry.stream.listen((String data) {
       setState(() {
+        context.read<DataProvider>().colortexts = 'green';
         colortexts = 'green';
         passwordslogin = data;
       });
@@ -103,6 +109,7 @@ class _NumpadState extends State<Numpad> {
 
   @override
   Widget build(BuildContext context) {
+    bool show = false;
     Decoration decoration = BoxDecoration(boxShadow: [
       BoxShadow(
           color: Color.fromARGB(255, 170, 170, 170),
@@ -114,36 +121,38 @@ class _NumpadState extends State<Numpad> {
                 MediaQuery.of(context).size.height) *
             0.012,
         fontWeight: FontWeight.w600);
+    double _width = MediaQuery.of(context).size.width;
+    double _height = MediaQuery.of(context).size.height;
     return Column(
       children: [
-        Container(
-          height: MediaQuery.of(context).size.height * 0.05,
-          width: MediaQuery.of(context).size.width * 0.7,
-          decoration: BoxDecoration(boxShadow: [
-            BoxShadow(
-                color: Color.fromARGB(255, 170, 170, 170),
-                offset: Offset(0, 0),
-                blurRadius: 1)
-          ], color: Colors.white, borderRadius: BorderRadius.circular(5)),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                "$passwordslogin",
-                style: TextStyle(
-                    color: colortexts == "back"
-                        ? Colors.black
-                        : colortexts == "red"
-                            ? Colors.red
-                            : Colors.green,
-                    fontSize: (MediaQuery.of(context).size.width +
-                            MediaQuery.of(context).size.height) *
-                        0.012,
-                    fontWeight: FontWeight.w600),
-              )
-            ],
-          ),
-        ),
+        // Container(
+        //   height: _height * 0.05,
+        //   width: _width * 0.7,
+        //   decoration: BoxDecoration(boxShadow: [
+        //     BoxShadow(
+        //         color: Color.fromARGB(255, 170, 170, 170),
+        //         offset: Offset(0, 0),
+        //         blurRadius: 1)
+        //   ], color: Colors.white, borderRadius: BorderRadius.circular(5)),
+        //   child: Row(
+        //     mainAxisAlignment: MainAxisAlignment.center,
+        //     children: [
+        //       Text(
+        //         "$passwordslogin",
+        //         style: TextStyle(
+        //             color: colortexts == "back"
+        //                 ? Colors.black
+        //                 : colortexts == "red"
+        //                     ? Colors.red
+        //                     : Colors.green,
+        //             fontSize: (MediaQuery.of(context).size.width +
+        //                     MediaQuery.of(context).size.height) *
+        //                 0.012,
+        //             fontWeight: FontWeight.w600),
+        //       )
+        //     ],
+        //   ),
+        // ),
         SizedBox(
           height: MediaQuery.of(context).size.height * 0.005,
         ),
@@ -337,7 +346,15 @@ class _NumpadState extends State<Numpad> {
                         Padding(
                             padding: const EdgeInsets.all(2.0),
                             child: GestureDetector(
-                                onTap: () {},
+                                onTap: () {
+                                  if (context
+                                          .read<DataProvider>()
+                                          .passwordsetting ==
+                                      context.read<DataProvider>().id) {
+                                    Get.offNamed('setting');
+                                    print('ตั่งค่า');
+                                  }
+                                },
                                 child: Container(
                                   color: Colors.white,
                                   width:
@@ -388,6 +405,78 @@ class _NumpadState extends State<Numpad> {
                       ]))
             ]))
       ],
+    );
+  }
+}
+
+class BoxID extends StatefulWidget {
+  const BoxID({super.key});
+
+  @override
+  State<BoxID> createState() => _BoxIDState();
+}
+
+class _BoxIDState extends State<BoxID> {
+  Timer? timer;
+  var id = '';
+  @override
+  void initState() {
+    id == '';
+    start();
+  }
+
+  void start() {
+    timer = Timer.periodic(Duration(microseconds: 200), (Timer t) {
+      setState(() {
+        id = context.read<DataProvider>().id;
+      });
+    });
+  }
+
+  void stop() {
+    setState(() {
+      timer?.cancel();
+    });
+  }
+
+  @override
+  void dispose() {
+    stop();
+    // TODO: implement dispose
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    double _width = MediaQuery.of(context).size.width;
+    double _height = MediaQuery.of(context).size.height;
+    return Container(
+      height: _height * 0.05,
+      width: _width * 0.6,
+      decoration: BoxDecoration(boxShadow: [
+        BoxShadow(
+            color: Color.fromARGB(255, 170, 170, 170),
+            offset: Offset(0, 0),
+            blurRadius: 1)
+      ], color: Colors.white, borderRadius: BorderRadius.circular(15)),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text(
+            context.read<DataProvider>().id,
+            style: TextStyle(
+                color: context.read<DataProvider>().colortexts == "back"
+                    ? Colors.black
+                    : context.read<DataProvider>().colortexts == "red"
+                        ? Colors.red
+                        : Colors.green,
+                fontSize: (MediaQuery.of(context).size.width +
+                        MediaQuery.of(context).size.height) *
+                    0.012,
+                fontWeight: FontWeight.w600),
+          )
+        ],
+      ),
     );
   }
 }

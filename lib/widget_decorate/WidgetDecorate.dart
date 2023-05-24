@@ -7,6 +7,10 @@ TextStyle style_text(
     FontWeight fontWeight = FontWeight.w500,
     List<Shadow>? shadow}) {
   TextStyle style = TextStyle(
-      fontSize: sized, color: colors, fontWeight: fontWeight, shadows: shadow);
+      fontSize: sized,
+      color: colors,
+      fontWeight: fontWeight,
+      shadows: shadow,
+      fontFamily: 'Prompt');
   return style;
 }

@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:collection';
 
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_blue_plus/gen/flutterblueplus.pb.dart';
 import 'package:just_audio/just_audio.dart';
 
@@ -38,6 +39,7 @@ class DataProvider with ChangeNotifier {
   // 'A&D_UA-651BLE_D57B3F'
 
   String id = '';
+  String colortexts = '';
   String temp = '';
   String weight = '';
   String sys = '';
@@ -69,4 +71,10 @@ class DataProvider with ChangeNotifier {
   var status_getqueue; //false
 
   List<String>? regter_data;
+}
+
+class StyleColorsApp with ChangeNotifier {
+  Color green_app = Color(0xff31d6aa);
+  Color yellow_app = Color(0xffffa800);
+  Color blue_app = Color(0xff00a3ff);
 }

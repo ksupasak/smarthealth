@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:math';
 
@@ -58,7 +59,8 @@ class _PrintQueueState extends State<PrintQueue> {
       'public_id': context.read<DataProvider>().id,
     });
     setState(() {
-      resTojson = json.decode(res.body);
+      resTojson = json.decode(res.body); //เเก้2
+
       Deviceprint();
     });
   }
@@ -96,27 +98,31 @@ class _PrintQueueState extends State<PrintQueue> {
     }
 
     if (selectDevice != null) {
-      setState(() {
-        resTojson['health_records'][0]['height'] == null
-            ? height = ''
-            : height = resTojson['health_records'][0]['height'];
-        resTojson['health_records'][0]['weight'] == null
-            ? weight = ''
-            : weight = resTojson['health_records'][0]['weight'];
-        resTojson['health_records'][0]['temp'] == null
-            ? temp = ''
-            : temp = resTojson['health_records'][0]['temp'];
-        resTojson['health_records'][0]['bp_sys'] == null
-            ? bp_sys = ''
-            : bp_sys = resTojson['health_records'][0]['bp_sys'];
-        resTojson['health_records'][0]['bp_dia'] == null
-            ? bp_dia = ''
-            : bp_dia = resTojson['health_records'][0]['bp_dia'];
-        resTojson['health_records'][0]['spo2'] == null
-            ? spo2 = ''
-            : spo2 = resTojson['health_records'][0]['spo2'];
-      });
-      printqueue();
+      if (resTojson['health_records'].length != 0) {
+        setState(() {
+          resTojson['health_records'][0]['height'] == null
+              ? height = ''
+              : height = resTojson['health_records'][0]['height'];
+          resTojson['health_records'][0]['weight'] == null
+              ? weight = ''
+              : weight = resTojson['health_records'][0]['weight'];
+          resTojson['health_records'][0]['temp'] == null
+              ? temp = ''
+              : temp = resTojson['health_records'][0]['temp'];
+          resTojson['health_records'][0]['bp_sys'] == null
+              ? bp_sys = ''
+              : bp_sys = resTojson['health_records'][0]['bp_sys'];
+          resTojson['health_records'][0]['bp_dia'] == null
+              ? bp_dia = ''
+              : bp_dia = resTojson['health_records'][0]['bp_dia'];
+          resTojson['health_records'][0]['spo2'] == null
+              ? spo2 = ''
+              : spo2 = resTojson['health_records'][0]['spo2'];
+        });
+        printqueue();
+      } else {
+        printqueue();
+      }
     }
   }
 
@@ -224,6 +230,7 @@ class _PrintQueueState extends State<PrintQueue> {
 
   @override
   void initState() {
+    startTimer();
     printer = ESMPrinter([
       {'vendor_id': '1137', 'product_id': '85'}
     ]);
@@ -251,7 +258,7 @@ class _PrintQueueState extends State<PrintQueue> {
     return Container(
       height: _height * 0.5,
       width: _width * 0.8,
-      color: Colors.white,
+      color: Color.fromARGB(255, 250, 250, 250),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
@@ -298,49 +305,51 @@ class _PrintQueueState extends State<PrintQueue> {
                     ]),
                 Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      resTojson['health_records'][0]['height'] == null
-                          ? Health(child: Text(' - '))
-                          : Health(
-                              child: Text(
-                                  '${resTojson['health_records'][0]['height']}',
-                                  style: text)),
-                      resTojson['health_records'][0]['weight'] == null
-                          ? Health(child: Text(' - '))
-                          : Health(
-                              child: Text(
-                                  '${resTojson['health_records'][0]['weight']}',
-                                  style: text),
-                            ),
-                      resTojson['health_records'][0]['temp'] == null
-                          ? Health(child: Text(' - '))
-                          : Health(
-                              child: Text(
-                                  '${resTojson['health_records'][0]['temp']}',
-                                  style: text),
-                            ),
-                      resTojson['health_records'][0]['bp_dia'] == null
-                          ? Health(child: Text(' - '))
-                          : Health(
-                              child: Text(
-                                  '${resTojson['health_records'][0]['bp_dia']}',
-                                  style: text),
-                            ),
-                      resTojson['health_records'][0]['bp_sys'] == null
-                          ? Health(child: Text(' - '))
-                          : Health(
-                              child: Text(
-                                  '${resTojson['health_records'][0]['bp_sys']}',
-                                  style: text),
-                            ),
-                      resTojson['health_records'][0]['spo2'] == null
-                          ? Health(child: Text(' - '))
-                          : Health(
-                              child: Text(
-                                  '${resTojson['health_records'][0]['spo2']}',
-                                  style: text),
-                            ),
-                    ]),
+                    children: resTojson['health_records'].length != 0
+                        ? [
+                            resTojson['health_records'][0]['height'] == null
+                                ? Health(child: Text(' - '))
+                                : Health(
+                                    child: Text(
+                                        '${resTojson['health_records'][0]['height']}',
+                                        style: text)),
+                            resTojson['health_records'][0]['weight'] == null
+                                ? Health(child: Text(' - '))
+                                : Health(
+                                    child: Text(
+                                        '${resTojson['health_records'][0]['weight']}',
+                                        style: text),
+                                  ),
+                            resTojson['health_records'][0]['temp'] == null
+                                ? Health(child: Text(' - '))
+                                : Health(
+                                    child: Text(
+                                        '${resTojson['health_records'][0]['temp']}',
+                                        style: text),
+                                  ),
+                            resTojson['health_records'][0]['bp_dia'] == null
+                                ? Health(child: Text(' - '))
+                                : Health(
+                                    child: Text(
+                                        '${resTojson['health_records'][0]['bp_dia']}',
+                                        style: text),
+                                  ),
+                            resTojson['health_records'][0]['bp_sys'] == null
+                                ? Health(child: Text(' - '))
+                                : Health(
+                                    child: Text(
+                                        '${resTojson['health_records'][0]['bp_sys']}',
+                                        style: text),
+                                  ),
+                            resTojson['health_records'][0]['spo2'] == null
+                                ? Health(child: Text(' - '))
+                                : Health(
+                                    child: Text(
+                                        '${resTojson['health_records'][0]['spo2']}',
+                                        style: text),
+                                  ),
+                          ]
+                        : []),
               ],
             ),
           )
@@ -349,10 +358,26 @@ class _PrintQueueState extends State<PrintQueue> {
     );
   }
 
+  int remainingSeconds = 5;
+  Timer? timer;
+  void startTimer() {
+    timer = Timer.periodic(Duration(seconds: 1), (Timer t) {
+      setState(() {
+        remainingSeconds--;
+      });
+
+      if (remainingSeconds == 0) {
+        timer!.cancel();
+        Get.offNamed('home');
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     double _width = MediaQuery.of(context).size.width;
     double _height = MediaQuery.of(context).size.height;
+
     return SafeArea(
       child: Scaffold(
         body: Stack(children: [
@@ -363,56 +388,63 @@ class _PrintQueueState extends State<PrintQueue> {
                       child: Container(
             height: _height * 0.8,
             width: _width * 0.8,
-            child: ListView(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 resTojson == null
                     ? Container(height: _height * 0.5, width: _width * 0.8)
                     : queue(),
                 SizedBox(height: _height * 0.05),
-                GestureDetector(
-                  onTap: () {
-                    context.read<Datafunction>().playsound();
-                    //  print2();
-                    //  printer?.printTest();
-                    Deviceprint();
-                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                        content: Container(
-                            width: MediaQuery.of(context).size.width,
-                            child: Center(
-                                child: Text(
-                              'printqueue',
-                              style: TextStyle(
-                                  fontFamily:
-                                      context.read<DataProvider>().fontFamily,
-                                  fontSize:
-                                      MediaQuery.of(context).size.width * 0.03),
-                            )))));
-                    print('ปริ้น');
-                  },
-                  child: BoxWidetdew(
-                      radius: 10.0,
-                      color: Colors.green,
-                      height: 0.06,
-                      width: 0.4,
-                      text: 'ปริ้นอีกครั้ง',
-                      fontSize: 0.05,
-                      textcolor: Colors.white),
+                Text(
+                  'กำลังออกใน: $remainingSeconds วินาที',
+                  style: TextStyle(
+                      fontSize: _width * 0.04,
+                      fontFamily: context.read<DataProvider>().fontFamily),
                 ),
-                SizedBox(height: _height * 0.05),
-                GestureDetector(
-                  onTap: () {
-                    context.read<Datafunction>().playsound();
-                    Get.offNamed('user_information');
-                  },
-                  child: BoxWidetdew(
-                      radius: 10.0,
-                      color: Colors.red,
-                      height: 0.06,
-                      width: 0.4,
-                      text: 'กลับ',
-                      fontSize: 0.05,
-                      textcolor: Colors.white),
-                ),
+                // GestureDetector(
+                //   onTap: () {
+                //     context.read<Datafunction>().playsound();
+                //     //  print2();
+                //     //  printer?.printTest();
+                //     Deviceprint();
+                //     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                //         content: Container(
+                //             width: MediaQuery.of(context).size.width,
+                //             child: Center(
+                //                 child: Text(
+                //               'printqueue',
+                //               style: TextStyle(
+                //                   fontFamily:
+                //                       context.read<DataProvider>().fontFamily,
+                //                   fontSize:
+                //                       MediaQuery.of(context).size.width * 0.03),
+                //             )))));
+                //     print('ปริ้น');
+                //   },
+                //   child: BoxWidetdew(
+                //       radius: 10.0,
+                //       color: Colors.green,
+                //       height: 0.06,
+                //       width: 0.4,
+                //       text: 'ปริ้นอีกครั้ง',
+                //       fontSize: 0.05,
+                //       textcolor: Colors.white),
+                // ),
+                // SizedBox(height: _height * 0.05),
+                // GestureDetector(
+                //   onTap: () {
+                //     context.read<Datafunction>().playsound();
+                //     Get.offNamed('user_information');
+                //   },
+                //   child: BoxWidetdew(
+                //       radius: 10.0,
+                //       color: Colors.red,
+                //       height: 0.06,
+                //       width: 0.4,
+                //       text: 'กลับ',
+                //       fontSize: 0.05,
+                //       textcolor: Colors.white),
+                // ),
               ],
             ),
           )))),

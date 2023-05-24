@@ -8,5 +8,8 @@ import 'package:smart_health/main_app/app.dart';
 void main() {
   HttpOverrides.global = GlobalHttpOverrides();
   WidgetsFlutterBinding.ensureInitialized();
-  runApp(const App());
+  SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp])
+      .then((_) {
+    runApp(App());
+  });
 }

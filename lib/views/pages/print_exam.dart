@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
@@ -34,6 +35,18 @@ class _Print_ExamState extends State<Print_Exam> {
   BluetoothPrinter? selectedPrinter;
   var devices = <BluetoothPrinter>[];
   List default_deivces = [];
+
+  Future<void> finished() async {
+    var url =
+        Uri.parse('${context.read<DataProvider>().platfromURL}/finish_appoint');
+    var res = await http.post(url, body: {
+      'public_id': context.read<DataProvider>().id,
+    });
+    setState(() {
+      resTojson = json.decode(res.body);
+    });
+  }
+
   Future<void> get_exam() async {
     var url = Uri.parse(
         '${context.read<DataProvider>().platfromURL}/get_doctor_exam');
@@ -45,6 +58,7 @@ class _Print_ExamState extends State<Print_Exam> {
       doctor_note = resTojson['data']['doctor_note'];
       dx = resTojson['data']['dx'];
       if (resTojson != null) {
+        startTimer();
         Deviceprint();
       }
     });
@@ -107,8 +121,25 @@ class _Print_ExamState extends State<Print_Exam> {
     printer?.printTest(bytes);
   }
 
+  int remainingSeconds = 5;
+  Timer? timer;
+  void startTimer() {
+    timer = Timer.periodic(Duration(seconds: 1), (Timer t) {
+      setState(() {
+        remainingSeconds--;
+      });
+
+      if (remainingSeconds == 0) {
+        timer!.cancel();
+        Get.offNamed('home');
+      }
+    });
+  }
+
   @override
   void initState() {
+    finished();
+
     printer = ESMPrinter([
       {'vendor_id': '1137', 'product_id': '85'}
     ]);
@@ -137,48 +168,62 @@ class _Print_ExamState extends State<Print_Exam> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                GestureDetector(
-                  onTap: () {
-                    context.read<Datafunction>().playsound();
+                Container(
+                  height: _height * 0.5,
+                  width: _width * 0.8,
+                  decoration: BoxDecoration(
+                      color: Color.fromARGB(255, 243, 243, 243),
+                      borderRadius: BorderRadius.circular(10)),
+                ),
+                SizedBox(height: _height * 0.01),
+                Text(
+                  'กำลังออกใน: $remainingSeconds วินาที',
+                  style: TextStyle(
+                      fontSize: _width * 0.04,
+                      fontFamily: context.read<DataProvider>().fontFamily),
+                ),
+                // GestureDetector(
+                //   onTap: () {
+                //     context.read<Datafunction>().playsound();
 
-                    Deviceprint();
-                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                        content: Container(
-                            width: MediaQuery.of(context).size.width,
-                            child: Center(
-                                child: Text(
-                              'ปริ้นผลตรวจ',
-                              style: TextStyle(
-                                  fontFamily:
-                                      context.read<DataProvider>().fontFamily,
-                                  fontSize:
-                                      MediaQuery.of(context).size.width * 0.03),
-                            )))));
-                  },
-                  child: BoxWidetdew(
-                      radius: 10.0,
-                      color: Colors.green,
-                      height: 0.06,
-                      width: 0.4,
-                      text: 'ปริ้นผลตรวจ',
-                      fontSize: 0.05,
-                      textcolor: Colors.white),
-                ),
-                SizedBox(height: _height * 0.05),
-                GestureDetector(
-                  onTap: () {
-                    context.read<Datafunction>().playsound();
-                    Get.offNamed('user_information');
-                  },
-                  child: BoxWidetdew(
-                      radius: 10.0,
-                      color: Colors.red,
-                      height: 0.06,
-                      width: 0.4,
-                      text: 'กลับ',
-                      fontSize: 0.05,
-                      textcolor: Colors.white),
-                ),
+                //     Deviceprint();
+                //     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                //         content: Container(
+                //             width: MediaQuery.of(context).size.width,
+                //             child: Center(
+                //                 child: Text(
+                //               'ปริ้นผลตรวจ',
+                //               style: TextStyle(
+                //                   fontFamily:
+                //                       context.read<DataProvider>().fontFamily,
+                //                   fontSize:
+                //                       MediaQuery.of(context).size.width * 0.03),
+                //             )))));
+                //   },
+                //   child: BoxWidetdew(
+                //       radius: 10.0,
+                //       color: Colors.green,
+                //       height: 0.06,
+                //       width: 0.4,
+                //       text: 'ปริ้นผลตรวจซ้ำ',
+                //       fontSize: 0.05,
+                //       textcolor: Colors.white),
+                // ),
+                // SizedBox(height: _height * 0.02),
+                // GestureDetector(
+                //   onTap: () {
+                //     context.read<Datafunction>().playsound();
+                //     Get.offNamed('user_information');
+                //   },
+                //   child: BoxWidetdew(
+                //       radius: 10.0,
+                //       color: Colors.red,
+                //       height: 0.06,
+                //       width: 0.4,
+                //       text: 'กลับ',
+                //       fontSize: 0.05,
+                //       textcolor: Colors.white),
+                // ),
               ],
             ),
           ))
