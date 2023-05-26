@@ -38,7 +38,7 @@ class _HomeappState extends State<Homeapp> {
   bool shownumpad = false;
   Timer? _timer;
   @override
-  void check() async {
+  void _check() async {
     setState(() {
       status = true;
     });
@@ -48,10 +48,18 @@ class _HomeappState extends State<Homeapp> {
           .read<Datafunction>()
           .checkDigit('${context.read<DataProvider>().id}');
 
+      // if (p.toString() == '${context.read<DataProvider>().id[12]}.0') {
+      //   var url = Uri.parse(
+      //       '${context.read<DataProvider>().platfromURL}/get_patient?public_id=${context.read<DataProvider>().id}'); //${context.read<stringitem>().uri}
+      //   var res = await http.get(url);
       if (p.toString() == '${context.read<DataProvider>().id[12]}.0') {
         var url = Uri.parse(
-            '${context.read<DataProvider>().platfromURL}/get_patient?public_id=${context.read<DataProvider>().id}'); //${context.read<stringitem>().uri}
-        var res = await http.get(url);
+            '${context.read<DataProvider>().platfromURL}/check_q}'); //${context.read<stringitem>().uri}
+        var res = await http.post(url, body: {
+          'care_unit_id': context.read<DataProvider>().care_unit_id,
+          'public_id': context.read<DataProvider>().id,
+        });
+
         if (res.statusCode == 200) {
           var resTojson = json.decode(res.body);
           if (resTojson['message'] == 'success') {
@@ -173,9 +181,101 @@ class _HomeappState extends State<Homeapp> {
     }
   }
 
+  void check2() async {
+    setState(() {
+      status = true;
+    });
+    context.read<Datafunction>().playsound();
+    if (context.read<DataProvider>().id.length == 13) {
+      var url =
+          Uri.parse('${context.read<DataProvider>().platfromURL}/check_q');
+      var res = await http.post(url, body: {
+        'care_unit_id': context.read<DataProvider>().care_unit_id,
+        'public_id': context.read<DataProvider>().id,
+      });
+      var resTojson = json.decode(res.body);
+      print(resTojson);
+      setState(() {
+        status = false;
+      });
+      if (resTojson['message'] == 'not found patient') {
+        showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return Popup(
+                texthead: 'ไม่พบข้อมูลในระบบ',
+                pathicon: 'assets/warning.png',
+                buttonbar: [
+                  GestureDetector(
+                      onTap: () {
+                        Navigator.pop(context);
+                        Timer(Duration(seconds: 2), () {
+                          setState(() {
+                            Get.toNamed('regter');
+                          });
+                        });
+                      },
+                      child: BoxWidetdew(
+                          color: Colors.green,
+                          height: 0.05,
+                          width: 0.2,
+                          text: 'สมัคร',
+                          radius: 0.0,
+                          textcolor: Colors.white)),
+                  GestureDetector(
+                      onTap: () {
+                        Navigator.pop(context);
+                      },
+                      child: BoxWidetdew(
+                          color: Colors.red,
+                          height: 0.05,
+                          width: 0.2,
+                          radius: 0.0,
+                          text: 'ออก',
+                          textcolor: Colors.white))
+                ],
+              );
+            });
+      } else {
+        setState(() {
+          status = false;
+          context.read<DataProvider>().dataidcard = resTojson;
+        });
+        Timer(Duration(seconds: 1), () {
+          Get.toNamed('user_information');
+        });
+      }
+    } else {
+      showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return Popup(
+              texthead: 'เลขบัตรประชาชนไม่ครบ',
+              textbody: 'กรุณากรองเลขบัตรประชาชนไห้ครบ',
+              pathicon: 'assets/warning (1).png',
+              buttonbar: [
+                GestureDetector(
+                    onTap: () {
+                      Navigator.pop(context);
+                    },
+                    child: BoxWidetdew(
+                        color: Color.fromARGB(255, 106, 143, 173),
+                        height: 0.05,
+                        width: 0.2,
+                        text: 'ตกลง',
+                        textcolor: Colors.white))
+              ],
+            );
+          });
+      setState(() {
+        status = false;
+      });
+    }
+  }
+
   void readerID() {
     try {
-      //   // Future.delayed(const Duration(seconds: 1), ()
+      // Future.delayed(const Duration(seconds: 1), ()
       // readingtime = Timer.periodic(const Duration(seconds: 1), (_)
       Future.delayed(const Duration(seconds: 1), () {
         reader = ESMIDCard.instance;
@@ -196,7 +296,7 @@ class _HomeappState extends State<Homeapp> {
             // idcard?.setValue(splitted[0]);
             idcard.setValue(splitted[0]);
             if (context.read<DataProvider>().id == splitted[0].toString()) {
-              check();
+              check2();
             } else {}
           }, onError: (error) {
             print(error);
@@ -270,8 +370,8 @@ class _HomeappState extends State<Homeapp> {
                 Positioned(
                     child: SafeArea(
                   child: ListView(children: [
-                    BoxTime(),
-                    BoxRunQueue2(),
+                    BoxTime(), //จุดtest1
+                    BoxRunQueue2(), //จุดtest2
                     Container(
                       width: _width,
                       height: _height * 0.7,
@@ -299,7 +399,7 @@ class _HomeappState extends State<Homeapp> {
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                BoxID(),
+                                BoxID(), //จุดtest3
                                 GestureDetector(
                                   onTap: () {
                                     if (shownumpad == false) {
@@ -338,7 +438,7 @@ class _HomeappState extends State<Homeapp> {
                                           status == false
                                               ? GestureDetector(
                                                   onTap: () {
-                                                    check();
+                                                    check2();
                                                   },
                                                   child: BoxWidetdew(
                                                       color: Color(0xff00A3FF),

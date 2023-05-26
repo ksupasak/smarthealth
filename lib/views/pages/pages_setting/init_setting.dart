@@ -225,6 +225,8 @@ class _InitsettingState extends State<Initsetting> {
                                             resTojson2['data'][index]['name'];
                                         care_unit_id.text =
                                             resTojson2['data'][index]['id'];
+                                        name_hospital.text =
+                                            resTojson2['customer_name'];
                                       });
                                     },
                                     child: Container(

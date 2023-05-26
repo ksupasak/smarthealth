@@ -3,6 +3,8 @@ import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:openvidu_client/openvidu_client.dart';
+import 'package:provider/provider.dart';
+import 'package:smart_health/provider/provider.dart';
 
 import 'drop_down.dart';
 import 'media_stream_view.dart';
@@ -90,39 +92,23 @@ class _ConfigViewState extends State<ConfigView> {
       ),
       constraints: const BoxConstraints(maxWidth: 400),
       child: Column(
-        mainAxisSize: MainAxisSize.min,
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          OVDropDown(
-            label: 'Input',
-            devices: _audioInputs ?? [],
-            selectDevice: selectedAudioInput,
-            onChanged: _selectAudioInput,
+          Container(
+            child: OVDropDown(
+              label: 'Input',
+              devices: _audioInputs ?? [],
+              selectDevice: selectedAudioInput,
+              onChanged: _selectAudioInput,
+            ),
           ),
-          OVDropDown(
-            label: 'Video',
-            devices: _videoInputs ?? [],
-            selectDevice: selectedVideoInput,
-            onChanged: _selectVideoInput,
-          ),
-          ElevatedButton(
-            onPressed: widget.onConnect,
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: const [
-                Padding(
-                  padding: EdgeInsets.only(right: 10),
-                  child: SizedBox(
-                    height: 15,
-                    width: 15,
-                    child: CircularProgressIndicator(
-                      color: Colors.white,
-                      strokeWidth: 2,
-                    ),
-                  ),
-                ),
-                Text('CONNECT'),
-              ],
+          Container(
+            child: OVDropDown(
+              label: 'Video',
+              devices: _videoInputs ?? [],
+              selectDevice: selectedVideoInput,
+              onChanged: _selectVideoInput,
             ),
           ),
         ],
@@ -145,11 +131,49 @@ class _ConfigViewState extends State<ConfigView> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          SizedBox(
-              height: _height * 0.5,
-              width: _width * 0.7,
+          Container(
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(15),
+                  boxShadow: [
+                    BoxShadow(
+                        color: Color(0xff48B5AA),
+                        offset: Offset(0, 2),
+                        spreadRadius: 1,
+                        blurRadius: 2)
+                  ]),
+              height: _height * 0.4,
+              width: _width * 0.6,
               child: _streamWidget()),
-          _controlsWidget()
+          Container(
+              color: Color.fromARGB(0, 7, 255, 139),
+              // height: _height * 0.15,
+              width: _width * 0.6,
+              child: _controlsWidget()),
+          GestureDetector(
+            onTap: widget.onConnect,
+            child: Container(
+              width: _width * 0.8,
+              height: _height * 0.055,
+              decoration: BoxDecoration(
+                  boxShadow: [
+                    BoxShadow(
+                        color: Colors.grey,
+                        offset: Offset(0, 2),
+                        blurRadius: 2,
+                        spreadRadius: 1)
+                  ],
+                  color: Color(0xff31D6AA),
+                  borderRadius: BorderRadius.circular(15)),
+              child: Center(
+                  child: Text(
+                'ยืนยันการวีดีโอคอล',
+                style: TextStyle(
+                    color: Colors.white,
+                    fontSize: _width * 0.04,
+                    fontFamily: context.read<DataProvider>().fontFamily),
+              )),
+            ),
+          ),
         ],
       ),
     );

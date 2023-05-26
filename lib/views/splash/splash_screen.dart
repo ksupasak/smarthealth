@@ -86,7 +86,7 @@ class _Splash_ScreenState extends State<Splash_Screen> {
   @override
   void initState() {
     printDatabase();
-    Future.delayed(const Duration(seconds: 2), () {
+    Future.delayed(const Duration(seconds: 4), () {
       Get.offAllNamed('home');
     });
     //scanTimer(4500);

@@ -28,44 +28,55 @@ class OVDropDown extends StatelessWidget {
             label,
             style: TextStyle(
               fontFamily: context.read<DataProvider>().fontFamily,
-              fontSize: 16,
-              fontWeight: FontWeight.bold,
+              fontSize: _width * 0.03,
+              fontWeight: FontWeight.w400,
+              color: Color(0xff48B5AA),
             ),
           ),
           Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10),
+                border: Border.all(color: Color(0xff48B5AA), width: 2),
+              ),
               child: DropdownButtonFormField<MediaDevice>(
-            isExpanded: true,
-            items: devices
-                .map(
-                  (device) => DropdownMenuItem(
-                    value: device,
-                    child: ListTile(
-                      leading: (selectDevice?.deviceId == device.deviceId)
-                          ? const Icon(
-                              EvaIcons.checkmarkSquare,
-                              color: Colors.white,
-                            )
-                          : const Icon(
-                              EvaIcons.square,
-                              color: Colors.white,
-                            ),
-                      title: Text(device.label),
-                    ),
+                isExpanded: true,
+                items: devices
+                    .map(
+                      (device) => DropdownMenuItem(
+                        value: device,
+                        child: ListTile(
+                          leading: (selectDevice?.deviceId == device.deviceId)
+                              ? const Icon(
+                                  EvaIcons.checkmarkSquare,
+                                  color: Colors.grey,
+                                )
+                              : const Icon(
+                                  EvaIcons.square,
+                                  color: Colors.grey,
+                                ),
+                          title: Text(
+                            device.label,
+                            style: TextStyle(
+                                color: Color(0xff1B6286),
+                                fontWeight: FontWeight.w500,
+                                fontSize: _width * 0.02),
+                          ),
+                        ),
+                      ),
+                    )
+                    .toList(),
+                onChanged: onChanged,
+                value: selectDevice,
+                decoration: const InputDecoration(
+                  prefixIcon: Icon(
+                    Icons.videocam,
                   ),
-                )
-                .toList(),
-            onChanged: onChanged,
-            value: selectDevice,
-            decoration: const InputDecoration(
-              prefixIcon: Icon(
-                Icons.videocam,
-              ),
-              contentPadding: EdgeInsets.symmetric(
-                horizontal: 0,
-                vertical: 0,
-              ),
-            ),
-          )),
+                  contentPadding: EdgeInsets.symmetric(
+                    horizontal: 0,
+                    vertical: 0,
+                  ),
+                ),
+              )),
         ],
       ),
     );

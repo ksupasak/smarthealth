@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'dart:math' as math;
 import 'dart:math';
 import 'package:flutter/foundation.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:dio/dio.dart';
@@ -77,21 +78,46 @@ class _PrePareVideoState extends State<PrePareVideo> {
         : Scaffold(
             body: Stack(
               children: [
-                backgrund(),
+                Positioned(
+                    child: Container(
+                  height: _height,
+                  width: _width,
+                  child: SvgPicture.asset(
+                    'assets/login.svg',
+                    fit: BoxFit.fill,
+                  ),
+                )),
                 Positioned(
                   child: Container(
-                      width: _width,
-                      child: Center(
-                          child: BoxWidetdew(
-                              height: 0.06,
-                              width: _width,
-                              color: Color.fromARGB(0, 255, 255, 255),
-                              radius: 5.0,
-                              fontSize: 0.05,
+                    height: _height,
+                    width: _width,
+                    child: Center(
+                      child: Container(
+                        height: _height * 0.06,
+                        width: _width,
+                        child: Center(
+                          child: Text(
+                            'กำลังเชื่อมต่อวีดีโอ',
+                            style: TextStyle(
+                              fontSize: _width * 0.05,
                               fontWeight: FontWeight.w500,
-                              text: 'กำลังเชื่อมต่อVideo',
-                              textcolor: Color.fromARGB(255, 9, 106, 0)))),
-                ),
+                              fontFamily:
+                                  context.read<DataProvider>().fontFamily,
+                              color: Color(0xff00A3FF),
+                              shadows: [
+                                Shadow(
+                                  color: Colors.grey,
+                                  offset: Offset(2, 2),
+                                  blurRadius: 4,
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                )
               ],
             ),
           );
@@ -205,7 +231,8 @@ class _RoomPageState extends State<RoomPage> {
     final result = await context.showDisconnectDialog();
     if (result == true) {
       await _openvidu.disconnect();
-      nav.pop();
+      //  nav.pop();
+      Get.offNamed('user_information');
     }
   }
 
@@ -240,203 +267,225 @@ class _RoomPageState extends State<RoomPage> {
   Widget build(BuildContext context) {
     double _width = MediaQuery.of(context).size.width;
     double _height = MediaQuery.of(context).size.height;
-    return Scaffold(
+    return SafeArea(
+      child: Scaffold(
         body: Stack(children: [
-      backgrund(),
-      Positioned(
-        child: localParticipant == null
-            ? Container()
-            : !isInside
-                ? Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      BoxWidetdew(
-                          height: 0.06,
-                          width: _width,
-                          color: Color.fromARGB(0, 255, 255, 255),
-                          radius: 5.0,
-                          fontSize: 0.05,
-                          fontWeight: FontWeight.w500,
-                          text: 'เตรียมความพร้อม',
-                          textcolor: Color.fromARGB(255, 9, 106, 0)),
-                      Center(
-                        child: ConfigView(
-                          participant: localParticipant!,
-                          onConnect: _onConnect,
-                        ),
-                      ),
-                      GestureDetector(
-                        onTap: () async {
-                          _timer?.cancel();
-                          await _openvidu.disconnect();
-                          context.read<Datafunction>().playsound();
-                          Navigator.pop(context);
-                        },
-                        child: Container(
-                            width: _width,
-                            child: Center(
-                                child: BoxWidetdew(
-                              height: 0.06,
-                              width: 0.35,
-                              color: Colors.red,
-                              radius: 5.0,
-                              fontSize: 0.04,
-                              text: 'ออก',
-                              textcolor: Colors.white,
-                            ))),
-                      ),
-                    ],
-                  )
-                : Container(
-                    child: Stack(children: [
-                      Positioned(
-                        child: Container(
-                          child: ListView.builder(
-                              //  scrollDirection: Axis.horizontal,
-                              itemCount: math.max(0, remoteParticipants.length),
-                              itemBuilder: (BuildContext context, int index) {
-                                final remote =
-                                    remoteParticipants.values.elementAt(index);
-                                return Container(
-                                  width: _width /
-                                      math.max(1, remoteParticipants.length),
-                                  height: _height /
-                                      math.max(1, remoteParticipants.length),
-                                  child: Expanded(
-                                    child: MediaStreamView(
-                                      borderRadius: BorderRadius.circular(5),
-                                      participant: remote,
+          backgrund(),
+          Positioned(
+            child: localParticipant == null
+                ? Container()
+                : !isInside
+                    ? Container(
+                        child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                            BoxTime(),
+                            BoxDecorate(
+                                child: InformationCard(
+                                    dataidcard: context
+                                        .read<DataProvider>()
+                                        .dataidcard)),
+                            Container(
+                              height: _height * 0.06,
+                              width: _width,
+                              child: Center(
+                                child: Text(
+                                  'เตรียมความพร้อม',
+                                  style: TextStyle(
+                                      fontSize: _width * 0.05,
+                                      fontWeight: FontWeight.w500,
+                                      fontFamily: context
+                                          .read<DataProvider>()
+                                          .fontFamily,
+                                      color: Color(0xff48B5AA)),
+                                ),
+                              ),
+                            ),
+                            Container(
+                                width: _width * 0.9,
+                                child: ConfigView(
+                                    participant: localParticipant!,
+                                    onConnect: _onConnect))
+                          ]))
+                    : Container(
+                        child: Stack(children: [
+                          Positioned(
+                            child: Container(
+                              child: ListView.builder(
+                                  itemCount:
+                                      math.max(0, remoteParticipants.length),
+                                  itemBuilder:
+                                      (BuildContext context, int index) {
+                                    final remote = remoteParticipants.values
+                                        .elementAt(index);
+                                    return Container(
+                                      width: _width /
+                                          math.max(
+                                              1, remoteParticipants.length),
+                                      height: _height /
+                                          math.max(
+                                              1, remoteParticipants.length),
+                                      child: Expanded(
+                                        child: MediaStreamView(
+                                          borderRadius:
+                                              BorderRadius.circular(5),
+                                          participant: remote,
+                                        ),
+                                      ),
+                                    );
+                                  }),
+                            ),
+                          ),
+                          Positioned(
+                            bottom: -10,
+                            child: Container(
+                              // color: Color.fromARGB(50, 255, 193, 7),
+                              height: _height * 0.08,
+                              width: _width,
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: [
+                                  GestureDetector(
+                                    onTap: () {
+                                      _onTapDisconnect();
+                                    },
+                                    child: Container(
+                                      child: Image.asset('assets/skrhjk.png'),
                                     ),
                                   ),
-                                );
-                              }),
-                        ),
-                      ),
-                      Positioned(
-                        bottom: 50,
-                        left: 50,
-                        child: Container(
-                          height: _height * 0.15,
-                          width: _width * 0.15,
-                          child: MediaStreamView(
-                            borderRadius: BorderRadius.circular(5),
-                            participant: localParticipant!,
+                                  GestureDetector(
+                                    onTap: () {
+                                      onTap:
+                                      showModalBottomSheet(
+                                          backgroundColor: Color.fromARGB(
+                                              255, 255, 255, 255),
+                                          isScrollControlled: true,
+                                          shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.vertical(
+                                                      top:
+                                                          Radius.circular(10))),
+                                          context: context,
+                                          builder: (context) => ControlsWidget(
+                                              _openvidu, localParticipant!));
+                                    },
+                                    child: Container(
+                                      child: Image.asset('assets/gjdz.png'),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              // child: Row(
+                              //   children: [
+                              //     GestureDetector(
+                              //       onTap: () {
+                              //         _onTapDisconnect();
+                              //       },
+                              //       child: Container(
+                              //           width: _width,
+                              //           child: Center(
+                              //               child: BoxWidetdew(
+                              //             height: 0.04,
+                              //             width: 0.3,
+                              //             color:
+                              //                 Color.fromARGB(255, 63, 54, 244),
+                              //             radius: 5.0,
+                              //             fontSize: 0.04,
+                              //             text: 'ออก',
+                              //             textcolor: Colors.white,
+                              //           ))),
+                              //     ),
+                              //     SizedBox(height: _height * 0.01),
+                              //     GestureDetector(
+                              //       onTap: () {
+                              //         // _onTapDisconnect();
+                              //         showModalBottomSheet(
+                              //             backgroundColor:
+                              //                 Color.fromARGB(255, 146, 50, 50),
+                              //             isScrollControlled: true,
+                              //             shape: RoundedRectangleBorder(
+                              //                 borderRadius:
+                              //                     BorderRadius.vertical(
+                              //                         top:
+                              //                             Radius.circular(10))),
+                              //             context: context,
+                              //             builder: (context) => ControlsWidget(
+                              //                 _openvidu, localParticipant!));
+                              //       },
+                              //       child: Container(
+                              //           width: _width,
+                              //           child: Center(
+                              //               child: BoxWidetdew(
+                              //             height: 0.016,
+                              //             width: 0.2,
+                              //             color: Colors.white,
+                              //             radius: 5.0,
+                              //             fontSize: 0.04,
+                              //             textcolor: Colors.white,
+                              //           ))),
+                              //     ),
+                              //   ],
+                              // ),
+                            ),
                           ),
+                          Positioned(
+                            bottom: 40,
+                            left: 40,
+                            child: Container(
+                              height: _height * 0.15,
+                              width: _width * 0.15,
+                              child: MediaStreamView(
+                                borderRadius: BorderRadius.circular(5),
+                                participant: localParticipant!,
+                              ),
+                            ),
+                          ),
+                        ]),
+                      ),
+          )
+        ]),
+        bottomNavigationBar: !isInside
+            ? Container(
+                height: _height * 0.03,
+                child: Row(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(4.0),
+                      child: GestureDetector(
+                        onTap: () {
+                          _timer?.cancel();
+                          context.read<Datafunction>().playsound();
+                          setState(() {
+                            Get.offNamed('user_information');
+                          });
+                        },
+                        child: Container(
+                          height: _height * 0.025,
+                          width: _width * 0.15,
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10),
+                              border: Border.all(
+                                  color: Color.fromARGB(255, 201, 201, 201),
+                                  width: _width * 0.002)),
+                          child: Center(
+                              child: Text(
+                            '< ย้อนกลับ',
+                            style: TextStyle(
+                                fontFamily:
+                                    context.read<DataProvider>().fontFamily,
+                                fontSize: _width * 0.03,
+                                color: Color.fromARGB(255, 201, 201, 201)),
+                          )),
                         ),
                       ),
-                      // Positioned(
-                      //   bottom: 10,
-                      //   right: 10,
-                      //   child: localParticipant != null
-                      //       ? SafeArea(
-                      //           top: false,
-                      //           child: Container(
-                      //             color: Colors.white,
-                      //             height: _height * 0.03,
-                      //             child: Center(
-                      //               child: ControlsWidget(
-                      //                   _openvidu, localParticipant!),
-                      //             ),
-                      //           ),
-                      //         )
-                      //       : Container(),
-                      // ),
-
-                      Positioned(
-                        bottom: -10,
-                        right: 1,
-                        child: Column(
-                          children: [
-                            GestureDetector(
-                              onTap: () {
-                                _onTapDisconnect();
-                              },
-                              child: Container(
-                                  width: _width,
-                                  child: Center(
-                                      child: BoxWidetdew(
-                                    height: 0.04,
-                                    width: 0.3,
-                                    color: Colors.red,
-                                    radius: 5.0,
-                                    fontSize: 0.04,
-                                    text: 'ออก',
-                                    textcolor: Colors.white,
-                                  ))),
-                            ),
-                            SizedBox(height: _height * 0.01),
-                            GestureDetector(
-                              onTap: () {
-                                // _onTapDisconnect();
-                                showModalBottomSheet(
-                                    backgroundColor:
-                                        Color.fromARGB(255, 255, 255, 255),
-                                    isScrollControlled: true,
-                                    shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.vertical(
-                                            top: Radius.circular(10))),
-                                    context: context,
-                                    builder: (context) => ControlsWidget(
-                                        _openvidu, localParticipant!));
-                              },
-                              child: Container(
-                                  width: _width,
-                                  child: Center(
-                                      child: BoxWidetdew(
-                                    height: 0.016,
-                                    width: 0.2,
-                                    color: Colors.white,
-                                    radius: 5.0,
-                                    fontSize: 0.04,
-                                    textcolor: Colors.white,
-                                  ))),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ]),
-                    // child: Column(
-                    //   children: [
-                    //     Expanded(
-                    //       child: ListView.builder(
-                    //           //  scrollDirection: Axis.horizontal,
-                    //           itemCount: math.max(0, remoteParticipants.length),
-                    //           itemBuilder: (BuildContext context, int index) {
-                    //             final remote =
-                    //                 remoteParticipants.values.elementAt(index);
-                    //             return Container(
-                    //               width: _width /
-                    //                   math.max(1, remoteParticipants.length),
-                    //               height: _height /
-                    //                   math.max(1, remoteParticipants.length),
-                    //               child: Expanded(
-                    //                 child: MediaStreamView(
-                    //                   borderRadius: BorderRadius.circular(5),
-                    //                   participant: remote,
-                    //                 ),
-                    //               ),
-                    //             );
-                    //           }),
-                    //     ),
-                    //     Container(
-                    //       height: 100,
-                    //       width: 100,
-                    //       child: MediaStreamView(
-                    //         borderRadius: BorderRadius.circular(5),
-                    //         participant: localParticipant!,
-                    //       ),
-                    //     ),
-                    //     if (localParticipant != null)
-                    //       SafeArea(
-                    //         top: false,
-                    //         child: ControlsWidget(_openvidu, localParticipant!),
-                    //       ),
-                    //   ],
-                    // ),
-                  ),
-      )
-    ]));
+                    ),
+                  ],
+                ),
+              )
+            : null,
+      ),
+    );
   }
 }
 

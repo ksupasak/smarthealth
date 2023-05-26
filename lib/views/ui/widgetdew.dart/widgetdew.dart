@@ -5,6 +5,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
+import 'package:flutter_pos_printer_platform/esc_pos_utils_platform/src/capability_profile.dart';
+import 'package:flutter_pos_printer_platform/esc_pos_utils_platform/src/enums.dart';
+import 'package:flutter_pos_printer_platform/esc_pos_utils_platform/src/generator.dart';
+import 'package:flutter_pos_printer_platform/esc_pos_utils_platform/src/pos_column.dart';
+import 'package:flutter_pos_printer_platform/esc_pos_utils_platform/src/pos_styles.dart';
+import 'package:flutter_pos_printer_platform/flutter_pos_printer_platform.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 
@@ -14,8 +20,10 @@ import 'package:smart_health/background/background.dart';
 import 'package:smart_health/background/color/style_color.dart';
 import 'package:smart_health/provider/provider.dart';
 import 'package:smart_health/provider/provider_function.dart';
+import 'package:smart_health/test/esm_printer.dart';
 import 'package:smart_health/views/pages/print_exam.dart';
 import 'package:smart_health/views/pages/videocall.dart';
+import 'package:smart_health/views/ui/widgetdew.dart/popup.dart';
 import 'package:smart_health/widget_decorate/WidgetDecorate.dart';
 import 'package:http/http.dart' as http;
 
@@ -39,7 +47,7 @@ class _backgrundState extends State<backgrund> {
       child: Column(
         children: [
           Container(
-            height: _height * 0.25,
+            height: _height * 0.2,
             width: _width,
             child: SvgPicture.asset(
               'assets/Frame 9178.svg',
@@ -81,8 +89,8 @@ class _BoxTimeState extends State<BoxTime> {
       setState(() {
         dateTime = DateTime.now();
         data = "เวลา ${dateTime.hour}:" +
-            "${dateTime.minute}:" +
-            "${dateTime.second}";
+            "${dateTime.minute.toString().padLeft(2, '0')}:" +
+            "${dateTime.second.toString().padLeft(2, '0')}";
       });
     });
   }
@@ -100,27 +108,42 @@ class _BoxTimeState extends State<BoxTime> {
     TextStyle style = TextStyle(
         fontFamily: context.read<DataProvider>().fontFamily,
         color: Color.fromARGB(255, 255, 255, 255),
-        fontSize: _width * 0.04,
+        fontSize: _width * 0.03,
         fontWeight: FontWeight.w600);
     return Container(
-      height: _height * 0.1,
-      width: _width,
-      child: Column(
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [WidgetNameHospital(), SizedBox(width: _width * 0.08)],
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
+        height: _height * 0.1,
+        width: _width,
+        child: Padding(
+          padding: const EdgeInsets.all(15.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(context.read<DataProvider>().care_unit, style: style),
-              Text(data.toString(), style: style)
+              Container(
+                width: _width * 0.45,
+                child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        children: [WidgetNameHospital()],
+                      ),
+                      Text(context.read<DataProvider>().care_unit,
+                          style: style),
+                    ]),
+              ),
+              Container(
+                  width: _width * 0.45,
+                  height: _height * 0.07,
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      Text(data.toString(), style: style),
+                    ],
+                  )),
             ],
           ),
-        ],
-      ),
-    );
+        ));
   }
 }
 
@@ -222,9 +245,10 @@ class _WidgetNameHospitalState extends State<WidgetNameHospital> {
 }
 
 class BoxRecord extends StatefulWidget {
-  BoxRecord({super.key, this.keyvavlue, this.texthead, this.icon});
+  BoxRecord({super.key, this.keyvavlue, this.texthead, this.icon, this.image});
   var keyvavlue;
   var texthead;
+  var image;
   Widget? icon;
   @override
   State<BoxRecord> createState() => _BoxRecordState();
@@ -236,44 +260,55 @@ class _BoxRecordState extends State<BoxRecord> {
     double _width = MediaQuery.of(context).size.width;
     double _height = MediaQuery.of(context).size.height;
     Color teamcolor = Color.fromARGB(255, 35, 131, 123);
-    return Container(
-      height: _height * 0.1,
-      width: _width * 0.2,
-      color: Colors.white,
-      child: Column(
-        children: [
-          widget.texthead == null
-              ? Text('')
-              : Text('${widget.texthead}',
-                  style: TextStyle(
-                      fontFamily: context.read<DataProvider>().fontFamily,
-                      fontSize: _width * 0.03,
-                      color: teamcolor)),
-          TextField(
-            cursorColor: teamcolor,
-            onChanged: (value) {
-              if (value.length > 0) {
-                context.read<Datafunction>().playsound();
-              }
-            },
-            decoration: InputDecoration(
-              focusedBorder: UnderlineInputBorder(
-                borderSide: BorderSide(
-                  color: teamcolor,
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Container(
+        //  height: _height * 0.1,
+        width: _width * 0.2,
+        color: Colors.white,
+        child: Column(
+          children: [
+            widget.texthead == null
+                ? Text('')
+                : Row(
+                    children: [
+                      widget.image != null
+                          ? Image.asset(widget.image)
+                          : SizedBox(),
+                      Text('${widget.texthead}',
+                          style: TextStyle(
+                              fontFamily:
+                                  context.read<DataProvider>().fontFamily,
+                              fontSize: _width * 0.03,
+                              color: teamcolor)),
+                    ],
+                  ),
+            TextField(
+              cursorColor: teamcolor,
+              onChanged: (value) {
+                if (value.length > 0) {
+                  context.read<Datafunction>().playsound();
+                }
+              },
+              decoration: InputDecoration(
+                focusedBorder: UnderlineInputBorder(
+                  borderSide: BorderSide(
+                    color: teamcolor,
+                  ),
                 ),
+                //   border: InputBorder.none, //เส้นไต้
               ),
-              //   border: InputBorder.none, //เส้นไต้
+              style: TextStyle(
+                fontFamily: context.read<DataProvider>().fontFamily,
+                color: teamcolor,
+                fontSize: _height * 0.03,
+              ),
+              controller: widget.keyvavlue,
+              keyboardType: TextInputType.number,
+              textAlign: TextAlign.center,
             ),
-            style: TextStyle(
-              fontFamily: context.read<DataProvider>().fontFamily,
-              color: teamcolor,
-              fontSize: _height * 0.03,
-            ),
-            controller: widget.keyvavlue,
-            keyboardType: TextInputType.number,
-            textAlign: TextAlign.center,
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -297,21 +332,72 @@ class _BoxDecorateState extends State<BoxDecorate> {
     return widget.child == null
         ? Container()
         : Container(
-            child: Center(
-              child: Container(
-                  width: _width * 0.8,
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(20),
-                    boxShadow: [
-                      BoxShadow(
-                          blurRadius: 10,
-                          color: Color.fromARGB(255, 214, 214, 214)),
-                    ],
-                  ),
-                  child: Center(
-                    child: widget.child,
-                  )),
+            // color: Color.fromARGB(37, 227, 151, 145),
+            width: _width,
+            height: _height * 0.12,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                Container(
+                    width: _width * 0.8,
+                    height: _height * 0.1,
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(10),
+                      boxShadow: [
+                        BoxShadow(
+                            blurRadius: 0.5,
+                            color: Color(0xff48B5AA),
+                            offset: Offset(0, 3)),
+                      ],
+                    ),
+                    child: Center(
+                      child: widget.child,
+                    )),
+              ],
+            ),
+          );
+  }
+}
+
+class BoxDecorate2 extends StatefulWidget {
+  BoxDecorate2({super.key, this.child, this.color});
+  var child;
+  var color;
+  @override
+  State<BoxDecorate2> createState() => _BoxDecorate2State();
+}
+
+class _BoxDecorate2State extends State<BoxDecorate2> {
+  @override
+  Widget build(BuildContext context) {
+    double _width = MediaQuery.of(context).size.width;
+    double _height = MediaQuery.of(context).size.height;
+
+    return widget.child == null
+        ? Container()
+        : Container(
+            width: _width,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                Container(
+                    width: _width * 0.8,
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(10),
+                      boxShadow: [
+                        BoxShadow(
+                            blurRadius: 1,
+                            spreadRadius: 1.5,
+                            color: Color(0xff48B5AA),
+                            offset: Offset(0, 3)),
+                      ],
+                    ),
+                    child: Center(
+                      child: widget.child,
+                    )),
+              ],
             ),
           );
   }
@@ -335,33 +421,33 @@ class _InformationCardState extends State<InformationCard> {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        Container(
-            width: MediaQuery.of(context).size.width * 0.20,
-            height: MediaQuery.of(context).size.height * 0.12,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(
-                MediaQuery.of(context).size.width * 0.03,
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Container(
+              width: MediaQuery.of(context).size.height * 0.1,
+              height: MediaQuery.of(context).size.height * 0.1,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(15),
+                color: Colors.white,
+                boxShadow: [
+                  BoxShadow(
+                      blurRadius: 2,
+                      spreadRadius: 2,
+                      color: Color.fromARGB(255, 188, 188, 188),
+                      offset: Offset(0, 2)),
+                ],
               ),
-              color: Colors.white,
-              boxShadow: [
-                BoxShadow(blurRadius: 10, color: Colors.white),
-              ],
-            ),
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(
-                MediaQuery.of(context).size.width * 0.03,
-              ),
-              child: widget.dataidcard['data']['picture_url'] == ''
-                  ? Container(
-                      color: Color.fromARGB(255, 240, 240, 240),
-                      child: Image.asset('assets/user (1).png'))
-                  : Image.network(
-                      '${widget.dataidcard['data']['picture_url']}',
-                      fit: BoxFit.fill,
-                    ),
-            )
-            // : Icon(Icons.person)
-            ),
+              child: ClipRRect(
+                  borderRadius: BorderRadius.circular(15),
+                  child: widget.dataidcard['personal']['picture_url'] == ''
+                      ? Container(
+                          color: Color.fromARGB(255, 240, 240, 240),
+                          child: Image.asset('assets/user (1).png'))
+                      : Image.network(
+                          '${widget.dataidcard['personal']['picture_url']}',
+                          fit: BoxFit.fill,
+                        ))),
+        ),
         Container(
           child: Padding(
               padding: const EdgeInsets.all(8.0),
@@ -369,18 +455,18 @@ class _InformationCardState extends State<InformationCard> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    "${widget.dataidcard['data']['first_name']}" +
+                    "${widget.dataidcard['personal']['first_name']}" +
                         '  ' +
-                        "${widget.dataidcard['data']['last_name']}",
+                        "${widget.dataidcard['personal']['last_name']}",
                     style: TextStyle(
                       fontFamily: context.read<DataProvider>().fontFamily,
                       fontSize: MediaQuery.of(context).size.width * 0.035,
-                      color: Color.fromARGB(255, 0, 109, 64),
+                      color: Color(0xff48B5AA),
                       shadows: [
                         Shadow(
-                          color: Color.fromARGB(255, 0, 109, 64),
-                          blurRadius: 10,
-                        ),
+                            //  color: Color.fromARGB(255, 0, 109, 64),
+                            //  blurRadius: 10,
+                            ),
                       ],
                     ),
                   ),
@@ -388,16 +474,16 @@ class _InformationCardState extends State<InformationCard> {
                     height: MediaQuery.of(context).size.height * 0.005,
                   ),
                   Text(
-                    "${widget.dataidcard['data']['public_id']}",
+                    "${widget.dataidcard['personal']['public_id']}",
                     style: TextStyle(
                       fontFamily: context.read<DataProvider>().fontFamily,
                       fontSize: MediaQuery.of(context).size.width * 0.03,
-                      color: Color.fromARGB(255, 0, 109, 64),
+                      color: Color(0xff1B6286),
                       shadows: [
                         Shadow(
-                          color: Color.fromARGB(255, 0, 109, 64),
-                          blurRadius: 10,
-                        ),
+                            // color: Color.fromARGB(255, 0, 109, 64),
+                            // blurRadius: 10,
+                            ),
                       ],
                     ),
                   ),
@@ -875,7 +961,7 @@ class _BoxRunQueue2State extends State<BoxRunQueue2> {
             spreadRadius: 1)
       ]);
   BoxDecoration boxdecoration_box = BoxDecoration(
-      borderRadius: BorderRadius.circular(5),
+      borderRadius: BorderRadius.circular(10),
       color: Colors.white, // context.read<StyleColorsApp>().blue_app,
       boxShadow: [
         BoxShadow(
@@ -886,7 +972,7 @@ class _BoxRunQueue2State extends State<BoxRunQueue2> {
       ]);
   BoxDecoration boxdecoration_boxbutton = BoxDecoration(
       borderRadius: BorderRadius.circular(5),
-      color: Color(0xff31d6aa), // context.read<StyleColorsApp>().blue_app,
+      color: Color(0xff31d6aa),
       boxShadow: [
         BoxShadow(
             color: Colors.grey,
@@ -896,7 +982,7 @@ class _BoxRunQueue2State extends State<BoxRunQueue2> {
       ]);
   BoxDecoration boxdecoration_boxbutton_in = BoxDecoration(
       borderRadius: BorderRadius.circular(5),
-      color: Color(0xffffffff), // context.read<StyleColorsApp>().blue_app,
+      color: Color(0xffffffff),
       border: Border.all(color: Colors.grey));
 
   Widget status() {
@@ -973,23 +1059,33 @@ class _BoxRunQueue2State extends State<BoxRunQueue2> {
           blurRadius: 2)
     ], color: Colors.white, borderRadius: BorderRadius.circular(5));
     return resTojson != null
-        ? ListView.builder(
-            scrollDirection: Axis.horizontal,
-            itemCount: resTojson['waits'].length,
-            itemBuilder: (context, index) {
-              return Container(
+        ? resTojson['waits'].length != 0
+            ? ListView.builder(
+                scrollDirection: Axis.horizontal,
+                itemCount: resTojson['waits'].length,
+                itemBuilder: (context, index) {
+                  return Container(
+                    width: _width * 0.08,
+                    decoration: decoration,
+                    margin: EdgeInsets.all(8),
+                    child: Center(
+                      child: Text(
+                        resTojson['waits'][index],
+                        style: TextStyle(color: Color(0xff1B6286)),
+                      ),
+                    ),
+                  );
+                },
+              )
+            : Container(
                 width: _width * 0.08,
-                decoration: decoration,
-                margin: EdgeInsets.all(8),
                 child: Center(
                   child: Text(
-                    resTojson['waits'][index],
-                    style: TextStyle(color: Color(0xff1B6286)),
+                    '- -',
+                    style: TextStyle(fontSize: 18),
                   ),
                 ),
-              );
-            },
-          )
+              )
         : Container();
   }
 
@@ -1023,6 +1119,36 @@ class _BoxRunQueue2State extends State<BoxRunQueue2> {
         : SizedBox();
   }
 
+  Widget completes() {
+    double _width = MediaQuery.of(context).size.width;
+    double _height = MediaQuery.of(context).size.height;
+    Decoration decoration = BoxDecoration(boxShadow: [
+      BoxShadow(
+          color: Color.fromARGB(255, 157, 157, 157),
+          offset: Offset(0, 2),
+          blurRadius: 2)
+    ], color: Colors.white, borderRadius: BorderRadius.circular(5));
+    return resTojson != null
+        ? ListView.builder(
+            scrollDirection: Axis.horizontal,
+            itemCount: resTojson['completes'].length,
+            itemBuilder: (context, index) {
+              return Container(
+                decoration: decoration,
+                width: _width * 0.08,
+                margin: EdgeInsets.all(8),
+                child: Center(
+                  child: Text(
+                    resTojson['completes'][index],
+                    style: TextStyle(color: Color(0xff1B6286)),
+                  ),
+                ),
+              );
+            },
+          )
+        : SizedBox();
+  }
+
   @override
   Widget build(BuildContext context) {
     double _height = MediaQuery.of(context).size.height;
@@ -1033,10 +1159,14 @@ class _BoxRunQueue2State extends State<BoxRunQueue2> {
         fontFamily: context.read<DataProvider>().fontFamily);
     TextStyle style2 = TextStyle(
         color: Color(0xffffa800),
-        fontSize: _width * 0.06,
+        fontSize: _width * 0.03,
         fontFamily: context.read<DataProvider>().fontFamily);
     TextStyle style3 = TextStyle(
         color: Colors.white,
+        fontSize: _width * 0.03,
+        fontFamily: context.read<DataProvider>().fontFamily);
+    TextStyle style4 = TextStyle(
+        color: Color(0xff1B6286),
         fontSize: _width * 0.03,
         fontFamily: context.read<DataProvider>().fontFamily);
     BoxDecoration boxdecoration_text_queue_blue = BoxDecoration(
@@ -1050,6 +1180,7 @@ class _BoxRunQueue2State extends State<BoxRunQueue2> {
               spreadRadius: 0)
         ]);
     BoxDecoration boxdecoration_text_queue_green = BoxDecoration(
+        //Color(0xffFFA800),
         borderRadius: BorderRadius.circular(5),
         color: Color(0xffcccccc),
         boxShadow: [
@@ -1059,138 +1190,489 @@ class _BoxRunQueue2State extends State<BoxRunQueue2> {
               blurRadius: 2,
               spreadRadius: 0)
         ]);
-    return Column(
-      children: [
-        Container(
-            height: _height * 0.25,
-            width: _width,
-            child: Center(
-                child: Container(
-                    height: _height * 0.2,
-                    width: _width * 0.7,
-                    decoration: boxdecoration_box,
-                    child: Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+    BoxDecoration boxdecoration_text_queue_completes = BoxDecoration(
+        borderRadius: BorderRadius.circular(5),
+        color: Color(0xffFFA800),
+        boxShadow: [
+          BoxShadow(
+              color: Colors.black,
+              offset: Offset(0, 0.5),
+              blurRadius: 2,
+              spreadRadius: 0)
+        ]);
+    BoxDecoration boxdecoration_box2 = BoxDecoration(
+        borderRadius: BorderRadius.circular(10),
+        color: Colors.white, // context.read<StyleColorsApp>().blue_app,
+        boxShadow: [
+          BoxShadow(
+              color: Colors.grey,
+              offset: Offset(0, 2),
+              blurRadius: 1,
+              spreadRadius: 0)
+        ]);
+    BoxDecoration boxdecoration_box3 = BoxDecoration(
+      borderRadius: BorderRadius.only(
+          topRight: Radius.circular(10), topLeft: Radius.circular(10)),
+      color: Color(0xff31D6AA),
+    );
+    BoxDecoration boxdecoration_box4 = BoxDecoration(
+      borderRadius: BorderRadius.only(
+          topRight: Radius.circular(10), topLeft: Radius.circular(10)),
+      color: Color(0xff00A3FF),
+    );
+    return Container(
+      child: Center(
+        child: Column(
+          children: [
+            Container(
+              height: _height * 0.2,
+              width: _width * 0.9,
+              decoration: boxdecoration_box,
+              child: Padding(
+                padding: const EdgeInsets.all(15.0),
+                child: Column(children: [
+                  Container(
+                    child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: [
-                          status(),
                           Container(
-                              height: _height * 0.1,
-                              child: Container(
-                                  height: _height * 0.1,
-                                  width: _width * 0.68,
-                                  child: Row(children: [
+                            decoration: boxdecoration_box,
+                            child: Column(
+                              children: [
+                                Container(
+                                  height: _height * 0.05,
+                                  width: _width * 0.42,
+                                  decoration: boxdecoration_box3,
+                                  child: Center(
+                                      child: Text('เเพทย์', style: style3)),
+                                ),
+                                resTojson != null
+                                    ? Container(
+                                        height: _height * 0.04,
+                                        width: _width * 0.42,
+                                        child: ListView.builder(
+                                          itemCount:
+                                              resTojson['callings'].length,
+                                          itemBuilder: (context, index) {
+                                            return Container(
+                                              width: _width * 0.42,
+                                              height: _height * 0.04,
+                                              child: Center(
+                                                child: Text(
+                                                    resTojson['callings'][index]
+                                                        ['doctor_name'],
+                                                    style: style2),
+                                              ),
+                                            );
+                                          },
+                                        ),
+                                      )
+                                    : Container()
+                              ],
+                            ),
+                          ),
+                          Container(
+                            decoration: boxdecoration_box,
+                            child: Column(
+                              children: [
+                                Container(
+                                  height: _height * 0.05,
+                                  width: _width * 0.22,
+                                  decoration: boxdecoration_box3,
+                                  child: Center(
+                                      child: Text('คิวที่', style: style3)),
+                                ),
+                                resTojson != null
+                                    ? Container(
+                                        height: _height * 0.04,
+                                        width: _width * 0.22,
+                                        child: ListView.builder(
+                                          itemCount:
+                                              resTojson['callings'].length,
+                                          itemBuilder: (context, index) {
+                                            return Container(
+                                              width: _width * 0.22,
+                                              height: _height * 0.04,
+                                              child: Center(
+                                                child: Text(
+                                                    resTojson['callings'][index]
+                                                        ['queue_number'],
+                                                    style: style2),
+                                              ),
+                                            );
+                                          },
+                                        ),
+                                      )
+                                    : Container()
+                              ],
+                            ),
+                          ),
+                          Container(
+                            decoration: boxdecoration_box,
+                            child: Column(
+                              children: [
+                                Container(
+                                  height: _height * 0.05,
+                                  width: _width * 0.22,
+                                  decoration: boxdecoration_box4,
+                                  child: Center(
+                                      child: Text('สถานะ', style: style3)),
+                                ),
+                                resTojson != null
+                                    ? Container(
+                                        height: _height * 0.04,
+                                        width: _width * 0.22,
+                                        child: ListView.builder(
+                                          itemCount:
+                                              resTojson['callings'].length,
+                                          itemBuilder: (context, index) {
+                                            return Container(
+                                              width: _width * 0.42,
+                                              height: _height * 0.04,
+                                              child: Center(
+                                                child: Text('เรียกคิว',
+                                                    style: style2),
+                                              ),
+                                            );
+                                          },
+                                        ),
+                                      )
+                                    : Container()
+                              ],
+                            ),
+                          ),
+                        ]),
+                  ),
+                  SizedBox(height: _height * 0.01),
+                  resTojson != null
+                      ? resTojson['processings'].length != 0
+                          ? Container(
+                              child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceAround,
+                                  children: [
                                     Container(
-                                      decoration: boxdecoration_boxbutton,
-                                      height: _height * 0.1,
-                                      width: _width * 0.3325,
+                                      decoration: boxdecoration_box,
                                       child: Column(
                                         children: [
-                                          Container(
-                                            height: _height * 0.05,
-                                            width: _width * 0.3325,
-                                            child: Center(
-                                                child: Text(
-                                              'คิวที่',
-                                              style: style,
-                                            )),
-                                          ),
-                                          Container(
-                                            decoration:
-                                                boxdecoration_boxbutton_in,
-                                            height: _height * 0.05,
-                                            width: _width * 0.3325,
-                                            child: numberqueue(),
-                                          )
+                                          resTojson != null
+                                              ? Container(
+                                                  height: _height * 0.04,
+                                                  width: _width * 0.42,
+                                                  child: ListView.builder(
+                                                    itemCount:
+                                                        resTojson['processings']
+                                                            .length,
+                                                    itemBuilder:
+                                                        (context, index) {
+                                                      return Container(
+                                                        width: _width * 0.42,
+                                                        height: _height * 0.04,
+                                                        child: Center(
+                                                          child: Text(
+                                                              resTojson['processings']
+                                                                      [index][
+                                                                  'doctor_name'],
+                                                              style: style4),
+                                                        ),
+                                                      );
+                                                    },
+                                                  ),
+                                                )
+                                              : Container()
                                         ],
                                       ),
                                     ),
-                                    SizedBox(
-                                      width: _width * 0.015,
+                                    Container(
+                                      decoration: boxdecoration_box,
+                                      child: Column(
+                                        children: [
+                                          resTojson != null
+                                              ? Container(
+                                                  height: _height * 0.04,
+                                                  width: _width * 0.22,
+                                                  child: ListView.builder(
+                                                    itemCount:
+                                                        resTojson['processings']
+                                                            .length,
+                                                    itemBuilder:
+                                                        (context, index) {
+                                                      return Container(
+                                                        width: _width * 0.22,
+                                                        height: _height * 0.04,
+                                                        child: Center(
+                                                          child: Text(
+                                                              resTojson['processings']
+                                                                      [index][
+                                                                  'queue_number'],
+                                                              style: style4),
+                                                        ),
+                                                      );
+                                                    },
+                                                  ),
+                                                )
+                                              : Container()
+                                        ],
+                                      ),
                                     ),
                                     Container(
-                                        decoration: boxdecoration_boxbutton,
-                                        height: _height * 0.1,
-                                        width: _width * 0.3325,
-                                        child: Column(children: [
-                                          Container(
-                                            height: _height * 0.05,
-                                            width: _width * 0.3325,
-                                            child: Center(
-                                                child: Text(
-                                              'ช่องบริการ',
-                                              style: style,
-                                            )),
-                                          ),
-                                          Container(
-                                              decoration:
-                                                  boxdecoration_boxbutton_in,
-                                              height: _height * 0.05,
-                                              width: _width * 0.3325,
-                                              child: Center(
-                                                  child: Text(
-                                                '',
-                                                style: style2,
-                                              )))
-                                        ]))
-                                  ])))
-                        ])))),
-        Container(
-          height: _height * 0.09,
-          width: _width,
-          child: Center(
-            child: Container(
-              height: _height * 0.09,
-              decoration: boxdecoration_box,
-              width: _width * 0.52,
-              child: Padding(
-                padding: const EdgeInsets.all(2.0),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    Container(
-                      child: Row(
-                        children: [
-                          Container(
-                            height: _height * 0.038,
-                            width: _width * 0.12,
-                            decoration: boxdecoration_text_queue_blue,
-                            child:
-                                Center(child: Text('คิวต่อไป', style: style3)),
-                          ),
-                          Container(
-                            height: _height * 0.04,
-                            width: _width * 0.38,
-                            child: listQ(),
-                          )
-                        ],
-                      ),
-                    ),
-                    Container(
-                      child: Row(
-                        children: [
-                          Container(
-                            height: _height * 0.038,
-                            width: _width * 0.12,
-                            decoration: boxdecoration_text_queue_green,
-                            child: Center(
-                                child: Text('เรียกเเล้ว', style: style3)),
-                          ),
-                          Container(
-                            height: _height * 0.04,
-                            width: _width * 0.38,
-                            child: calleds(),
-                          )
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
+                                      decoration: boxdecoration_box,
+                                      child: Column(
+                                        children: [
+                                          resTojson != null
+                                              ? Container(
+                                                  height: _height * 0.04,
+                                                  width: _width * 0.22,
+                                                  child: ListView.builder(
+                                                    itemCount:
+                                                        resTojson['processings']
+                                                            .length,
+                                                    itemBuilder:
+                                                        (context, index) {
+                                                      return Container(
+                                                        width: _width * 0.42,
+                                                        height: _height * 0.04,
+                                                        child: Center(
+                                                          child: Text(
+                                                              'เข้าตรวจ',
+                                                              style: style4),
+                                                        ),
+                                                      );
+                                                    },
+                                                  ),
+                                                )
+                                              : Container()
+                                        ],
+                                      ),
+                                    ),
+                                  ]),
+                            )
+                          : Container()
+                      : Container(),
+                ]),
               ),
             ),
-          ),
-        )
-      ],
+            SizedBox(height: _height * 0.01),
+            Container(
+              width: _width,
+              child: Center(
+                child: Container(
+                  decoration: boxdecoration_box,
+                  width: _width * 0.6,
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        Container(
+                          child: Row(
+                            children: [
+                              Container(
+                                height: _height * 0.038,
+                                width: _width * 0.15,
+                                decoration: boxdecoration_text_queue_blue,
+                                child: Center(
+                                    child: Text('คิวต่อไป', style: style3)),
+                              ),
+                              Container(
+                                height: _height * 0.04,
+                                width: _width * 0.38,
+                                child: listQ(),
+                              )
+                            ],
+                          ),
+                        ),
+                        resTojson != null
+                            ? resTojson['completes'].length != 0
+                                ? Container(
+                                    child: Row(
+                                      children: [
+                                        Container(
+                                          height: _height * 0.038,
+                                          width: _width * 0.15,
+                                          decoration:
+                                              boxdecoration_text_queue_completes,
+                                          child: Center(
+                                              child: Text('รับผลตรวจ',
+                                                  style: style3)),
+                                        ),
+                                        Container(
+                                          height: _height * 0.04,
+                                          width: _width * 0.38,
+                                          child: completes(),
+                                        )
+                                      ],
+                                    ),
+                                  )
+                                : Container()
+                            : Container(),
+                        resTojson != null
+                            ? resTojson['calleds'].length != 0
+                                ? Container(
+                                    child: Row(
+                                      children: [
+                                        Container(
+                                          height: _height * 0.038,
+                                          width: _width * 0.15,
+                                          decoration:
+                                              boxdecoration_text_queue_green,
+                                          child: Center(
+                                              child: Text('เรียกเเล้ว',
+                                                  style: style3)),
+                                        ),
+                                        Container(
+                                          height: _height * 0.04,
+                                          width: _width * 0.38,
+                                          child: calleds(),
+                                        )
+                                      ],
+                                    ),
+                                  )
+                                : Container()
+                            : Container(),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            )
+          ],
+        ),
+      ),
     );
+    // Column(
+    //   children: [
+    //     Container(
+    //         height: _height * 0.25,
+    //         width: _width,
+    //         child: Center(
+    //             child: Container(
+    //                 height: _height * 0.2,
+    //                 width: _width * 0.7,
+    //                 decoration: boxdecoration_box,
+    //                 child: Column(
+    //                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+    //                     children: [
+    //                       status(),
+    //                       Container(
+    //                           height: _height * 0.1,
+    //                           child: Container(
+    //                               height: _height * 0.1,
+    //                               width: _width * 0.68,
+    //                               child: Row(children: [
+    //                                 Container(
+    //                                   decoration: boxdecoration_boxbutton,
+    //                                   height: _height * 0.1,
+    //                                   width: _width * 0.3325,
+    //                                   child: Column(
+    //                                     children: [
+    //                                       Container(
+    //                                         height: _height * 0.05,
+    //                                         width: _width * 0.3325,
+    //                                         child: Center(
+    //                                             child: Text(
+    //                                           'คิวที่',
+    //                                           style: style,
+    //                                         )),
+    //                                       ),
+    //                                       Container(
+    //                                         decoration:
+    //                                             boxdecoration_boxbutton_in,
+    //                                         height: _height * 0.05,
+    //                                         width: _width * 0.3325,
+    //                                         child: numberqueue(),
+    //                                       )
+    //                                     ],
+    //                                   ),
+    //                                 ),
+    //                                 SizedBox(
+    //                                   width: _width * 0.015,
+    //                                 ),
+    //                                 Container(
+    //                                     decoration: boxdecoration_boxbutton,
+    //                                     height: _height * 0.1,
+    //                                     width: _width * 0.3325,
+    //                                     child: Column(children: [
+    //                                       Container(
+    //                                         height: _height * 0.05,
+    //                                         width: _width * 0.3325,
+    //                                         child: Center(
+    //                                             child: Text(
+    //                                           'ช่องบริการ',
+    //                                           style: style,
+    //                                         )),
+    //                                       ),
+    //                                       Container(
+    //                                           decoration:
+    //                                               boxdecoration_boxbutton_in,
+    //                                           height: _height * 0.05,
+    //                                           width: _width * 0.3325,
+    //                                           child: Center(
+    //                                               child: Text(
+    //                                             '',
+    //                                             style: style2,
+    //                                           )))
+    //                                     ]))
+    //                               ])))
+    //                     ])))),
+    // Container(
+    //   height: _height * 0.09,
+    //   width: _width,
+    //   child: Center(
+    //     child: Container(
+    //       height: _height * 0.09,
+    //       decoration: boxdecoration_box,
+    //       width: _width * 0.52,
+    //       child: Padding(
+    //         padding: const EdgeInsets.all(2.0),
+    //         child: Column(
+    //           mainAxisAlignment: MainAxisAlignment.spaceAround,
+    //           children: [
+    //             Container(
+    //               child: Row(
+    //                 children: [
+    //                   Container(
+    //                     height: _height * 0.038,
+    //                     width: _width * 0.12,
+    //                     decoration: boxdecoration_text_queue_blue,
+    //                     child:
+    //                         Center(child: Text('คิวต่อไป', style: style3)),
+    //                   ),
+    //                   Container(
+    //                     height: _height * 0.04,
+    //                     width: _width * 0.38,
+    //                     child: listQ(),
+    //                   )
+    //                 ],
+    //               ),
+    //             ),
+    //             Container(
+    //               child: Row(
+    //                 children: [
+    //                   Container(
+    //                     height: _height * 0.038,
+    //                     width: _width * 0.12,
+    //                     decoration: boxdecoration_text_queue_green,
+    //                     child: Center(
+    //                         child: Text('เรียกเเล้ว', style: style3)),
+    //                   ),
+    //                   Container(
+    //                     height: _height * 0.04,
+    //                     width: _width * 0.38,
+    //                     child: calleds(),
+    //                   )
+    //                 ],
+    //               ),
+    //             ),
+    //           ],
+    //         ),
+    //       ),
+    //     ),
+    //   ),
+    // )
+
+    //   ],
+    // );
   }
 }
 
@@ -1883,6 +2365,7 @@ class _BoxToDayState extends State<BoxToDay> {
   Future<void> checkt_queue() async {
     var url = Uri.parse('${context.read<DataProvider>().platfromURL}/check_q');
     var res = await http.post(url, body: {
+      'care_unit_id': context.read<DataProvider>().care_unit_id,
       'public_id': context.read<DataProvider>().id,
     });
     setState(() {
@@ -1914,7 +2397,18 @@ class _BoxToDayState extends State<BoxToDay> {
           Shadow(
             color: Colors.grey,
             offset: Offset(0, 2),
-            blurRadius: 0,
+            blurRadius: 4,
+          ),
+        ],
+        fontSize: _width * 0.05);
+    TextStyle styletext5 = TextStyle(
+        fontFamily: context.read<DataProvider>().fontFamily,
+        color: Color(0xff31D6AA),
+        shadows: [
+          Shadow(
+            color: Colors.grey,
+            offset: Offset(0, 2),
+            blurRadius: 4,
           ),
         ],
         fontSize: _width * 0.05);
@@ -1936,86 +2430,193 @@ class _BoxToDayState extends State<BoxToDay> {
         color: Color.fromARGB(255, 0, 73, 129),
         fontSize: _width * 0.045,
         fontWeight: FontWeight.w600);
+    TextStyle style3 = TextStyle(
+        fontFamily: context.read<DataProvider>().fontFamily,
+        color: Colors.grey,
+        fontSize: _width * 0.02,
+        fontWeight: FontWeight.w600);
+    TextStyle style4 = TextStyle(
+        fontFamily: context.read<DataProvider>().fontFamily,
+        color: Colors.grey,
+        fontSize: _width * 0.03,
+        fontWeight: FontWeight.w600);
+    TextStyle style5 = TextStyle(
+        fontFamily: context.read<DataProvider>().fontFamily,
+        fontSize: _width * 0.03,
+        color: Colors.grey);
     return Container(
         width: _width,
         child: resTojson != null
             ? resTojson['todays'].length != 0
-                ? Center(
-                    child: Container(
-                      // height: _height * 0.35,
-                      width: _width * 0.8,
-                      color: Colors.grey,
-                    ),
-                  )
-
-                //  Center(  //Ui การนัดหมายอันเก่า
-                //     child: Container(
-                //         height: _height * 0.15,
-                //         width: _width * 0.8,
-                //         decoration: BoxDecoration(
-                //             color: Color.fromARGB(146, 167, 255, 236),
-                //             borderRadius: BorderRadius.circular(20)),
-                //         child: Column(children: [
-                //           Text('การนัดหมายวันนี้', style: styletext3),
-                //           Container(
-                //             color: Color.fromARGB(255, 115, 250, 221),
-                //             child: Row(
-                //               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                //               children: [
-                //                 Container(
-                //                     width: _width * 0.2,
-                //                     child: Center(
-                //                         child: Text('วันที่', style: style2))),
-                //                 Container(
-                //                     width: _width * 0.2,
-                //                     child: Center(
-                //                         child: Text('เวลา', style: style2))),
-                //                 Container(
-                //                     width: _width * 0.2,
-                //                     child: Center(
-                //                         child: Text('สถานที่', style: style2))),
-                //                 Container(
-                //                     width: _width * 0.2,
-                //                     child: Center(
-                //                         child: Text('เเพทย์', style: style2))),
-                //               ],
-                //             ),
-                //           ),
-                //           Container(
-                //               color: Color.fromARGB(255, 100, 202, 131),
-                //               height: _height * 0.04,
-                //               child: Row(
-                //                   mainAxisAlignment:
-                //                       MainAxisAlignment.spaceBetween,
-                //                   children: [
-                //                     Container(
-                //                         width: _width * 0.2,
-                //                         child: Center(
-                //                             child: Text(
-                //                                 resTojson['todays'][0]['date'],
-                //                                 style: style))),
-                //                     Container(
-                //                         width: _width * 0.2,
-                //                         child: Center(
-                //                             child: Text(
-                //                                 resTojson['todays'][0]['slot'],
-                //                                 style: style))),
-                //                     Container(
-                //                         width: _width * 0.2,
-                //                         child: Center(
-                //                             child: Text(
-                //                                 resTojson['todays'][0]
-                //                                     ['care_name'],
-                //                                 style: style))),
-                //                     Container(
-                //                         width: _width * 0.2,
-                //                         child: Center(
-                //                             child: Text(
-                //                                 resTojson['todays'][0]
-                //                                     ['doctor_name'],
-                //                                 style: style))),
-                //                   ]))
-                //         ])))
+                ? resTojson['queue_number'] != ''
+                    ? Center(
+                        child: Column(
+                          children: [
+                            Container(
+                              height: _height * 0.28,
+                              width: _width * 0.6,
+                              decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  boxShadow: [
+                                    BoxShadow(
+                                        color: Colors.grey,
+                                        offset: Offset(0, 2),
+                                        blurRadius: 2,
+                                        spreadRadius: 1)
+                                  ],
+                                  borderRadius: BorderRadius.circular(15),
+                                  border: Border.all(
+                                      width: 5, color: Color(0xff31D6AA))),
+                              child: Column(children: [
+                                Container(
+                                  child: Column(children: [
+                                    Text(
+                                      context
+                                          .read<DataProvider>()
+                                          .name_hospital,
+                                      style: style5,
+                                    ),
+                                    Text(
+                                      'หมายเลขคิวที่',
+                                      style: TextStyle(
+                                          fontFamily: context
+                                              .read<DataProvider>()
+                                              .fontFamily,
+                                          fontWeight: FontWeight.w500,
+                                          fontSize: _width * 0.03,
+                                          color: Colors.black),
+                                    ),
+                                    Text(resTojson['queue_number'],
+                                        style: TextStyle(
+                                            fontFamily: context
+                                                .read<DataProvider>()
+                                                .fontFamily,
+                                            fontWeight: FontWeight.w500,
+                                            fontSize: _width * 0.04,
+                                            color: Colors.black))
+                                  ]),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.all(15.0),
+                                  child: Container(
+                                    child: Row(
+                                      children: [
+                                        Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Text('Doctor :', style: style4),
+                                            Text('Care    :', style: style4)
+                                          ],
+                                        ),
+                                        Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                                "${resTojson['personal']['first_name']} ${resTojson['personal']['last_name']}",
+                                                style: style4),
+                                            Text(
+                                                "${resTojson['todays'][0]['care_name']} / ${resTojson['todays'][0]['slot']}",
+                                                style: style4)
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                                SizedBox(height: _height * 0.01),
+                                Container(
+                                  width: _width * 0.6,
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceAround,
+                                    children: [
+                                      Text('height', style: style4),
+                                      Text('weight', style: style4),
+                                      Text('temp', style: style4),
+                                      Text('sys', style: style4),
+                                      Text('dia', style: style4),
+                                      Text('spo2', style: style4),
+                                    ],
+                                  ),
+                                )
+                              ]),
+                            ),
+                            SizedBox(height: _height * 0.01),
+                            ButtonPrintQueue()
+                          ],
+                        ),
+                      )
+                    : Container(
+                        child: Center(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Container(
+                                height: _width * 0.2,
+                                width: _width * 0.2,
+                                child: Image.asset(
+                                  'assets/sdbz.png',
+                                  fit: BoxFit.fill,
+                                ),
+                              ),
+                              Text('ท่านมีกำหนดนัดหมายวันนี้',
+                                  style: styletext5),
+                              SizedBox(height: _height * 0.005),
+                              Container(
+                                //   height: _height * 0.07,
+                                width: _width * 0.5,
+                                decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    boxShadow: [
+                                      BoxShadow(
+                                          color: Colors.grey,
+                                          offset: Offset(0, 2),
+                                          blurRadius: 2,
+                                          spreadRadius: 1)
+                                    ],
+                                    borderRadius: BorderRadius.circular(15),
+                                    border: Border.all(
+                                        width: 5, color: Color(0xff31D6AA))),
+                                child: Padding(
+                                  padding: const EdgeInsets.all(5.0),
+                                  child: Row(children: [
+                                    Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceAround,
+                                      children: [
+                                        Text('Doctor :', style: style3),
+                                        Text('Date   :', style: style3),
+                                        Text('Care   :', style: style3)
+                                      ],
+                                    ),
+                                    Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Text(
+                                            resTojson['todays'][0]
+                                                ['doctor_name'],
+                                            style: style3),
+                                        Text(resTojson['todays'][0]['date'],
+                                            style: style3),
+                                        Text(
+                                            "${resTojson['todays'][0]['care_name']}[${resTojson['todays'][0]['slot']}]",
+                                            style: style3),
+                                      ],
+                                    )
+                                  ]),
+                                ),
+                              ),
+                              SizedBox(height: _height * 0.005),
+                              ButtonQueue()
+                            ],
+                          ),
+                        ),
+                      )
                 : Container(
                     child: Center(
                       child: Column(
@@ -2029,18 +2630,467 @@ class _BoxToDayState extends State<BoxToDay> {
                               fit: BoxFit.fill,
                             ),
                           ),
-
                           Text('วันนี้ท่านไม่มีกำหนดนัดหมาย',
                               style: styletext2),
                           SizedBox(
                             height: _height * 0.01,
                           ),
-                          //  ButtonAddAppointToday()
+                          ButtonAddAppointToday()
                         ],
                       ),
                     ),
                   )
             : Container());
+  }
+}
+
+class ButtonPrintQueue extends StatefulWidget {
+  const ButtonPrintQueue({super.key});
+
+  @override
+  State<ButtonPrintQueue> createState() => _ButtonPrintQueueState();
+}
+
+class _ButtonPrintQueueState extends State<ButtonPrintQueue> {
+  var resTojson;
+
+  DateTime dateTime = DateTime.parse('0000-00-00 00:00');
+  String datatime = "";
+  ESMPrinter? printer;
+  var devices = <BluetoothPrinter>[];
+  List default_deivces = [];
+  BluetoothPrinter? selectedPrinter;
+  String height = '';
+  String weight = '';
+  String temp = '';
+  String bp_sys = '';
+  String bp_dia = '';
+  String spo2 = '';
+  bool ontap = false;
+
+  Future<void> checkt_queue() async {
+    var url = Uri.parse('${context.read<DataProvider>().platfromURL}/check_q');
+    var res = await http.post(url, body: {
+      'care_unit_id': context.read<DataProvider>().care_unit_id,
+      'public_id': context.read<DataProvider>().id,
+    });
+    setState(() {
+      resTojson = json.decode(res.body);
+      print(resTojson);
+      Deviceprint();
+    });
+  }
+
+  void selectDevice(BluetoothPrinter device) async {
+    if (selectedPrinter != null) {
+      if ((device.address != selectedPrinter!.address) ||
+          (device.typePrinter == PrinterType.usb &&
+              selectedPrinter!.vendorId != device.vendorId)) {
+        await PrinterManager.instance
+            .disconnect(type: selectedPrinter!.typePrinter);
+      }
+    }
+
+    selectedPrinter = device;
+    // setState(() {});
+  }
+
+  void Deviceprint() {
+    debugPrint('call print test');
+
+    debugPrint("selectedPrinter = ${selectedPrinter}");
+    print("selectedPrinter = ${selectedPrinter}");
+    if (selectedPrinter == null) {
+      for (final device in devices) {
+        var vendor_id = device.vendorId;
+        var product_id = device.productId;
+        debugPrint('scan for ${vendor_id} ${product_id}');
+        if (default_deivces != null) {
+          for (final s in default_deivces) {
+            if (s['vendor_id'] == vendor_id && s['product_id'] == product_id) {
+              debugPrint('found ');
+              selectDevice(device);
+            }
+          }
+        }
+      }
+    }
+    debugPrint("selectDevice = ${selectDevice}");
+    print("selectDevice = ${selectDevice}");
+    if (selectDevice != null) {
+      print('resTojson = ${resTojson['health_records'].length}');
+      if (resTojson['health_records'].length != 0) {
+        setState(() {
+          resTojson['health_records'][0]['height'] == null
+              ? height = ''
+              : height = resTojson['health_records'][0]['height'];
+          resTojson['health_records'][0]['weight'] == null
+              ? weight = ''
+              : weight = resTojson['health_records'][0]['weight'];
+          resTojson['health_records'][0]['temp'] == null
+              ? temp = ''
+              : temp = resTojson['health_records'][0]['temp'];
+          resTojson['health_records'][0]['bp_sys'] == null
+              ? bp_sys = ''
+              : bp_sys = resTojson['health_records'][0]['bp_sys'];
+          resTojson['health_records'][0]['bp_dia'] == null
+              ? bp_dia = ''
+              : bp_dia = resTojson['health_records'][0]['bp_dia'];
+          resTojson['health_records'][0]['spo2'] == null
+              ? spo2 = ''
+              : spo2 = resTojson['health_records'][0]['spo2'];
+        });
+        printqueue();
+      } else {
+        printqueue();
+      }
+    }
+  }
+
+  void printqueue() async {
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Container(
+            width: MediaQuery.of(context).size.width,
+            child: Center(
+                child: Text(
+              'ปริ้นผลตรวจ',
+              style: TextStyle(
+                  fontFamily: context.read<DataProvider>().fontFamily,
+                  fontSize: MediaQuery.of(context).size.width * 0.03),
+            )))));
+    List<int> bytes = [];
+
+    // Xprinter XP-N160I
+    final profile = await CapabilityProfile.load(name: 'XP-N160I');
+
+    // PaperSize.mm80 or PaperSize.mm58
+    final generator = Generator(PaperSize.mm58, profile);
+    // bytes += generator.setGlobalCodeTable('CP1252');
+    bytes += generator.text(context.read<DataProvider>().name_hospital,
+        styles: const PosStyles(align: PosAlign.center));
+
+    // bytes += generator.text('Queue',
+    //     styles: const PosStyles(
+    //         align: PosAlign.center,
+    //         width: PosTextSize.size2,
+    //         height: PosTextSize.size2,
+    //         fontType: PosFontType.fontA));
+    bytes += generator.text('');
+    bytes += generator.text("Q ${resTojson['queue_number']}",
+        styles: const PosStyles(
+            align: PosAlign.center,
+            width: PosTextSize.size3,
+            height: PosTextSize.size3,
+            fontType: PosFontType.fontA));
+    bytes += generator.text('\n');
+    bytes += generator.text('Doctor :  ');
+    bytes += generator.text(
+        'Care   :  ${resTojson['todays'][0]['care_name']} / ( ${resTojson['todays'][0]['slot']} )');
+    bytes += generator.text('\n');
+    bytes += generator.text('Health Information',
+        styles: const PosStyles(align: PosAlign.center));
+    bytes += generator.row([
+      PosColumn(
+          width: 2,
+          text: 'height',
+          styles: const PosStyles(align: PosAlign.center, codeTable: 'CP1252')),
+      PosColumn(
+          width: 2,
+          text: 'weight',
+          styles: const PosStyles(align: PosAlign.center, codeTable: 'CP1252')),
+      PosColumn(
+          width: 2,
+          text: 'temp',
+          styles: const PosStyles(align: PosAlign.center, codeTable: 'CP1252')),
+      PosColumn(
+          width: 2,
+          text: 'sys',
+          styles: const PosStyles(align: PosAlign.center, codeTable: 'CP1252')),
+      PosColumn(
+          width: 2,
+          text: 'dia',
+          styles: const PosStyles(align: PosAlign.center, codeTable: 'CP1252')),
+      PosColumn(
+          width: 2,
+          text: 'spo2',
+          styles: const PosStyles(align: PosAlign.center, codeTable: 'CP1252')),
+    ]);
+    bytes += generator.row([
+      PosColumn(
+          width: 2,
+          text: '${height}',
+          styles: const PosStyles(align: PosAlign.center, codeTable: 'CP1252')),
+      PosColumn(
+          width: 2,
+          text: '${weight}',
+          styles: const PosStyles(align: PosAlign.center, codeTable: 'CP1252')),
+      PosColumn(
+          width: 2,
+          text: '${temp}',
+          styles: const PosStyles(align: PosAlign.center, codeTable: 'CP1252')),
+      PosColumn(
+          width: 2,
+          text: '${bp_sys}',
+          styles: const PosStyles(align: PosAlign.center, codeTable: 'CP1252')),
+      PosColumn(
+          width: 2,
+          text: '${bp_dia}',
+          styles: const PosStyles(align: PosAlign.center, codeTable: 'CP1252')),
+      PosColumn(
+          width: 2,
+          text: '$spo2',
+          styles: const PosStyles(align: PosAlign.center, codeTable: 'CP1252')),
+    ]);
+    // bytes += generator.text(
+    //     '${resTojson['personal']['first_name']}   ${resTojson['personal']['last_name']}',
+    //     styles: const PosStyles(align: PosAlign.center, codeTable: '255'));
+    //  bytes += generator.text('$datatime');
+    printer?.printTest(bytes);
+    // printer?.printEscPos(bytes, generator);
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    checkt_queue();
+    printer = ESMPrinter([
+      {'vendor_id': '1137', 'product_id': '85'}
+    ]);
+
+    setState(() {
+      dateTime = DateTime.now();
+      datatime = "${dateTime.hour}: " +
+          "${dateTime.minute}  ${dateTime.day}/${dateTime.month}/${dateTime.year}";
+    });
+    super.initState();
+  }
+
+  BoxDecoration boxDecorate = BoxDecoration(
+      color: Color(0xff31D6AA),
+      borderRadius: BorderRadius.circular(15),
+      boxShadow: [
+        BoxShadow(
+          color: Colors.grey,
+          offset: Offset(0, 4),
+          blurRadius: 5,
+        )
+      ]);
+
+  @override
+  Widget build(BuildContext context) {
+    double _width = MediaQuery.of(context).size.width;
+    double _height = MediaQuery.of(context).size.height;
+    TextStyle style = TextStyle(
+        fontWeight: FontWeight.w500,
+        fontFamily: context.read<DataProvider>().fontFamily,
+        fontSize: _width * 0.03,
+        color: Colors.white);
+    return ontap == false
+        ? GestureDetector(
+            onTap: checkt_queue,
+            child: Container(
+                height: _height * 0.05,
+                width: _width * 0.3,
+                decoration: boxDecorate,
+                child: Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Image.asset('assets/jhb.png'),
+                      Text('  ปริ้นคิว', style: style)
+                    ])))
+        : Container(
+            height: 0.06, width: 0.35, child: CircularProgressIndicator());
+  }
+}
+
+class ButtonQueue extends StatefulWidget {
+  const ButtonQueue({super.key});
+
+  @override
+  State<ButtonQueue> createState() => _ButtonQueueState();
+}
+
+class _ButtonQueueState extends State<ButtonQueue> {
+  bool ontap = false;
+  void addQueue() async {
+    var url = Uri.parse('${context.read<DataProvider>().platfromURL}/get_q');
+    var res = await http.post(url, body: {
+      'public_id': context.read<DataProvider>().id,
+      'care_unit_id': context.read<DataProvider>().care_unit_id
+    });
+
+    var resTojson = json.decode(res.body);
+    if (res.statusCode == 200) {
+      if (resTojson['message'] == 'success') {
+        setState(() {
+          Future.delayed(const Duration(seconds: 2), () {
+            setState(() {
+              ontap == false;
+            });
+            Navigator.pop(context);
+          });
+          Future.delayed(const Duration(seconds: 2), () {
+            Get.offNamed('user_information');
+          });
+        });
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            content: Container(
+                width: MediaQuery.of(context).size.width,
+                child: Center(
+                    child: Text(
+                  'รับคิวสำเร็จ',
+                  style: TextStyle(
+                      fontFamily: context.read<DataProvider>().fontFamily,
+                      fontSize: MediaQuery.of(context).size.width * 0.03),
+                )))));
+      }
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Container(
+              width: MediaQuery.of(context).size.width,
+              child: Center(
+                  child: Text(
+                'รับคิวไม่สำเร็จ',
+                style: TextStyle(
+                    fontFamily: context.read<DataProvider>().fontFamily,
+                    fontSize: MediaQuery.of(context).size.width * 0.03),
+              )))));
+    }
+  }
+
+  void checkt_queue() async {
+    setState(() {
+      ontap == true;
+    });
+    var url = Uri.parse('${context.read<DataProvider>().platfromURL}/check_q');
+    var res = await http.post(url, body: {
+      'public_id': context.read<DataProvider>().id,
+      'care_unit_id': context.read<DataProvider>().care_unit_id
+    });
+    var resTojson = json.decode(res.body);
+    if (res.statusCode == 200) {
+      if (resTojson['health_records'].length != 0) {
+        addQueue();
+      } else {
+        showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return Container(
+                child: Center(
+                  child: Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(15),
+                      color: Colors.white,
+                    ),
+                    height: 700,
+                    width: 600,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Image.asset('assets/sbng.png'),
+                        Text(
+                          'ท่านยังไม่ได้ตรวจสุขภาพ ต้องการตรวจสุขภาพหรือไม่',
+                          style: TextStyle(
+                              color: Color(0xffFFA800),
+                              fontSize: 30,
+                              fontFamily:
+                                  context.read<DataProvider>().fontFamily),
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            GestureDetector(
+                                onTap: () {
+                                  Get.offAllNamed('healthrecord');
+                                },
+                                child: BoxWidetdew(
+                                    fontSize: 0.04,
+                                    radius: 15.0,
+                                    color: Color(0xff00A3FF),
+                                    height: 0.04,
+                                    width: 0.2,
+                                    text: 'ยืนยัน',
+                                    textcolor: Colors.white)),
+                            SizedBox(
+                              width: 10,
+                            ),
+                            GestureDetector(
+                                onTap: () {
+                                  Navigator.pop(context);
+                                  addQueue();
+                                },
+                                child: BoxWidetdew(
+                                    fontSize: 0.04,
+                                    radius: 15.0,
+                                    colorborder: Colors.red,
+                                    color: Color.fromARGB(255, 255, 255, 255),
+                                    height: 0.04,
+                                    width: 0.2,
+                                    text: 'ข้าม',
+                                    textcolor: Colors.red)),
+                          ],
+                        )
+                      ],
+                    ),
+                  ),
+                ),
+              );
+            });
+      }
+    } else {
+      setState(() {
+        ontap == false;
+      });
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Container(
+              width: MediaQuery.of(context).size.width,
+              child: Center(
+                  child: Text(
+                'ไม่สำเร็จ',
+                style: TextStyle(
+                    fontFamily: context.read<DataProvider>().fontFamily,
+                    fontSize: MediaQuery.of(context).size.width * 0.03),
+              )))));
+    }
+  }
+
+  BoxDecoration boxDecorate = BoxDecoration(
+      color: Color(0xff31D6AA),
+      borderRadius: BorderRadius.circular(15),
+      boxShadow: [
+        BoxShadow(
+          color: Colors.grey,
+          offset: Offset(0, 4),
+          blurRadius: 5,
+        )
+      ]);
+  @override
+  Widget build(BuildContext context) {
+    double _width = MediaQuery.of(context).size.width;
+    double _height = MediaQuery.of(context).size.height;
+    TextStyle style = TextStyle(
+        fontWeight: FontWeight.w500,
+        fontFamily: context.read<DataProvider>().fontFamily,
+        fontSize: _width * 0.03,
+        color: Colors.white);
+    return ontap == false
+        ? GestureDetector(
+            onTap: checkt_queue,
+            //  () {
+            //   //    Get.toNamed('healthrecord');
+            // },
+            child: Container(
+                height: _height * 0.05,
+                width: _width * 0.3,
+                decoration: boxDecorate,
+                child: Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Image.asset('assets/jhb.png'),
+                      Text('  รับคิว', style: style)
+                    ])))
+        : Container(
+            height: 0.06, width: 0.35, child: CircularProgressIndicator());
   }
 }
 
@@ -2061,6 +3111,14 @@ class _ButtonAddAppointTodayState extends State<ButtonAddAppointToday> {
       'care_unit_id': context.read<DataProvider>().care_unit_id
     });
     if (res.statusCode == 200) {
+      setState(() {
+        Future.delayed(const Duration(seconds: 2), () {
+          Navigator.pop(context);
+        });
+        Future.delayed(const Duration(seconds: 2), () {
+          Get.offNamed('user_information');
+        });
+      });
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           content: Container(
               width: MediaQuery.of(context).size.width,
@@ -2074,8 +3132,6 @@ class _ButtonAddAppointTodayState extends State<ButtonAddAppointToday> {
 
       setState(() {
         ontap == false;
-        Navigator.pop(context);
-        Get.offNamed('user_information');
       });
     } else {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
@@ -2091,8 +3147,25 @@ class _ButtonAddAppointTodayState extends State<ButtonAddAppointToday> {
     }
   }
 
+  BoxDecoration boxDecorate = BoxDecoration(
+      color: Color(0xff31D6AA),
+      borderRadius: BorderRadius.circular(15),
+      boxShadow: [
+        BoxShadow(
+          color: Colors.grey,
+          offset: Offset(0, 4),
+          blurRadius: 5,
+        )
+      ]);
   @override
   Widget build(BuildContext context) {
+    double _width = MediaQuery.of(context).size.width;
+    double _height = MediaQuery.of(context).size.height;
+    TextStyle style = TextStyle(
+        fontWeight: FontWeight.w500,
+        fontFamily: context.read<DataProvider>().fontFamily,
+        fontSize: _width * 0.03,
+        color: Colors.white);
     return ontap == false
         ? GestureDetector(
             onTap: () {
@@ -2102,17 +3175,13 @@ class _ButtonAddAppointTodayState extends State<ButtonAddAppointToday> {
               addAppointToday();
             },
             child: Container(
-                child: Center(
-                    child: BoxWidetdew(
-              height: 0.06,
-              width: 0.35,
-              color: Colors.blue,
-              radius: 5.0,
-              fontSize: 0.04,
-              text: 'เพิ่มนัดหมาย',
-              textcolor: Colors.white,
-            ))),
-          )
+                height: _height * 0.05,
+                width: _width * 0.3,
+                decoration: boxDecorate,
+                child: Row(children: [
+                  Image.asset('assets/erbhjr.png'),
+                  Text('เพิ่มนัดหมาย', style: style)
+                ])))
         : Container(
             height: 0.06, width: 0.35, child: CircularProgressIndicator());
   }
@@ -2153,6 +3222,8 @@ class _BoxStatusinformState extends State<BoxStatusinform> {
   String? status;
   Timer? _timer;
   var resTojson;
+  var resTojson2;
+
   Future<void> check_status() async {
     var url = Uri.parse(
         '${context.read<DataProvider>().platfromURL}/get_video_status');
@@ -2164,10 +3235,24 @@ class _BoxStatusinformState extends State<BoxStatusinform> {
     if (resTojson['message'] == 'finished' ||
         resTojson['message'] == 'completed') {
       setState(() {
+        print('completedเเล้ว');
         status = resTojson['message'];
         stop();
+        get_Examination();
       });
     }
+  }
+
+  void get_Examination() async {
+    var url = Uri.parse(
+        'https://emr-life.com/clinic_master/clinic/Api/get_doctor_exam');
+    var res = await http.post(url, body: {
+      'public_id': context.read<DataProvider>().id,
+    });
+    resTojson2 = json.decode(res.body);
+
+    print('--------------------$resTojson2');
+    setState(() {});
   }
 
   void lop() {
@@ -2187,6 +3272,7 @@ class _BoxStatusinformState extends State<BoxStatusinform> {
 
   @override
   void initState() {
+    get_Examination();
     status = widget.status;
     if (status == 'end') {
       lop();
@@ -2195,12 +3281,130 @@ class _BoxStatusinformState extends State<BoxStatusinform> {
     super.initState();
   }
 
+  String datatime = "";
+  ESMPrinter? printer;
+
+  String doctor_note = '--';
+  String dx = '--';
+  BluetoothPrinter? selectedPrinter;
+  bool finished_check_status = false;
+  var devices = <BluetoothPrinter>[];
+  List default_deivces = [];
+  Future<void> get_finished() async {
+    var url =
+        Uri.parse('${context.read<DataProvider>().platfromURL}/finish_appoint');
+    var res = await http.post(url, body: {
+      'public_id': context.read<DataProvider>().id,
+    });
+    setState(() {
+      finished_check_status = false;
+      Timer(Duration(milliseconds: 500), () {
+        Navigator.pop(context);
+      });
+      Timer(Duration(milliseconds: 600), () {
+        Get.offNamed('user_information');
+      });
+    });
+  }
+
+  Future<void> get_exam() async {
+    var url = Uri.parse(
+        '${context.read<DataProvider>().platfromURL}/get_doctor_exam');
+    var res = await http.post(url, body: {
+      'public_id': context.read<DataProvider>().id,
+    });
+    setState(() {
+      resTojson2 = json.decode(res.body);
+      doctor_note = resTojson2['data']['doctor_note'];
+      dx = resTojson2['data']['dx'];
+      if (resTojson2 != null) {
+        Deviceprint();
+        get_finished();
+      }
+    });
+  }
+
+  void Deviceprint() {
+    debugPrint('call print test');
+    if (selectedPrinter == null) {
+      for (final device in devices) {
+        var vendor_id = device.vendorId;
+        var product_id = device.productId;
+        debugPrint('scan for ${vendor_id} ${product_id}');
+        if (default_deivces != null) {
+          for (final s in default_deivces) {
+            if (s['vendor_id'] == vendor_id && s['product_id'] == product_id) {
+              debugPrint('found ');
+              selectDevice(device);
+            }
+          }
+        }
+      }
+    }
+
+    if (selectDevice != null) {
+      printexam();
+    }
+  }
+
+  void selectDevice(BluetoothPrinter device) async {
+    if (selectedPrinter != null) {
+      if ((device.address != selectedPrinter!.address) ||
+          (device.typePrinter == PrinterType.usb &&
+              selectedPrinter!.vendorId != device.vendorId)) {
+        await PrinterManager.instance
+            .disconnect(type: selectedPrinter!.typePrinter);
+      }
+    }
+    selectedPrinter = device;
+  }
+
+  void printexam() async {
+    List<int> bytes = [];
+    final profile = await CapabilityProfile.load(name: 'XP-N160I');
+    final generator = Generator(PaperSize.mm58, profile);
+    bytes += generator.text(context.read<DataProvider>().name_hospital,
+        styles: const PosStyles(align: PosAlign.center));
+    // bytes += generator.text("Examination",
+    //     styles: const PosStyles(
+    //         align: PosAlign.center,
+    //         width: PosTextSize.size3,
+    //         height: PosTextSize.size3,
+    //         fontType: PosFontType.fontA));
+    bytes += generator.text('Examination',
+        styles: const PosStyles(
+            width: PosTextSize.size1, height: PosTextSize.size1));
+    bytes += generator.text('\n');
+    bytes += generator.text('Doctor  :  pairot tanyajasesn');
+    bytes += generator.text('Results :  ${dx}');
+    bytes += generator.text('        :  ${doctor_note}');
+    printer?.printTest(bytes);
+  }
+
+  void finished() async {
+    print('finished');
+    printer = ESMPrinter([
+      {'vendor_id': '1137', 'product_id': '85'}
+    ]);
+    get_exam();
+    setState(() {
+      var dateTime = DateTime.now();
+      datatime = "${dateTime.hour}: " +
+          "${dateTime.minute}  ${dateTime.day}/${dateTime.month}/${dateTime.year}";
+    });
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     double _width = MediaQuery.of(context).size.width;
     double _height = MediaQuery.of(context).size.height;
     TextStyle style = TextStyle(
-        color: Colors.green,
+        color: Color(0xff76FFD5),
+        fontFamily: context.read<DataProvider>().fontFamily,
+        fontSize: _width * 0.04);
+    TextStyle style2 = TextStyle(
+        color: Color(0xff1B6286),
         fontFamily: context.read<DataProvider>().fontFamily,
         fontSize: _width * 0.04);
     return widget.status != null
@@ -2233,41 +3437,195 @@ class _BoxStatusinformState extends State<BoxStatusinform> {
                   )
                 : status == 'end'
                     ? Container(
-                        child: Column(
-                        children: [
-                          Text('การตรวจเสร็จสิ้นกรุณารอผลตรวจ', style: style),
-                          Container(
-                            width: MediaQuery.of(context).size.width * 0.07,
-                            height: MediaQuery.of(context).size.width * 0.07,
-                            child: CircularProgressIndicator(),
-                          )
-                        ],
-                      ))
+                        child: Center(
+                          child: Container(
+                              height: _height * 0.15,
+                              width: _width * 0.7,
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(10),
+                                  border: Border.all(
+                                      color: Color(0xff76FFD5), width: 8)),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text('การตรวจเสร็จสิ้นกรุณารอผลตรวจ',
+                                      style: style),
+                                  Container(
+                                    width: MediaQuery.of(context).size.width *
+                                        0.07,
+                                    height: MediaQuery.of(context).size.width *
+                                        0.07,
+                                    child: CircularProgressIndicator(
+                                        color: Color(0xff76FFD5)),
+                                  )
+                                ],
+                              )),
+                        ),
+                      )
                     : status == 'completed'
                         ? Container(
-                            child: Column(
+                            height: _height * 0.5,
+                            // color: Colors.red,
+                            child: ListView(
                               children: [
-                                Text('รับผลตรวจ', style: style),
-                                GestureDetector(
-                                  onTap: () {
-                                    //api finished
-                                    Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) =>
-                                                Print_Exam()));
-                                  },
-                                  child: BoxWidetdew(
-                                    radius: 2.0,
-                                    color: Colors.green,
-                                    width: 0.3,
-                                    height: 0.05,
-                                    text: 'ปริ้นผลตรวจ',
-                                    textcolor: Colors.white,
-                                    fontWeight: FontWeight.w500,
-                                    fontSize: 0.04,
+                                Container(
+                                  child: Column(
+                                    children: [
+                                      Text('รับผลตรวจ', style: style),
+                                      resTojson2 != null
+                                          ? resTojson2['data'] != null
+                                              ? Container(
+                                                  width: _width * 0.7,
+                                                  decoration: BoxDecoration(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              10),
+                                                      border: Border.all(
+                                                          color:
+                                                              Color(0xff76FFD5),
+                                                          width: 8)),
+                                                  child: Padding(
+                                                    padding:
+                                                        const EdgeInsets.all(
+                                                            8.0),
+                                                    child: Column(
+                                                      children: [
+                                                        Text(
+                                                          context
+                                                              .read<
+                                                                  DataProvider>()
+                                                              .name_hospital,
+                                                          style: style2,
+                                                        ),
+                                                        Row(
+                                                          children: [
+                                                            Text('Examination',
+                                                                style: style2),
+                                                          ],
+                                                        ),
+                                                        SizedBox(
+                                                            height:
+                                                                _height * 0.01),
+                                                        Container(
+                                                          child: Row(
+                                                            crossAxisAlignment:
+                                                                CrossAxisAlignment
+                                                                    .start,
+                                                            children: [
+                                                              Container(
+                                                                child: Column(
+                                                                  mainAxisAlignment:
+                                                                      MainAxisAlignment
+                                                                          .start,
+                                                                  children: [
+                                                                    Text(
+                                                                        'Doctor',
+                                                                        style:
+                                                                            style2),
+                                                                    Text(
+                                                                        'Results',
+                                                                        style:
+                                                                            style2)
+                                                                  ],
+                                                                ),
+                                                              ),
+                                                              SizedBox(
+                                                                width: _width *
+                                                                    0.02,
+                                                              ),
+                                                              Container(
+                                                                child: Column(
+                                                                  crossAxisAlignment:
+                                                                      CrossAxisAlignment
+                                                                          .start,
+                                                                  children: [
+                                                                    Text(': --',
+                                                                        style:
+                                                                            style2),
+                                                                    Container(
+                                                                      width:
+                                                                          _width *
+                                                                              0.5,
+                                                                      child: Text(
+                                                                          ": ${resTojson2['data']['doctor_note']}",
+                                                                          style:
+                                                                              style2),
+                                                                    ),
+                                                                    Container(
+                                                                      width:
+                                                                          _width *
+                                                                              0.5,
+                                                                      child: Text(
+                                                                          ": ${resTojson2['data']['dx']}",
+                                                                          style:
+                                                                              style2),
+                                                                    )
+                                                                  ],
+                                                                ),
+                                                              )
+                                                            ],
+                                                          ),
+                                                        )
+                                                      ],
+                                                    ),
+                                                  ),
+                                                )
+                                              : Container()
+                                          : Container(
+                                              width: MediaQuery.of(context)
+                                                      .size
+                                                      .width *
+                                                  0.05,
+                                              height: MediaQuery.of(context)
+                                                      .size
+                                                      .width *
+                                                  0.05,
+                                              child: CircularProgressIndicator(
+                                                  color: Color(0xff76FFD5)),
+                                            ),
+                                      SizedBox(height: _height * 0.01),
+                                      finished_check_status != true
+                                          ? GestureDetector(
+                                              onTap: () {
+                                                setState(() {
+                                                  finished_check_status = true;
+                                                  // finished();
+                                                  get_finished();
+                                                });
+
+                                                // Navigator.push(
+                                                //     context,
+                                                //     MaterialPageRoute(
+                                                //         builder: (context) =>
+                                                //             Print_Exam()));
+                                              },
+                                              child: BoxWidetdew(
+                                                radius: 2.0,
+                                                color: Color(0xff76FFD5),
+                                                width: 0.3,
+                                                height: 0.05,
+                                                text: 'ปริ้นผลตรวจ',
+                                                textcolor: Colors.white,
+                                                fontWeight: FontWeight.w500,
+                                                fontSize: 0.04,
+                                              ),
+                                            )
+                                          : Container(
+                                              width: MediaQuery.of(context)
+                                                      .size
+                                                      .width *
+                                                  0.05,
+                                              height: MediaQuery.of(context)
+                                                      .size
+                                                      .width *
+                                                  0.05,
+                                              child: CircularProgressIndicator(
+                                                color: Color(0xff76FFD5),
+                                              ),
+                                            ),
+                                    ],
                                   ),
-                                )
+                                ),
                               ],
                             ),
                           )
@@ -2275,7 +3633,28 @@ class _BoxStatusinformState extends State<BoxStatusinform> {
                             ? Container(
                                 child: Column(
                                 children: [
-                                  Text('รายการวันนี้เสร็จสิ้น', style: style),
+                                  Container(
+                                    child: Center(
+                                      child: Container(
+                                          height: _height * 0.15,
+                                          width: _width * 0.7,
+                                          decoration: BoxDecoration(
+                                              borderRadius:
+                                                  BorderRadius.circular(10),
+                                              border: Border.all(
+                                                  color: Color(0xff76FFD5),
+                                                  width: 8)),
+                                          child: Column(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: [
+                                              Text('รายการวันนี้เสร็จสิ้นเเล้ว',
+                                                  style: style),
+                                            ],
+                                          )),
+                                    ),
+                                  ),
+                                  SizedBox(height: _height * 0.01),
                                   GestureDetector(
                                     onTap: () {
                                       Navigator.push(
@@ -2286,7 +3665,7 @@ class _BoxStatusinformState extends State<BoxStatusinform> {
                                     },
                                     child: BoxWidetdew(
                                       radius: 2.0,
-                                      color: Colors.green,
+                                      color: Color(0xff76FFD5),
                                       width: 0.3,
                                       height: 0.05,
                                       text: 'ปริ้นผลตรวจซ้ำ',

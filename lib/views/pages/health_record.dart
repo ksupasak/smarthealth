@@ -345,148 +345,156 @@ class _HealthRecordState extends State<HealthRecord> {
 
     return SafeArea(
       child: Scaffold(
-          body: Stack(children: [
-        backgrund(),
-        Positioned(
-            child: ListView(children: [
-          BoxTime(),
-          WidgetNameHospital(),
-          Container(height: _height * 0.01),
-          BoxDecorate(
-              color: Color.fromARGB(255, 43, 179, 161),
-              child: InformationCard(
-                  dataidcard: context.read<DataProvider>().dataidcard)),
-          //   SizedBox(height: heightsizedbox),
-          // Container(
-          //   width: _width,
-          //   child: Row(
-          //     mainAxisAlignment: MainAxisAlignment.spaceAround,
-          //     children: [
-          //       SizedBox(width: _width * 0.2),
-          //       GestureDetector(
-          //         onTap: () {
-          //           setState(() {
-          //             if (ble == true) {
-          //               ble = false;
-          //               stop2();
-          //             } else {
-          //               ble = true;
-          //               restartdata();
-          //             }
-          //           });
-          //         },
-          //         child: Container(
-          //           width: _width * 0.2,
-          //           height: _height * 0.04,
-          //           child: ble == true
-          //               ? Icon(Icons.abc,
-          //                   color: Colors.green, size: _width * 0.12)
-          //               : Icon(Icons.abc,
-          //                   color: Colors.black, size: _width * 0.12),
-          //         ),
-          //       )
-          //     ],
-          //   ),
-          // ),
-          SizedBox(height: heightsizedbox),
-          BoxDecorate(
-
-              //  color: Color.fromARGB(255, 0, 0, 0),
-              child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                BoxRecord(texthead: 'TEMP', keyvavlue: temp),
-                Line(height: heightline, color: teamcolor),
-                BoxRecord(texthead: 'WEIGHT', keyvavlue: weight),
-                Line(height: heightline, color: teamcolor),
-                BoxRecord(texthead: 'height', keyvavlue: height)
-              ])),
-          SizedBox(height: heightsizedbox),
-          BoxDecorate(
-              //   color: Colors.white,
-              child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                BoxRecord(texthead: 'SYS', keyvavlue: sys),
-                Line(height: heightline, color: teamcolor),
-                BoxRecord(texthead: 'DIA', keyvavlue: dia),
-                Line(height: heightline, color: teamcolor),
-                BoxRecord(texthead: 'PULSE', keyvavlue: pulse)
-              ])),
-          SizedBox(height: heightsizedbox),
-          BoxDecorate(
-              //   color: Colors.white,
-              child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                BoxRecord(texthead: 'PR', keyvavlue: pr),
-                Line(height: heightline, color: teamcolor),
-                BoxRecord(texthead: 'SPO2', keyvavlue: spo2),
-              ])),
-          SizedBox(height: heightsizedbox),
-          BoxDecorate(
-//color: Colors.white,
-            child: Column(
-              children: [
-                Text('ค่าน้ำตาล',
-                    style: TextStyle(
-                        fontFamily: context.read<DataProvider>().fontFamily,
-                        fontSize: _width * 0.04,
-                        color: teamcolor)),
-                SizedBox(height: heightsizedbox),
-                Row(
+        body: Stack(children: [
+          backgrund(),
+          Positioned(
+              child: ListView(children: [
+            BoxTime(),
+            BoxDecorate2(
+                color: Color.fromARGB(255, 43, 179, 161),
+                child: InformationCard(
+                    dataidcard: context.read<DataProvider>().dataidcard)),
+            SizedBox(height: heightsizedbox),
+            BoxDecorate2(
+                child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
-                      BoxRecord(texthead: 'FBS', keyvavlue: fbs),
-                      Line(height: heightline, color: teamcolor),
-                      BoxRecord(texthead: 'SI', keyvavlue: si),
-                      Line(height: heightline, color: teamcolor),
-                      BoxRecord(texthead: 'URIC', keyvavlue: uric)
-                    ]),
-              ],
-            ),
-          ),
-          SizedBox(height: heightsizedbox),
-          Center(
-            child: prevent == false
-                ? GestureDetector(
-                    onTap: () {
-                      context.read<Datafunction>().playsound();
+                  BoxRecord(
+                      image: 'assets/shr.png',
+                      texthead: 'height',
+                      keyvavlue: height),
+                  Line(height: heightline, color: teamcolor),
+                  BoxRecord(
+                      image: 'assets/srhnate.png',
+                      texthead: 'WEIGHT',
+                      keyvavlue: weight),
+                ])),
+            SizedBox(height: heightsizedbox),
+            BoxDecorate2(
+                child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                  BoxRecord(
+                      image: 'assets/jhv.png', texthead: 'SYS', keyvavlue: sys),
+                  Line(height: heightline, color: teamcolor),
+                  BoxRecord(
+                      image: 'assets/jhvkb.png',
+                      texthead: 'DIA',
+                      keyvavlue: dia),
+                  Line(height: heightline, color: teamcolor),
+                  BoxRecord(
+                      image: 'assets/jhbjk;.png',
+                      texthead: 'PULSE',
+                      keyvavlue: pulse)
+                ])),
+            SizedBox(height: heightsizedbox),
+            BoxDecorate2(
+                child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                  BoxRecord(
+                      image: 'assets/jhgh.png',
+                      texthead: 'TEMP',
+                      keyvavlue: temp),
+                  Line(height: heightline, color: teamcolor),
+                  BoxRecord(
+                      image: 'assets/kauo.png',
+                      texthead: 'SPO2',
+                      keyvavlue: spo2),
+                ])),
+            SizedBox(height: heightsizedbox),
+            // BoxDecorate2(
+            //   child: Column(
+            //     children: [
+            //       Text('ค่าน้ำตาล',
+            //           style: TextStyle(
+            //               fontFamily: context.read<DataProvider>().fontFamily,
+            //               fontSize: _width * 0.04,
+            //               color: teamcolor)),
+            //       SizedBox(height: heightsizedbox),
+            //       Row(
+            //           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            //           children: [
+            //             BoxRecord(texthead: 'FBS', keyvavlue: fbs),
+            //             Line(height: heightline, color: teamcolor),
+            //             BoxRecord(texthead: 'SI', keyvavlue: si),
+            //             Line(height: heightline, color: teamcolor),
+            //             BoxRecord(texthead: 'URIC', keyvavlue: uric)
+            //           ]),
+            //     ],
+            //   ),
+            // ),
+            // SizedBox(height: heightsizedbox),
+            Container(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  Container(
+                      height: _height * 0.2,
+                      child: Image.asset('assets/hraej.png')),
+                  SizedBox(height: _height * 0.01),
+                  Container(
+                    child: prevent == false
+                        ? GestureDetector(
+                            onTap: () {
+                              context.read<Datafunction>().playsound();
 
-                      chackrecorddata();
-                    },
-                    child: BoxWidetdew(
-                        height: 0.06,
-                        width: 0.3,
-                        text: 'บันทึก',
-                        fontSize: 0.05,
-                        color: teamcolor,
-                        textcolor: Colors.white),
-                  )
-                : Container(
-                    width: MediaQuery.of(context).size.width * 0.07,
-                    height: MediaQuery.of(context).size.width * 0.07,
-                    child: CircularProgressIndicator(),
+                              chackrecorddata();
+                            },
+                            child: BoxWidetdew(
+                                height: 0.06,
+                                width: 0.3,
+                                text: 'บันทึก',
+                                fontSize: 0.05,
+                                radius: 15.0,
+                                color: Color(0xff31D6AA),
+                                textcolor: Colors.white),
+                          )
+                        : Container(
+                            width: MediaQuery.of(context).size.width * 0.07,
+                            height: MediaQuery.of(context).size.width * 0.07,
+                            child: CircularProgressIndicator(),
+                          ),
                   ),
-          ),
-          SizedBox(height: _height * 0.01),
-          Center(
-              child: GestureDetector(
+                ],
+              ),
+            ),
+          ]))
+        ]),
+        bottomNavigationBar: Container(
+          height: _height * 0.03,
+          child: Row(
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(4.0),
+                child: GestureDetector(
                   onTap: () {
                     stop();
                     context.read<Datafunction>().playsound();
-
-                    //  Navigator.pop(context);
                   },
-                  child: BoxWidetdew(
-                      height: 0.055,
-                      width: 0.25,
-                      fontSize: 0.05,
-                      text: 'กลับ',
-                      color: Colors.red,
-                      textcolor: Colors.white)))
-        ]))
-      ])),
+                  child: Container(
+                    height: _height * 0.025,
+                    width: _width * 0.15,
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10),
+                        border: Border.all(
+                            color: Color.fromARGB(255, 201, 201, 201),
+                            width: _width * 0.002)),
+                    child: Center(
+                        child: Text(
+                      '< ย้อนกลับ',
+                      style: TextStyle(
+                          fontFamily: context.read<DataProvider>().fontFamily,
+                          fontSize: _width * 0.03,
+                          color: Color.fromARGB(255, 201, 201, 201)),
+                    )),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 }
