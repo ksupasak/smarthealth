@@ -399,7 +399,13 @@ class _HomeappState extends State<Homeapp> {
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                BoxID(), //จุดtest3
+                                GestureDetector(
+                                    onTap: () {
+                                      setState(() {
+                                        shownumpad = true;
+                                      });
+                                    },
+                                    child: BoxID()), //จุดtest3
                                 GestureDetector(
                                   onTap: () {
                                     if (shownumpad == false) {

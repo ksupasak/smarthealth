@@ -4,11 +4,13 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
+import 'package:flutter_pos_printer_platform/esc_pos_utils_platform/esc_pos_utils_platform.dart';
 import 'package:get/get.dart';
 import 'package:openvidu_client/openvidu_client.dart';
 import 'package:provider/provider.dart';
 import 'package:smart_health/provider/provider.dart';
 import 'package:smart_health/provider/provider_function.dart';
+import 'package:smart_health/test/esm_printer.dart';
 import 'package:smart_health/views/pages/home.dart';
 import 'package:smart_health/views/pages/videocall.dart';
 import 'package:smart_health/views/ui/widgetdew.dart/widgetdew.dart';
@@ -59,11 +61,13 @@ class _UserInformation2State extends State<UserInformation2> {
   var resTojson2;
   var resTojson;
   String status = '';
+  ESMPrinter? printer;
   bool status2 = false;
   late OpenViduClient _openvidu;
-
+  bool ontap = false;
   PrePareVideo? _prePareVideo;
-
+  String doctor_note = '--';
+  String dx = '--';
   Future<void> checkt_queue() async {
     var url = Uri.parse('${context.read<DataProvider>().platfromURL}/check_q');
     var res = await http.post(url, body: {
@@ -180,10 +184,127 @@ class _UserInformation2State extends State<UserInformation2> {
     });
   }
 
+  Future<void> q() async {
+    if (resTojson['health_records'].length != 0) {
+      print('รับคิวได้');
+      var url = Uri.parse('${context.read<DataProvider>().platfromURL}/get_q');
+      var res = await http.post(url, body: {
+        'public_id': context.read<DataProvider>().id,
+        'care_unit_id': context.read<DataProvider>().care_unit_id
+      });
+      if (res.statusCode == 200) {
+        ontap = false;
+        Future.delayed(const Duration(seconds: 2), () {
+          setState(() {
+            Navigator.pop(context);
+          });
+        });
+        Future.delayed(const Duration(seconds: 2), () {
+          Get.offNamed('user_information');
+        });
+      }
+    } else {
+      print('รับคิวไม่ได้');
+      Get.offNamed('healthrecord');
+    }
+  }
+
+  Future<void> exam() async {
+    var url = Uri.parse(
+        '${context.read<DataProvider>().platfromURL}/get_doctor_exam');
+    var res = await http.post(url, body: {
+      'public_id': context.read<DataProvider>().id,
+    });
+    setState(() {
+      resTojson2 = json.decode(res.body);
+      doctor_note = resTojson2['data']['doctor_note'];
+      dx = resTojson2['data']['dx'];
+      if (resTojson2 != null) {
+        setState(() {
+          ontap = false;
+          printexam();
+        });
+      }
+    });
+  }
+
+  void printexam() async {
+    List<int> bytes = [];
+
+    final profile = await CapabilityProfile.load(name: 'XP-N160I');
+    final generator = Generator(PaperSize.mm58, profile);
+
+    bytes += generator.text(context.read<DataProvider>().name_hospital,
+        styles: const PosStyles(align: PosAlign.center));
+
+    bytes += generator.text('Examination',
+        styles: const PosStyles(
+            width: PosTextSize.size1, height: PosTextSize.size1));
+    bytes += generator.text('\n');
+    bytes += generator.text('Doctor  :  pairot tanyajasesn');
+    bytes += generator.text('Results :  ${dx}');
+    bytes += generator.text('        :  ${doctor_note}');
+    printer?.printTest(bytes);
+  }
+
+  Future<void> printq() async {
+    List<int> bytes = [];
+
+    final profile = await CapabilityProfile.load(name: 'XP-N160I');
+    final generator = Generator(PaperSize.mm58, profile);
+
+    bytes += generator.text(context.read<DataProvider>().name_hospital,
+        styles: const PosStyles(align: PosAlign.center));
+    bytes += generator.text("Q ${resTojson['queue_number']}",
+        styles: const PosStyles(
+            align: PosAlign.center,
+            width: PosTextSize.size3,
+            height: PosTextSize.size3,
+            fontType: PosFontType.fontA));
+    bytes += generator.text('\n');
+    bytes +=
+        generator.text('Doctor :   ${resTojson['todays'][0]['doctor_name']}');
+    bytes += generator.text(
+        'Care   :  ${resTojson['todays'][0]['care_name']} / ( ${resTojson['todays'][0]['slot']} )');
+    bytes += generator.text('\n');
+    bytes += generator.text('Health Information',
+        styles: const PosStyles(align: PosAlign.center));
+    bytes += generator.row([
+      PosColumn(
+          width: 2,
+          text: 'height',
+          styles: const PosStyles(align: PosAlign.center, codeTable: 'CP1252')),
+      PosColumn(
+          width: 2,
+          text: 'weight',
+          styles: const PosStyles(align: PosAlign.center, codeTable: 'CP1252')),
+      PosColumn(
+          width: 2,
+          text: 'temp',
+          styles: const PosStyles(align: PosAlign.center, codeTable: 'CP1252')),
+      PosColumn(
+          width: 2,
+          text: 'sys',
+          styles: const PosStyles(align: PosAlign.center, codeTable: 'CP1252')),
+      PosColumn(
+          width: 2,
+          text: 'dia',
+          styles: const PosStyles(align: PosAlign.center, codeTable: 'CP1252')),
+      PosColumn(
+          width: 2,
+          text: 'spo2',
+          styles: const PosStyles(align: PosAlign.center, codeTable: 'CP1252')),
+    ]);
+    ontap = false;
+    printer?.printTest(bytes);
+  }
+
   @override
   void initState() {
     checkt_queue();
-
+    printer = ESMPrinter([
+      {'vendor_id': '1137', 'product_id': '85'}
+    ]);
     // TODO: implement initState
     super.initState();
   }
@@ -216,15 +337,195 @@ class _UserInformation2State extends State<UserInformation2> {
                     ),
                     Container(
                       height: _height * 0.5,
-                      //       color: Color.fromARGB(100, 255, 235, 59),
+                      //    color: Color.fromARGB(100, 255, 235, 59),
                       child: Column(
                         children: [
                           status != ''
-                              ? BoxStatusinform(status: status)
+                              ? Column(
+                                  children: [
+                                    BoxStatusinform(status: status),
+                                    SizedBox(
+                                      height: _height * 0.01,
+                                    ),
+                                    ontap == true
+                                        ? Container(
+                                            width: MediaQuery.of(context)
+                                                    .size
+                                                    .width *
+                                                0.05,
+                                            height: MediaQuery.of(context)
+                                                    .size
+                                                    .width *
+                                                0.05,
+                                            child: CircularProgressIndicator(
+                                              color: Color(0xff76FFD5),
+                                            ),
+                                          )
+                                        : GestureDetector(
+                                            onTap: () {
+                                              setState(() {
+                                                ontap = true;
+                                              });
+                                              exam();
+                                            },
+                                            child: Container(
+                                                height: _height * 0.05,
+                                                width: _width * 0.3,
+                                                decoration: BoxDecoration(
+                                                    color: Color(0xff31D6AA),
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            15),
+                                                    boxShadow: [
+                                                      BoxShadow(
+                                                        color: Colors.grey,
+                                                        offset: Offset(0, 4),
+                                                        blurRadius: 5,
+                                                      )
+                                                    ]),
+                                                child: Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment.start,
+                                                    children: [
+                                                      Image.asset(
+                                                          'assets/jhb.png'),
+                                                      Text('  ปริ้นผลตรวจ',
+                                                          style: TextStyle(
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w500,
+                                                              fontFamily: context
+                                                                  .read<
+                                                                      DataProvider>()
+                                                                  .fontFamily,
+                                                              fontSize:
+                                                                  _width * 0.03,
+                                                              color:
+                                                                  Colors.white))
+                                                    ])),
+                                          )
+                                  ],
+                                )
                               : Column(
                                   children: [
                                     //  Container(child: Center(child: BoxQueue())),
                                     BoxToDay(),
+                                    SizedBox(height: _height * 0.01),
+
+                                    ontap == false
+                                        ? resTojson['todays'].length != 0
+                                            ? resTojson['queue_number'] != ''
+                                                ? GestureDetector(
+                                                    onTap: () {
+                                                      setState(() {
+                                                        ontap = true;
+                                                      });
+                                                      printq();
+                                                    },
+                                                    child: Container(
+                                                        height: _height * 0.05,
+                                                        width: _width * 0.3,
+                                                        decoration: BoxDecoration(
+                                                            color: Color(
+                                                                0xff31D6AA),
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        15),
+                                                            boxShadow: [
+                                                              BoxShadow(
+                                                                color:
+                                                                    Colors.grey,
+                                                                offset: Offset(
+                                                                    0, 4),
+                                                                blurRadius: 5,
+                                                              )
+                                                            ]),
+                                                        child: Row(
+                                                            mainAxisAlignment:
+                                                                MainAxisAlignment
+                                                                    .start,
+                                                            children: [
+                                                              Image.asset(
+                                                                  'assets/jhb.png'),
+                                                              Text('  ปริ้น',
+                                                                  style: TextStyle(
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .w500,
+                                                                      fontFamily: context
+                                                                          .read<
+                                                                              DataProvider>()
+                                                                          .fontFamily,
+                                                                      fontSize:
+                                                                          _width *
+                                                                              0.03,
+                                                                      color: Colors
+                                                                          .white))
+                                                            ])),
+                                                  )
+                                                : GestureDetector(
+                                                    onTap: () {
+                                                      setState(() {
+                                                        ontap = true;
+                                                      });
+                                                      q();
+                                                    },
+                                                    child: Container(
+                                                        height: _height * 0.05,
+                                                        width: _width * 0.3,
+                                                        decoration: BoxDecoration(
+                                                            color: Color(
+                                                                0xff31D6AA),
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        15),
+                                                            boxShadow: [
+                                                              BoxShadow(
+                                                                color:
+                                                                    Colors.grey,
+                                                                offset: Offset(
+                                                                    0, 4),
+                                                                blurRadius: 5,
+                                                              )
+                                                            ]),
+                                                        child: Row(
+                                                            mainAxisAlignment:
+                                                                MainAxisAlignment
+                                                                    .start,
+                                                            children: [
+                                                              Image.asset(
+                                                                  'assets/jhb.png'),
+                                                              Text('  รับคิว',
+                                                                  style: TextStyle(
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .w500,
+                                                                      fontFamily: context
+                                                                          .read<
+                                                                              DataProvider>()
+                                                                          .fontFamily,
+                                                                      fontSize:
+                                                                          _width *
+                                                                              0.03,
+                                                                      color: Colors
+                                                                          .white))
+                                                            ])),
+                                                  )
+                                            : Container()
+                                        : Container(
+                                            width: MediaQuery.of(context)
+                                                    .size
+                                                    .width *
+                                                0.07,
+                                            height: MediaQuery.of(context)
+                                                    .size
+                                                    .width *
+                                                0.07,
+                                            child: CircularProgressIndicator(
+                                                color: Color(0xff76FFD5)),
+                                          )
                                   ],
                                 ),
                         ],
@@ -297,53 +598,53 @@ class _choiceState extends State<choice> {
   var resTojson2;
   String status = '';
 
-  // Future<void> getqueue() async {
-  //   if (resTojson['health_records'].length == 0) {
-  //     context.read<DataProvider>().status_getqueue = 'false';
-  //     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-  //         content: Container(
-  //             width: MediaQuery.of(context).size.width,
-  //             child: Center(
-  //                 child: Text(
-  //               'ตรวจสุขภาพก่อนรับคิว',
-  //               style: TextStyle(
-  //                   fontFamily: context.read<DataProvider>().fontFamily,
-  //                   fontSize: MediaQuery.of(context).size.width * 0.03),
-  //             )))));
-  //     Get.toNamed('healthrecord');
-  //   } else {
-  //     context.read<DataProvider>().status_getqueue = 'true';
-  //     var url = Uri.parse('${context.read<DataProvider>().platfromURL}/get_q');
-  //     var res = await http.post(url, body: {
-  //       'care_unit_id': context.read<DataProvider>().care_unit_id,
-  //       'public_id': context.read<DataProvider>().id,
-  //     });
-  //     if (res.statusCode == 200) {
-  //       print('รับคิว รีเซ็ท');
-  //       setState(() {
-  //         resTojson = json.decode(res.body);
-  //         context.read<DataProvider>().status_getqueue == 'true';
-  //         Navigator.pop(context);
-  //         Navigator.push(context,
-  //             MaterialPageRoute(builder: (context) => UserInformation2()));
-  //       });
-  //     }
-  //   }
-  // }
+  Future<void> getqueue() async {
+    if (resTojson['health_records'].length == 0) {
+      context.read<DataProvider>().status_getqueue = 'false';
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Container(
+              width: MediaQuery.of(context).size.width,
+              child: Center(
+                  child: Text(
+                'ตรวจสุขภาพก่อนรับคิว',
+                style: TextStyle(
+                    fontFamily: context.read<DataProvider>().fontFamily,
+                    fontSize: MediaQuery.of(context).size.width * 0.03),
+              )))));
+      Get.toNamed('healthrecord');
+    } else {
+      context.read<DataProvider>().status_getqueue = 'true';
+      var url = Uri.parse('${context.read<DataProvider>().platfromURL}/get_q');
+      var res = await http.post(url, body: {
+        'care_unit_id': context.read<DataProvider>().care_unit_id,
+        'public_id': context.read<DataProvider>().id,
+      });
+      if (res.statusCode == 200) {
+        print('รับคิว รีเซ็ท');
+        setState(() {
+          resTojson = json.decode(res.body);
+          context.read<DataProvider>().status_getqueue == 'true';
+          Navigator.pop(context);
+          Navigator.push(context,
+              MaterialPageRoute(builder: (context) => UserInformation2()));
+        });
+      }
+    }
+  }
 
-  // Future<void> checkt_queue() async {
-  //   var url = Uri.parse('${context.read<DataProvider>().platfromURL}/check_q');
-  //   var res = await http.post(url, body: {
-  //     'care_unit_id': context.read<DataProvider>().care_unit_id,
-  //     'public_id': context.read<DataProvider>().id,
-  //   });
-  //   setState(() {
-  //     resTojson = json.decode(res.body);
-  //     if (resTojson != null) {
-  //       init();
-  //     }
-  //   });
-  // }
+  Future<void> checkt_queue() async {
+    var url = Uri.parse('${context.read<DataProvider>().platfromURL}/check_q');
+    var res = await http.post(url, body: {
+      'care_unit_id': context.read<DataProvider>().care_unit_id,
+      'public_id': context.read<DataProvider>().id,
+    });
+    setState(() {
+      resTojson = json.decode(res.body);
+      if (resTojson != null) {
+        // init();
+      }
+    });
+  }
 
   // void init() {
   //   if (resTojson['queue_number'] == '' &&
@@ -394,7 +695,7 @@ class _choiceState extends State<choice> {
 
   @override
   void initState() {
-    // checkt_queue();
+    checkt_queue();
     // check_status();
     // TODO: implement initState
     super.initState();
@@ -436,6 +737,16 @@ class _choiceState extends State<choice> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
+          // GestureDetector(
+          //     onTap: () {
+          //       getqueue();
+          //     },
+          //     child: Container(
+          //       width: 100,
+          //       height: 100,
+          //       color: Colors.black,
+          //     )),
+          //  ButtonQueue(),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [

@@ -35,13 +35,14 @@ class ESMPrinter {
   List default_deivces = [];
 
   ESMPrinter(List devices) {
-    debugPrint('init printer');
+    debugPrint('=========>init printer');
 
     default_deivces = devices;
 
 //  PrinterManager.instance.stateUSB is only supports on Android
     _subscriptionUsbStatus = PrinterManager.instance.stateUSB.listen((status) {
-      log(' ----------------- status usb $status ------------------ ');
+      log(' ----------------- status usb ${status} ------------------ ');
+      debugPrint(' ----------------- status usb ${status} ------------------ ');
       _currentUsbStatus = status;
       if (Platform.isAndroid) {
         if (status == USBStatus.connected && pendingTask != null) {
@@ -58,7 +59,7 @@ class ESMPrinter {
   }
 
   void scan() {
-    debugPrint('scan');
+    debugPrint('====scan');
 
     devices.clear();
     _subscription = printerManager
@@ -80,7 +81,8 @@ class ESMPrinter {
   }
 
   void printTest(List<int> data) {
-    debugPrint('call print test');
+    debugPrint(
+        'call print test ${selectedPrinter.toString()} ${devices.length}');
     if (selectedPrinter == null) {
       for (final device in devices) {
         var vendor_id = device.vendorId;
@@ -89,7 +91,7 @@ class ESMPrinter {
         if (default_deivces != null) {
           for (final s in default_deivces) {
             if (s['vendor_id'] == vendor_id && s['product_id'] == product_id) {
-              debugPrint('found ');
+              debugPrint('======found ');
               selectDevice(device);
             }
           }
@@ -98,7 +100,10 @@ class ESMPrinter {
     }
 
     if (selectDevice != null) {
+      print('ปริ้น');
       _printReceiveTest(data);
+    } else {
+      print('ไม่ปริ้น');
     }
   }
 
@@ -177,6 +182,7 @@ class ESMPrinter {
 
   /// print ticket
   void printEscPos(List<int> bytes, Generator generator) async {
+    print('จุด1 ${selectedPrinter.toString()}');
     var connectedTCP = false;
     if (selectedPrinter == null) return;
     var bluetoothPrinter = selectedPrinter!;
@@ -235,7 +241,8 @@ class ESMPrinter {
             .disconnect(type: selectedPrinter!.typePrinter);
       }
     }
-
+    debugPrint(
+        ' ----------------- selectedPrinter ${device.toString()} ------------------ ');
     selectedPrinter = device;
     // setState(() {});
   }

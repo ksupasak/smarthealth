@@ -88,7 +88,7 @@ class _BoxTimeState extends State<BoxTime> {
     timer = Timer.periodic(Duration(seconds: 1), (Timer t) {
       setState(() {
         dateTime = DateTime.now();
-        data = "เวลา ${dateTime.hour}:" +
+        data = "${dateTime.hour}:" +
             "${dateTime.minute.toString().padLeft(2, '0')}:" +
             "${dateTime.second.toString().padLeft(2, '0')}";
       });
@@ -132,13 +132,20 @@ class _BoxTimeState extends State<BoxTime> {
                     ]),
               ),
               Container(
-                  width: _width * 0.45,
+                  width: _width * 0.35,
                   height: _height * 0.07,
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
-                      Text(data.toString(), style: style),
+                      Container(
+                          width: _width * 0.2,
+                          height: _height * 0.03,
+                          child: Row(
+                            children: [
+                              Text(data.toString(), style: style),
+                            ],
+                          )),
                     ],
                   )),
             ],
@@ -682,7 +689,7 @@ class _BoxShoHealth_RecordsState extends State<BoxShoHealth_Records> {
   void information() async {
     var url = Uri.parse('${context.read<DataProvider>().platfromURL}/check_q');
     var res = await http.post(url, body: {
-      // 'care_unit_id': '63d7a282790f9bc85700000e',
+      'care_unit_id': context.read<DataProvider>().care_unit_id,
       'public_id': context.read<DataProvider>().id,
     });
     setState(() {
@@ -2021,7 +2028,7 @@ class _BoxAppointmentsState extends State<BoxAppointments> {
   void information() async {
     var url = Uri.parse('${context.read<DataProvider>().platfromURL}/check_q');
     var res = await http.post(url, body: {
-      // 'care_unit_id': '63d7a282790f9bc85700000e',
+      'care_unit_id': context.read<DataProvider>().care_unit_id,
       'public_id': context.read<DataProvider>().id,
     });
     setState(() {
@@ -2361,7 +2368,7 @@ class BoxToDay extends StatefulWidget {
 
 class _BoxToDayState extends State<BoxToDay> {
   var resTojson;
-
+  bool ontap = false;
   Future<void> checkt_queue() async {
     var url = Uri.parse('${context.read<DataProvider>().platfromURL}/check_q');
     var res = await http.post(url, body: {
@@ -2514,7 +2521,7 @@ class _BoxToDayState extends State<BoxToDay> {
                                               CrossAxisAlignment.start,
                                           children: [
                                             Text(
-                                                "${resTojson['personal']['first_name']} ${resTojson['personal']['last_name']}",
+                                                "${resTojson['todays'][0]['doctor_name']} ",
                                                 style: style4),
                                             Text(
                                                 "${resTojson['todays'][0]['care_name']} / ${resTojson['todays'][0]['slot']}",
@@ -2544,7 +2551,7 @@ class _BoxToDayState extends State<BoxToDay> {
                               ]),
                             ),
                             SizedBox(height: _height * 0.01),
-                            ButtonPrintQueue()
+                            //  ButtonPrintQueue()
                           ],
                         ),
                       )
@@ -2612,7 +2619,18 @@ class _BoxToDayState extends State<BoxToDay> {
                                 ),
                               ),
                               SizedBox(height: _height * 0.005),
-                              ButtonQueue()
+                              // ontap == false
+                              //     ? GestureDetector(
+                              //         onTap: () {
+                              //           setState(() {
+                              //             ontap = true;
+                              //           });
+                              //         },
+                              //         child: ButtonQueue())
+                              //     : Container(
+                              //         height: 0.06,
+                              //         width: 0.35,
+                              //         child: CircularProgressIndicator()),
                             ],
                           ),
                         ),
@@ -2653,7 +2671,6 @@ class ButtonPrintQueue extends StatefulWidget {
 
 class _ButtonPrintQueueState extends State<ButtonPrintQueue> {
   var resTojson;
-
   DateTime dateTime = DateTime.parse('0000-00-00 00:00');
   String datatime = "";
   ESMPrinter? printer;
@@ -2783,7 +2800,8 @@ class _ButtonPrintQueueState extends State<ButtonPrintQueue> {
             height: PosTextSize.size3,
             fontType: PosFontType.fontA));
     bytes += generator.text('\n');
-    bytes += generator.text('Doctor :  ');
+    bytes +=
+        generator.text('Doctor :   ${resTojson['todays'][0]['doctor_name']}');
     bytes += generator.text(
         'Care   :  ${resTojson['todays'][0]['care_name']} / ( ${resTojson['todays'][0]['slot']} )');
     bytes += generator.text('\n');
@@ -2845,14 +2863,14 @@ class _ButtonPrintQueueState extends State<ButtonPrintQueue> {
     //     '${resTojson['personal']['first_name']}   ${resTojson['personal']['last_name']}',
     //     styles: const PosStyles(align: PosAlign.center, codeTable: '255'));
     //  bytes += generator.text('$datatime');
-    printer?.printTest(bytes);
-    // printer?.printEscPos(bytes, generator);
+    printer?.printTest(bytes); //
+    printer?.printEscPos(bytes, generator);
   }
 
   @override
   void initState() {
     // TODO: implement initState
-    checkt_queue();
+    //  checkt_queue();
     printer = ESMPrinter([
       {'vendor_id': '1137', 'product_id': '85'}
     ]);
@@ -2887,7 +2905,7 @@ class _ButtonPrintQueueState extends State<ButtonPrintQueue> {
         color: Colors.white);
     return ontap == false
         ? GestureDetector(
-            onTap: checkt_queue,
+            onTap: Deviceprint, //checkt_queue,
             child: Container(
                 height: _height * 0.05,
                 width: _width * 0.3,
@@ -2913,6 +2931,16 @@ class ButtonQueue extends StatefulWidget {
 class _ButtonQueueState extends State<ButtonQueue> {
   bool ontap = false;
   void addQueue() async {
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Container(
+            width: MediaQuery.of(context).size.width,
+            child: Center(
+                child: Text(
+              'กำลังรับคิว',
+              style: TextStyle(
+                  fontFamily: context.read<DataProvider>().fontFamily,
+                  fontSize: MediaQuery.of(context).size.width * 0.03),
+            )))));
     var url = Uri.parse('${context.read<DataProvider>().platfromURL}/get_q');
     var res = await http.post(url, body: {
       'public_id': context.read<DataProvider>().id,
@@ -2923,11 +2951,12 @@ class _ButtonQueueState extends State<ButtonQueue> {
     if (res.statusCode == 200) {
       if (resTojson['message'] == 'success') {
         setState(() {
+          checkt_queue();
           Future.delayed(const Duration(seconds: 2), () {
             setState(() {
               ontap == false;
+              Navigator.pop(context);
             });
-            Navigator.pop(context);
           });
           Future.delayed(const Duration(seconds: 2), () {
             Get.offNamed('user_information');
@@ -2970,72 +2999,24 @@ class _ButtonQueueState extends State<ButtonQueue> {
     var resTojson = json.decode(res.body);
     if (res.statusCode == 200) {
       if (resTojson['health_records'].length != 0) {
-        addQueue();
+        setState(() {
+          addQueue();
+        });
       } else {
-        showDialog(
-            context: context,
-            builder: (BuildContext context) {
-              return Container(
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            content: Container(
+                width: MediaQuery.of(context).size.width,
                 child: Center(
-                  child: Container(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(15),
-                      color: Colors.white,
-                    ),
-                    height: 700,
-                    width: 600,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Image.asset('assets/sbng.png'),
-                        Text(
-                          'ท่านยังไม่ได้ตรวจสุขภาพ ต้องการตรวจสุขภาพหรือไม่',
-                          style: TextStyle(
-                              color: Color(0xffFFA800),
-                              fontSize: 30,
-                              fontFamily:
-                                  context.read<DataProvider>().fontFamily),
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            GestureDetector(
-                                onTap: () {
-                                  Get.offAllNamed('healthrecord');
-                                },
-                                child: BoxWidetdew(
-                                    fontSize: 0.04,
-                                    radius: 15.0,
-                                    color: Color(0xff00A3FF),
-                                    height: 0.04,
-                                    width: 0.2,
-                                    text: 'ยืนยัน',
-                                    textcolor: Colors.white)),
-                            SizedBox(
-                              width: 10,
-                            ),
-                            GestureDetector(
-                                onTap: () {
-                                  Navigator.pop(context);
-                                  addQueue();
-                                },
-                                child: BoxWidetdew(
-                                    fontSize: 0.04,
-                                    radius: 15.0,
-                                    colorborder: Colors.red,
-                                    color: Color.fromARGB(255, 255, 255, 255),
-                                    height: 0.04,
-                                    width: 0.2,
-                                    text: 'ข้าม',
-                                    textcolor: Colors.red)),
-                          ],
-                        )
-                      ],
-                    ),
-                  ),
-                ),
-              );
-            });
+                    child: Text(
+                  'ตรวจสุขภาพก่อนรับคิว',
+                  style: TextStyle(
+                      fontFamily: context.read<DataProvider>().fontFamily,
+                      fontSize: MediaQuery.of(context).size.width * 0.03),
+                )))));
+
+        setState(() {
+          Get.offNamed('healthrecord');
+        });
       }
     } else {
       setState(() {
@@ -3076,9 +3057,6 @@ class _ButtonQueueState extends State<ButtonQueue> {
     return ontap == false
         ? GestureDetector(
             onTap: checkt_queue,
-            //  () {
-            //   //    Get.toNamed('healthrecord');
-            // },
             child: Container(
                 height: _height * 0.05,
                 width: _width * 0.3,
@@ -3272,6 +3250,9 @@ class _BoxStatusinformState extends State<BoxStatusinform> {
 
   @override
   void initState() {
+    printer = ESMPrinter([
+      {'vendor_id': '1137', 'product_id': '85'}
+    ]);
     get_Examination();
     status = widget.status;
     if (status == 'end') {
@@ -3298,11 +3279,17 @@ class _BoxStatusinformState extends State<BoxStatusinform> {
     });
     setState(() {
       finished_check_status = false;
-      Timer(Duration(milliseconds: 500), () {
-        Navigator.pop(context);
-      });
-      Timer(Duration(milliseconds: 600), () {
-        Get.offNamed('user_information');
+      showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return Popup(
+                fontSize: 0.05,
+                texthead: 'สำเร็จ',
+                pathicon: 'assets/correct.png');
+          });
+
+      Timer(Duration(seconds: 2), () {
+        Get.offNamed('home');
       });
     });
   }
@@ -3318,45 +3305,9 @@ class _BoxStatusinformState extends State<BoxStatusinform> {
       doctor_note = resTojson2['data']['doctor_note'];
       dx = resTojson2['data']['dx'];
       if (resTojson2 != null) {
-        Deviceprint();
         get_finished();
       }
     });
-  }
-
-  void Deviceprint() {
-    debugPrint('call print test');
-    if (selectedPrinter == null) {
-      for (final device in devices) {
-        var vendor_id = device.vendorId;
-        var product_id = device.productId;
-        debugPrint('scan for ${vendor_id} ${product_id}');
-        if (default_deivces != null) {
-          for (final s in default_deivces) {
-            if (s['vendor_id'] == vendor_id && s['product_id'] == product_id) {
-              debugPrint('found ');
-              selectDevice(device);
-            }
-          }
-        }
-      }
-    }
-
-    if (selectDevice != null) {
-      printexam();
-    }
-  }
-
-  void selectDevice(BluetoothPrinter device) async {
-    if (selectedPrinter != null) {
-      if ((device.address != selectedPrinter!.address) ||
-          (device.typePrinter == PrinterType.usb &&
-              selectedPrinter!.vendorId != device.vendorId)) {
-        await PrinterManager.instance
-            .disconnect(type: selectedPrinter!.typePrinter);
-      }
-    }
-    selectedPrinter = device;
   }
 
   void printexam() async {
@@ -3365,12 +3316,7 @@ class _BoxStatusinformState extends State<BoxStatusinform> {
     final generator = Generator(PaperSize.mm58, profile);
     bytes += generator.text(context.read<DataProvider>().name_hospital,
         styles: const PosStyles(align: PosAlign.center));
-    // bytes += generator.text("Examination",
-    //     styles: const PosStyles(
-    //         align: PosAlign.center,
-    //         width: PosTextSize.size3,
-    //         height: PosTextSize.size3,
-    //         fontType: PosFontType.fontA));
+
     bytes += generator.text('Examination',
         styles: const PosStyles(
             width: PosTextSize.size1, height: PosTextSize.size1));
@@ -3378,14 +3324,14 @@ class _BoxStatusinformState extends State<BoxStatusinform> {
     bytes += generator.text('Doctor  :  pairot tanyajasesn');
     bytes += generator.text('Results :  ${dx}');
     bytes += generator.text('        :  ${doctor_note}');
-    printer?.printTest(bytes);
+    // printer?.printTest(bytes);
+
+    printer?.printEscPos(bytes, generator);
   }
 
   void finished() async {
     print('finished');
-    printer = ESMPrinter([
-      {'vendor_id': '1137', 'product_id': '85'}
-    ]);
+
     get_exam();
     setState(() {
       var dateTime = DateTime.now();
@@ -3464,7 +3410,7 @@ class _BoxStatusinformState extends State<BoxStatusinform> {
                       )
                     : status == 'completed'
                         ? Container(
-                            height: _height * 0.5,
+                            height: _height * 0.3,
                             // color: Colors.red,
                             child: ListView(
                               children: [
@@ -3539,7 +3485,8 @@ class _BoxStatusinformState extends State<BoxStatusinform> {
                                                                       CrossAxisAlignment
                                                                           .start,
                                                                   children: [
-                                                                    Text(': --',
+                                                                    Text(
+                                                                        ": ${context.read<DataProvider>().dataidcard['todays'][0]['doctor_name']}",
                                                                         style:
                                                                             style2),
                                                                     Container(
@@ -3583,46 +3530,6 @@ class _BoxStatusinformState extends State<BoxStatusinform> {
                                               child: CircularProgressIndicator(
                                                   color: Color(0xff76FFD5)),
                                             ),
-                                      SizedBox(height: _height * 0.01),
-                                      finished_check_status != true
-                                          ? GestureDetector(
-                                              onTap: () {
-                                                setState(() {
-                                                  finished_check_status = true;
-                                                  // finished();
-                                                  get_finished();
-                                                });
-
-                                                // Navigator.push(
-                                                //     context,
-                                                //     MaterialPageRoute(
-                                                //         builder: (context) =>
-                                                //             Print_Exam()));
-                                              },
-                                              child: BoxWidetdew(
-                                                radius: 2.0,
-                                                color: Color(0xff76FFD5),
-                                                width: 0.3,
-                                                height: 0.05,
-                                                text: 'ปริ้นผลตรวจ',
-                                                textcolor: Colors.white,
-                                                fontWeight: FontWeight.w500,
-                                                fontSize: 0.04,
-                                              ),
-                                            )
-                                          : Container(
-                                              width: MediaQuery.of(context)
-                                                      .size
-                                                      .width *
-                                                  0.05,
-                                              height: MediaQuery.of(context)
-                                                      .size
-                                                      .width *
-                                                  0.05,
-                                              child: CircularProgressIndicator(
-                                                color: Color(0xff76FFD5),
-                                              ),
-                                            ),
                                     ],
                                   ),
                                 ),
@@ -3631,51 +3538,135 @@ class _BoxStatusinformState extends State<BoxStatusinform> {
                           )
                         : status == 'finished'
                             ? Container(
-                                child: Column(
-                                children: [
-                                  Container(
-                                    child: Center(
-                                      child: Container(
-                                          height: _height * 0.15,
-                                          width: _width * 0.7,
-                                          decoration: BoxDecoration(
-                                              borderRadius:
-                                                  BorderRadius.circular(10),
-                                              border: Border.all(
-                                                  color: Color(0xff76FFD5),
-                                                  width: 8)),
-                                          child: Column(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                            children: [
-                                              Text('รายการวันนี้เสร็จสิ้นเเล้ว',
-                                                  style: style),
-                                            ],
-                                          )),
+                                height: _height * 0.3,
+                                child: ListView(
+                                  children: [
+                                    Container(
+                                      child: Column(
+                                        children: [
+                                          Text('รับผลตรวจ', style: style),
+                                          resTojson2 != null
+                                              ? resTojson2['data'] != null
+                                                  ? Container(
+                                                      width: _width * 0.7,
+                                                      decoration: BoxDecoration(
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(10),
+                                                          border: Border.all(
+                                                              color: Color(
+                                                                  0xff76FFD5),
+                                                              width: 8)),
+                                                      child: Padding(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                .all(8.0),
+                                                        child: Column(
+                                                          children: [
+                                                            Text(
+                                                              context
+                                                                  .read<
+                                                                      DataProvider>()
+                                                                  .name_hospital,
+                                                              style: style2,
+                                                            ),
+                                                            Row(
+                                                              children: [
+                                                                Text(
+                                                                    'Examination',
+                                                                    style:
+                                                                        style2),
+                                                              ],
+                                                            ),
+                                                            SizedBox(
+                                                                height:
+                                                                    _height *
+                                                                        0.01),
+                                                            Container(
+                                                              child: Row(
+                                                                crossAxisAlignment:
+                                                                    CrossAxisAlignment
+                                                                        .start,
+                                                                children: [
+                                                                  Container(
+                                                                    child:
+                                                                        Column(
+                                                                      mainAxisAlignment:
+                                                                          MainAxisAlignment
+                                                                              .start,
+                                                                      children: [
+                                                                        Text(
+                                                                            'Doctor',
+                                                                            style:
+                                                                                style2),
+                                                                        Text(
+                                                                            'Results',
+                                                                            style:
+                                                                                style2)
+                                                                      ],
+                                                                    ),
+                                                                  ),
+                                                                  SizedBox(
+                                                                    width:
+                                                                        _width *
+                                                                            0.02,
+                                                                  ),
+                                                                  Container(
+                                                                    child:
+                                                                        Column(
+                                                                      crossAxisAlignment:
+                                                                          CrossAxisAlignment
+                                                                              .start,
+                                                                      children: [
+                                                                        Text(
+                                                                            ": ${context.read<DataProvider>().dataidcard['todays'][0]['doctor_name']}",
+                                                                            style:
+                                                                                style2),
+                                                                        Container(
+                                                                          width:
+                                                                              _width * 0.5,
+                                                                          child: Text(
+                                                                              ": ${resTojson2['data']['doctor_note']}",
+                                                                              style: style2),
+                                                                        ),
+                                                                        Container(
+                                                                          width:
+                                                                              _width * 0.5,
+                                                                          child: Text(
+                                                                              ": ${resTojson2['data']['dx']}",
+                                                                              style: style2),
+                                                                        )
+                                                                      ],
+                                                                    ),
+                                                                  )
+                                                                ],
+                                                              ),
+                                                            )
+                                                          ],
+                                                        ),
+                                                      ),
+                                                    )
+                                                  : Container()
+                                              : Container(
+                                                  width: MediaQuery.of(context)
+                                                          .size
+                                                          .width *
+                                                      0.05,
+                                                  height: MediaQuery.of(context)
+                                                          .size
+                                                          .width *
+                                                      0.05,
+                                                  child:
+                                                      CircularProgressIndicator(
+                                                          color: Color(
+                                                              0xff76FFD5)),
+                                                ),
+                                        ],
+                                      ),
                                     ),
-                                  ),
-                                  SizedBox(height: _height * 0.01),
-                                  GestureDetector(
-                                    onTap: () {
-                                      Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  Print_Exam()));
-                                    },
-                                    child: BoxWidetdew(
-                                      radius: 2.0,
-                                      color: Color(0xff76FFD5),
-                                      width: 0.3,
-                                      height: 0.05,
-                                      text: 'ปริ้นผลตรวจซ้ำ',
-                                      textcolor: Colors.white,
-                                      fontWeight: FontWeight.w500,
-                                      fontSize: 0.04,
-                                    ),
-                                  )
-                                ],
-                              ))
+                                  ],
+                                ),
+                              )
                             : Text('--', style: style))
         : Container();
   }

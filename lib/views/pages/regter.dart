@@ -39,19 +39,20 @@ class _RegterState extends State<Regter> {
   }
 
   void setvalue() {
+    print(context.read<DataProvider>().regter_data);
     if (context.read<DataProvider>().regter_data != null) {
       setState(() {
-        id.text == context.read<DataProvider>().regter_data![0];
-        prefix_name.text == context.read<DataProvider>().regter_data![1];
-        first_name.text == context.read<DataProvider>().regter_data![2];
-        last_name.text == context.read<DataProvider>().regter_data![4];
+        id.text = context.read<DataProvider>().regter_data![0];
+        prefix_name.text = context.read<DataProvider>().regter_data![1];
+        first_name.text = context.read<DataProvider>().regter_data![2];
+        last_name.text = context.read<DataProvider>().regter_data![4];
       });
     } else {
       setState(() {
-        id.text == '--';
-        prefix_name.text == '--';
-        first_name.text == '--';
-        last_name.text == '--';
+        id.text = '--';
+        prefix_name.text = '--';
+        first_name.text = '--';
+        last_name.text = '--';
       });
     }
   }
@@ -191,15 +192,15 @@ class _RegterState extends State<Regter> {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text('คำนำหน้าชื่อ', style: style2),
-                                    textdatauser(),
+                                    textdatauser(child: prefix_name),
                                     Text('ชื่อ', style: style2),
-                                    textdatauser(),
+                                    textdatauser(child: first_name),
                                     Text('นามสกุล', style: style2),
-                                    textdatauser(),
+                                    textdatauser(child: last_name),
                                     Text('เลขประจำตัวประชาชน', style: style2),
-                                    textdatauser(),
+                                    textdatauser(child: id),
                                     Text('รหัส HN', style: style2),
-                                    textdatauser(),
+                                    textdatauser(child: hn),
                                   ]),
                             ),
                             SizedBox(height: _height * 0.01),
@@ -248,19 +249,19 @@ class _RegterState extends State<Regter> {
                   //         child: Column(
                   //           crossAxisAlignment: CrossAxisAlignment.start,
                   //           children: [
-                  //             Boxheab(child: 'เลขบัตรประชาชน'),
-                  //             Boxheab(child: 'คำนำหน้าชื่อ'),
-                  //             Boxheab(child: 'ชื่อ'),
-                  //             Boxheab(child: 'นามสกุล'),
-                  //             Boxheab(child: 'Prefix'),
-                  //             Boxheab(child: 'FirstName'),
-                  //             Boxheab(child: 'SurName'),
-                  //             Boxheab(child: 'เลขที่'),
-                  //             Boxheab(child: 'หมู่'),
-                  //             Boxheab(child: 'ซอย/เเยก'),
-                  //             Boxheab(child: 'เเขวง/ตำบล'),
-                  //             Boxheab(child: 'เขต'),
-                  //             Boxheab(child: 'จังหวัด'),
+                  // Boxheab(child: 'เลขบัตรประชาชน'),
+                  // Boxheab(child: 'คำนำหน้าชื่อ'),
+                  // Boxheab(child: 'ชื่อ'),
+                  // Boxheab(child: 'นามสกุล'),
+                  // Boxheab(child: 'Prefix'),
+                  // Boxheab(child: 'FirstName'),
+                  // Boxheab(child: 'SurName'),
+                  // Boxheab(child: 'เลขที่'),
+                  // Boxheab(child: 'หมู่'),
+                  // Boxheab(child: 'ซอย/เเยก'),
+                  // Boxheab(child: 'เเขวง/ตำบล'),
+                  // Boxheab(child: 'เขต'),
+                  // Boxheab(child: 'จังหวัด'),
                   //           ],
                   //         ),
                   //       ),
