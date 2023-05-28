@@ -2547,6 +2547,55 @@ class _BoxToDayState extends State<BoxToDay> {
                                       Text('spo2', style: style4),
                                     ],
                                   ),
+                                ),
+                                Container(
+                                  width: _width * 0.6,
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceAround,
+                                    children: [
+                                      resTojson['health_records'][0]
+                                                  ['height'] ==
+                                              null
+                                          ? Text('-')
+                                          : Text(
+                                              "${resTojson['health_records'][0]['height']}",
+                                              style: style4),
+                                      resTojson['health_records'][0]
+                                                  ['weight'] ==
+                                              null
+                                          ? Text('-')
+                                          : Text(
+                                              "${resTojson['health_records'][0]['weight']}",
+                                              style: style4),
+                                      resTojson['health_records'][0]['temp'] ==
+                                              null
+                                          ? Text('-')
+                                          : Text(
+                                              "${resTojson['health_records'][0]['temp']}",
+                                              style: style4),
+                                      resTojson['health_records'][0]
+                                                  ['bp_sys'] ==
+                                              null
+                                          ? Text('-')
+                                          : Text(
+                                              "${resTojson['health_records'][0]['bp_sys']}",
+                                              style: style4),
+                                      resTojson['health_records'][0]
+                                                  ['bp_dia'] ==
+                                              null
+                                          ? Text('-')
+                                          : Text(
+                                              "${resTojson['health_records'][0]['bp_dia']}",
+                                              style: style4),
+                                      resTojson['health_records'][0]['spo2'] ==
+                                              null
+                                          ? Text('-')
+                                          : Text(
+                                              "${resTojson['health_records'][0]['spo2']}",
+                                              style: style4),
+                                    ],
+                                  ),
                                 )
                               ]),
                             ),

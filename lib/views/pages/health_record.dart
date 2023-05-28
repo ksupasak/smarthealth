@@ -94,10 +94,7 @@ class _HealthRecordState extends State<HealthRecord> {
         dia.text == '' ||
         spo2.text == '' ||
         pr.text == '' ||
-        pulse == '' ||
-        fbs.text == '' ||
-        si.text == '' ||
-        uric.text == '') {
+        pulse == '') {
       showDialog(
           context: context,
           builder: (BuildContext context) {
@@ -152,10 +149,10 @@ class _HealthRecordState extends State<HealthRecord> {
       "pulse_rate": "${pulse.text}",
       "spo2": "${spo2.text}",
       "fbs": "${fbs.text}",
-      "height": "160",
-      "bmi": "122",
+      "height": "${height.text}",
+      "bmi": "",
       "bp": "${sys.text}/${dia.text}",
-      "rr": "90",
+      "rr": "",
     });
     var resTojson = json.decode(res.body);
 
