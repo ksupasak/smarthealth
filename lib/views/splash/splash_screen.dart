@@ -112,7 +112,7 @@ class _Splash_ScreenState extends State<Splash_Screen> {
                 height: _height * 0.2,
                 width: _width,
                 child: SvgPicture.asset(
-                  'assets/spate.svg',
+                  'assets/splash.svg',
                   fit: BoxFit.fill,
                 ),
               ),

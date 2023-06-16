@@ -719,7 +719,7 @@ public class MainActivity extends FlutterActivity {
         AssetManager assetManager = getAssets();
         try {
 
-            InputStream is = assetManager.open("rdnidlib.dls");
+            InputStream is = assetManager.open("rdnidlib.dls"); 
 
             File out = new File(Path);
             if (out.exists()) { //check already has License File

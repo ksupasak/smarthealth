@@ -60,6 +60,12 @@ class _UserInformation2State extends State<UserInformation2> {
   var resTojson3;
   var resTojson2;
   var resTojson;
+  String height = '-';
+  String weight = '-';
+  String temp = '-';
+  String sys = '-';
+  String dia = '-';
+  String spo2 = '-';
   String status = '';
   ESMPrinter? printer;
   bool status2 = false;
@@ -68,6 +74,7 @@ class _UserInformation2State extends State<UserInformation2> {
   PrePareVideo? _prePareVideo;
   String doctor_note = '--';
   String dx = '--';
+
   Future<void> checkt_queue() async {
     var url = Uri.parse('${context.read<DataProvider>().platfromURL}/check_q');
     var res = await http.post(url, body: {
@@ -76,6 +83,7 @@ class _UserInformation2State extends State<UserInformation2> {
     });
     setState(() {
       resTojson = json.decode(res.body);
+
       if (resTojson != null) {
         if (resTojson['queue_number'] != '') {
           lop_queue();
@@ -87,6 +95,14 @@ class _UserInformation2State extends State<UserInformation2> {
       }
       check_status();
     });
+    if (resTojson['health_records'].length != 0) {
+      height = resTojson['health_records'][0]['height'].toString();
+      weight = resTojson['health_records'][0]['weight'].toString();
+      temp = resTojson['health_records'][0]['temp'].toString();
+      sys = resTojson['health_records'][0]['bp_sys'].toString();
+      dia = resTojson['health_records'][0]['bp_dia'].toString();
+      spo2 = resTojson['health_records'][0]['spo2'].toString();
+    }
   }
 
   void lop_queue() {
@@ -252,7 +268,6 @@ class _UserInformation2State extends State<UserInformation2> {
 
     final profile = await CapabilityProfile.load(name: 'XP-N160I');
     final generator = Generator(PaperSize.mm58, profile);
-
     bytes += generator.text(context.read<DataProvider>().name_hospital,
         styles: const PosStyles(align: PosAlign.center));
     bytes += generator.text("Q ${resTojson['queue_number']}",
@@ -271,28 +286,58 @@ class _UserInformation2State extends State<UserInformation2> {
         styles: const PosStyles(align: PosAlign.center));
     bytes += generator.row([
       PosColumn(
-          width: 2,
+          width: 4,
           text: 'height',
           styles: const PosStyles(align: PosAlign.center, codeTable: 'CP1252')),
       PosColumn(
-          width: 2,
+          width: 4,
           text: 'weight',
           styles: const PosStyles(align: PosAlign.center, codeTable: 'CP1252')),
       PosColumn(
-          width: 2,
+          width: 4,
           text: 'temp',
           styles: const PosStyles(align: PosAlign.center, codeTable: 'CP1252')),
+    ]);
+    bytes += generator.row([
       PosColumn(
-          width: 2,
+          width: 4,
+          text: height,
+          styles: const PosStyles(align: PosAlign.center, codeTable: 'CP1252')),
+      PosColumn(
+          width: 4,
+          text: weight,
+          styles: const PosStyles(align: PosAlign.center, codeTable: 'CP1252')),
+      PosColumn(
+          width: 4,
+          text: temp,
+          styles: const PosStyles(align: PosAlign.center, codeTable: 'CP1252')),
+    ]);
+    bytes += generator.row([
+      PosColumn(
+          width: 4,
           text: 'sys',
           styles: const PosStyles(align: PosAlign.center, codeTable: 'CP1252')),
       PosColumn(
-          width: 2,
+          width: 4,
           text: 'dia',
           styles: const PosStyles(align: PosAlign.center, codeTable: 'CP1252')),
       PosColumn(
-          width: 2,
+          width: 4,
           text: 'spo2',
+          styles: const PosStyles(align: PosAlign.center, codeTable: 'CP1252')),
+    ]);
+    bytes += generator.row([
+      PosColumn(
+          width: 4,
+          text: sys,
+          styles: const PosStyles(align: PosAlign.center, codeTable: 'CP1252')),
+      PosColumn(
+          width: 4,
+          text: dia,
+          styles: const PosStyles(align: PosAlign.center, codeTable: 'CP1252')),
+      PosColumn(
+          width: 4,
+          text: spo2,
           styles: const PosStyles(align: PosAlign.center, codeTable: 'CP1252')),
     ]);
     ontap = false;
@@ -303,7 +348,8 @@ class _UserInformation2State extends State<UserInformation2> {
   void initState() {
     checkt_queue();
     printer = ESMPrinter([
-      {'vendor_id': '1137', 'product_id': '85'}
+      {'vendor_id': '19267', 'product_id': '14384'},
+      //   {'vendor_id': '1137', 'product_id': '85'}
     ]);
     // TODO: implement initState
     super.initState();
@@ -541,7 +587,15 @@ class _UserInformation2State extends State<UserInformation2> {
                       ),
                     ),
                   ]
-                : [],
+                : [
+                    Container(
+                      width: MediaQuery.of(context).size.width * 0.07,
+                      height: MediaQuery.of(context).size.width * 0.07,
+                      child: Center(
+                          child: CircularProgressIndicator(
+                              color: Color(0xff000000))),
+                    ),
+                  ],
           ))
         ],
       ),

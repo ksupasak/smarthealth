@@ -23,7 +23,7 @@ class Mibfs {
                 String x;
 
                 x = ((((256 * values[12]) + values[11]) / 2) / 100).toString();
-                controller.add(x);
+
                 if (values[10] != 0) {
                   controller.add(x);
                 }

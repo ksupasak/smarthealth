@@ -75,8 +75,6 @@ class ESMPrinter {
       ));
       debugPrint(
           'found printer ${device.name} ${device.vendorId} ${device.productId} ');
-
-      // setState(() {});
     });
   }
 
@@ -90,8 +88,12 @@ class ESMPrinter {
         debugPrint('scan for ${vendor_id} ${product_id}');
         if (default_deivces != null) {
           for (final s in default_deivces) {
-            if (s['vendor_id'] == vendor_id && s['product_id'] == product_id) {
+            debugPrint(
+                'scan for ${vendor_id} ${product_id} ${s['vendor_id']}  ${s['product_id']} ');
+            if (s['vendor_id'] == vendor_id.toString() &&
+                s['product_id'] == product_id.toString()) {
               debugPrint('======found ');
+
               selectDevice(device);
             }
           }
@@ -99,7 +101,7 @@ class ESMPrinter {
       }
     }
 
-    if (selectDevice != null) {
+    if (selectedPrinter != null) {
       print('ปริ้น');
       _printReceiveTest(data);
     } else {
@@ -111,7 +113,8 @@ class ESMPrinter {
     List<int> bytes = [];
 
     // Xprinter XP-N160I
-    final profile = await CapabilityProfile.load(name: 'XP-N160I');
+    final profile =
+        await CapabilityProfile.load(name: 'XP-N160I'); // Thermal_Printer
 
     // PaperSize.mm80 or PaperSize.mm58
     final generator = Generator(PaperSize.mm58, profile);

@@ -15,7 +15,7 @@ class NoVideoWidget extends StatelessWidget {
         child: LayoutBuilder(
           builder: (ctx, constraints) => Icon(
             EvaIcons.videoOffOutline,
-            color: LKColors.lkBlue,
+            color: Color.fromRGBO(90, 139, 255, 1),
             size: math.min(constraints.maxHeight, constraints.maxWidth) * 0.3,
           ),
         ),

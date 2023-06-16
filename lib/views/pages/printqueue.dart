@@ -232,7 +232,10 @@ class _PrintQueueState extends State<PrintQueue> {
   void initState() {
     startTimer();
     printer = ESMPrinter([
-      {'vendor_id': '1137', 'product_id': '85'}
+      // {'vendor_id': '1121', 'product_id': '19841'},
+      // {'vendor_id': '8746', 'product_id': '1'},
+      {'vendor_id': '19267', 'product_id': '14384'},
+      // {'vendor_id': '1137', 'product_id': '85'},
     ]);
     checkt_queue();
     setState(() {

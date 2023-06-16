@@ -129,7 +129,6 @@ class _ConfigViewState extends State<ConfigView> {
     double _height = MediaQuery.of(context).size.height;
     return Container(
       child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Container(
               decoration: BoxDecoration(
@@ -141,19 +140,19 @@ class _ConfigViewState extends State<ConfigView> {
                         spreadRadius: 1,
                         blurRadius: 2)
                   ]),
-              height: _height * 0.4,
+              height: _height * 0.3,
               width: _width * 0.6,
               child: _streamWidget()),
           Container(
               color: Color.fromARGB(0, 7, 255, 139),
-              // height: _height * 0.15,
+              //  height: _height * 0.15,
               width: _width * 0.6,
               child: _controlsWidget()),
           GestureDetector(
             onTap: widget.onConnect,
             child: Container(
               width: _width * 0.8,
-              height: _height * 0.055,
+              height: _height * 0.05,
               decoration: BoxDecoration(
                   boxShadow: [
                     BoxShadow(

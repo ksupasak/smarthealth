@@ -280,7 +280,9 @@ class _BoxRecordState extends State<BoxRecord> {
                 : Row(
                     children: [
                       widget.image != null
-                          ? Image.asset(widget.image)
+                          ? Container(
+                              width: _width * 0.05,
+                              child: Image.asset(widget.image))
                           : SizedBox(),
                       Text('${widget.texthead}',
                           style: TextStyle(
@@ -1233,10 +1235,10 @@ class _BoxRunQueue2State extends State<BoxRunQueue2> {
           children: [
             Container(
               height: _height * 0.2,
-              width: _width * 0.9,
+              width: _width * 0.95,
               decoration: boxdecoration_box,
               child: Padding(
-                padding: const EdgeInsets.all(15.0),
+                padding: const EdgeInsets.all(10.0),
                 child: Column(children: [
                   Container(
                     child: Row(
@@ -1248,7 +1250,7 @@ class _BoxRunQueue2State extends State<BoxRunQueue2> {
                               children: [
                                 Container(
                                   height: _height * 0.05,
-                                  width: _width * 0.42,
+                                  width: _width * 0.4,
                                   decoration: boxdecoration_box3,
                                   child: Center(
                                       child: Text('เเพทย์', style: style3)),
@@ -1256,7 +1258,7 @@ class _BoxRunQueue2State extends State<BoxRunQueue2> {
                                 resTojson != null
                                     ? Container(
                                         height: _height * 0.04,
-                                        width: _width * 0.42,
+                                        width: _width * 0.4,
                                         child: ListView.builder(
                                           itemCount:
                                               resTojson['callings'].length,
@@ -1547,139 +1549,6 @@ class _BoxRunQueue2State extends State<BoxRunQueue2> {
         ),
       ),
     );
-    // Column(
-    //   children: [
-    //     Container(
-    //         height: _height * 0.25,
-    //         width: _width,
-    //         child: Center(
-    //             child: Container(
-    //                 height: _height * 0.2,
-    //                 width: _width * 0.7,
-    //                 decoration: boxdecoration_box,
-    //                 child: Column(
-    //                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-    //                     children: [
-    //                       status(),
-    //                       Container(
-    //                           height: _height * 0.1,
-    //                           child: Container(
-    //                               height: _height * 0.1,
-    //                               width: _width * 0.68,
-    //                               child: Row(children: [
-    //                                 Container(
-    //                                   decoration: boxdecoration_boxbutton,
-    //                                   height: _height * 0.1,
-    //                                   width: _width * 0.3325,
-    //                                   child: Column(
-    //                                     children: [
-    //                                       Container(
-    //                                         height: _height * 0.05,
-    //                                         width: _width * 0.3325,
-    //                                         child: Center(
-    //                                             child: Text(
-    //                                           'คิวที่',
-    //                                           style: style,
-    //                                         )),
-    //                                       ),
-    //                                       Container(
-    //                                         decoration:
-    //                                             boxdecoration_boxbutton_in,
-    //                                         height: _height * 0.05,
-    //                                         width: _width * 0.3325,
-    //                                         child: numberqueue(),
-    //                                       )
-    //                                     ],
-    //                                   ),
-    //                                 ),
-    //                                 SizedBox(
-    //                                   width: _width * 0.015,
-    //                                 ),
-    //                                 Container(
-    //                                     decoration: boxdecoration_boxbutton,
-    //                                     height: _height * 0.1,
-    //                                     width: _width * 0.3325,
-    //                                     child: Column(children: [
-    //                                       Container(
-    //                                         height: _height * 0.05,
-    //                                         width: _width * 0.3325,
-    //                                         child: Center(
-    //                                             child: Text(
-    //                                           'ช่องบริการ',
-    //                                           style: style,
-    //                                         )),
-    //                                       ),
-    //                                       Container(
-    //                                           decoration:
-    //                                               boxdecoration_boxbutton_in,
-    //                                           height: _height * 0.05,
-    //                                           width: _width * 0.3325,
-    //                                           child: Center(
-    //                                               child: Text(
-    //                                             '',
-    //                                             style: style2,
-    //                                           )))
-    //                                     ]))
-    //                               ])))
-    //                     ])))),
-    // Container(
-    //   height: _height * 0.09,
-    //   width: _width,
-    //   child: Center(
-    //     child: Container(
-    //       height: _height * 0.09,
-    //       decoration: boxdecoration_box,
-    //       width: _width * 0.52,
-    //       child: Padding(
-    //         padding: const EdgeInsets.all(2.0),
-    //         child: Column(
-    //           mainAxisAlignment: MainAxisAlignment.spaceAround,
-    //           children: [
-    //             Container(
-    //               child: Row(
-    //                 children: [
-    //                   Container(
-    //                     height: _height * 0.038,
-    //                     width: _width * 0.12,
-    //                     decoration: boxdecoration_text_queue_blue,
-    //                     child:
-    //                         Center(child: Text('คิวต่อไป', style: style3)),
-    //                   ),
-    //                   Container(
-    //                     height: _height * 0.04,
-    //                     width: _width * 0.38,
-    //                     child: listQ(),
-    //                   )
-    //                 ],
-    //               ),
-    //             ),
-    //             Container(
-    //               child: Row(
-    //                 children: [
-    //                   Container(
-    //                     height: _height * 0.038,
-    //                     width: _width * 0.12,
-    //                     decoration: boxdecoration_text_queue_green,
-    //                     child: Center(
-    //                         child: Text('เรียกเเล้ว', style: style3)),
-    //                   ),
-    //                   Container(
-    //                     height: _height * 0.04,
-    //                     width: _width * 0.38,
-    //                     child: calleds(),
-    //                   )
-    //                 ],
-    //               ),
-    //             ),
-    //           ],
-    //         ),
-    //       ),
-    //     ),
-    //   ),
-    // )
-
-    //   ],
-    // );
   }
 }
 

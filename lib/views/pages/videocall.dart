@@ -340,8 +340,8 @@ class _RoomPageState extends State<RoomPage> {
                           Positioned(
                             bottom: -10,
                             child: Container(
-                              // color: Color.fromARGB(50, 255, 193, 7),
-                              height: _height * 0.08,
+                              //  color: Color.fromARGB(50, 255, 193, 7),
+                              height: _height * 0.07,
                               width: _width,
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.end,
@@ -430,11 +430,11 @@ class _RoomPageState extends State<RoomPage> {
                             ),
                           ),
                           Positioned(
-                            bottom: 40,
-                            left: 40,
+                            bottom: 5,
+                            left: 5,
                             child: Container(
                               height: _height * 0.15,
-                              width: _width * 0.15,
+                              width: _width * 0.2,
                               child: MediaStreamView(
                                 borderRadius: BorderRadius.circular(5),
                                 participant: localParticipant!,

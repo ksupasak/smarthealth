@@ -26,6 +26,10 @@ class DataProvider with ChangeNotifier {
   var resTojson;
   List<String> devicename = [];
   List<String> namescan = [
+    'Yuwell HT-YHW', //เครื่องวัดอุณหภูมิ D0:05:10:00:02:74
+    'Yuwell BO-YX110-FDC7', //เครื่องspo
+    'Yuwell BP-YE680A', //เครื่องวัดความดัน
+    //
     'HC-08',
     'MIBFS',
     'HJ-Narigmed',

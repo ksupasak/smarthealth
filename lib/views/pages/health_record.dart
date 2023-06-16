@@ -46,20 +46,52 @@ class _HealthRecordState extends State<HealthRecord> {
   TextEditingController uric = TextEditingController();
   TextEditingController height = TextEditingController();
   void restartdata() {
-    timer = Timer.periodic(const Duration(seconds: 1), (_) {
+    timer = Timer.periodic(const Duration(seconds: 2), (_) {
+      test();
+      // setState(() {
+      //   temp.text = context.read<DataProvider>().temp;
+      //   weight.text = context.read<DataProvider>().weight;
+      //   sys.text = context.read<DataProvider>().sys;
+      //   dia.text = context.read<DataProvider>().dia;
+      //   spo2.text = context.read<DataProvider>().spo2;
+      //   pr.text = context.read<DataProvider>().pr;
+      //   pulse.text = context.read<DataProvider>().pul;
+      //   fbs.text = context.read<DataProvider>().fbs;
+      //   si.text = context.read<DataProvider>().si;
+      //   uric.text = context.read<DataProvider>().uric;
+      // });
+    });
+  }
+
+  void test() {
+    if (spo2.text == '') {
+      setState(() {
+        spo2.text = context.read<DataProvider>().spo2;
+      });
+    }
+    if (temp.text == '') {
       setState(() {
         temp.text = context.read<DataProvider>().temp;
-        weight.text = context.read<DataProvider>().weight;
-        sys.text = context.read<DataProvider>().sys;
-        dia.text = context.read<DataProvider>().dia;
-        spo2.text = context.read<DataProvider>().spo2;
-        pr.text = context.read<DataProvider>().pr;
-        pulse.text = context.read<DataProvider>().pul;
-        fbs.text = context.read<DataProvider>().fbs;
-        si.text = context.read<DataProvider>().si;
-        uric.text = context.read<DataProvider>().uric;
       });
-    });
+    }
+    if (weight.text == '') {
+      setState(() {
+        weight.text = context.read<DataProvider>().weight;
+      });
+    }
+    if (sys.text == '') {
+      setState(() {
+        sys.text = context.read<DataProvider>().sys;
+      });
+    }
+    if (dia.text == '') {
+      setState(() {
+        dia.text = context.read<DataProvider>().dia;
+      });
+    }
+    if (pulse.text == '') {
+      pulse.text = context.read<DataProvider>().pul;
+    }
   }
 
   @override
@@ -93,7 +125,6 @@ class _HealthRecordState extends State<HealthRecord> {
         sys.text == '' ||
         dia.text == '' ||
         spo2.text == '' ||
-        pr.text == '' ||
         pulse == '') {
       showDialog(
           context: context,
@@ -177,6 +208,7 @@ class _HealthRecordState extends State<HealthRecord> {
             });
           });
         } else {
+          print(resTojson);
           setState(() {
             prevent = false;
             setState(() {
@@ -239,7 +271,7 @@ class _HealthRecordState extends State<HealthRecord> {
         ScanResult r = results.last;
 
         if (namescan.contains(r.device.name.toString())) {
-          r.device.connect();
+          r.device.connect(); //Yuwell HT-YHW
         }
       } else {}
     });
@@ -247,10 +279,9 @@ class _HealthRecordState extends State<HealthRecord> {
     _streamSubscription = Stream.periodic(Duration(seconds: 5)).listen((_) {
       FlutterBluePlus.instance.startScan(timeout: const Duration(seconds: 4));
       FlutterBluePlus.instance.scanResults.listen((results) {
-        print('streamtimeกำลังทำงาน');
         if (results.length > 0) {
           ScanResult r = results.last;
-
+          // print(r.device.name);
           if (namescan.contains(r.device.id.toString())) {
             r.device.connect();
           }
@@ -262,10 +293,13 @@ class _HealthRecordState extends State<HealthRecord> {
         .asyncMap((_) => flutterBlue.connectedDevices)
         .listen((connectedDevices) {
       connectedDevices.forEach((device) {
-        print('functionstreamtimeกำลังทำงาน');
+        print('functionstreamtimeกำลังทำงาน ');
         if (online_devices.containsKey(device.id.toString()) == false) {
           online_devices[device.id.toString()] = device.name;
-          if (device.name == 'HC-08') {
+          if (device.name == 'Yuwell HT-YHW') {
+            print('functionstreamtimeกำลังทำงาน ${device.name}');
+            //HC-08
+            // print("${device.id}");
             Hc08 hc08 = Hc08(device: device);
             hc08.parse().listen((temp) {
               if (temp != null && temp != '') {
@@ -277,7 +311,8 @@ class _HealthRecordState extends State<HealthRecord> {
                 });
               }
             });
-          } else if (device.name == 'HJ-Narigmed') {
+          } else if (device.name == 'Yuwell BO-YX110-FDC7') {
+            print('functionstreamtimeกำลังทำงาน ${device.name}');
             HjNarigmed hjNarigmed = HjNarigmed(device: device);
             hjNarigmed.parse().listen((mVal) {
               Map<String, String> val = HashMap();
@@ -289,7 +324,8 @@ class _HealthRecordState extends State<HealthRecord> {
                 context.read<DataProvider>().pr = mVal['pr'];
               });
             });
-          } else if (device.name == 'A&D_UA-651BLE_D57B3F') {
+          } else if (device.name == 'Yuwell BP-YE680A') {
+            print('functionstreamtimeกำลังทำงาน ${device.name}');
             AdUa651ble adUa651ble = AdUa651ble(device: device);
             adUa651ble.parse().listen((nVal) {
               Map<String, String> val = HashMap();
@@ -304,6 +340,7 @@ class _HealthRecordState extends State<HealthRecord> {
               });
             });
           } else if (device.name == 'MIBFS') {
+            print('functionstreamtimeกำลังทำงาน ${device.name}');
             Mibfs mibfs = Mibfs(device: device);
             mibfs.parse().listen((weight) {
               Map<String, String> val = HashMap();
@@ -358,7 +395,7 @@ class _HealthRecordState extends State<HealthRecord> {
                     children: [
                   BoxRecord(
                       image: 'assets/shr.png',
-                      texthead: 'height',
+                      texthead: 'HEIGHT',
                       keyvavlue: height),
                   Line(height: heightline, color: teamcolor),
                   BoxRecord(
