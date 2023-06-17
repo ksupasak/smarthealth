@@ -296,7 +296,7 @@ class _HealthRecordState extends State<HealthRecord> {
         print('functionstreamtimeกำลังทำงาน ');
         if (online_devices.containsKey(device.id.toString()) == false) {
           online_devices[device.id.toString()] = device.name;
-          if (device.name == 'Yuwell HT-YHW') {
+          if (device.name == 'HC-08') {
             print('functionstreamtimeกำลังทำงาน ${device.name}');
             //HC-08
             // print("${device.id}");
@@ -311,7 +311,7 @@ class _HealthRecordState extends State<HealthRecord> {
                 });
               }
             });
-          } else if (device.name == 'Yuwell BO-YX110-FDC7') {
+          } else if (device.name == 'HJ-Narigmed') {
             print('functionstreamtimeกำลังทำงาน ${device.name}');
             HjNarigmed hjNarigmed = HjNarigmed(device: device);
             hjNarigmed.parse().listen((mVal) {
@@ -324,7 +324,7 @@ class _HealthRecordState extends State<HealthRecord> {
                 context.read<DataProvider>().pr = mVal['pr'];
               });
             });
-          } else if (device.name == 'Yuwell BP-YE680A') {
+          } else if (device.name == 'A&D_UA-651BLE_D57B3F') {
             print('functionstreamtimeกำลังทำงาน ${device.name}');
             AdUa651ble adUa651ble = AdUa651ble(device: device);
             adUa651ble.parse().listen((nVal) {
