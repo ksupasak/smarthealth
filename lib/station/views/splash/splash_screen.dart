@@ -37,6 +37,7 @@ class _Splash_ScreenState extends State<Splash_Screen> {
   var care_unit_id;
   var platfromURL;
   var passwordsetting;
+  var myapp;
   late List<RecordSnapshot<int, Map<String, Object?>>> init;
   bool status = false;
   final idcard = Numpad();
@@ -44,6 +45,7 @@ class _Splash_ScreenState extends State<Splash_Screen> {
   Stream<String>? entry;
   Timer? readingtime;
   Timer? reading;
+
   Future<void> printDatabase() async {
     var device;
 
@@ -53,6 +55,7 @@ class _Splash_ScreenState extends State<Splash_Screen> {
       platfromURL = record['platfromURL'].toString();
       care_unit_id = record['care_unit_id'].toString();
       passwordsetting = record['passwordsetting'].toString();
+      myapp = record['myapp'].toString();
       care_unit = record['care_unit'].toString();
       device = record['device'];
       print(name_hospital);
@@ -70,6 +73,7 @@ class _Splash_ScreenState extends State<Splash_Screen> {
     context.read<DataProvider>().care_unit_id = care_unit_id;
     context.read<DataProvider>().passwordsetting = passwordsetting;
     context.read<DataProvider>().care_unit = care_unit;
+    context.read<DataProvider>().myapp = myapp;
     setState(() {
       addDataInfoToDatabase(context.read<DataProvider>());
     });

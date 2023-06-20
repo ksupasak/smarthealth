@@ -103,6 +103,7 @@ class _InitsettingState extends State<Initsetting> {
     context.read<DataProvider>().password = passwordsetting.text;
     context.read<DataProvider>().care_unit = care_unit.text;
     context.read<DataProvider>().app = app.text;
+
     setState(() {
       addDataInfoToDatabase(context.read<DataProvider>());
       Navigator.pushReplacement(

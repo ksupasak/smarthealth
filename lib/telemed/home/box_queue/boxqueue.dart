@@ -5,7 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:provider/provider.dart';
-import 'package:smarthealth/myapp/provider/provider.dart';
+import 'package:smart_health/myapp/provider/provider.dart';
+
 import 'package:http/http.dart' as http;
 
 class BoxQueue extends StatefulWidget {

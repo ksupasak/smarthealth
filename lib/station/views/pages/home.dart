@@ -352,7 +352,7 @@ class _HomeappState extends State<Homeapp> {
     setState(() {
       context.read<DataProvider>().id = '';
     });
-    // lop();
+    lop();
     // TODO: implement initState
     super.initState();
   }

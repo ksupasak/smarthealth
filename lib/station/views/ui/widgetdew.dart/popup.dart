@@ -45,7 +45,8 @@ class _PopupState extends State<Popup> {
           : Text(
               "${widget.texthead}",
               style: TextStyle(
-                  fontFamily: context.read<DataProvider>().fontFamily,
+                  fontFamily:
+                      'Prompt', //context.read<DataProvider>().fontFamily,
                   fontSize:
                       widget.fontSize == null ? 16 : _width * widget.fontSize),
             ),
@@ -54,7 +55,8 @@ class _PopupState extends State<Popup> {
           : Text(
               "${widget.textbody}",
               style: TextStyle(
-                  fontFamily: context.read<DataProvider>().fontFamily,
+                  fontFamily:
+                      'Prompt', //context.read<DataProvider>().fontFamily,
                   fontSize:
                       widget.fontSize == null ? 16 : _width * widget.fontSize),
             ),

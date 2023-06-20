@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
-import 'package:smarthealth/telemed/home/box_queue/boxqueue.dart';
-import 'package:smarthealth/telemed/widget/backgrund.dart';
-import 'package:smarthealth/telemed/widget/boxhead.dart';
-import 'package:smarthealth/telemed/widget/numpad.dart';
+import 'package:smart_health/telemed/home/box_queue/boxqueue.dart';
+import 'package:smart_health/telemed/widget/backgrund.dart';
+import 'package:smart_health/telemed/widget/boxhead.dart';
+import 'package:smart_health/telemed/widget/numpad.dart';
 
 class HomeTelemed extends StatefulWidget {
   const HomeTelemed({super.key});

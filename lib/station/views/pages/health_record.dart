@@ -149,7 +149,7 @@ class _HealthRecordState extends State<HealthRecord> {
                     onTap: () {
                       recorddata();
 
-                      context.read<Datafunction>().playsound();
+                      //   context.read<Datafunction>().playsound();
                     },
                     child: MarkCheck(
                         pathicon: 'assets/check.png',

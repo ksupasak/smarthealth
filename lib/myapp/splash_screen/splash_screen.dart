@@ -10,6 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:smart_health/station/main_app/app.dart';
 //import 'package:smart_health/telemed/home/homeapp.dart';
 
 class Splash_Screen extends StatefulWidget {
@@ -92,8 +93,8 @@ class _Splash_ScreenState extends State<Splash_Screen> {
       Navigator.pushReplacement(
           context, MaterialPageRoute(builder: (context) => HomeCareCevier()));
     } else if (context.read<DataProvider>().app == 'station') {
-      // Navigator.pushReplacement(
-      //     context, MaterialPageRoute(builder: (context) => HomeTelemed()));
+      Navigator.pushReplacement(
+          context, MaterialPageRoute(builder: (context) => App()));
     } else {
       Navigator.pushReplacement(
           context, MaterialPageRoute(builder: (context) => Setting()));

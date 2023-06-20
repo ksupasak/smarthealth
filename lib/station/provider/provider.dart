@@ -10,7 +10,7 @@ class DataProvider with ChangeNotifier {
   String name_hospital = ''; //NAME OF HOSPITAL
   String care_unit = ''; //Care Unit
   String platfromURL = ''; //https://emr-life.com/clinic_master/clinic/Api/
-
+  String myapp = '';
   String care_unit_id = ''; //63d79d61790f9bc857000006
   String passwordsetting = ''; //
   String fontFamily = 'Prompt'; //
