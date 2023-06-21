@@ -27,18 +27,17 @@ class _ScanBLEState extends State<ScanBLE> {
     setState(() {
       button = true;
     });
-    Future.delayed(const Duration(seconds: 5), () {
+    Future.delayed(const Duration(seconds: 12), () {
       setState(() {
         button = false;
         scanconnected();
       });
     });
     print('กำลังเเสกน');
-    FlutterBluePlus.instance.startScan(timeout: const Duration(seconds: 4));
+    FlutterBluePlus.instance.startScan(timeout: const Duration(seconds: 10));
     FlutterBluePlus.instance.scanResults.listen((results) {
       if (results.length > 0) {
         ScanResult r = results.last;
-        // print(r);
         if (namescan.contains(r.device.name.toString())) {
           print('เจอdeviceที่กำหนด');
           print("name= ${r.device.name} id= ${r.device.id}");
@@ -54,7 +53,7 @@ class _ScanBLEState extends State<ScanBLE> {
     setState(() {
       button = true;
     });
-    Future.delayed(const Duration(seconds: 5), () {
+    Future.delayed(const Duration(seconds: 2), () {
       setState(() {
         button = false;
       });

@@ -15,7 +15,7 @@ class DataProvider with ChangeNotifier {
   var resTojson;
   String id = '';
   String colortexts = '';
-
+  String audio = 'massad.mp3';
   String temp = '';
   String weight = '';
   String sys = '';
@@ -28,8 +28,8 @@ class DataProvider with ChangeNotifier {
   String uric = '';
   List<String> namescan = [
     'Yuwell HT-YHW', //เครื่องวัดอุณหภูมิ D0:05:10:00:02:74
-    'Yuwell BO-YX110-FDC7', //เครื่องspo
-    'Yuwell BP-YE680A', //เครื่องวัดความดัน
+    'Yuwell BO-YX110-FDC7', //เครื่องspo  Yuwell_BO_YX110_FDC7
+    'Yuwell BP-YE680A', //เครื่องวัดความดัน  Yuwell_BP_YE680A
     //
     // 'HC-08',
     'MIBFS',

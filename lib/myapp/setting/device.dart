@@ -17,7 +17,8 @@ class Device extends StatefulWidget {
 
 class _DeviceState extends State<Device> {
   late List<RecordSnapshot<int, Map<String, Object?>>> init;
-  List item = [];
+  List<dynamic> item = [];
+  List<MapEntry<String, Object?>> deviceList = [];
   Map<String, String> imagesdevice = {
     'FT_F5F30C4C52DE': '',
     'Yuwell HT-YHW': 'LINE_ALBUM_yuwell_230620.jpg',
@@ -38,14 +39,11 @@ class _DeviceState extends State<Device> {
     for (RecordSnapshot<int, Map<String, Object?>> record in init) {
       context.read<DataProvider>().mapdevices = record['mapdevices'];
     }
+    List<MapEntry<String, Object?>> deviceList =
+        context.read<DataProvider>().mapdevices.entries.toList();
     print(context.read<DataProvider>().mapdevices);
-    // print('splittedค่า');
-    // final splitted =
-    //     context.read<DataProvider>().mapdevices.toString().split(',');
-    // item = splitted;
-    // print(splitted);
-    //
-//
+    print(deviceList);
+
     print('โหลดเสร็จเเล้ว');
     Future.delayed(const Duration(seconds: 1), () {
       setState(() {
@@ -111,6 +109,7 @@ class _DeviceState extends State<Device> {
     final store = intMapStoreFactory.store('smart_healt_device');
     var records = await store.find(db);
     print(records);
+
     if ((records.length == 0)) {
       Map<String, Object?> mapdevices = {};
       final key = await store.add(db, {'mapdevices': mapdevices});
@@ -138,64 +137,69 @@ class _DeviceState extends State<Device> {
         child: ListView(
           children: [
 ///////////
-            ListView.builder(
-              itemCount: item.length,
-              itemBuilder: (BuildContext context, int index) {
-                Map<String, Object?> device = item[index];
-                return ListTile(
-                  title: Text('name'),
-                  subtitle: Text('Age:  '),
-                  onTap: () {
-                    // ทำสิ่งที่ต้องการเมื่อคลิกที่รายการ
-                    print('คลิกที่รายการที่ $index');
-                  },
-                );
-              },
+
+            Container(
+              height: _height * 0.5,
+              child: ListView.builder(
+                itemCount: deviceList.length,
+                itemBuilder: (context, index) {
+                  final entry = deviceList[index];
+                  final key = entry.key;
+                  final value = entry.value;
+
+                  return ListTile(
+                    title: Text(key),
+                    subtitle: Text(value.toString()),
+                  );
+                },
+              ),
             ),
-            Column(
-              children: item
-                  .map((d) => Dismissible(
-                        key: ValueKey(d),
-                        child: Container(
-                          height: 50,
-                          width: _width,
-                          color: Colors.green,
-                          child: Column(
-                            children: [
-                              Text("${d['name']}  ${namedevice[d['name']]}"),
-                            ],
-                          ),
-                        ),
-                        onDismissed: (direction) {
-                          setState(() {});
-                          ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(content: Text('ลบอุปกรณ์ $d')));
-                        },
-                        confirmDismiss: (direction) async {
-                          return await showDialog(
-                            context: context,
-                            builder: (BuildContext context) {
-                              return AlertDialog(
-                                title: const Text("Confirm"),
-                                content: const Text("ยกเลิกการเชื่อมต่อ"),
-                                actions: <Widget>[
-                                  TextButton(
-                                      onPressed: () =>
-                                          Navigator.of(context).pop(false),
-                                      child: const Text("CANCEL")),
-                                  TextButton(
-                                      onPressed: () =>
-                                          Navigator.of(context).pop(true),
-                                      child: const Text("DELETE"))
-                                ],
-                              );
-                            },
-                          );
-                        },
-                        background: Container(color: Colors.red),
-                      ))
-                  .toList(),
-            ),
+
+            // Column(
+            //   children: deviceList
+            //       .map((d) => Dismissible(
+            //             key: ValueKey(d),
+            //             child: Container(
+            //               height: 50,
+            //               width: _width,
+            //               color: Colors.green,
+            //               child: Column(
+            //                 children: [
+            //                   Text("---"),
+            //                 ],
+            //               ),
+            //             ),
+            //             onDismissed: (direction) {
+            //               setState(() {});
+            //               ScaffoldMessenger.of(context).showSnackBar(
+            //                   SnackBar(content: Text('ลบอุปกรณ์ $d')));
+            //             },
+            //             confirmDismiss: (direction) async {
+            //               return await showDialog(
+            //                 context: context,
+            //                 builder: (BuildContext context) {
+            //                   return AlertDialog(
+            //                     title: const Text("Confirm"),
+            //                     content: const Text("ยกเลิกการเชื่อมต่อ"),
+            //                     actions: <Widget>[
+            //                       TextButton(
+            //                           onPressed: () =>
+            //                               Navigator.of(context).pop(false),
+            //                           child: const Text("CANCEL")),
+            //                       TextButton(
+            //                           onPressed: () =>
+            //                               Navigator.of(context).pop(true),
+            //                           child: const Text("DELETE"))
+            //                     ],
+            //                   );
+            //                 },
+            //               );
+            //             },
+            //             background: Container(color: Colors.red),
+            //           ))
+            //       .toList(),
+            // ),
+
 ////////
             Column(
               children: context.read<DataProvider>().mapdevices == null
