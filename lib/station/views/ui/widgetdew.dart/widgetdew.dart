@@ -21,6 +21,7 @@ import 'package:smart_health/station/background/color/style_color.dart';
 import 'package:smart_health/station/provider/provider.dart';
 import 'package:smart_health/station/provider/provider_function.dart';
 import 'package:smart_health/station/test/esm_printer.dart';
+import 'package:smart_health/station/views/pages/health_record.dart';
 import 'package:smart_health/station/views/pages/print_exam.dart';
 import 'package:smart_health/station/views/pages/videocall.dart';
 import 'package:smart_health/station/views/ui/widgetdew.dart/popup.dart';
@@ -732,6 +733,21 @@ class _BoxShoHealth_RecordsState extends State<BoxShoHealth_Records> {
         fontFamily: context.read<DataProvider>().fontFamily,
         color: Color.fromARGB(255, 12, 172, 153),
         fontSize: _width * 0.025);
+    BoxDecoration boxDecorate = BoxDecoration(
+        color: Color(0xff31D6AA),
+        borderRadius: BorderRadius.circular(15),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey,
+            offset: Offset(0, 4),
+            blurRadius: 5,
+          )
+        ]);
+    TextStyle style = TextStyle(
+        fontWeight: FontWeight.w500,
+        fontFamily: context.read<DataProvider>().fontFamily,
+        fontSize: _width * 0.03,
+        color: Colors.white);
     return Container(
       width: _width,
       child: Column(
@@ -855,7 +871,30 @@ class _BoxShoHealth_RecordsState extends State<BoxShoHealth_Records> {
                       child: Center(
                           child: Text('ไม่มีข้อมูลสุขภาพ', style: styletext4)),
                     )
-              : Container()
+              : Container(),
+          Container(
+            child: GestureDetector(
+                onTap: () {
+                  setState(() {
+                    Get.offNamed('healthrecord');
+                    // Navigator.push(
+                    //     context,
+                    //     MaterialPageRoute(
+                    //         builder: (context) => HealthRecord()));
+                  });
+                },
+                child: Container(
+                    height: _height * 0.05,
+                    width: _width * 0.3,
+                    decoration: boxDecorate,
+                    child: Row(children: [
+                      Image.asset('assets/erbhjr.png'),
+                      Text(
+                        'ตรวจสุขภาพ',
+                        style: style,
+                      )
+                    ]))),
+          )
         ],
       ),
     );
@@ -3053,6 +3092,7 @@ class _ButtonAddAppointTodayState extends State<ButtonAddAppointToday> {
           blurRadius: 5,
         )
       ]);
+
   @override
   Widget build(BuildContext context) {
     double _width = MediaQuery.of(context).size.width;

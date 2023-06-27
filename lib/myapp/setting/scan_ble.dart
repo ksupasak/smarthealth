@@ -18,23 +18,28 @@ class ScanBLE extends StatefulWidget {
 
 class _ScanBLEState extends State<ScanBLE> {
   bool button = false;
+  bool refresh = false;
   List<String> namescan = DataProvider().namescan;
   List<ScanResult> listscan = [];
   List<BluetoothDevice> connected = [];
   Map<String, String> listadddevice = {};
   StreamSubscription? _functionscanconnected;
+  String titleappbar = '';
   void scan() {
     setState(() {
+      titleappbar = 'กำลังค้นหาอุปกรณ์...';
       button = true;
+      refresh = true;
     });
-    Future.delayed(const Duration(seconds: 12), () {
+    Future.delayed(const Duration(seconds: 4), () {
       setState(() {
         button = false;
+        refresh = false;
         scanconnected();
       });
     });
     print('กำลังเเสกน');
-    FlutterBluePlus.instance.startScan(timeout: const Duration(seconds: 10));
+    FlutterBluePlus.instance.startScan(timeout: const Duration(seconds: 4));
     FlutterBluePlus.instance.scanResults.listen((results) {
       if (results.length > 0) {
         ScanResult r = results.last;
@@ -52,10 +57,13 @@ class _ScanBLEState extends State<ScanBLE> {
   Future<void> scanconnected() async {
     setState(() {
       button = true;
+      refresh = true;
     });
     Future.delayed(const Duration(seconds: 2), () {
       setState(() {
+        titleappbar = 'ค้นหาเสร็จสิ้น';
         button = false;
+        refresh = false;
       });
     });
     print('กำลังเเสกนdeviceที่เคยconnect');
@@ -123,6 +131,39 @@ class _ScanBLEState extends State<ScanBLE> {
     double _width = MediaQuery.of(context).size.width;
     double _height = MediaQuery.of(context).size.height;
     return Scaffold(
+      appBar: AppBar(
+        title: Text(
+          titleappbar,
+          style: TextStyle(color: Colors.black),
+        ),
+        backgroundColor: Color.fromARGB(255, 255, 255, 255),
+        actions: [
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: GestureDetector(
+              onTap: () {
+                setState(() {
+                  scan();
+                });
+              },
+              child: refresh == false
+                  ? Icon(
+                      Icons.search,
+                      color: Colors.black,
+                    )
+                  : Container(
+                      width: _width * 0.1,
+                      child: Center(
+                        child: CircularProgressIndicator(
+                          color: Colors.black,
+                        ),
+                      ),
+                    ),
+            ),
+          ),
+        ],
+      ),
+      backgroundColor: Colors.white,
       body: ListView(children: [
         Column(
           children: [
@@ -135,48 +176,159 @@ class _ScanBLEState extends State<ScanBLE> {
                     children: [
                       ListTile(
                         title: Container(
-                          decoration: BoxDecoration(border: Border.all()),
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10),
+                              color: Colors.white,
+                              boxShadow: [
+                                BoxShadow(
+                                    color: Color.fromARGB(255, 42, 100, 45),
+                                    blurRadius: 1,
+                                    offset: Offset(0, 1))
+                              ]),
                           child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Column(
+                            padding: const EdgeInsets.all(0.0),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
                               children: [
-                                Row(
-                                  children: [
-                                    Container(
-                                        child: listscan[index].device.name ==
-                                                'Yuwell HT-YHW'
-                                            ? Text('เครื่องวัดอุณหภูมิ')
-                                            : listscan[index].device.name ==
-                                                    'Yuwell BO-YX110-FDC7'
-                                                ? Text('เครื่องspo')
-                                                : listscan[index].device.name ==
-                                                        'Yuwell BP-YE680A'
-                                                    ? Text('เครื่องวัดความดัน')
-                                                    : listscan[index]
-                                                                .device
-                                                                .name ==
-                                                            'MIBFS'
-                                                        ? Text(
-                                                            'เครื่องชั่งน้ำหนัก')
-                                                        : listscan[index]
-                                                                    .device
-                                                                    .name ==
-                                                                'FT_F5F30C4C52DE'
-                                                            ? Text(
-                                                                'เครื่องอ่านบัตร')
-                                                            : Text('--')),
-                                  ],
+                                Container(
+                                  height: _height * 0.1,
+                                  width: _width * 0.2,
+                                  child: context
+                                                  .read<DataProvider>()
+                                                  .imagesdevice[
+                                              listscan[index].device.name] !=
+                                          ''
+                                      ? Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: Image.asset(
+                                              "assets/${context.read<DataProvider>().imagesdevice[listscan[index].device.name]}"),
+                                        )
+                                      : SizedBox(),
                                 ),
-                                Text(
-                                    "ยี่ห้อ ${listscan[index].device.name} id ${listscan[index].device.id}"),
+                                Container(
+                                  width: _width * 0.6,
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(context
+                                          .read<DataProvider>()
+                                          .namedevice[
+                                              listscan[index].device.name]
+                                          .toString()),
+                                      Text(
+                                          "Name : ${listscan[index].device.name}"),
+                                      Text(
+                                          "Id : ${listscan[index].device.id.toString()}"),
+                                    ],
+                                  ),
+                                ),
+                                GestureDetector(
+                                    onTap: () {
+                                      showDialog(
+                                          context: context,
+                                          builder: (BuildContext context) {
+                                            return AlertDialog(
+                                                title: Text(
+                                                  'เพิ่มอุปกรณ์',
+                                                  style: TextStyle(
+                                                      color: Colors.black),
+                                                ),
+                                                content: Container(
+                                                  color: Colors.white,
+                                                  width: _width * 0.6,
+                                                  height: _height * 0.08,
+                                                  child: Row(
+                                                    children: [
+                                                      Container(
+                                                        height: _height * 0.1,
+                                                        width: _width * 0.1,
+                                                        child: context
+                                                                    .read<
+                                                                        DataProvider>()
+                                                                    .imagesdevice[listscan[
+                                                                        index]
+                                                                    .device
+                                                                    .name] !=
+                                                                ''
+                                                            ? Padding(
+                                                                padding:
+                                                                    const EdgeInsets
+                                                                            .all(
+                                                                        8.0),
+                                                                child: Image.asset(
+                                                                    "assets/${context.read<DataProvider>().imagesdevice[listscan[index].device.name]}"),
+                                                              )
+                                                            : SizedBox(),
+                                                      ),
+                                                      Column(
+                                                        crossAxisAlignment:
+                                                            CrossAxisAlignment
+                                                                .start,
+                                                        children: [
+                                                          Text(context
+                                                              .read<
+                                                                  DataProvider>()
+                                                              .namedevice[
+                                                                  listscan[
+                                                                          index]
+                                                                      .device
+                                                                      .name]
+                                                              .toString()),
+                                                          Text(
+                                                              "${listscan[index].device.name}"),
+                                                          Text(
+                                                              "${listscan[index].device.id.toString()}"),
+                                                        ],
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                                actions: [
+                                                  Padding(
+                                                    padding:
+                                                        const EdgeInsets.all(
+                                                            8.0),
+                                                    child: GestureDetector(
+                                                        onTap: () {
+                                                          Navigator.pop(
+                                                              context);
+                                                          adddevice(
+                                                              listscan[index]
+                                                                  .device
+                                                                  .name,
+                                                              listscan[index]
+                                                                  .device
+                                                                  .id
+                                                                  .toString());
+                                                        },
+                                                        child: Text('เพิ่ม')),
+                                                  ),
+                                                  Padding(
+                                                    padding:
+                                                        const EdgeInsets.all(
+                                                            8.0),
+                                                    child: GestureDetector(
+                                                        onTap: () {
+                                                          Navigator.pop(
+                                                              context);
+                                                        },
+                                                        child: Text('กลับ')),
+                                                  )
+                                                ]);
+                                          });
+                                    },
+                                    child: Container(
+                                      width: _width * 0.1,
+                                      child: Icon(
+                                        Icons.add,
+                                        color: Colors.green,
+                                      ),
+                                    ))
                               ],
                             ),
                           ),
                         ),
-                        onTap: () {
-                          adddevice(listscan[index].device.name,
-                              listscan[index].device.id.toString());
-                        },
                       ),
                     ],
                   );
@@ -192,40 +344,145 @@ class _ScanBLEState extends State<ScanBLE> {
                     children: [
                       ListTile(
                         title: Container(
-                          decoration: BoxDecoration(border: Border.all()),
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10),
+                              color: Colors.white,
+                              boxShadow: [
+                                BoxShadow(
+                                    color: Color.fromARGB(255, 42, 100, 45),
+                                    blurRadius: 1,
+                                    offset: Offset(0, 1))
+                              ]),
                           child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Column(
+                            padding: const EdgeInsets.all(0.0),
+                            child: Row(
                               children: [
-                                Row(
-                                  children: [
-                                    Container(
-                                        child: connected[index].name ==
-                                                'Yuwell HT-YHW'
-                                            ? Text('เครื่องวัดอุณหภูมิ')
-                                            : connected[index].name ==
-                                                    'Yuwell BO-YX110-FDC7'
-                                                ? Text('เครื่องspo')
-                                                : connected[index].name ==
-                                                        'Yuwell BP-YE680A'
-                                                    ? Text('เครื่องวัดความดัน')
-                                                    : connected[index].name ==
-                                                            'MIBFS'
-                                                        ? Text(
-                                                            'เครื่องชั่งน้ำหนัก')
-                                                        : Text('--')),
-                                  ],
+                                Container(
+                                  height: _height * 0.1,
+                                  width: _width * 0.2,
+                                  child: context
+                                              .read<DataProvider>()
+                                              .imagesdevice ==
+                                          ''
+                                      ? SizedBox()
+                                      : Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: Image.asset(
+                                              "assets/${context.read<DataProvider>().imagesdevice[connected[index].name]}"),
+                                        ),
                                 ),
-                                Text(
-                                    "ยี่ห้อ ${connected[index].name} id ${connected[index].id} เคยเชื่อมต่อ"),
+                                Container(
+                                  width: _width * 0.6,
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(context
+                                          .read<DataProvider>()
+                                          .namedevice[connected[index].name]
+                                          .toString()),
+                                      Text("Name : ${connected[index].name}"),
+                                      Text("Id :  ${connected[index].id}")
+                                    ],
+                                  ),
+                                ),
+                                GestureDetector(
+                                    onTap: () {
+                                      showDialog(
+                                          context: context,
+                                          builder: (BuildContext context) {
+                                            return AlertDialog(
+                                                title: Text(
+                                                  'เพิ่มอุปกรณ์',
+                                                  style: TextStyle(
+                                                      color: Colors.black),
+                                                ),
+                                                content: Container(
+                                                  color: Colors.white,
+                                                  width: _width * 0.6,
+                                                  height: _height * 0.08,
+                                                  child: Row(
+                                                    children: [
+                                                      Container(
+                                                        height: _height * 0.1,
+                                                        width: _width * 0.1,
+                                                        child: context
+                                                                    .read<
+                                                                        DataProvider>()
+                                                                    .imagesdevice[connected[
+                                                                        index]
+                                                                    .name] ==
+                                                                ''
+                                                            ? Image.asset(
+                                                                "assets/${context.read<DataProvider>().imagesdevice[connected[index].name]}")
+                                                            : SizedBox(),
+                                                      ),
+                                                      Column(
+                                                        crossAxisAlignment:
+                                                            CrossAxisAlignment
+                                                                .start,
+                                                        children: [
+                                                          Text(context
+                                                              .read<
+                                                                  DataProvider>()
+                                                              .namedevice[
+                                                                  connected[
+                                                                          index]
+                                                                      .name]
+                                                              .toString()),
+                                                          Text(
+                                                              "Name : ${connected[index].name}"),
+                                                          Text(
+                                                              "Id :  ${connected[index].id}")
+                                                        ],
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                                actions: [
+                                                  Padding(
+                                                    padding:
+                                                        const EdgeInsets.all(
+                                                            8.0),
+                                                    child: GestureDetector(
+                                                        onTap: () {
+                                                          Navigator.pop(
+                                                              context);
+
+                                                          adddevice(
+                                                              connected[index]
+                                                                  .name,
+                                                              connected[index]
+                                                                  .id
+                                                                  .toString());
+                                                        },
+                                                        child: Text('เพิ่ม')),
+                                                  ),
+                                                  Padding(
+                                                    padding:
+                                                        const EdgeInsets.all(
+                                                            8.0),
+                                                    child: GestureDetector(
+                                                        onTap: () {
+                                                          Navigator.pop(
+                                                              context);
+                                                        },
+                                                        child: Text('กลับ')),
+                                                  )
+                                                ]);
+                                          });
+                                    },
+                                    child: Container(
+                                      width: _width * 0.1,
+                                      child: Icon(
+                                        Icons.add,
+                                        color: Colors.blue,
+                                      ),
+                                    ))
                               ],
                             ),
                           ),
                         ),
-                        onTap: () {
-                          adddevice(connected[index].name,
-                              connected[index].id.toString());
-                        },
                       ),
                     ],
                   );
@@ -234,41 +491,6 @@ class _ScanBLEState extends State<ScanBLE> {
             ),
           ],
         ),
-        button == false
-            ? GestureDetector(
-                onTap: scan,
-                child: Container(
-                  child: Center(
-                    child: Container(
-                        height: 50,
-                        width: _width * 0.9,
-                        decoration: BoxDecoration(
-                            color: Colors.white,
-                            boxShadow: [BoxShadow()],
-                            border: Border.all(
-                                color: Color.fromARGB(255, 0, 85, 71),
-                                width: 2),
-                            borderRadius: BorderRadius.circular(5)),
-                        child: Center(
-                          child: Text(
-                            'เเสกน',
-                            style: TextStyle(
-                                color: Color.fromARGB(255, 0, 85, 71),
-                                fontSize: _width * 0.05),
-                          ),
-                        )),
-                  ),
-                ),
-              )
-            : Container(
-                child: Center(
-                  child: Container(
-                    width: MediaQuery.of(context).size.width * 0.05,
-                    height: MediaQuery.of(context).size.width * 0.05,
-                    child: CircularProgressIndicator(),
-                  ),
-                ),
-              ),
       ]),
     );
   }

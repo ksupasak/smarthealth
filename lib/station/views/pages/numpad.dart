@@ -4,6 +4,7 @@ import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
+import 'package:smart_health/myapp/setting/setting.dart';
 import 'package:smart_health/station/provider/provider.dart';
 import 'package:smart_health/station/provider/provider_function.dart';
 import 'dart:async';
@@ -351,7 +352,11 @@ class _NumpadState extends State<Numpad> {
                                           .read<DataProvider>()
                                           .passwordsetting ==
                                       context.read<DataProvider>().id) {
-                                    Get.offNamed('setting');
+                                    //    Get.offNamed('setting');
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) => Setting()));
                                     print('ตั่งค่า');
                                   }
                                 },

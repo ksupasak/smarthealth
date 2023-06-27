@@ -13,6 +13,8 @@ import 'package:smart_health/station/background/background.dart';
 import 'package:smart_health/station/background/color/style_color.dart';
 import 'package:smart_health/station/provider/provider.dart';
 import 'package:smart_health/station/provider/provider_function.dart';
+
+import 'package:smart_health/myapp/menu/menuhome.dart';
 import 'package:smart_health/station/views/pages/numpad.dart';
 import 'package:smart_health/station/views/pages/user_information2.dart';
 import 'package:smart_health/station/views/pages/videocall.dart';
@@ -69,8 +71,6 @@ class _HomeappState extends State<Homeapp> {
             });
 
             Timer(Duration(seconds: 1), () {
-              // readingtime?.cancel();
-              // reading?.cancel();
               Get.toNamed('user_information');
             });
           } else if (resTojson['message'] == 'not found') {
@@ -287,6 +287,8 @@ class _HomeappState extends State<Homeapp> {
           entry?.listen((String data) async {
             List<String> splitted = data.split('#');
             print("IDCard " + data);
+            context.read<DataProvider>().id = splitted[0].toString();
+            context.read<DataProvider>().regter_data = splitted;
             setState(() {
               context.read<DataProvider>().regter_data = splitted;
               context.read<DataProvider>().id = splitted[0].toString();
@@ -335,14 +337,12 @@ class _HomeappState extends State<Homeapp> {
                   width: MediaQuery.of(context).size.width,
                   child: Center(
                       child: Text(
-                    'ยังไม่ได้ตั่งค่าplatfromURL',
+                    "can't connect URL",
                     style: TextStyle(
                         fontFamily: context.read<DataProvider>().fontFamily,
                         fontSize: MediaQuery.of(context).size.width * 0.03),
                   )))));
-        } else {
-          readerID();
-        }
+        } else {}
       });
     });
   }
@@ -352,7 +352,8 @@ class _HomeappState extends State<Homeapp> {
     setState(() {
       context.read<DataProvider>().id = '';
     });
-    lop();
+    //  lop();
+    readerID();
     // TODO: implement initState
     super.initState();
   }
@@ -476,6 +477,35 @@ class _HomeappState extends State<Homeapp> {
                               ],
                             ),
                           ),
+                          GestureDetector(
+                            onTap: () {
+                              //  Navigator.pop(context);
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => MenuHome()));
+                            },
+                            child: Container(
+                              height: _height * 0.05,
+                              width: _width * 0.4,
+                              //   color: Colors.amber,
+                              child: Center(
+                                  child: Text(
+                                'กลับ',
+                                style: TextStyle(
+                                    shadows: [
+                                      Shadow(
+                                          color: Colors.black,
+                                          blurRadius: 1,
+                                          offset: Offset(0, 1))
+                                    ],
+                                    color: Colors.white,
+                                    fontFamily:
+                                        context.read<DataProvider>().fontFamily,
+                                    fontSize: _width * 0.04),
+                              )),
+                            ),
+                          )
                         ],
                       )),
                     ),

@@ -48,50 +48,64 @@ class _HealthRecordState extends State<HealthRecord> {
   void restartdata() {
     timer = Timer.periodic(const Duration(seconds: 2), (_) {
       test();
-      // setState(() {
-      //   temp.text = context.read<DataProvider>().temp;
-      //   weight.text = context.read<DataProvider>().weight;
-      //   sys.text = context.read<DataProvider>().sys;
-      //   dia.text = context.read<DataProvider>().dia;
-      //   spo2.text = context.read<DataProvider>().spo2;
-      //   pr.text = context.read<DataProvider>().pr;
-      //   pulse.text = context.read<DataProvider>().pul;
-      //   fbs.text = context.read<DataProvider>().fbs;
-      //   si.text = context.read<DataProvider>().si;
-      //   uric.text = context.read<DataProvider>().uric;
-      // });
     });
   }
 
   void test() {
-    if (spo2.text == '') {
+    String temp_value = '';
+    String weight_value = '';
+    String sys_value = '';
+    String dia_value = '';
+    String spo2_value = '';
+    String pr_value = '';
+    String pulse_value = '';
+    String fbs_value = '';
+    String si_value = '';
+    String uric_value = '';
+    timer = Timer.periodic(const Duration(seconds: 2), (_) {
       setState(() {
-        spo2.text = context.read<DataProvider>().spo2;
+        if (temp_value != context.read<DataProvider>().temp) {
+          temp.text = context.read<DataProvider>().temp;
+          temp_value = context.read<DataProvider>().temp;
+        }
+        if (weight_value != context.read<DataProvider>().weight) {
+          weight.text = context.read<DataProvider>().weight;
+          weight_value = context.read<DataProvider>().weight;
+        }
+        if (sys_value != context.read<DataProvider>().sys) {
+          sys.text = context.read<DataProvider>().sys;
+          sys_value = context.read<DataProvider>().sys;
+        }
+        if (dia_value != context.read<DataProvider>().dia) {
+          dia.text = context.read<DataProvider>().dia;
+          dia_value = context.read<DataProvider>().dia;
+        }
+        if (spo2_value != context.read<DataProvider>().spo2) {
+          spo2.text = context.read<DataProvider>().spo2;
+          spo2_value = context.read<DataProvider>().spo2;
+        }
+        if (pr_value != context.read<DataProvider>().pr) {
+          pr.text = context.read<DataProvider>().pr;
+          pr_value = context.read<DataProvider>().pr;
+        }
+        if (pulse_value != context.read<DataProvider>().pul) {
+          pulse.text = context.read<DataProvider>().pul;
+          pulse_value = context.read<DataProvider>().pul;
+        }
+        if (fbs_value != context.read<DataProvider>().fbs) {
+          fbs.text = context.read<DataProvider>().fbs;
+          fbs_value = context.read<DataProvider>().fbs;
+        }
+        if (si_value != context.read<DataProvider>().si) {
+          si.text = context.read<DataProvider>().si;
+          si_value = context.read<DataProvider>().si;
+        }
+        if (uric_value != context.read<DataProvider>().uric) {
+          uric.text = context.read<DataProvider>().uric;
+          uric_value = context.read<DataProvider>().uric;
+        }
       });
-    }
-    if (temp.text == '') {
-      setState(() {
-        temp.text = context.read<DataProvider>().temp;
-      });
-    }
-    if (weight.text == '') {
-      setState(() {
-        weight.text = context.read<DataProvider>().weight;
-      });
-    }
-    if (sys.text == '') {
-      setState(() {
-        sys.text = context.read<DataProvider>().sys;
-      });
-    }
-    if (dia.text == '') {
-      setState(() {
-        dia.text = context.read<DataProvider>().dia;
-      });
-    }
-    if (pulse.text == '') {
-      pulse.text = context.read<DataProvider>().pul;
-    }
+    });
   }
 
   @override
@@ -148,7 +162,7 @@ class _HealthRecordState extends State<HealthRecord> {
                 GestureDetector(
                     onTap: () {
                       recorddata();
-
+                      Navigator.pop(context);
                       //   context.read<Datafunction>().playsound();
                     },
                     child: MarkCheck(
@@ -193,15 +207,14 @@ class _HealthRecordState extends State<HealthRecord> {
           setState(() {
             prevent = false;
 
-            showDialog(
-                context: context,
-                builder: (BuildContext context) {
-                  return Popup(
-                      fontSize: 0.05,
-                      texthead: 'สำเร็จ',
-                      pathicon: 'assets/correct.png');
-                });
-
+            // showDialog(
+            //     context: context,
+            //     builder: (BuildContext context) {
+            //       return Popup(
+            //           fontSize: 0.05,
+            //           texthead: 'สำเร็จ',
+            //           pathicon: 'assets/correct.png');
+            //     });
             Timer(Duration(seconds: 1), () {
               stop();
               Get.offNamed('user_information');

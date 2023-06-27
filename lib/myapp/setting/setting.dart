@@ -43,7 +43,7 @@ class _SettingState extends State<Setting> {
                                 MaterialPageRoute(
                                     builder: (context) => Initsetting()));
                           },
-                          child: BoxSetting(text: 'Initsetting')),
+                          child: BoxSetting(text: 'Init Setting')),
                       GestureDetector(
                           onTap: () {
                             //   context.read<Datafunction>().playsound();
@@ -58,6 +58,7 @@ class _SettingState extends State<Setting> {
                           onTap: () {
                             //  context.read<Datafunction>().playsound();
                             //  Get.offNamed('home');
+                            Navigator.pop(context);
                           },
                           child: BoxSetting(text: 'Exit')),
                     ],

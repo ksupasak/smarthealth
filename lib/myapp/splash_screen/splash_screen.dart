@@ -1,6 +1,6 @@
 import 'package:provider/provider.dart';
 import 'package:sembast/sembast.dart';
-import 'package:smart_health/carecever/home/homeapp.dart';
+import 'package:smart_health/caregiver/home/homeapp.dart';
 import 'package:smart_health/myapp/provider/provider.dart';
 import 'package:smart_health/myapp/setting/init_setting.dart';
 import 'package:smart_health/myapp/setting/local.dart';

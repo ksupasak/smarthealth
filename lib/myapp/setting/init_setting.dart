@@ -9,10 +9,11 @@ import 'package:provider/provider.dart';
 import 'package:sembast/sembast.dart';
 
 import 'package:http/http.dart' as http;
-import 'package:smart_health/carecever/home/homeapp.dart';
+import 'package:smart_health/caregiver/home/homeapp.dart';
 import 'package:smart_health/myapp/splash_screen/splash_screen.dart';
 import 'package:smart_health/myapp/provider/provider.dart';
 import 'package:smart_health/myapp/setting/local.dart';
+import 'package:smart_health/myapp/widgetdew.dart';
 
 class Initsetting extends StatefulWidget {
   const Initsetting({super.key});
@@ -34,21 +35,16 @@ class _InitsettingState extends State<Initsetting> {
   late List<RecordSnapshot<int, Map<String, Object?>>> dataHospital;
   var resTojson;
   var resTojson2;
-  // var app;
+  int? numindex;
   void test() {
-    //  name_hospital.text = 'Name Hospital';
-    //  care_unit.text = 'care unit 01';
     platfromURL.text =
         'https://emr-life.com/clinic_master/clinic/Api/list_care_unit';
-
-    //  care_unit_id.text = '63d7a282790f9bc85700000e'; //63d79d61790f9bc857000006
-    //  passwordsetting.text = '';
   }
 
   void sync() async {
     try {
       var url = Uri.parse(
-          'https://emr-life.com/clinic_master/clinic/Api/list_care_unit'); //${context.read<stringitem>().uri}
+          'https://emr-life.com/clinic_master/clinic/Api/list_care_unit');
       var res = await http.post(url, body: {'code': id_hospital.text});
       resTojson2 = json.decode(res.body);
       print(resTojson2);
@@ -88,7 +84,7 @@ class _InitsettingState extends State<Initsetting> {
               width: MediaQuery.of(context).size.width,
               child: Center(
                   child: Text(
-                'platfromURL ผิด1',
+                'platformURL ผิด1',
                 style: TextStyle(
                     fontFamily: context.read<DataProvider>().family,
                     fontSize: MediaQuery.of(context).size.width * 0.03),
@@ -116,12 +112,14 @@ class _InitsettingState extends State<Initsetting> {
 
     dataHospital = await getAllData();
     for (RecordSnapshot<int, Map<String, Object?>> record in dataHospital) {
-      app.text = record['myapp'].toString();
-      name_hospital.text = record['name_hospital'].toString();
-      platfromURL.text = record['platfromURL'].toString();
-      care_unit_id.text = record['care_unit_id'].toString();
-      care_unit.text = record['care_unit'].toString();
-      passwordsetting.text = record['passwordsetting'].toString();
+      setState(() {
+        app.text = record['myapp'].toString();
+        name_hospital.text = record['name_hospital'].toString();
+        platfromURL.text = record['platfromURL'].toString();
+        care_unit_id.text = record['care_unit_id'].toString();
+        care_unit.text = record['care_unit'].toString();
+        passwordsetting.text = record['passwordsetting'].toString();
+      });
 
       print(name_hospital.text);
       print(platfromURL.text);
@@ -132,6 +130,7 @@ class _InitsettingState extends State<Initsetting> {
       //   print(knownDevices);
       // }
     }
+
     print('เช็คapi');
     check_api();
   }
@@ -173,51 +172,9 @@ class _InitsettingState extends State<Initsetting> {
   @override
   void initState() {
     printDatabase();
-
     // TODO: implement initState
     super.initState();
   }
-
-  // List listTtem = ["carecevier", "telemed"];
-  // Widget dropdown() {
-  //   double _width = MediaQuery.of(context).size.width;
-  //   double _height = MediaQuery.of(context).size.height;
-  //   return Container(
-  //     width: _width * 0.9,
-  //     child: Column(
-  //       crossAxisAlignment: CrossAxisAlignment.start,
-  //       children: [
-  //         Row(
-  //           mainAxisAlignment: MainAxisAlignment.start,
-  //           children: [
-  //             Text(
-  //               'เลือกประเภทApp',
-  //               style: TextStyle(
-  //                   fontFamily: context.read<DataProvider>().family,
-  //                   fontSize: _width * 0.05,
-  //                   color: Color.fromARGB(255, 19, 100, 92)),
-  //             ),
-  //           ],
-  //         ),
-  //         DropdownButton(
-  //           hint: Text('เลือก'),
-  //           value: app,
-  //           onChanged: (newValue) {
-  //             setState(() {
-  //               //   app = newValue;
-  //             });
-  //           },
-  //           items: listTtem.map((valueItem) {
-  //             return DropdownMenuItem(
-  //                 value: valueItem,
-  //                 child:
-  //                     Container(width: _width * 0.7, child: Text(valueItem)));
-  //           }).toList(),
-  //         ),
-  //       ],
-  //     ),
-  //   );
-  // }
 
   @override
   Widget build(BuildContext context) {
@@ -228,122 +185,217 @@ class _InitsettingState extends State<Initsetting> {
           FocusScope.of(context).requestFocus(FocusNode());
         }),
         child: Scaffold(
+            backgroundColor: Color.fromARGB(255, 245, 245, 245),
+            appBar: AppBar(
+              backgroundColor: Colors.white,
+              actions: [
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: GestureDetector(
+                    onTap: () {
+                      test();
+                    },
+                    child: Icon(
+                      Icons.download,
+                      color: Colors.black,
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: GestureDetector(
+                    onTap: () {
+                      safe();
+                    },
+                    child: Icon(
+                      Icons.save,
+                      color: Colors.black,
+                    ),
+                  ),
+                ),
+              ],
+            ),
             body: Stack(children: [
-          Positioned(
-              child: ListView(children: [
-            Container(
-                child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                  BoxTextFieldSetting(
-                      keyvavlue: platfromURL, texthead: 'PlatfromURL'),
-                  //   dropdown(),
-                  BoxTextFieldSetting(
-                      keyvavlue: id_hospital, texthead: 'Id_Hospital'),
-                  Container(
-                      child: Center(
-                          child: GestureDetector(
-                              onTap: () {
-                                sync();
-                              },
-                              child: BoxWidetdew(
-                                  text: 'Sync',
-                                  height: 0.04,
-                                  width: 0.2,
-                                  radius: 2.0,
-                                  textcolor: Colors.white,
-                                  fontSize: 0.04,
-                                  color: Colors.blue)))),
-                  Container(
-                    height: resTojson2 != null
-                        ? resTojson2['data'].length != 0
-                            ? _height * 0.3
-                            : 0
-                        : 0,
-                    child: resTojson2 != null
-                        ? resTojson2['data'].length != 0
-                            ? ListView.builder(
-                                itemCount: resTojson2['data'].length,
-                                itemBuilder: (context, index) {
-                                  return GestureDetector(
-                                    onTap: () {
-                                      setState(() {
-                                        care_unit.text =
-                                            resTojson2['data'][index]['name'];
-                                        care_unit_id.text =
-                                            resTojson2['data'][index]['id'];
-                                        name_hospital.text =
-                                            resTojson2['customer_name'];
-                                        app.text =
-                                            resTojson2['data'][index]['type'];
-                                        print(app.text);
-                                      });
-                                    },
-                                    child: Container(
-                                        width: _width * 0.08,
-                                        height: _height * 0.05,
-                                        child: Center(
-                                            child: Text(
-                                                resTojson2['data'][index]
-                                                    ['name'],
-                                                style: TextStyle(
-                                                    color: Colors.green)))),
-                                  );
-                                })
-                            : Container(
-                                color: Colors.black,
-                              )
-                        : Container(
-                            color: Colors.red,
+              Positioned(
+                  child: ListView(children: [
+                Container(
+                    child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Row(children: [
+                          Text('Set Up', style: TextStyle(color: Colors.grey))
+                        ]),
+                      ),
+                      Container(
+                        width: _width * 0.98,
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(5),
+                            color: Colors.white,
+                            boxShadow: [
+                              BoxShadow(
+                                  blurRadius: 1,
+                                  color: Color.fromARGB(255, 225, 225, 225),
+                                  offset: Offset(0, 1))
+                            ]),
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Column(
+                            children: [
+                              BoxTextFieldSetting(
+                                  keyvavlue: platfromURL,
+                                  texthead: 'PlatfromURL'),
+                              BoxTextFieldSetting(
+                                  keyvavlue: id_hospital,
+                                  texthead: 'Id_Hospital'),
+                              Container(
+                                  child: Center(
+                                      child: GestureDetector(
+                                          onTap: () {
+                                            sync();
+                                          },
+                                          child: Container(
+                                            child: Icon(Icons.sync_alt),
+                                          )))),
+                              Container(
+                                height: resTojson2 != null
+                                    ? resTojson2['data'].length != 0
+                                        ? _height * 0.3
+                                        : 0
+                                    : 0,
+                                child: resTojson2 != null
+                                    ? resTojson2['data'].length != 0
+                                        ? ListView.builder(
+                                            itemCount:
+                                                resTojson2['data'].length,
+                                            itemBuilder: (context, index) {
+                                              return GestureDetector(
+                                                onTap: () {
+                                                  setState(() {
+                                                    numindex = index;
+                                                    care_unit.text =
+                                                        resTojson2['data']
+                                                            [index]['name'];
+                                                    care_unit_id.text =
+                                                        resTojson2['data']
+                                                            [index]['id'];
+                                                    name_hospital.text =
+                                                        resTojson2[
+                                                            'customer_name'];
+                                                    app.text =
+                                                        resTojson2['data']
+                                                            [index]['type'];
+                                                    print(app.text);
+                                                  });
+                                                },
+                                                child: Center(
+                                                    child: Padding(
+                                                  padding:
+                                                      const EdgeInsets.all(2.0),
+                                                  child: Container(
+                                                      decoration: BoxDecoration(
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(5),
+                                                          color: numindex ==
+                                                                  index
+                                                              ? Color.fromRGBO(
+                                                                  226,
+                                                                  255,
+                                                                  227,
+                                                                  1)
+                                                              : Colors.white,
+                                                          boxShadow: [
+                                                            BoxShadow(
+                                                                blurRadius: 1,
+                                                                offset: Offset(
+                                                                    0, 1),
+                                                                color: Colors
+                                                                    .green)
+                                                          ]),
+                                                      width: _width * 0.7,
+                                                      height: _height * 0.05,
+                                                      child: Center(
+                                                        child: Text(
+                                                            resTojson2['data']
+                                                                [index]['name'],
+                                                            style: TextStyle(
+                                                                color: Colors
+                                                                    .green)),
+                                                      )),
+                                                )),
+                                              );
+                                            })
+                                        : Container()
+                                    : Container(),
+                              ),
+                            ],
                           ),
-                  ),
-                  BoxTextFieldSetting(keyvavlue: app, texthead: 'ประเภทApp'),
-                  BoxTextFieldSetting(
-                      keyvavlue: name_hospital, texthead: 'Name_Hospital'),
-                  BoxTextFieldSetting(
-                      keyvavlue: care_unit, texthead: 'Care_Unit'),
-                  BoxTextFieldSetting(
-                      keyvavlue: care_unit_id, texthead: 'Care_Unit_id'),
-                  BoxTextFieldSetting(
-                      lengthlimitingtextinputformatter: 4,
-                      keyvavlue: passwordsetting,
-                      texthead: 'Passwordsetting',
-                      textinputtype: TextInputType.number),
-                  SizedBox(
-                    height: _height * 0.05,
-                  ),
-                  Container(
-                      child: Center(
-                          child: GestureDetector(
-                              onTap: () {
-                                safe();
-                              },
-                              child: BoxWidetdew(
-                                  text: 'บันทึก',
-                                  height: 0.07,
-                                  width: 0.6,
-                                  radius: 2.0,
-                                  textcolor: Colors.white,
-                                  fontSize: 0.05,
-                                  color: Color.fromARGB(255, 54, 200, 244))))),
-                  Container(
-                      child: Center(
-                          child: GestureDetector(
-                              onTap: () {
-                                test();
-                                //    sync();
-                              },
-                              child: BoxWidetdew(
-                                  text: 'test',
-                                  height: 0.07,
-                                  width: 0.6,
-                                  radius: 2.0,
-                                  textcolor: Colors.black,
-                                  fontSize: 0.05,
-                                  color: Color.fromARGB(255, 255, 255, 255))))),
-                ]))
-          ]))
-        ])));
+                        ),
+                      ),
+                      Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Row(children: [
+                            Text('Password',
+                                style: TextStyle(color: Colors.grey))
+                          ])),
+                      Container(
+                        width: _width * 0.98,
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(5),
+                            color: Colors.white,
+                            boxShadow: [
+                              BoxShadow(
+                                  blurRadius: 1,
+                                  color: Color.fromARGB(255, 225, 225, 225),
+                                  offset: Offset(0, 1))
+                            ]),
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Column(children: [
+                            BoxTextFieldSetting(
+                                lengthlimitingtextinputformatter: 4,
+                                keyvavlue: passwordsetting,
+                                texthead: 'Password Setting',
+                                textinputtype: TextInputType.number),
+                          ]),
+                        ),
+                      ),
+                      Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Row(children: [
+                            Text('About', style: TextStyle(color: Colors.grey))
+                          ])),
+                      Container(
+                        width: _width * 0.98,
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(5),
+                            color: Colors.white,
+                            boxShadow: [
+                              BoxShadow(
+                                  blurRadius: 1,
+                                  color: Color.fromARGB(255, 225, 225, 225),
+                                  offset: Offset(0, 1))
+                            ]),
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Column(children: [
+                            BoxText(keyvavlue: app, texthead: 'ประเภทApp'),
+                            BoxText(
+                                keyvavlue: name_hospital,
+                                texthead: 'Name Hospital'),
+                            BoxText(
+                                keyvavlue: care_unit, texthead: 'Care Unit'),
+                            BoxText(
+                                keyvavlue: care_unit_id,
+                                texthead: 'Care Unit id'),
+                          ]),
+                        ),
+                      ),
+                    ]))
+              ]))
+            ])));
   }
 }
 
@@ -390,8 +442,6 @@ class _BoxTextFieldSettingState extends State<BoxTextFieldSetting> {
                 decoration: BoxDecoration(
                     color: Colors.white,
                     boxShadow: [BoxShadow()],
-                    border: Border.all(
-                        color: Color.fromARGB(255, 0, 85, 71), width: 2),
                     borderRadius: BorderRadius.circular(5)),
                 width: _width * 0.9,
                 child: TextField(
@@ -416,72 +466,60 @@ class _BoxTextFieldSettingState extends State<BoxTextFieldSetting> {
   }
 }
 
-class BoxWidetdew extends StatefulWidget {
-  BoxWidetdew(
-      {super.key,
-      this.color,
-      this.text,
-      this.height,
-      this.width,
-      this.fontSize,
-      this.textcolor,
-      this.fontWeight,
-      this.radius,
-      this.colorborder});
-  var color;
-  var text;
-  var width;
-  var height;
-  var fontSize;
-  var textcolor;
-  var fontWeight;
-  var radius;
-  var colorborder;
+class BoxText extends StatefulWidget {
+  BoxText({
+    super.key,
+    this.keyvavlue,
+    this.texthead,
+    this.textinputtype,
+  });
+  var keyvavlue;
+  String? texthead;
+  TextInputType? textinputtype;
+
   @override
-  State<BoxWidetdew> createState() => _BoxWidetdewState();
+  State<BoxText> createState() => _BoxTextState();
 }
 
-class _BoxWidetdewState extends State<BoxWidetdew> {
+class _BoxTextState extends State<BoxText> {
   @override
   Widget build(BuildContext context) {
     double _width = MediaQuery.of(context).size.width;
     double _height = MediaQuery.of(context).size.height;
-    return Container(
-      decoration: BoxDecoration(
-        border: widget.colorborder == null
-            ? null
-            : Border.all(color: widget.colorborder, width: 2),
-        borderRadius: widget.radius == null
-            ? BorderRadius.circular(100)
-            : BorderRadius.circular(widget.radius),
-        color: widget.color == null ? Colors.amber : widget.color,
-        boxShadow: [
-          BoxShadow(
-            blurRadius: 2,
-            offset: Offset(0.5, 2),
-            color: Colors.grey,
-          ),
-        ],
-      ),
-      height: widget.height == null ? _height * 0.02 : _height * widget.height,
-      width: widget.width == null ? _width * 0.08 : _width * widget.width,
-      child: Center(
-        child: widget.text == null
-            ? null
-            : Text(
-                widget.text.toString(),
-                style: TextStyle(
-                  fontFamily: context.read<DataProvider>().family,
-                  fontSize:
-                      widget.fontSize == null ? 20 : _width * widget.fontSize,
-                  color: widget.textcolor == null
-                      ? Colors.black
-                      : widget.textcolor,
-                  fontWeight: widget.fontWeight == null
-                      ? FontWeight.w400
-                      : widget.fontWeight,
+    TextStyle style1 = TextStyle(
+        fontFamily: context.read<DataProvider>().family,
+        fontSize: _width * 0.05,
+        color: Color.fromARGB(255, 19, 100, 92));
+    TextStyle style2 = TextStyle(
+        fontFamily: context.read<DataProvider>().family,
+        fontSize: _width * 0.05,
+        color: Color.fromARGB(255, 0, 0, 0));
+
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(0, 10, 0, 10),
+      child: Container(
+        child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              widget.texthead == null
+                  ? Text('')
+                  : Text(widget.texthead.toString(), style: style1),
+              Container(
+                decoration:
+                    BoxDecoration(borderRadius: BorderRadius.circular(5)),
+                width: _width * 0.9,
+                child: Text(
+                  '${widget.keyvavlue.text}',
+                  style: style2,
                 ),
               ),
+              SizedBox(height: 10),
+              Container(
+                  color: Color.fromARGB(100, 158, 158, 158),
+                  height: 1,
+                  width: _width * 0.9),
+            ]),
       ),
     );
   }

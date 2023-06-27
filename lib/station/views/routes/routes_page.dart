@@ -21,7 +21,7 @@ class Routes {
   static const String home = '/home';
   static const String menu = '/menu';
   static const String healthrecord = '/healthrecord';
-  static const String setting = '/setting';
+  // static const String setting = '/setting';
   static const String checkqueue = '/checkqueue';
   static const String device = '/device';
   static const String initsetting = '/initsetting';
@@ -33,7 +33,7 @@ class Routes {
         GetPage(name: home, page: (() => Homeapp())),
         GetPage(name: menu, page: (() => Menu())),
         GetPage(name: healthrecord, page: (() => HealthRecord())),
-        GetPage(name: setting, page: (() => Setting())),
+        // GetPage(name: setting, page: (() => Setting())),
         GetPage(name: checkqueue, page: (() => CheckQueue())),
         GetPage(name: device, page: (() => Device())),
         GetPage(name: initsetting, page: (() => Initsetting())),

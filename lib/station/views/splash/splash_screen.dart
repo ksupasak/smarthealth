@@ -10,6 +10,7 @@ import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 import 'package:sembast/sembast.dart';
+import 'package:smart_health/myapp/menu/menuhome.dart';
 import 'package:smart_health/station/device/ad_ua651ble.dart';
 import 'package:smart_health/station/device/hc08.dart';
 import 'package:smart_health/station/device/hj_narigmed.dart';
@@ -90,8 +91,14 @@ class _Splash_ScreenState extends State<Splash_Screen> {
   @override
   void initState() {
     printDatabase();
-    Future.delayed(const Duration(seconds: 4), () {
-      Get.offAllNamed('home');
+    // Future.delayed(const Duration(microseconds: 500), () {
+    //   //Get.offAllNamed('home');
+    //   Navigator.push(
+    //       context, MaterialPageRoute(builder: (context) => Homeapp()));
+    // });
+    Future.delayed(const Duration(microseconds: 550), () {
+      Navigator.push(
+          context, MaterialPageRoute(builder: (context) => MenuHome()));
     });
     //scanTimer(4500);
     // bleScan(); //
@@ -120,8 +127,6 @@ class _Splash_ScreenState extends State<Splash_Screen> {
                   fit: BoxFit.fill,
                 ),
               ),
-
-              // CircularProgressIndicator(),
             ),
           ),
         ),

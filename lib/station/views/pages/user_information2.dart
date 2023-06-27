@@ -96,12 +96,12 @@ class _UserInformation2State extends State<UserInformation2> {
       check_status();
     });
     if (resTojson['health_records'].length != 0) {
-      height = resTojson['health_records'][0]['height'].toString();
-      weight = resTojson['health_records'][0]['weight'].toString();
-      temp = resTojson['health_records'][0]['temp'].toString();
-      sys = resTojson['health_records'][0]['bp_sys'].toString();
-      dia = resTojson['health_records'][0]['bp_dia'].toString();
-      spo2 = resTojson['health_records'][0]['spo2'].toString();
+      height = "${resTojson['health_records'][0]['height'].toString()}";
+      weight = "${resTojson['health_records'][0]['weight'].toString()}";
+      temp = "${resTojson['health_records'][0]['temp'].toString()}";
+      sys = "${resTojson['health_records'][0]['bp_sys'].toString()}";
+      dia = "${resTojson['health_records'][0]['bp_dia'].toString()}";
+      spo2 = "${resTojson['health_records'][0]['spo2'].toString()}";
     }
   }
 
@@ -273,8 +273,8 @@ class _UserInformation2State extends State<UserInformation2> {
     bytes += generator.text("Q ${resTojson['queue_number']}",
         styles: const PosStyles(
             align: PosAlign.center,
-            width: PosTextSize.size3,
-            height: PosTextSize.size3,
+            width: PosTextSize.size6,
+            height: PosTextSize.size6,
             fontType: PosFontType.fontA));
     bytes += generator.text('\n');
     bytes +=

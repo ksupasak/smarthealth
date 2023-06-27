@@ -59,6 +59,7 @@ dependencies:
   flutter_svg: ^2.0.5
   #image_picker: ^0.8.7+5
   vibration: ^1.7.5
+  carousel_slider: ^4.2.1
   openvidu_client:
     path: "vendors/flutter_openvidu_client"
     
@@ -99,6 +100,7 @@ flutter:
     - assets/sounds/mysound.mp3
     - assets/backgrund/
     - assets/splash/
+    - assets/image_menu/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
