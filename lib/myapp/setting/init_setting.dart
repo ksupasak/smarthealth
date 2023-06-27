@@ -36,6 +36,7 @@ class _InitsettingState extends State<Initsetting> {
   var resTojson;
   var resTojson2;
   int? numindex;
+  bool status_safe = false;
   void test() {
     platfromURL.text =
         'https://emr-life.com/clinic_master/clinic/Api/list_care_unit';
@@ -101,9 +102,15 @@ class _InitsettingState extends State<Initsetting> {
     context.read<DataProvider>().app = app.text;
 
     setState(() {
+      status_safe = true;
       addDataInfoToDatabase(context.read<DataProvider>());
-      Navigator.pushReplacement(
-          context, MaterialPageRoute(builder: (context) => Splash_Screen()));
+      Future.delayed(const Duration(seconds: 2), () {
+        setState(() {
+          status_safe = false;
+          Navigator.pushReplacement(context,
+              MaterialPageRoute(builder: (context) => Splash_Screen()));
+        });
+      });
     });
   }
 
@@ -207,10 +214,12 @@ class _InitsettingState extends State<Initsetting> {
                     onTap: () {
                       safe();
                     },
-                    child: Icon(
-                      Icons.save,
-                      color: Colors.black,
-                    ),
+                    child: status_safe == false
+                        ? Icon(
+                            Icons.save,
+                            color: Colors.black,
+                          )
+                        : CircularProgressIndicator(),
                   ),
                 ),
               ],
