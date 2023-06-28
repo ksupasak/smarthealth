@@ -1,6 +1,7 @@
 import 'package:provider/provider.dart';
 import 'package:sembast/sembast.dart';
 import 'package:smart_health/caregiver/home/homeapp.dart';
+import 'package:smart_health/caregiver/login/login.dart';
 import 'package:smart_health/myapp/provider/provider.dart';
 import 'package:smart_health/myapp/setting/init_setting.dart';
 import 'package:smart_health/myapp/setting/local.dart';
@@ -90,8 +91,10 @@ class _Splash_ScreenState extends State<Splash_Screen> {
   void myapp() {
     if (context.read<DataProvider>().app == 'care_giver') {
       //carecevier,telemed
+      // Navigator.pushReplacement(
+      //     context, MaterialPageRoute(builder: (context) => HomeCareCevier()));
       Navigator.pushReplacement(
-          context, MaterialPageRoute(builder: (context) => HomeCareCevier()));
+          context, MaterialPageRoute(builder: (context) => Login_User()));
     } else if (context.read<DataProvider>().app == 'station') {
       Navigator.pushReplacement(
           context, MaterialPageRoute(builder: (context) => App()));
