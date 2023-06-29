@@ -100,8 +100,8 @@ class _Login_UserState extends State<Login_User> {
     setState(() {
       status = true;
       context.read<DataProvider>().user_id = resTojson['data']['public_id'];
-      context.read<DataProvider>().user_name = resTojson['data']['code'];
-      context.read<DataProvider>().user_code = resTojson['data']['name'];
+      context.read<DataProvider>().user_name = resTojson['data']['name'];
+      context.read<DataProvider>().user_code = resTojson['data']['code'];
       print('บันทึก');
       print('${context.read<DataProvider>().user_id}');
       print('${context.read<DataProvider>().user_name}');
