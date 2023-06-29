@@ -38,14 +38,13 @@ class _InitsettingState extends State<Initsetting> {
   int? numindex;
   bool status_safe = false;
   void test() {
-    platfromURL.text =
-        'https://emr-life.com/clinic_master/clinic/Api/list_care_unit';
+    platfromURL.text = 'https://emr-life.com/clinic_master/clinic/Api';
   }
 
   void sync() async {
     try {
       var url = Uri.parse(
-          'https://emr-life.com/clinic_master/clinic/Api/list_care_unit');
+          '${context.read<DataProvider>().platfromURL}/list_care_unit');
       var res = await http.post(url, body: {'code': id_hospital.text});
       resTojson2 = json.decode(res.body);
       print(resTojson2);
@@ -85,7 +84,7 @@ class _InitsettingState extends State<Initsetting> {
               width: MediaQuery.of(context).size.width,
               child: Center(
                   child: Text(
-                'platformURL ผิด1',
+                'platformURL ผิด',
                 style: TextStyle(
                     fontFamily: context.read<DataProvider>().family,
                     fontSize: MediaQuery.of(context).size.width * 0.03),

@@ -9,6 +9,7 @@ import 'package:provider/provider.dart';
 import 'package:sembast/sembast.dart';
 import 'package:smart_health/caregiver/home/esm_cardread/cardread_Ble.dart';
 import 'package:smart_health/caregiver/home/esm_cardread/esm_idcard.dart';
+import 'package:smart_health/caregiver/login/login.dart';
 import 'package:smart_health/caregiver/user_information/user_information.dart';
 import 'package:smart_health/caregiver/widget/backgrund.dart';
 import 'package:smart_health/caregiver/widget/numpad.dart';
@@ -280,29 +281,146 @@ class _HomeCareCevierState extends State<HomeCareCevier> {
                     ),
                   ],
                 ),
-                Container(
-                  height: _height * 0.13,
-                  width: _width * 0.85,
-                  decoration: BoxDecoration(
-                      boxShadow: [
-                        BoxShadow(
-                          blurRadius: 2,
-                          offset: Offset(0, 2),
-                          color: Color(0xff48B5AA),
-                        )
-                      ],
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(15)),
-                  child: Center(
-                    child: Text(
-                      'ปรึกษาเเพทย์',
-                      style: TextStyle(
-                          fontFamily: context.read<DataProvider>().family,
-                          fontSize: _width * 0.07,
-                          color: Color(0xff48B5AA)),
-                    ),
-                  ),
-                ),
+                context.read<DataProvider>().user_name != null &&
+                        context.read<DataProvider>().user_name != ''
+                    ? Container(
+                        height: _height * 0.13,
+                        width: _width * 0.85,
+                        decoration: BoxDecoration(
+                            boxShadow: [
+                              BoxShadow(
+                                blurRadius: 2,
+                                offset: Offset(0, 2),
+                                color: Color(0xff48B5AA),
+                              )
+                            ],
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(15)),
+                        child: Stack(
+                          children: [
+                            Positioned(
+                              child: Row(
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Container(
+                                        height: _height * 0.1,
+                                        width: _height * 0.1,
+                                        decoration: BoxDecoration(
+                                            border: Border.all(
+                                                color: Color(0xff48B5AA)),
+                                            borderRadius:
+                                                BorderRadius.circular(50)),
+                                        child: Icon(
+                                          Icons.person,
+                                          color: Color(0xff48B5AA),
+                                        )),
+                                  ),
+                                  Container(
+                                    width: _width * 0.57,
+                                    height: _height * 0.13,
+                                    child: Row(
+                                      children: [
+                                        Text(
+                                          'ผู้ตรวจ: ${context.read<DataProvider>().user_name}',
+                                          style: TextStyle(
+                                              fontFamily: context
+                                                  .read<DataProvider>()
+                                                  .family,
+                                              fontSize: _width * 0.04,
+                                              color: Color(0xff48B5AA)),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            Positioned(
+                                right: 0,
+                                bottom: 0,
+                                child: GestureDetector(
+                                  onTap: () {
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                Login_User()));
+                                  },
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(4.0),
+                                    child: Icon(
+                                      Icons.logout,
+                                      color: Color(0xff48B5AA),
+                                    ),
+                                  ),
+                                ))
+                          ],
+                        ),
+                      )
+                    : Container(
+                        height: _height * 0.13,
+                        width: _width * 0.85,
+                        decoration: BoxDecoration(
+                            boxShadow: [
+                              BoxShadow(
+                                blurRadius: 2,
+                                offset: Offset(0, 2),
+                                color: Color(0xff48B5AA),
+                              )
+                            ],
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(15)),
+                        child: Stack(
+                          children: [
+                            Positioned(
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: Text(
+                                            'ยังไม่ผู้ตรวจ',
+                                            style: TextStyle(
+                                                fontSize: _width * 0.04,
+                                                color: Color(0xff48B5AA),
+                                                fontFamily: context
+                                                    .read<DataProvider>()
+                                                    .family),
+                                          )),
+                                    ],
+                                  ),
+                                  GestureDetector(
+                                    onTap: () {
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  Login_User()));
+                                    },
+                                    child: Container(
+                                      height: _height * 0.04,
+                                      width: _height * 0.04,
+                                      decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(50),
+                                          border: Border.all(
+                                              color: Color(0xff48B5AA))),
+                                      child: Icon(
+                                        Icons.add,
+                                        color: Color(0xff48B5AA),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
                 Container(
                   child: Column(
                     children: [

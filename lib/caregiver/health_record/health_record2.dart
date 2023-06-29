@@ -143,7 +143,7 @@ class _HealthRecord2State extends State<HealthRecord2> {
 
   void bleScan() {
     _functionScan = Stream.periodic(Duration(seconds: 5)).listen((_) {
-      print('เเสกน   ');
+      print('สเเกน   ');
       FlutterBluePlus.instance.startScan(timeout: const Duration(seconds: 4));
     });
     FlutterBluePlus.instance.scanResults.listen((results) {
@@ -404,6 +404,7 @@ class _HealthRecord2State extends State<HealthRecord2> {
       "bp": "${sys.text}/${dia.text}",
       "rr": "",
       "cc": "${cc.text}",
+      "recep_public_id": context.read<DataProvider>().user_id,
     });
     var resTojson = json.decode(res.body);
 

@@ -23,7 +23,7 @@ class Splash_Screen extends StatefulWidget {
 
 class _Splash_ScreenState extends State<Splash_Screen> {
   late List<RecordSnapshot<int, Map<String, Object?>>> init;
-
+  late List<RecordSnapshot<int, Map<String, Object?>>> initUser;
   void setdata() async {
     Future<bool> data = showDataBaseDatauserApp();
     Future<List<RecordSnapshot<int, Map<String, Object?>>>> recordsdata;
@@ -46,6 +46,7 @@ class _Splash_ScreenState extends State<Splash_Screen> {
   Future<void> redDatabase() async {
     print('กำลังโหลดข้อมูล');
     init = await getAllData();
+    initUser = await getAllDataUser();
     for (RecordSnapshot<int, Map<String, Object?>> record in init) {
       context.read<DataProvider>().app = record['myapp'].toString();
       context.read<DataProvider>().name_hospital =
@@ -59,7 +60,12 @@ class _Splash_ScreenState extends State<Splash_Screen> {
           record['passwordsetting'].toString();
       context.read<DataProvider>().care_unit = record['care_unit'].toString();
     }
-
+    for (RecordSnapshot<int, Map<String, Object?>> record in initUser) {
+      context.read<DataProvider>().user_id = record['id'].toString();
+      context.read<DataProvider>().user_name = record['code'].toString();
+      context.read<DataProvider>().user_code = record['name'].toString();
+    }
+    print('App');
     print('${context.read<DataProvider>().app}');
     print('${context.read<DataProvider>().name_hospital}');
 
@@ -68,6 +74,10 @@ class _Splash_ScreenState extends State<Splash_Screen> {
     print('${context.read<DataProvider>().care_unit}');
     print('${context.read<DataProvider>().care_unit_id}');
     print('${context.read<DataProvider>().password}');
+    print('user');
+    print('${context.read<DataProvider>().user_id}');
+    print('${context.read<DataProvider>().user_name}');
+    print('${context.read<DataProvider>().user_code}');
     print('โหลดเสร็จเเล้ว');
     Future.delayed(const Duration(seconds: 1), () {
       setState(() {
@@ -90,11 +100,8 @@ class _Splash_ScreenState extends State<Splash_Screen> {
 
   void myapp() {
     if (context.read<DataProvider>().app == 'care_giver') {
-      //carecevier,telemed
-      // Navigator.pushReplacement(
-      //     context, MaterialPageRoute(builder: (context) => HomeCareCevier()));
       Navigator.pushReplacement(
-          context, MaterialPageRoute(builder: (context) => Login_User()));
+          context, MaterialPageRoute(builder: (context) => HomeCareCevier()));
     } else if (context.read<DataProvider>().app == 'station') {
       Navigator.pushReplacement(
           context, MaterialPageRoute(builder: (context) => App()));

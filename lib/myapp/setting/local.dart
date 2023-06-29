@@ -83,3 +83,24 @@ Future<List<RecordSnapshot<int, Map<String, Object?>>>> getdevice() async {
 
   return records;
 }
+
+Future deletedatabaseUser() async {
+  Database db = await openDatabaseappUser();
+  var store = intMapStoreFactory.store('data_user_smart_healt');
+  await store.drop(db);
+}
+
+Future<Database> openDatabaseappUser() async {
+  Directory app = await getApplicationDocumentsDirectory();
+  String dbpart = app.path + '/' + 'data_user_smart_healt.db';
+  final db = await databaseFactoryIo.openDatabase(dbpart);
+  return db;
+}
+
+Future<List<RecordSnapshot<int, Map<String, Object?>>>> getAllDataUser() async {
+  Database db = await openDatabaseappUser();
+  var store = intMapStoreFactory.store('data_user_smart_healt');
+  var records = await store.find(db);
+
+  return records;
+}
