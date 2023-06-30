@@ -36,6 +36,7 @@ class _HomeCareCevierState extends State<HomeCareCevier> {
   StreamSubscription? cardReader;
   late List<RecordSnapshot<int, Map<String, Object?>>> init;
   Timer? _timer;
+
   void readerID() {
     try {
       Future.delayed(const Duration(seconds: 1), () {
@@ -340,21 +341,54 @@ class _HomeCareCevierState extends State<HomeCareCevier> {
                                 right: 0,
                                 bottom: 0,
                                 child: GestureDetector(
-                                  onTap: () {
-                                    Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) =>
-                                                Login_User()));
-                                  },
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(4.0),
-                                    child: Icon(
-                                      Icons.logout,
-                                      color: Color(0xff48B5AA),
-                                    ),
-                                  ),
-                                ))
+                                    onTap: () {
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  Login_User()));
+                                    },
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Container(
+                                        width: _width * 0.2,
+                                        height: _height * 0.03,
+                                        decoration: BoxDecoration(
+                                            color: Color(0xff31d6aa),
+                                            borderRadius:
+                                                BorderRadius.circular(5)),
+                                        child: Row(
+                                          children: [
+                                            Padding(
+                                              padding:
+                                                  const EdgeInsets.all(1.0),
+                                              child: Icon(
+                                                Icons.edit,
+                                                color: Colors.white,
+                                              ),
+                                            ),
+                                            Text(
+                                              'เปลี่ยนผู้ตรวจ',
+                                              style: TextStyle(
+                                                  color: Colors.white,
+                                                  fontWeight: FontWeight.w500,
+                                                  fontFamily: context
+                                                      .read<DataProvider>()
+                                                      .family,
+                                                  fontSize: _width * 0.02),
+                                            )
+                                          ],
+                                        ),
+                                      ),
+                                    )
+                                    //  Padding(
+                                    //   padding: const EdgeInsets.all(4.0),
+                                    //   child: Icon(
+                                    //     Icons.logout,
+                                    //     color: Color(0xff48B5AA),
+                                    //   ),
+                                    // ),
+                                    ))
                           ],
                         ),
                       )
@@ -429,7 +463,7 @@ class _HomeCareCevierState extends State<HomeCareCevier> {
                               fontFamily: context.read<DataProvider>().family,
                               fontSize: _width * 0.04,
                               color: Color(0xff00A3FF))),
-                      Text('บัตรประชาชน เพื่อทำการเข้าสู่ระบบ',
+                      Text('บัตรประชาชน เพื่อตรวจ',
                           style: TextStyle(
                               fontFamily: context.read<DataProvider>().family,
                               fontSize: _width * 0.04,
@@ -467,6 +501,81 @@ class _HomeCareCevierState extends State<HomeCareCevier> {
                     ),
                   ),
                 ),
+          Container(
+            height: _height * 0.3,
+            width: _width,
+            child: Column(mainAxisAlignment: MainAxisAlignment.end, children: [
+              GestureDetector(
+                  onTap: () {
+                    showModalBottomSheet(
+                      backgroundColor: Color.fromARGB(0, 255, 255, 255),
+                      isScrollControlled: true,
+                      shape: RoundedRectangleBorder(
+                          borderRadius:
+                              BorderRadius.vertical(top: Radius.circular(10))),
+                      context: context,
+                      builder: (context) => Container(
+                        height: _height * 0.6,
+                        decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.only(
+                                topLeft: Radius.circular(20),
+                                topRight: Radius.circular(20))),
+                        child: Column(children: [
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Container(
+                                height: _height * 0.01,
+                                width: _width * 0.4,
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(50),
+                                    color: Colors.grey)),
+                          ),
+                          context.read<DataProvider>().list_patients.length > 0
+                              ? list_patients()
+                              : Text(
+                                  'ไม่มีรายการ',
+                                  style: TextStyle(
+                                      fontFamily:
+                                          context.read<DataProvider>().family),
+                                )
+                        ]),
+                      ),
+                    );
+                  },
+                  child: Container(
+                    width: _width * 0.35,
+                    height: _height * 0.05,
+                    decoration: BoxDecoration(
+                        boxShadow: [
+                          BoxShadow(
+                              color: Colors.grey,
+                              blurRadius: 2,
+                              offset: Offset(1, 1)),
+                        ],
+                        color: Color(0xff31D6AA),
+                        borderRadius: BorderRadius.circular(10)),
+                    child: Row(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.all(4.0),
+                          child: Icon(
+                            Icons.format_list_numbered,
+                            color: Colors.white,
+                          ),
+                        ),
+                        Text(
+                          'รายการตรวจ',
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontFamily: context.read<DataProvider>().family,
+                              fontSize: _width * 0.035),
+                        )
+                      ],
+                    ),
+                  )),
+            ]),
+          )
         ]));
   }
 
@@ -479,6 +588,21 @@ class _HomeCareCevierState extends State<HomeCareCevier> {
       child: ListView(children: [
         //  Container(child: Numpad())
       ]),
+    );
+  }
+
+  Widget list_patients() {
+    double _width = MediaQuery.of(context).size.width;
+    double _height = MediaQuery.of(context).size.height;
+    return Container(
+      height: _height * 0.5,
+      child: ListView.builder(
+          itemCount: context.read<DataProvider>().list_patients.length,
+          itemBuilder: (BuildContext context, int index) {
+            return Container(
+              child: Text(index.toString()),
+            );
+          }),
     );
   }
 }

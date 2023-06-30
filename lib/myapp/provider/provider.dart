@@ -5,6 +5,7 @@ class DataProvider with ChangeNotifier {
   String user_name = '';
   String user_id = '';
   String user_code = '';
+  List list_patients = [];
   String app = '';
   String platfromURL = 'https://emr-life.com/clinic_master/clinic/Api/';
   String name_hospital = '';

@@ -186,7 +186,7 @@ class _Login_UserState extends State<Login_User> {
                       Row(
                         children: [
                           Text(
-                            'ล็อกอินด้วยเลขบัตรประชาชน',
+                            'ล็อกอินผู้ตรวจด้วยเลขบัตรประชาชน',
                             style: TextStyle(
                                 fontFamily: context.read<DataProvider>().family,
                                 fontSize: _width * 0.035,
