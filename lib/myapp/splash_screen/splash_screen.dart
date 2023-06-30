@@ -62,8 +62,8 @@ class _Splash_ScreenState extends State<Splash_Screen> {
     }
     for (RecordSnapshot<int, Map<String, Object?>> record in initUser) {
       context.read<DataProvider>().user_id = record['id'].toString();
-      context.read<DataProvider>().user_name = record['code'].toString();
-      context.read<DataProvider>().user_code = record['name'].toString();
+      context.read<DataProvider>().user_name = record['name'].toString();
+      context.read<DataProvider>().user_code = record['code'].toString();
     }
     print('App');
     print('${context.read<DataProvider>().app}');

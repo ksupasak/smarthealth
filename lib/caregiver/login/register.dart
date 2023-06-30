@@ -135,6 +135,36 @@ class _RegisterState extends State<Register> {
                                   fontSize: _width * 0.06,
                                   color: Color(0xff1B6286))),
                           Container(
+                            height: _height * 0.1,
+                            width: _height * 0.1,
+                            child: Stack(
+                              children: [
+                                Positioned(
+                                  child: Container(
+                                    height: _height * 0.1,
+                                    width: _height * 0.1,
+                                    decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(50),
+                                        border: Border.all(
+                                            color: Color(0xff1B6286))),
+                                    child: Icon(Icons.person,
+                                        color: Color(0xff1B6286)),
+                                  ),
+                                ),
+                                Positioned(
+                                    right: 0,
+                                    bottom: 0,
+                                    child: Container(
+                                        decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(50),
+                                            color: Colors.white),
+                                        child: Icon(Icons.add,
+                                            color: Color(0xff1B6286))))
+                              ],
+                            ),
+                          ),
+                          Container(
                               height: _height * 0.05,
                               width: _width * 0.8,
                               child: Row(
@@ -227,18 +257,11 @@ class _RegisterState extends State<Register> {
                                 keyboardType: TextInputType.number,
                                 style: textFieldStyle,
                                 decoration: InputDecoration(
-                                  // labelText: 'ชื่อ',
                                   errorText: id.text.isEmpty
                                       ? 'กรุณากรอกนามรหัสบัตรประจำตัวประชาชน'
                                       : null,
                                 ),
                               ),
-                              // TextField(
-                              //     maxLength: 13,
-                              //     keyboardType: TextInputType.number,
-                              //     controller: id,
-                              //     decoration: textFieldDecoration,
-                              //     style: textFieldStyle),
                             ),
                           ),
                           Container(
@@ -264,17 +287,11 @@ class _RegisterState extends State<Register> {
                                   return null;
                                 },
                                 decoration: InputDecoration(
-                                  // labelText: 'ชื่อ',
                                   errorText: officer_code.text.isEmpty
                                       ? 'กรุณากรอกนามรหัสเจ้าหน้าที่'
                                       : null,
                                 ),
                               ),
-
-                              // TextField(
-                              //     controller: officer_code,
-                              //     decoration: textFieldDecoration,
-                              //     style: textFieldStyle),
                             ),
                           ),
                           SizedBox(height: _height * 0.05),

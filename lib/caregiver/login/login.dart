@@ -25,6 +25,7 @@ class _Login_UserState extends State<Login_User> {
   TextEditingController password = TextEditingController();
   TextEditingController id = TextEditingController();
   bool status = false;
+  bool statusdelete = false;
   var resTojson;
   Future<void> login() async {
     var url =
@@ -122,7 +123,7 @@ class _Login_UserState extends State<Login_User> {
     Future.delayed(const Duration(seconds: 2), () {
       setState(() {
         status = false;
-        Navigator.push(
+        Navigator.pushReplacement(
             context, MaterialPageRoute(builder: (context) => Splash_Screen()));
       });
     });
@@ -130,6 +131,9 @@ class _Login_UserState extends State<Login_User> {
   }
 
   Future<void> delete() async {
+    setState(() {
+      statusdelete = true;
+    });
     deletedatabaseUser();
     final db = await openDatabaseappUser();
     final store = intMapStoreFactory.store('data_user_smart_healt');
@@ -140,7 +144,7 @@ class _Login_UserState extends State<Login_User> {
     });
     Future.delayed(const Duration(seconds: 2), () {
       setState(() {
-        status = false;
+        statusdelete = true;
         Navigator.push(
             context, MaterialPageRoute(builder: (context) => Splash_Screen()));
       });
@@ -173,85 +177,6 @@ class _Login_UserState extends State<Login_User> {
                 ),
               ),
               SizedBox(height: _height * 0.02),
-              context.read<DataProvider>().user_name != null &&
-                      context.read<DataProvider>().user_name != ''
-                  ? Container(
-                      child: Center(
-                        child: Column(
-                          children: [
-                            Container(
-                                width: _width * 0.8,
-                                child: Text('ผู้ตรวจปัจจุบัน')),
-                            Container(
-                              width: _width * 0.8,
-                              decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(10),
-                                  color: Colors.white,
-                                  boxShadow: [
-                                    BoxShadow(color: Colors.grey, blurRadius: 1)
-                                  ]),
-                              child: Stack(
-                                children: [
-                                  Positioned(
-                                    child: Row(
-                                      children: [
-                                        Padding(
-                                          padding: const EdgeInsets.all(8.0),
-                                          child: Container(
-                                              height: _height * 0.05,
-                                              width: _height * 0.05,
-                                              decoration: BoxDecoration(
-                                                  border: Border.all(
-                                                      color: Color(0xff48B5AA)),
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                          50)),
-                                              child: Icon(
-                                                Icons.person,
-                                                color: Color(0xff48B5AA),
-                                              )),
-                                        ),
-                                        Container(
-                                          child: Row(
-                                            children: [
-                                              Text(
-                                                'ผู้ตรวจ: ${context.read<DataProvider>().user_name}',
-                                                style: TextStyle(
-                                                    fontFamily: context
-                                                        .read<DataProvider>()
-                                                        .family,
-                                                    fontSize: _width * 0.04,
-                                                    color: Color(0xff48B5AA)),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                  Positioned(
-                                      right: 0,
-                                      bottom: 0,
-                                      child: GestureDetector(
-                                        onTap: () {
-                                          delete();
-                                        },
-                                        child: Padding(
-                                          padding: const EdgeInsets.all(4.0),
-                                          child: Icon(
-                                            Icons.delete,
-                                            color: Color(0xffff0000),
-                                          ),
-                                        ),
-                                      ))
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    )
-                  : SizedBox(),
 
               Container(
                 child: Center(
@@ -260,7 +185,13 @@ class _Login_UserState extends State<Login_User> {
                     child: Column(children: [
                       Row(
                         children: [
-                          Text('เลขบัตรประชาชน'),
+                          Text(
+                            'ล็อกอินด้วยเลขบัตรประชาชน',
+                            style: TextStyle(
+                                fontFamily: context.read<DataProvider>().family,
+                                fontSize: _width * 0.035,
+                                color: Color(0xff48B5AA)),
+                          ),
                         ],
                       ),
                       Container(
@@ -313,7 +244,14 @@ class _Login_UserState extends State<Login_User> {
                               });
                               login();
                             },
-                            child: Text('เข้าสู่ระบบ')),
+                            child: Text(
+                              'เข้าสู่ระบบ',
+                              style: TextStyle(
+                                  fontFamily:
+                                      context.read<DataProvider>().family,
+                                  fontSize: _width * 0.04,
+                                  color: Color(0xffffffff)),
+                            )),
                       ),
                     )
                   : Container(
@@ -321,7 +259,8 @@ class _Login_UserState extends State<Login_User> {
                         child: Container(
                           width: MediaQuery.of(context).size.width * 0.05,
                           height: MediaQuery.of(context).size.width * 0.05,
-                          child: CircularProgressIndicator(),
+                          child: CircularProgressIndicator(
+                              color: Color(0xff48B5AA)),
                         ),
                       ),
                     ),
@@ -342,6 +281,165 @@ class _Login_UserState extends State<Login_User> {
                   ],
                 ),
               ),
+              context.read<DataProvider>().user_name != null &&
+                      context.read<DataProvider>().user_name != ''
+                  ? Container(
+                      child: Center(
+                        child: Column(
+                          children: [
+                            Container(
+                                width: _width * 0.8,
+                                child: Text(
+                                  'ผู้ตรวจปัจจุบัน',
+                                  style: TextStyle(
+                                      fontFamily:
+                                          context.read<DataProvider>().family,
+                                      fontSize: _width * 0.035,
+                                      color: Color(0xff48B5AA)),
+                                )),
+                            Container(
+                              width: _width * 0.8,
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(10),
+                                  color: Colors.white,
+                                  boxShadow: [
+                                    BoxShadow(color: Colors.grey, blurRadius: 1)
+                                  ]),
+                              child: Stack(
+                                children: [
+                                  Positioned(
+                                    child: Row(
+                                      children: [
+                                        Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: Container(
+                                              height: _height * 0.05,
+                                              width: _height * 0.05,
+                                              decoration: BoxDecoration(
+                                                  border: Border.all(
+                                                      color: Color(0xff48B5AA)),
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          50)),
+                                              child: Icon(
+                                                Icons.person,
+                                                color: Color(0xff48B5AA),
+                                              )),
+                                        ),
+                                        Container(
+                                          child: Row(
+                                            children: [
+                                              Text(
+                                                'ผู้ตรวจ: ${context.read<DataProvider>().user_name}',
+                                                style: TextStyle(
+                                                    fontFamily: context
+                                                        .read<DataProvider>()
+                                                        .family,
+                                                    fontSize: _width * 0.04,
+                                                    color: Color(0xff48B5AA)),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  Positioned(
+                                      right: 0,
+                                      bottom: 0,
+                                      child: GestureDetector(
+                                        onTap: () {
+                                          showDialog(
+                                              context: context,
+                                              builder: (BuildContext context) {
+                                                return AlertDialog(
+                                                  title: Text(
+                                                    'ลบผู้ตรวจ!',
+                                                    style: TextStyle(
+                                                        color:
+                                                            Color(0xffff0000),
+                                                        fontFamily: context
+                                                            .read<
+                                                                DataProvider>()
+                                                            .family,
+                                                        fontSize: 22),
+                                                  ),
+                                                  actions: [
+                                                    GestureDetector(
+                                                      onTap: () {
+                                                        Navigator.pop(context);
+                                                      },
+                                                      child: Padding(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                .all(8.0),
+                                                        child: Text(
+                                                          'ยกเลิก',
+                                                          style: TextStyle(
+                                                              color:
+                                                                  Colors.grey,
+                                                              fontFamily: context
+                                                                  .read<
+                                                                      DataProvider>()
+                                                                  .family),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                    GestureDetector(
+                                                      onTap: () {
+                                                        Navigator.pop(context);
+                                                        delete();
+                                                      },
+                                                      child: Padding(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                .all(8.0),
+                                                        child: Text(
+                                                          'ลบ',
+                                                          style: TextStyle(
+                                                              color: Colors.red,
+                                                              fontFamily: context
+                                                                  .read<
+                                                                      DataProvider>()
+                                                                  .family),
+                                                        ),
+                                                      ),
+                                                    )
+                                                  ],
+                                                );
+                                              });
+                                        },
+                                        child: Padding(
+                                          padding: const EdgeInsets.all(4.0),
+                                          child: statusdelete == false
+                                              ? Icon(
+                                                  Icons.delete,
+                                                  color: Color(0xffff0000),
+                                                )
+                                              : Container(
+                                                  width: MediaQuery.of(context)
+                                                          .size
+                                                          .width *
+                                                      0.05,
+                                                  height: MediaQuery.of(context)
+                                                          .size
+                                                          .width *
+                                                      0.05,
+                                                  child:
+                                                      CircularProgressIndicator(
+                                                    color: Colors.red,
+                                                  ),
+                                                ),
+                                        ),
+                                      ))
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    )
+                  : SizedBox(),
               SizedBox(height: _height * 0.02),
               Container(
                 child: Center(
@@ -355,7 +453,13 @@ class _Login_UserState extends State<Login_User> {
                             MaterialPageRoute(
                                 builder: (context) => Register()));
                       },
-                      child: Text('ลงทะเบียน')),
+                      child: Text(
+                        'ลงทะเบียน',
+                        style: TextStyle(
+                            fontFamily: context.read<DataProvider>().family,
+                            fontSize: _width * 0.04,
+                            color: Color(0xffffffff)),
+                      )),
                 ),
               ),
             ],

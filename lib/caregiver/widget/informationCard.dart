@@ -77,6 +77,24 @@ class _InformationCardState extends State<InformationCard> {
                       color: Color(0xff1B6286),
                     ),
                   ),
+                  context.read<DataProvider>().user_name != null &&
+                          context.read<DataProvider>().user_name != ''
+                      ? Text(
+                          'ผู้ตรวจ: ${context.read<DataProvider>().user_name}',
+                          style: TextStyle(
+                            fontFamily: context.read<DataProvider>().family,
+                            fontSize: MediaQuery.of(context).size.width * 0.03,
+                            color: Color(0xff1B6286),
+                          ),
+                        )
+                      : Text(
+                          'ผู้ตรวจ: ไม่มีผู้ตรวจ',
+                          style: TextStyle(
+                            fontFamily: context.read<DataProvider>().family,
+                            fontSize: MediaQuery.of(context).size.width * 0.03,
+                            color: Color(0xff1B6286),
+                          ),
+                        )
                 ],
               )),
         ),
