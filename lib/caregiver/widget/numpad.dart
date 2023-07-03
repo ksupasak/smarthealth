@@ -443,18 +443,29 @@ class _BoxIDState extends State<BoxID> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Text(
-            context.read<DataProvider>().id,
-            style: TextStyle(
-                color: context.read<DataProvider>().colortexts == "back"
-                    ? Colors.black
-                    : context.read<DataProvider>().colortexts == "red"
-                        ? Colors.red
-                        : Colors.green,
-                fontSize: (MediaQuery.of(context).size.width +
-                        MediaQuery.of(context).size.height) *
-                    0.012,
-                fontWeight: FontWeight.w600),
+          Container(
+            width: _width * 0.6,
+            child: Center(
+              child: Text(
+                context.read<DataProvider>().id,
+                style: TextStyle(
+                    color: context.read<DataProvider>().colortexts == "back"
+                        ? Colors.black
+                        : context.read<DataProvider>().colortexts == "red"
+                            ? Colors.red
+                            : Colors.green,
+                    fontSize: (MediaQuery.of(context).size.width +
+                            MediaQuery.of(context).size.height) *
+                        0.012,
+                    fontWeight: FontWeight.w600),
+              ),
+            ),
+          ),
+          GestureDetector(
+            onTap: () {
+              context.read<DataProvider>().id = '';
+            },
+            child: Icon(Icons.cancel, color: Colors.grey),
           )
         ],
       ),

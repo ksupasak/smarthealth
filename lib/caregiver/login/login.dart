@@ -71,7 +71,7 @@ class _Login_UserState extends State<Login_User> {
                 GestureDetector(
                   onTap: () {
                     Navigator.pop(context);
-                    Navigator.pushReplacement(context,
+                    Navigator.push(context,
                         MaterialPageRoute(builder: (context) => Register()));
                   },
                   child: Padding(

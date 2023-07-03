@@ -7,6 +7,7 @@ import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 import 'package:provider/provider.dart';
 import 'package:sembast/sembast.dart';
+import 'package:smart_health/caregiver/format_list/format_list.dart';
 import 'package:smart_health/caregiver/home/esm_cardread/cardread_Ble.dart';
 import 'package:smart_health/caregiver/home/esm_cardread/esm_idcard.dart';
 import 'package:smart_health/caregiver/login/login.dart';
@@ -38,7 +39,7 @@ class _HomeCareCevierState extends State<HomeCareCevier> {
   late List<RecordSnapshot<int, Map<String, Object?>>> init;
   Timer? _timer;
   Timer? reading;
-  int index_bottomNavigationBar = 1;
+  int index_bottomNavigationBar = 0;
   void readerID() {
     try {
       Future.delayed(const Duration(seconds: 1), () {
@@ -268,30 +269,30 @@ class _HomeCareCevierState extends State<HomeCareCevier> {
     double _height = MediaQuery.of(context).size.height;
     double _width = MediaQuery.of(context).size.width;
     List<Widget> body = [
-      Setting(),
       Stack(
         children: [
           Positioned(child: BackGrund()),
           Positioned(child: _width > _height ? style_width() : style_height())
         ],
       ),
-      Login_User()
+      FormatList(),
+      Login_User(),
+      Setting(),
     ];
     return SafeArea(
       child: Scaffold(
         body: body[index_bottomNavigationBar],
         bottomNavigationBar: BottomNavigationBar(
           selectedItemColor: Color(0xff48B5AA),
+          unselectedItemColor: Color(0x50000000),
           currentIndex: index_bottomNavigationBar,
           items: [
+            BottomNavigationBarItem(label: "Home", icon: Icon(Icons.home)),
+            BottomNavigationBarItem(
+                label: "รายการตรวจ", icon: Icon(Icons.format_list_numbered)),
+            BottomNavigationBarItem(label: "User", icon: Icon(Icons.person)),
             BottomNavigationBarItem(
                 label: "Settings", icon: Icon(Icons.settings)),
-            BottomNavigationBarItem(
-                label: "Home",
-                icon: Icon(
-                  Icons.home,
-                )),
-            BottomNavigationBarItem(label: "User", icon: Icon(Icons.person)),
           ],
           onTap: (index) {
             setState(() {
@@ -566,77 +567,8 @@ class _HomeCareCevierState extends State<HomeCareCevier> {
           Container(
             height: _height * 0.2,
             width: _width,
-            child: Column(mainAxisAlignment: MainAxisAlignment.end, children: [
-              GestureDetector(
-                  onTap: () {
-                    showModalBottomSheet(
-                      backgroundColor: Color.fromARGB(0, 255, 255, 255),
-                      isScrollControlled: true,
-                      shape: RoundedRectangleBorder(
-                          borderRadius:
-                              BorderRadius.vertical(top: Radius.circular(10))),
-                      context: context,
-                      builder: (context) => Container(
-                        height: _height * 0.6,
-                        decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.only(
-                                topLeft: Radius.circular(20),
-                                topRight: Radius.circular(20))),
-                        child: Column(children: [
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Container(
-                                height: _height * 0.01,
-                                width: _width * 0.4,
-                                decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(50),
-                                    color: Colors.grey)),
-                          ),
-                          context.read<DataProvider>().list_patients.length > 0
-                              ? list_patients()
-                              : Text(
-                                  'ไม่มีรายการ',
-                                  style: TextStyle(
-                                      fontFamily:
-                                          context.read<DataProvider>().family),
-                                )
-                        ]),
-                      ),
-                    );
-                  },
-                  child: Container(
-                    width: _width * 0.35,
-                    height: _height * 0.05,
-                    decoration: BoxDecoration(
-                        boxShadow: [
-                          BoxShadow(
-                              color: Colors.grey,
-                              blurRadius: 2,
-                              offset: Offset(1, 1)),
-                        ],
-                        color: Color(0xff31D6AA),
-                        borderRadius: BorderRadius.circular(10)),
-                    child: Row(
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.all(4.0),
-                          child: Icon(
-                            Icons.format_list_numbered,
-                            color: Colors.white,
-                          ),
-                        ),
-                        Text(
-                          'รายการตรวจ',
-                          style: TextStyle(
-                              color: Colors.white,
-                              fontFamily: context.read<DataProvider>().family,
-                              fontSize: _width * 0.035),
-                        )
-                      ],
-                    ),
-                  )),
-            ]),
+            child:
+                Column(mainAxisAlignment: MainAxisAlignment.end, children: []),
           )
         ]));
   }
@@ -650,21 +582,6 @@ class _HomeCareCevierState extends State<HomeCareCevier> {
       child: ListView(children: [
         //  Container(child: Numpad())
       ]),
-    );
-  }
-
-  Widget list_patients() {
-    double _width = MediaQuery.of(context).size.width;
-    double _height = MediaQuery.of(context).size.height;
-    return Container(
-      height: _height * 0.5,
-      child: ListView.builder(
-          itemCount: context.read<DataProvider>().list_patients.length,
-          itemBuilder: (BuildContext context, int index) {
-            return Container(
-              child: Text(index.toString()),
-            );
-          }),
     );
   }
 }
