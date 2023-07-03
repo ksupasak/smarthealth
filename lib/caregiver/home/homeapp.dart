@@ -398,11 +398,14 @@ class _HomeCareCevierState extends State<HomeCareCevier> {
                                 bottom: 0,
                                 child: GestureDetector(
                                     onTap: () {
-                                      Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  Login_User()));
+                                      setState(() {
+                                        index_bottomNavigationBar = 2;
+                                      });
+                                      // Navigator.push(
+                                      //     context,
+                                      //     MaterialPageRoute(
+                                      //         builder: (context) =>
+                                      //             Login_User()));
                                     },
                                     child: Padding(
                                       padding: const EdgeInsets.all(8.0),
