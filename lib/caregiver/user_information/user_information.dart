@@ -114,7 +114,7 @@ class _User_InformationState extends State<User_Information> {
                                           fontFamily: context
                                               .read<DataProvider>()
                                               .family,
-                                          fontSize: _width * 0.065),
+                                          fontSize: _width * 0.06),
                                     ),
                                   )
                                 ]),
@@ -166,7 +166,7 @@ class _User_InformationState extends State<User_Information> {
                                           fontFamily: context
                                               .read<DataProvider>()
                                               .family,
-                                          fontSize: _width * 0.065),
+                                          fontSize: _width * 0.06),
                                     ),
                                   )
                                 ]),

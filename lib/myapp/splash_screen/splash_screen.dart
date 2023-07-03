@@ -1,3 +1,6 @@
+import 'dart:io';
+
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:provider/provider.dart';
 import 'package:sembast/sembast.dart';
 import 'package:smart_health/caregiver/home/homeapp.dart';
@@ -24,6 +27,35 @@ class Splash_Screen extends StatefulWidget {
 class _Splash_ScreenState extends State<Splash_Screen> {
   late List<RecordSnapshot<int, Map<String, Object?>>> init;
   late List<RecordSnapshot<int, Map<String, Object?>>> initUser;
+
+  Future<void> getDeviceInformation() async {
+    DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
+
+    if (Platform.isAndroid) {
+      AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
+      print('Device Model: ${androidInfo.model}');
+      print('Device ID: ${androidInfo.androidId}');
+      setState(() {
+        context.read<DataProvider>().appId = androidInfo.androidId.toString();
+      });
+      // และข้อมูลอื่น ๆ ตามที่คุณต้องการ
+    } else if (Platform.isIOS) {
+      IosDeviceInfo iosInfo = await deviceInfo.iosInfo;
+      print('Device Model: ${iosInfo.model}');
+      print('Device ID: ${iosInfo.identifierForVendor}');
+      setState(() {
+        context.read<DataProvider>().appId =
+            iosInfo.identifierForVendor.toString();
+      });
+
+      // และข้อมูลอื่น ๆ ตามที่คุณต้องการ
+    } else if (Platform.isWindows) {
+      WindowsDeviceInfo windowsInfo = await deviceInfo.windowsInfo;
+      print('Device Model: ${windowsInfo.computerName}');
+      print('Device ID: ${windowsInfo.numberOfCores}');
+    }
+  }
+
   void setdata() async {
     Future<bool> data = showDataBaseDatauserApp();
     Future<List<RecordSnapshot<int, Map<String, Object?>>>> recordsdata;
@@ -113,6 +145,7 @@ class _Splash_ScreenState extends State<Splash_Screen> {
 
   @override
   void initState() {
+    getDeviceInformation();
     print('เข้าหน้าsplash');
     setdata();
     super.initState();

@@ -3,6 +3,7 @@ import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
+import 'package:smart_health/myapp/provider/provider.dart';
 import 'package:smart_health/myapp/setting/device.dart';
 import 'package:smart_health/myapp/setting/init_setting.dart';
 import 'package:smart_health/myapp/widgetdew.dart';
@@ -58,7 +59,9 @@ class _SettingState extends State<Setting> {
                           onTap: () {
                             //  context.read<Datafunction>().playsound();
                             //  Get.offNamed('home');
-                            Navigator.pop(context);
+                            if (context.read<DataProvider>().app == "station") {
+                              Navigator.pop(context);
+                            }
                           },
                           child: BoxSetting(text: 'Exit')),
                     ],

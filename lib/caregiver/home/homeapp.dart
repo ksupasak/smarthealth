@@ -15,6 +15,7 @@ import 'package:smart_health/caregiver/widget/backgrund.dart';
 import 'package:smart_health/caregiver/widget/numpad.dart';
 import 'package:smart_health/myapp/provider/provider.dart';
 import 'package:smart_health/myapp/setting/local.dart';
+import 'package:smart_health/myapp/setting/setting.dart';
 import 'package:smart_health/myapp/widgetdew.dart';
 
 import 'package:http/http.dart' as http;
@@ -36,7 +37,8 @@ class _HomeCareCevierState extends State<HomeCareCevier> {
   StreamSubscription? cardReader;
   late List<RecordSnapshot<int, Map<String, Object?>>> init;
   Timer? _timer;
-
+  Timer? reading;
+  int index_bottomNavigationBar = 1;
   void readerID() {
     try {
       Future.delayed(const Duration(seconds: 1), () {
@@ -246,13 +248,15 @@ class _HomeCareCevierState extends State<HomeCareCevier> {
   void initState() {
     print('เข้าหน้าHome');
     load_list_patients();
-    //  connectCreaDreadBLE();
+
+    // connectCreaDreadBLE();
     // TODO: implement initState
     super.initState();
   }
 
   @override
   void dispose() {
+    reading!.cancel();
     _functionScan!.cancel();
     _timer!.cancel();
     // TODO: implement dispose
@@ -261,16 +265,50 @@ class _HomeCareCevierState extends State<HomeCareCevier> {
 
   @override
   Widget build(BuildContext context) {
-    double _width = MediaQuery.of(context).size.width;
     double _height = MediaQuery.of(context).size.height;
-    return SafeArea(
-      child: Scaffold(
-          body: Stack(
+    double _width = MediaQuery.of(context).size.width;
+    List<Widget> body = [
+      Setting(),
+      Stack(
         children: [
           Positioned(child: BackGrund()),
           Positioned(child: _width > _height ? style_width() : style_height())
         ],
-      )),
+      ),
+      Login_User()
+    ];
+    return SafeArea(
+      child: Scaffold(
+        body: body[index_bottomNavigationBar],
+        bottomNavigationBar: BottomNavigationBar(
+          selectedItemColor: Color(0xff48B5AA),
+          currentIndex: index_bottomNavigationBar,
+          items: [
+            BottomNavigationBarItem(
+                label: "Settings", icon: Icon(Icons.settings)),
+            BottomNavigationBarItem(
+                label: "Home",
+                icon: Icon(
+                  Icons.home,
+                )),
+            BottomNavigationBarItem(label: "User", icon: Icon(Icons.person)),
+          ],
+          onTap: (index) {
+            setState(() {
+              index_bottomNavigationBar = index;
+            });
+            // setState(() {
+            //   if (index == 2) {
+            //     Navigator.push(context,
+            //         MaterialPageRoute(builder: (context) => Login_User()));
+            //   } else if (index == 0) {
+            //     Navigator.push(context,
+            //         MaterialPageRoute(builder: (context) => Setting()));
+            //   }
+            // });
+          },
+        ),
+      ),
     );
   }
 
@@ -447,11 +485,14 @@ class _HomeCareCevierState extends State<HomeCareCevier> {
                                   ),
                                   GestureDetector(
                                     onTap: () {
-                                      Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  Login_User()));
+                                      setState(() {
+                                        index_bottomNavigationBar = 2;
+                                      });
+                                      // Navigator.push(
+                                      //     context,
+                                      //     MaterialPageRoute(
+                                      //         builder: (context) =>
+                                      //             Login_User()));
                                     },
                                     child: Container(
                                       height: _height * 0.04,
@@ -520,7 +561,7 @@ class _HomeCareCevierState extends State<HomeCareCevier> {
                   ),
                 ),
           Container(
-            height: _height * 0.3,
+            height: _height * 0.2,
             width: _width,
             child: Column(mainAxisAlignment: MainAxisAlignment.end, children: [
               GestureDetector(

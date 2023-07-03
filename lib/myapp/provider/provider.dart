@@ -6,7 +6,9 @@ class DataProvider with ChangeNotifier {
   String user_id = '';
   String user_code = '';
   List list_patients = [];
+  bool permission_card_reader = true;
   String app = '';
+  String appId = '';
   String platfromURL = 'https://emr-life.com/clinic_master/clinic/Api/';
   String name_hospital = '';
   String care_unit = '';

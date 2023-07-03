@@ -175,6 +175,21 @@ class _InitsettingState extends State<Initsetting> {
     }
   }
 
+  String maskString(
+      String original, int prefixLength, int suffixLength, String maskChar) {
+    if (original.length <= prefixLength + suffixLength) {
+      return original;
+    }
+
+    String prefix = original.substring(0, prefixLength);
+    String suffix = original.substring(original.length - suffixLength);
+    String masked = prefix +
+        maskChar * (original.length - prefixLength - suffixLength) +
+        suffix;
+
+    return masked;
+  }
+
   @override
   void initState() {
     printDatabase();
@@ -389,14 +404,22 @@ class _InitsettingState extends State<Initsetting> {
                         child: Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: Column(children: [
-                            BoxText(keyvavlue: app, texthead: 'ประเภทApp'),
+                            BoxText(keyvavlue: app.text, texthead: 'ประเภทApp'),
                             BoxText(
-                                keyvavlue: name_hospital,
+                                keyvavlue: maskString(
+                                    context.read<DataProvider>().appId,
+                                    3,
+                                    3,
+                                    "*"),
+                                texthead: 'App Id'),
+                            BoxText(
+                                keyvavlue: name_hospital.text,
                                 texthead: 'Name Hospital'),
                             BoxText(
-                                keyvavlue: care_unit, texthead: 'Care Unit'),
+                                keyvavlue: care_unit.text,
+                                texthead: 'Care Unit'),
                             BoxText(
-                                keyvavlue: care_unit_id,
+                                keyvavlue: care_unit_id.text,
                                 texthead: 'Care Unit id'),
                           ]),
                         ),
@@ -481,7 +504,7 @@ class BoxText extends StatefulWidget {
     this.texthead,
     this.textinputtype,
   });
-  var keyvavlue;
+  String? keyvavlue;
   String? texthead;
   TextInputType? textinputtype;
 
@@ -518,7 +541,7 @@ class _BoxTextState extends State<BoxText> {
                     BoxDecoration(borderRadius: BorderRadius.circular(5)),
                 width: _width * 0.9,
                 child: Text(
-                  '${widget.keyvavlue.text}',
+                  '${widget.keyvavlue}',
                   style: style2,
                 ),
               ),

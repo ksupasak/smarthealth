@@ -783,6 +783,7 @@ class _BoxRecordState extends State<BoxRecord> {
                     ],
                   ),
             TextField(
+              //  autofocus: false,//ปิดแป้นพิม
               cursorColor: teamcolor,
               onChanged: (value) {
                 if (value.length > 0) {}
