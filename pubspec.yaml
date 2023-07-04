@@ -61,6 +61,7 @@ dependencies:
   vibration: ^1.7.5
   carousel_slider: ^4.2.1
   device_info_plus: ^2.1.2
+ 
   openvidu_client:
     path: "vendors/flutter_openvidu_client"
     

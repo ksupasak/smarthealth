@@ -27,7 +27,6 @@ import 'package:smart_health/myapp/setting/device/yuwell_ht_yhw.dart';
 import 'package:smart_health/myapp/setting/local.dart';
 import 'package:smart_health/myapp/widgetdew.dart';
 import 'package:http/http.dart' as http;
-
 import 'package:flutter_vibrate/flutter_vibrate.dart';
 import 'package:vibration/vibration.dart';
 
@@ -62,7 +61,11 @@ class _HealthRecord2State extends State<HealthRecord2> {
       StreamController<Map<String, String>>();
   Timer? timer;
   TextEditingController cc = TextEditingController();
-
+  bool _isChecked1 = false;
+  bool _isChecked2 = false;
+  bool _isChecked21 = false;
+  bool _isChecked22 = false;
+  bool _isChecked23 = false;
   void restartdata() {
     String temp_value = '';
     String weight_value = '';
@@ -472,6 +475,11 @@ class _HealthRecord2State extends State<HealthRecord2> {
     double heightsizedbox = _height * 0.02;
     double heightline = _height * 0.03;
     Color teamcolor = Color.fromARGB(255, 47, 174, 164);
+    TextStyle textStyle = TextStyle(
+      fontFamily: context.read<DataProvider>().family,
+      fontSize: _width * 0.03,
+      color: Color.fromARGB(255, 35, 131, 123),
+    );
     return SafeArea(
       child: Scaffold(
         body: Stack(children: [
@@ -618,6 +626,198 @@ class _HealthRecord2State extends State<HealthRecord2> {
                 ])),
             SizedBox(height: heightsizedbox),
             BoxDecorate2(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  BoxRecord(
+                    texthead: 'BloodGlucose',
+                    image: 'assets/Frame 9184.png',
+                  ),
+                  Line(height: heightline, color: teamcolor),
+                  Container(
+                    child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Container(
+                              child: Row(
+                            children: [
+                              Text('ก่อนอาหาร', style: textStyle),
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: GestureDetector(
+                                  onTap: () {
+                                    setState(() {
+                                      if (_isChecked1) {
+                                        _isChecked1 = false;
+                                      } else {
+                                        _isChecked1 = true;
+                                        _isChecked2 = false;
+                                      }
+                                    });
+                                  },
+                                  child: Container(
+                                    width: _width * 0.05,
+                                    height: _width * 0.05,
+                                    decoration: BoxDecoration(
+                                        color: _isChecked1
+                                            ? Colors.green
+                                            : Color.fromARGB(
+                                                255, 216, 216, 216),
+                                        borderRadius:
+                                            BorderRadius.circular(50)),
+                                  ),
+                                ),
+                              )
+                            ],
+                          )),
+                          Container(
+                              child: Row(
+                            children: [
+                              Text('หลังอาหาร', style: textStyle),
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: GestureDetector(
+                                  onTap: () {
+                                    setState(() {
+                                      if (_isChecked2) {
+                                        _isChecked2 = false;
+                                      } else {
+                                        _isChecked1 = false;
+                                        _isChecked2 = true;
+                                      }
+                                    });
+                                  },
+                                  child: Container(
+                                    width: _width * 0.05,
+                                    height: _width * 0.05,
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(50),
+                                      color: _isChecked2
+                                          ? Colors.green
+                                          : Color.fromARGB(255, 216, 216, 216),
+                                    ),
+                                  ),
+                                ),
+                              )
+                            ],
+                          )),
+                        ]),
+                  ),
+                  Line(height: heightline, color: teamcolor),
+                  Container(
+                    child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
+                          Container(
+                            child: Row(
+                              children: [
+                                Text('เช้า', style: textStyle),
+                                Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: GestureDetector(
+                                    onTap: () {
+                                      setState(() {
+                                        if (_isChecked21) {
+                                          _isChecked21 = false;
+                                        } else {
+                                          _isChecked21 = true;
+                                          _isChecked22 = false;
+                                          _isChecked23 = false;
+                                        }
+                                      });
+                                    },
+                                    child: Container(
+                                      width: _width * 0.05,
+                                      height: _width * 0.05,
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(50),
+                                        color: _isChecked21
+                                            ? Colors.green
+                                            : Color.fromARGB(
+                                                255, 216, 216, 216),
+                                      ),
+                                    ),
+                                  ),
+                                )
+                              ],
+                            ),
+                          ),
+                          Container(
+                            child: Row(
+                              children: [
+                                Text('กลางวัน', style: textStyle),
+                                Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: GestureDetector(
+                                    onTap: () {
+                                      setState(() {
+                                        if (_isChecked22) {
+                                          _isChecked22 = false;
+                                        } else {
+                                          _isChecked21 = false;
+                                          _isChecked22 = true;
+                                          _isChecked23 = false;
+                                        }
+                                      });
+                                    },
+                                    child: Container(
+                                      width: _width * 0.05,
+                                      height: _width * 0.05,
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(50),
+                                        color: _isChecked22
+                                            ? Colors.green
+                                            : Color.fromARGB(
+                                                255, 216, 216, 216),
+                                      ),
+                                    ),
+                                  ),
+                                )
+                              ],
+                            ),
+                          ),
+                          Container(
+                            child: Row(
+                              children: [
+                                Text('เย็น', style: textStyle),
+                                Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: GestureDetector(
+                                    onTap: () {
+                                      setState(() {
+                                        if (_isChecked23) {
+                                          _isChecked23 = false;
+                                        } else {
+                                          _isChecked21 = false;
+                                          _isChecked22 = false;
+                                          _isChecked23 = true;
+                                        }
+                                      });
+                                    },
+                                    child: Container(
+                                      width: _width * 0.05,
+                                      height: _width * 0.05,
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(50),
+                                        color: _isChecked23
+                                            ? Colors.green
+                                            : Color.fromARGB(
+                                                255, 216, 216, 216),
+                                      ),
+                                    ),
+                                  ),
+                                )
+                              ],
+                            ),
+                          )
+                        ]),
+                  ),
+                ],
+              ),
+            ),
+            SizedBox(height: heightsizedbox),
+            BoxDecorate2(
               child: Center(
                 child: TextField(
                   cursorColor: Color(0xff48B5AA),
@@ -755,7 +955,7 @@ class _BoxRecordState extends State<BoxRecord> {
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Container(
-        height: _height * 0.1,
+        height: _height * 0.12,
         width: _width * 0.2,
         decoration: BoxDecoration(boxShadow: [
           // BoxShadow(
@@ -774,12 +974,15 @@ class _BoxRecordState extends State<BoxRecord> {
                               width: _width * 0.05,
                               child: Image.asset(widget.image))
                           : SizedBox(),
-                      Text('${widget.texthead}',
-                          style: TextStyle(
-                            fontFamily: context.read<DataProvider>().family,
-                            fontSize: _width * 0.03,
-                            color: teamcolor,
-                          )),
+                      Container(
+                        width: _width * 0.15,
+                        child: Text('${widget.texthead}',
+                            style: TextStyle(
+                              fontFamily: context.read<DataProvider>().family,
+                              fontSize: _width * 0.03,
+                              color: teamcolor,
+                            )),
+                      ),
                     ],
                   ),
             TextField(
@@ -814,5 +1017,19 @@ class _BoxRecordState extends State<BoxRecord> {
         ),
       ),
     );
+  }
+}
+
+class ListImage extends StatefulWidget {
+  const ListImage({super.key});
+
+  @override
+  State<ListImage> createState() => _ListImageState();
+}
+
+class _ListImageState extends State<ListImage> {
+  @override
+  Widget build(BuildContext context) {
+    return Container();
   }
 }

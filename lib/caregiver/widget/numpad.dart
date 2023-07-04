@@ -37,6 +37,13 @@ class _NumpadState extends State<Numpad> {
   String colortexts = 'back';
   StreamController<String> entry = StreamController<String>();
 
+  void deleteAll() {
+    setState(() {
+      passwordslogin = '';
+      context.read<DataProvider>().id = '';
+    });
+  }
+
   void setValue(String val) {
     entry.sink.add(val);
   }
@@ -129,7 +136,7 @@ class _NumpadState extends State<Numpad> {
     double _height = MediaQuery.of(context).size.height;
     return Column(
       children: [
-        BoxID(),
+        BoxID(onPressed: deleteAll),
         SizedBox(
           height: MediaQuery.of(context).size.height * 0.005,
         ),
@@ -388,8 +395,8 @@ class _NumpadState extends State<Numpad> {
 }
 
 class BoxID extends StatefulWidget {
-  const BoxID({super.key});
-
+  BoxID({super.key, this.onPressed});
+  VoidCallback? onPressed;
   @override
   State<BoxID> createState() => _BoxIDState();
 }
@@ -462,9 +469,7 @@ class _BoxIDState extends State<BoxID> {
             ),
           ),
           GestureDetector(
-            onTap: () {
-              context.read<DataProvider>().id = '';
-            },
+            onTap: widget.onPressed,
             child: Icon(Icons.cancel, color: Colors.grey),
           )
         ],
