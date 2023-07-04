@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:collection';
 import 'dart:convert';
+import 'dart:io';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
@@ -29,6 +30,7 @@ import 'package:smart_health/myapp/widgetdew.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_vibrate/flutter_vibrate.dart';
 import 'package:vibration/vibration.dart';
+// import 'package:image_picker/image_picker.dart';
 
 class HealthRecord2 extends StatefulWidget {
   const HealthRecord2({super.key});
@@ -816,6 +818,8 @@ class _HealthRecord2State extends State<HealthRecord2> {
                 ],
               ),
             ),
+            // SizedBox(height: heightsizedbox),
+            // BoxDecorate2(child: ListImage()),
             SizedBox(height: heightsizedbox),
             BoxDecorate2(
               child: Center(
@@ -1020,16 +1024,38 @@ class _BoxRecordState extends State<BoxRecord> {
   }
 }
 
-class ListImage extends StatefulWidget {
-  const ListImage({super.key});
+// class ListImage extends StatefulWidget {
+//   const ListImage({super.key});
 
-  @override
-  State<ListImage> createState() => _ListImageState();
-}
+//   @override
+//   State<ListImage> createState() => _ListImageState();
+// }
 
-class _ListImageState extends State<ListImage> {
-  @override
-  Widget build(BuildContext context) {
-    return Container();
-  }
-}
+// class _ListImageState extends State<ListImage> {
+//   final ImagePicker _imagePicker = ImagePicker();
+//   List<File> multiimages = [];
+//   multiimagePicker() async {
+//     final List<XFile> pickedImage = await _imagePicker.pickMultiImage();
+//     if (pickedImage != null) {
+//       pickedImage.forEach((e) {
+//         multiimages.add(File(e.path));
+//       });
+//       setState(() {});
+//     }
+//   }
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return Container(
+//       child: Row(
+//         children: [
+//           GestureDetector(
+//               onTap: () {
+//                 multiimagePicker();
+//               },
+//               child: Icon(Icons.add))
+//         ],
+//       ),
+//     );
+//   }
+// }
