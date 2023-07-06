@@ -107,10 +107,12 @@ class _NumpadState extends State<Numpad> {
     this.widget.entry = entry;
 
     entry.stream.listen((String data) {
+      print("Received ID Card "+data);
       setState(() {
         context.read<DataProvider>().colortexts = 'green';
         colortexts = 'green';
         passwordslogin = data;
+        chakepasswordslogin();
       });
     });
 

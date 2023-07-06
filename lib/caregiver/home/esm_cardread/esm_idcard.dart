@@ -96,6 +96,13 @@ class ESMIDCard {
 
   StreamController<String> entry = StreamController<String>();
 
+  StreamController<String> status = StreamController<String>();
+
+
+    Stream<String> getStatus() {
+    return status.stream;
+  }
+
 //  _currentEntries.listen((listOfStrings) {
 //     // From this point you can use listOfStrings as List<String> object
 //     // and do all other business logic you want
@@ -127,10 +134,7 @@ class ESMIDCard {
     initAndroid();
   }
 
-  void read() async {
-    print("call read");
-    buttonRead();
-  }
+
 
   void readAuto() async {
     print("call check");
@@ -158,8 +162,16 @@ class ESMIDCard {
     isEnabled = true;
     // });
 
-    buttonFindReader();
+    // buttonFindReader();
+    // findReader();
+
+    status.sink.add("ADAPTER_READY");
+
+
   }
+
+
+
 
   ///////////////////////////////// Response from native /////////////////////////////////
   Future<void> _fromNative(MethodCall call) async {
@@ -350,6 +362,7 @@ class ESMIDCard {
     try {
       if (IO.Platform.isAndroid) {
         int listOption = NA_FIRST +
+          
             NA_SCAN +
             NA_BLE1 +
             NA_BLE0 +
@@ -687,7 +700,7 @@ class ESMIDCard {
   }
 
   //////////////////////////////// Button Find Reader ////////////////////////////////
-  Future<void> buttonFindReader() async {
+  Future<void> findReader() async {
     isReaderConnected = false;
     String text = "Reader scanning...";
     // setState(() {
@@ -724,11 +737,16 @@ class ESMIDCard {
 
       // ===================== Select Reader ======================== //
       if (await selectReaderDF(textReaderName) == true) {
+
         // ===================== Get Reader Info ======================== //
         await getReaderInfoDF();
 
         // ===================== Get License Info ======================== //
         await getLicenseInfoDF();
+
+        status.sink.add("DEVICE_READY");
+
+
       }
     }
     // setState(() {
@@ -737,7 +755,7 @@ class ESMIDCard {
   }
 
   //////////////////////////////// Button Read Card ////////////////////////////////
-  Future<void> buttonRead() async {
+  Future<void> read() async {
     isReading = true;
 
     String text = "Reading...";

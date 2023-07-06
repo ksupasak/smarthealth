@@ -31,7 +31,7 @@ class HomeCareCevier extends StatefulWidget {
 class _HomeCareCevierState extends State<HomeCareCevier> {
   bool status = false;
   ESMIDCard? reader;
-  Stream<String>? entry;
+
   var devices;
   StreamSubscription? _functionScan;
   StreamSubscription? _functionReaddata;
@@ -40,12 +40,24 @@ class _HomeCareCevierState extends State<HomeCareCevier> {
   Timer? _timer;
   Timer? reading;
   int index_bottomNavigationBar = 0;
-  void readerID() {
+
+  final idcard = Numpad();
+
+
+  Stream<String>? entry;
+  Stream<String>? reader_status;
+
+  void startReader() {
     try {
-      Future.delayed(const Duration(seconds: 1), () {
+      Future.delayed(const Duration(seconds: 2), () {
+
         reader = ESMIDCard.instance;
 
+        // reader?.findReader();
+
         entry = reader?.getEntry();
+
+        
         print('->initstate ');
         if (entry != null) {
           print('entry!=null');
@@ -57,9 +69,12 @@ class _HomeCareCevierState extends State<HomeCareCevier> {
               setState(() {});
               print(
                   "${context.read<DataProvider>().id} / ${splitted[0].toString()}");
-
+              idcard.setValue(splitted[0]);
               if (context.read<DataProvider>().id == splitted[0].toString()) {
-              } else {}
+
+              } else {
+
+              }
             }, onError: (error) {
               print(error);
             }, onDone: () {
@@ -69,15 +84,42 @@ class _HomeCareCevierState extends State<HomeCareCevier> {
         } else {
           print('entry ==null');
         }
-        // const oneSec = Duration(seconds: 1);
-        // reading = Timer.periodic(oneSec, (Timer t) => checkCard());
+
+
+        reader_status = reader?.getStatus();
+        reader_status?.listen((String data) async {
+
+          print("Reader Status :  " + data);
+
+          if(data=="ADAPTER_READY"){
+
+              reader?.findReader();
+
+          }else 
+          if(data=="DEVICE_READY"){
+
+            const oneSec = Duration(seconds: 2);
+            reading = Timer.periodic(oneSec, (Timer t) => checkCard()); 
+
+          }
+
+
+        });
+
+
+
+   
       });
     } on Exception catch (e) {
       print('error');
       print(e.toString());
     }
   }
+  void checkCard() async{
 
+    reader?.readAuto();
+
+  }
   void check() async {
     setState(() {
       status = true;
@@ -175,58 +217,58 @@ class _HomeCareCevierState extends State<HomeCareCevier> {
     }
   }
 
-  void bleScan() {
-    _functionScan = Stream.periodic(Duration(seconds: 5)).listen((_) {
-      print('เเสกน   ');
-      FlutterBluePlus.instance.startScan(timeout: const Duration(seconds: 4));
-    });
-    FlutterBluePlus.instance.scanResults.listen((results) {
-      if (results.length > 0) {
-        ScanResult r = results.last;
+  // void bleScan() {
+  //   _functionScan = Stream.periodic(Duration(seconds: 5)).listen((_) {
+  //     print('เเสกน   ');
+  //     FlutterBluePlus.instance.startScan(timeout: const Duration(seconds: 4));
+  //   });
+  //   FlutterBluePlus.instance.scanResults.listen((results) {
+  //     if (results.length > 0) {
+  //       ScanResult r = results.last;
 
-        if (r.device.name.toString() == 'FT_F5F30C4C52DE') {
-          print('{เจอdeviceเครื่องอ่านบัตรที่กำหนด}');
-          if (r.device.id.toString() == devices['FT_F5F30C4C52DE'].toString()) {
-            print("name= ${r.device.name} id= ${r.device.id} กำลัง connect");
-            r.device.connect();
-            _functionScan!.cancel();
-            print('หยุดค้นหา');
-            readerID();
-          } else {
-            print(
-                "name= ${r.device.name} id= ${r.device.id} ->ไม่ใช่ที่ต่องการ");
-          }
-        }
-      }
-    });
-    // _functionReaddata = Stream.periodic(Duration(seconds: 4))
-    //     .asyncMap((_) => FlutterBluePlus.instance.connectedDevices)
-    //     .listen((connectedDevices) {
-    //   connectedDevices.forEach((device) {
-    //     if (device.id.toString() == devices['FT_F5F30C4C52DE'].toString()) {
-    //       CardRead cardread = CardRead(device: device);
-    //       cardread.parse().listen((data) {
-    //         print(data);
-    //       });
-    //     }
-    //   });
-    // });
-  }
+  //       if (r.device.name.toString() == 'FT_F5F30C4C52DE') {
+  //         print('{เจอdeviceเครื่องอ่านบัตรที่กำหนด}');
+  //         if (r.device.id.toString() == devices['FT_F5F30C4C52DE'].toString()) {
+  //           print("name= ${r.device.name} id= ${r.device.id} กำลัง connect");
+  //           r.device.connect();
+  //           _functionScan!.cancel();
+  //           print('หยุดค้นหา');
+  //           readerID();
+  //         } else {
+  //           print(
+  //               "name= ${r.device.name} id= ${r.device.id} ->ไม่ใช่ที่ต่องการ");
+  //         }
+  //       }
+  //     }
+  //   });
+  //   // _functionReaddata = Stream.periodic(Duration(seconds: 4))
+  //   //     .asyncMap((_) => FlutterBluePlus.instance.connectedDevices)
+  //   //     .listen((connectedDevices) {
+  //   //   connectedDevices.forEach((device) {
+  //   //     if (device.id.toString() == devices['FT_F5F30C4C52DE'].toString()) {
+  //   //       CardRead cardread = CardRead(device: device);
+  //   //       cardread.parse().listen((data) {
+  //   //         print(data);
+  //   //       });
+  //   //     }
+  //   //   });
+  //   // });
+  // }
 
-  Future<void> connectCreaDreadBLE() async {
-    print('กำลังโหลดตรวจสอบDeviceเครื่องอ่านบัตร');
+  // Future<void> connectCreaDreadBLE() async {
+  //   print('กำลังโหลดตรวจสอบDeviceเครื่องอ่านบัตร');
 
-    init = await getdevice();
-    for (RecordSnapshot<int, Map<String, Object?>> record in init) {
-      devices = record['mapdevices'];
-    }
-    if (devices['FT_F5F30C4C52DE'] != null) {
-      print('กำลังค้นหาเรื่องอ่านบัตร ID ${devices['FT_F5F30C4C52DE']}');
-      bleScan();
-    } else {
-      print('ไม่ได้เพิ่มdeviceเครื่องอ่านบัตร');
-    }
-  }
+  //   init = await getdevice();
+  //   for (RecordSnapshot<int, Map<String, Object?>> record in init) {
+  //     devices = record['mapdevices'];
+  //   }
+  //   if (devices['FT_F5F30C4C52DE'] != null) {
+  //     print('กำลังค้นหาเรื่องอ่านบัตร ID ${devices['FT_F5F30C4C52DE']}');
+  //     bleScan();
+  //   } else {
+  //     print('ไม่ได้เพิ่มdeviceเครื่องอ่านบัตร');
+  //   }
+  // }
 
   Future<void> load_list_patients() async {
     var resTojson;
@@ -253,6 +295,9 @@ class _HomeCareCevierState extends State<HomeCareCevier> {
     // connectCreaDreadBLE();
     // TODO: implement initState
     super.initState();
+    // connectCreaDreadBLE();
+    startReader();
+
   }
 
   @override
@@ -537,7 +582,7 @@ class _HomeCareCevierState extends State<HomeCareCevier> {
               ],
             ),
           ),
-          Container(child: Numpad()),
+          Container(child: idcard),
           SizedBox(height: _height * 0.01),
           status == false
               ? Container(
