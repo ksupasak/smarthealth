@@ -1,14 +1,11 @@
 import 'dart:async';
 import 'dart:collection';
 import 'dart:convert';
-import 'dart:io';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
-import 'package:just_audio/just_audio.dart';
 import 'package:provider/provider.dart';
 import 'package:sembast/sembast.dart';
 import 'package:smart_health/myapp/action/playsound.dart';
@@ -19,7 +16,6 @@ import 'package:smart_health/myapp/setting/device/hj_narigmed.dart';
 
 import 'package:smart_health/myapp/setting/device/mibfs.dart';
 import 'package:smart_health/caregiver/home/homeapp.dart';
-import 'package:smart_health/caregiver/user_information/user_information.dart';
 import 'package:smart_health/caregiver/widget/informationCard.dart';
 import 'package:smart_health/myapp/provider/provider.dart';
 import 'package:smart_health/myapp/setting/device/yuwell_bo_yx110_fdg7.dart';
@@ -28,8 +24,7 @@ import 'package:smart_health/myapp/setting/device/yuwell_ht_yhw.dart';
 import 'package:smart_health/myapp/setting/local.dart';
 import 'package:smart_health/myapp/widgetdew.dart';
 import 'package:http/http.dart' as http;
-import 'package:flutter_vibrate/flutter_vibrate.dart';
-import 'package:vibration/vibration.dart';
+
 // import 'package:image_picker/image_picker.dart';
 
 class HealthRecord2 extends StatefulWidget {

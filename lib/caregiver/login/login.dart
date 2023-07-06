@@ -32,6 +32,7 @@ class _Login_UserState extends State<Login_User> {
         Uri.parse('${context.read<DataProvider>().platfromURL}/get_recep');
     var res = await http.post(url, body: {'public_id': id.text});
     resTojson = json.decode(res.body);
+
     print(resTojson);
 
     if (resTojson['message'] == 'not found') {
