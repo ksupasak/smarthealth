@@ -1979,7 +1979,7 @@ class _BoxSettingState extends State<BoxSetting> {
         width: _width * 0.98,
         height: _height * 0.06,
         decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(20),
+            borderRadius: BorderRadius.circular(5),
             color: Color.fromARGB(255, 255, 255, 255),
             boxShadow: [
               BoxShadow(
@@ -2026,14 +2026,8 @@ class _BoxSettingState extends State<BoxSetting> {
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.end,
                               children: [
-                                Center(
-                                  child: Text(
-                                    '>',
-                                    style: widget.textstyle == null
-                                        ? style1
-                                        : widget.textstyle,
-                                  ),
-                                ),
+                                Icon(Icons.navigate_next_outlined,
+                                    color: Color.fromARGB(255, 20, 142, 130)),
                               ],
                             ))
                       ],

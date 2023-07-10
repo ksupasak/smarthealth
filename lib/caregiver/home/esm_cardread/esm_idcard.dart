@@ -98,8 +98,7 @@ class ESMIDCard {
 
   StreamController<String> status = StreamController<String>();
 
-
-    Stream<String> getStatus() {
+  Stream<String> getStatus() {
     return status.stream;
   }
 
@@ -134,8 +133,6 @@ class ESMIDCard {
     initAndroid();
   }
 
-
-
   void readAuto() async {
     print("call check");
     autoReadProcess();
@@ -166,12 +163,7 @@ class ESMIDCard {
     // findReader();
 
     status.sink.add("ADAPTER_READY");
-
-
   }
-
-
-
 
   ///////////////////////////////// Response from native /////////////////////////////////
   Future<void> _fromNative(MethodCall call) async {
@@ -361,8 +353,8 @@ class ESMIDCard {
 
     try {
       if (IO.Platform.isAndroid) {
-        int listOption = NA_FIRST +
-          
+        int listOption = NA_POPUP + //1
+
             NA_SCAN +
             NA_BLE1 +
             NA_BLE0 +
@@ -737,7 +729,6 @@ class ESMIDCard {
 
       // ===================== Select Reader ======================== //
       if (await selectReaderDF(textReaderName) == true) {
-
         // ===================== Get Reader Info ======================== //
         await getReaderInfoDF();
 
@@ -745,8 +736,6 @@ class ESMIDCard {
         await getLicenseInfoDF();
 
         status.sink.add("DEVICE_READY");
-
-
       }
     }
     // setState(() {

@@ -107,7 +107,7 @@ class _NumpadState extends State<Numpad> {
     this.widget.entry = entry;
 
     entry.stream.listen((String data) {
-      print("Received ID Card "+data);
+      print("Received ID Card " + data);
       setState(() {
         context.read<DataProvider>().colortexts = 'green';
         colortexts = 'green';
@@ -423,15 +423,9 @@ class _BoxIDState extends State<BoxID> {
     });
   }
 
-  void stop() {
-    setState(() {
-      timer?.cancel();
-    });
-  }
-
   @override
   void dispose() {
-    stop();
+    timer?.cancel();
     // TODO: implement dispose
     super.dispose();
   }

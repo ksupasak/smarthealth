@@ -3,6 +3,8 @@ import 'dart:io';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:provider/provider.dart';
 import 'package:sembast/sembast.dart';
+import 'package:smart_health/caregiver/center/center.dart';
+
 import 'package:smart_health/caregiver/home/homeapp.dart';
 import 'package:smart_health/caregiver/login/login.dart';
 import 'package:smart_health/myapp/provider/provider.dart';
@@ -133,7 +135,7 @@ class _Splash_ScreenState extends State<Splash_Screen> {
   void myapp() {
     if (context.read<DataProvider>().app == 'care_giver') {
       Navigator.pushReplacement(
-          context, MaterialPageRoute(builder: (context) => HomeCareCevier()));
+          context, MaterialPageRoute(builder: (context) => Center_Caregiver()));
     } else if (context.read<DataProvider>().app == 'station') {
       Navigator.pushReplacement(
           context, MaterialPageRoute(builder: (context) => App()));

@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 import 'package:smart_health/myapp/provider/provider.dart';
 import 'package:smart_health/myapp/setting/device.dart';
 import 'package:smart_health/myapp/setting/init_setting.dart';
+import 'package:smart_health/myapp/setting/update_license.dart';
 import 'package:smart_health/myapp/widgetdew.dart';
 
 class Setting extends StatefulWidget {
@@ -55,6 +56,14 @@ class _SettingState extends State<Setting> {
                                     builder: (context) => Device()));
                           },
                           child: BoxSetting(text: 'Device')),
+                      GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => Update_License()));
+                          },
+                          child: BoxSetting(text: 'Update License')),
                       GestureDetector(
                           onTap: () {
                             //  context.read<Datafunction>().playsound();

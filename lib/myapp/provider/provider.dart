@@ -33,7 +33,7 @@ class DataProvider with ChangeNotifier {
   String si = '';
   String uric = '';
   List<String> namescan = [
-    'FT_F5F30C4C52DE', //เครื่องอ่านบัตร
+    //  'FT_F5F30C4C52DE', //เครื่องอ่านบัตร
     'Yuwell HT-YHW', //เครื่องวัดอุณหภูมิ D0:05:10:00:02:74
     'Yuwell BO-YX110-FDC7', //เครื่องspo2  Yuwell_BO_YX110_FDC7
     'Yuwell BP-YE680A', //เครื่องวัดความดัน  Yuwell_BP_YE680A
@@ -43,7 +43,7 @@ class DataProvider with ChangeNotifier {
     'A&D_UA-651BLE_D57B3F' //เครื่องวัดความดัน
   ];
   Map<String, String> imagesdevice = {
-    'FT_F5F30C4C52DE': '',
+    // 'FT_F5F30C4C52DE': '',
     'Yuwell HT-YHW': 'LINE_ALBUM_yuwell_230620.jpg',
     'Yuwell BP-YE680A': 'LINE_ALBUM_yuwell_230618.jpg',
     'Yuwell BO-YX110-FDC7': 'LINE_ALBUM_yuwell_230619.jpg',
@@ -53,7 +53,7 @@ class DataProvider with ChangeNotifier {
     'A&D_UA-651BLE_D57B3F': '',
   };
   Map<String, String> namedevice = {
-    'FT_F5F30C4C52DE': 'เครื่องอ่านบัตรประชน',
+    //  'FT_F5F30C4C52DE': 'เครื่องอ่านบัตรประชน',
     'Yuwell HT-YHW': 'เครื่องวัดอุณหภูมิ',
     'Yuwell BP-YE680A': 'เครื่องวัดความดัน',
     'Yuwell BO-YX110-FDC7': 'เครื่องวัดspo2',

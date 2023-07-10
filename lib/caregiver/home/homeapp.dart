@@ -8,7 +8,6 @@ import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 import 'package:provider/provider.dart';
 import 'package:sembast/sembast.dart';
 import 'package:smart_health/caregiver/format_list/format_list.dart';
-import 'package:smart_health/caregiver/home/esm_cardread/cardread_Ble.dart';
 import 'package:smart_health/caregiver/home/esm_cardread/esm_idcard.dart';
 import 'package:smart_health/caregiver/login/login.dart';
 import 'package:smart_health/caregiver/user_information/user_information.dart';
@@ -43,21 +42,18 @@ class _HomeCareCevierState extends State<HomeCareCevier> {
 
   final idcard = Numpad();
 
-
   Stream<String>? entry;
   Stream<String>? reader_status;
 
   void startReader() {
     try {
       Future.delayed(const Duration(seconds: 2), () {
-
         reader = ESMIDCard.instance;
 
         // reader?.findReader();
 
         entry = reader?.getEntry();
 
-        
         print('->initstate ');
         if (entry != null) {
           print('entry!=null');
@@ -69,12 +65,12 @@ class _HomeCareCevierState extends State<HomeCareCevier> {
               setState(() {});
               print(
                   "${context.read<DataProvider>().id} / ${splitted[0].toString()}");
-              idcard.setValue(splitted[0]);
+              context.read<DataProvider>().id = splitted[0].toString();
+              context.read<DataProvider>().user_id = splitted[0].toString();
+              // idcard.setValue(splitted[0]);
+
               if (context.read<DataProvider>().id == splitted[0].toString()) {
-
-              } else {
-
-              }
+              } else {}
             }, onError: (error) {
               print(error);
             }, onDone: () {
@@ -85,41 +81,29 @@ class _HomeCareCevierState extends State<HomeCareCevier> {
           print('entry ==null');
         }
 
-
         reader_status = reader?.getStatus();
         reader_status?.listen((String data) async {
-
           print("Reader Status :  " + data);
 
-          if(data=="ADAPTER_READY"){
-
-              reader?.findReader();
-
-          }else 
-          if(data=="DEVICE_READY"){
-
+          if (data == "ADAPTER_READY") {
+            reader?.findReader();
+          } else if (data == "DEVICE_READY") {
             const oneSec = Duration(seconds: 2);
-            reading = Timer.periodic(oneSec, (Timer t) => checkCard()); 
-
+            reading = Timer.periodic(oneSec, (Timer t) => checkCard());
           }
-
-
         });
-
-
-
-   
       });
     } on Exception catch (e) {
       print('error');
       print(e.toString());
     }
   }
-  void checkCard() async{
 
+  void checkCard() async {
+    print('เช็คการ์ด');
     reader?.readAuto();
-
   }
+
   void check() async {
     setState(() {
       status = true;
@@ -217,59 +201,6 @@ class _HomeCareCevierState extends State<HomeCareCevier> {
     }
   }
 
-  // void bleScan() {
-  //   _functionScan = Stream.periodic(Duration(seconds: 5)).listen((_) {
-  //     print('เเสกน   ');
-  //     FlutterBluePlus.instance.startScan(timeout: const Duration(seconds: 4));
-  //   });
-  //   FlutterBluePlus.instance.scanResults.listen((results) {
-  //     if (results.length > 0) {
-  //       ScanResult r = results.last;
-
-  //       if (r.device.name.toString() == 'FT_F5F30C4C52DE') {
-  //         print('{เจอdeviceเครื่องอ่านบัตรที่กำหนด}');
-  //         if (r.device.id.toString() == devices['FT_F5F30C4C52DE'].toString()) {
-  //           print("name= ${r.device.name} id= ${r.device.id} กำลัง connect");
-  //           r.device.connect();
-  //           _functionScan!.cancel();
-  //           print('หยุดค้นหา');
-  //           readerID();
-  //         } else {
-  //           print(
-  //               "name= ${r.device.name} id= ${r.device.id} ->ไม่ใช่ที่ต่องการ");
-  //         }
-  //       }
-  //     }
-  //   });
-  //   // _functionReaddata = Stream.periodic(Duration(seconds: 4))
-  //   //     .asyncMap((_) => FlutterBluePlus.instance.connectedDevices)
-  //   //     .listen((connectedDevices) {
-  //   //   connectedDevices.forEach((device) {
-  //   //     if (device.id.toString() == devices['FT_F5F30C4C52DE'].toString()) {
-  //   //       CardRead cardread = CardRead(device: device);
-  //   //       cardread.parse().listen((data) {
-  //   //         print(data);
-  //   //       });
-  //   //     }
-  //   //   });
-  //   // });
-  // }
-
-  // Future<void> connectCreaDreadBLE() async {
-  //   print('กำลังโหลดตรวจสอบDeviceเครื่องอ่านบัตร');
-
-  //   init = await getdevice();
-  //   for (RecordSnapshot<int, Map<String, Object?>> record in init) {
-  //     devices = record['mapdevices'];
-  //   }
-  //   if (devices['FT_F5F30C4C52DE'] != null) {
-  //     print('กำลังค้นหาเรื่องอ่านบัตร ID ${devices['FT_F5F30C4C52DE']}');
-  //     bleScan();
-  //   } else {
-  //     print('ไม่ได้เพิ่มdeviceเครื่องอ่านบัตร');
-  //   }
-  // }
-
   Future<void> load_list_patients() async {
     var resTojson;
     if (context.read<DataProvider>().user_id != null &&
@@ -292,12 +223,10 @@ class _HomeCareCevierState extends State<HomeCareCevier> {
     print('เข้าหน้าHome');
     load_list_patients();
 
-    // connectCreaDreadBLE();
     // TODO: implement initState
     super.initState();
-    // connectCreaDreadBLE();
-    startReader();
 
+    // startReader();
   }
 
   @override
@@ -320,40 +249,41 @@ class _HomeCareCevierState extends State<HomeCareCevier> {
           Positioned(child: _width > _height ? style_width() : style_height())
         ],
       ),
-      FormatList(),
-      Login_User(),
-      Setting(),
+      // FormatList(),
+      // Login_User(),
+      // Setting(),
     ];
     return SafeArea(
       child: Scaffold(
-        body: body[index_bottomNavigationBar],
-        bottomNavigationBar: BottomNavigationBar(
-          selectedItemColor: Color(0xff48B5AA),
-          unselectedItemColor: Color(0x50000000),
-          currentIndex: index_bottomNavigationBar,
-          items: [
-            BottomNavigationBarItem(label: "Home", icon: Icon(Icons.home)),
-            BottomNavigationBarItem(
-                label: "รายการตรวจ", icon: Icon(Icons.format_list_numbered)),
-            BottomNavigationBarItem(label: "User", icon: Icon(Icons.person)),
-            BottomNavigationBarItem(
-                label: "Settings", icon: Icon(Icons.settings)),
-          ],
-          onTap: (index) {
-            setState(() {
-              index_bottomNavigationBar = index;
-            });
-            // setState(() {
-            //   if (index == 2) {
-            //     Navigator.push(context,
-            //         MaterialPageRoute(builder: (context) => Login_User()));
-            //   } else if (index == 0) {
-            //     Navigator.push(context,
-            //         MaterialPageRoute(builder: (context) => Setting()));
-            //   }
-            // });
-          },
-        ),
+        body: body[0],
+        // bottomNavigationBar: BottomNavigationBar(
+        //   selectedItemColor: Color(0xff48B5AA),
+        //   unselectedItemColor: Color(0x50000000),
+        //   currentIndex: index_bottomNavigationBar,
+        //   items: [
+        //     BottomNavigationBarItem(label: "Home", icon: Icon(Icons.home)),
+        //     BottomNavigationBarItem(
+        //         label: "รายการตรวจ", icon: Icon(Icons.format_list_numbered)),
+        //     BottomNavigationBarItem(label: "User", icon: Icon(Icons.person)),
+        //     BottomNavigationBarItem(
+        //         label: "Settings", icon: Icon(Icons.settings)),
+        //   ],
+        //   onTap: (index) {
+        //     setState(() {
+        //       context.read<DataProvider>().id = '';
+        //       index_bottomNavigationBar = index;
+        //     });
+        //     // setState(() {
+        //     //   if (index == 2) {
+        //     //     Navigator.push(context,
+        //     //         MaterialPageRoute(builder: (context) => Login_User()));
+        //     //   } else if (index == 0) {
+        //     //     Navigator.push(context,
+        //     //         MaterialPageRoute(builder: (context) => Setting()));
+        //     //   }
+        //     // });
+        //   },
+        // ),
       ),
     );
   }

@@ -20,11 +20,27 @@ class User_Information extends StatefulWidget {
 }
 
 class _User_InformationState extends State<User_Information> {
+  var resTojson;
   @override
   void initState() {
     print('เข้าหน้าuser_information');
+    checkt_queue();
     // TODO: implement initState
     super.initState();
+  }
+
+  Future<void> checkt_queue() async {
+    var url = Uri.parse('${context.read<DataProvider>().platfromURL}/check_q');
+    var res = await http.post(url, body: {
+      'care_unit_id': context.read<DataProvider>().care_unit_id,
+      'public_id': context.read<DataProvider>().id,
+    });
+    setState(() {
+      resTojson = json.decode(res.body);
+      if (resTojson != null) {
+        print("health_records = ${resTojson['health_records'].length}");
+      }
+    });
   }
 
   @override
@@ -65,6 +81,24 @@ class _User_InformationState extends State<User_Information> {
                 width: _width,
                 child: Column(
                   children: [
+                    resTojson != null
+                        ? resTojson['health_records'].length != 0
+                            ? Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Container(
+                                  child: Text(
+                                    'ตรวจเสร็จเเล้ว',
+                                    style: TextStyle(
+                                        fontFamily:
+                                            context.read<DataProvider>().family,
+                                        fontSize: 22,
+                                        color: Colors.green,
+                                        fontWeight: FontWeight.w500),
+                                  ),
+                                ),
+                              )
+                            : SizedBox()
+                        : SizedBox(),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
@@ -247,9 +281,12 @@ class _choiceState extends State<choice> {
       'care_unit_id': context.read<DataProvider>().care_unit_id,
       'public_id': context.read<DataProvider>().id,
     });
+    List c = [];
     setState(() {
       resTojson = json.decode(res.body);
-      if (resTojson != null) {}
+      if (resTojson != null) {
+        // print("health_records = ${resTojson['health_records'].length}");
+      }
     });
   }
 
@@ -316,54 +353,6 @@ class _choiceState extends State<choice> {
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
-          // GestureDetector(
-          //   onTap: () {
-          //     showModalBottomSheet(
-          //       backgroundColor: Color.fromARGB(0, 255, 255, 255),
-          //       isScrollControlled: true,
-          //       shape: RoundedRectangleBorder(
-          //           borderRadius:
-          //               BorderRadius.vertical(top: Radius.circular(10))),
-          //       context: context,
-          //       builder: (context) => Container(
-          //         height: _height * 0.6,
-          //         decoration: BoxDecoration(
-          //             color: Colors.white,
-          //             borderRadius: BorderRadius.only(
-          //                 topLeft: Radius.circular(20),
-          //                 topRight: Radius.circular(20))),
-          //         child: Column(children: [
-          //           Padding(
-          //             padding: const EdgeInsets.all(8.0),
-          //             child: Container(
-          //                 height: _height * 0.01,
-          //                 width: _width * 0.4,
-          //                 decoration: BoxDecoration(
-          //                     borderRadius: BorderRadius.circular(50),
-          //                     color: Colors.grey)),
-          //           ),
-          //           HeadBoxAppointments(),
-          //           BoxAppointments(),
-          //         ]),
-          //       ),
-          //     );
-          //   },
-          //   child: Container(
-          //       height: _height * 0.05,
-          //       width: _width * 0.35,
-          //       decoration: boxDecoration1,
-          //       child: Row(
-          //         children: [
-          //           Image.asset('assets/pasd.png'),
-          //           Center(
-          //               child: Text(
-          //             'การนัดหมาย',
-          //             style: style,
-          //           )),
-          //         ],
-          //       )),
-          // ),
-
           SizedBox(width: _width * 0.05),
           GestureDetector(
             onTap: () {

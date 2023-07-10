@@ -74,6 +74,7 @@ class _HealthRecord2State extends State<HealthRecord2> {
     String fbs_value = '';
     String si_value = '';
     String uric_value = '';
+
     timer = Timer.periodic(const Duration(seconds: 2), (_) {
       setState(() {
         if (temp_value != context.read<DataProvider>().temp) {
@@ -628,6 +629,7 @@ class _HealthRecord2State extends State<HealthRecord2> {
                 children: [
                   BoxRecord(
                     texthead: 'BloodGlucose',
+                    keyvavlue: fbs,
                     image: 'assets/Frame 9184.png',
                   ),
                   Line(height: heightline, color: teamcolor),

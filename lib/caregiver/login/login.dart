@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/material.dart';
@@ -22,11 +23,23 @@ class Login_User extends StatefulWidget {
 }
 
 class _Login_UserState extends State<Login_User> {
-  TextEditingController password = TextEditingController();
+  //TextEditingController password = TextEditingController();
   TextEditingController id = TextEditingController();
   bool status = false;
   bool statusdelete = false;
+  Timer? _timer;
   var resTojson;
+
+  void getid() {
+    var i;
+    _timer = Timer.periodic(Duration(seconds: 1), (timer) {
+      if (i != context.read<DataProvider>().user_id) {
+        i = context.read<DataProvider>().user_id;
+        id.text = context.read<DataProvider>().user_id;
+      }
+    });
+  }
+
   Future<void> login() async {
     var url =
         Uri.parse('${context.read<DataProvider>().platfromURL}/get_recep');
@@ -151,6 +164,13 @@ class _Login_UserState extends State<Login_User> {
       });
     });
     await db.close();
+  }
+
+  @override
+  void initState() {
+    getid();
+    // TODO: implement initState
+    super.initState();
   }
 
   Widget build(BuildContext context) {
