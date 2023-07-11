@@ -32,24 +32,28 @@ class _FormatListState extends State<FormatList> {
     double _height = MediaQuery.of(context).size.height;
     return context.read<DataProvider>().user_id != '' &&
             context.read<DataProvider>().user_id != null
-        ? Column(children: [
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Container(
-                  // height: _height * 0.01,
-                  // width: _width * 0.4,
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(50),
-                      color: Colors.grey)),
-            ),
-            context.read<DataProvider>().list_patients.length > 0
-                ? list_patients()
-                : Text(
-                    'ไม่มีรายการ',
-                    style: TextStyle(
-                        fontFamily: context.read<DataProvider>().family),
-                  )
-          ])
+        ? SafeArea(
+            child: Column(children: [
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Container(
+                    // height: _height * 0.01,
+                    // width: _width * 0.4,
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(50),
+                        color: Colors.grey)),
+              ),
+              context.read<DataProvider>().list_patients.length > 0
+                  ? list_patients()
+                  : Text(
+                      'ไม่มีรายการ',
+                      style: TextStyle(
+                          color: Color(0xff48B5AA),
+                          fontSize: 22,
+                          fontFamily: context.read<DataProvider>().family),
+                    )
+            ]),
+          )
         : Container(
             child: Center(
                 child: Text('กรุณาล็อคอิน',
