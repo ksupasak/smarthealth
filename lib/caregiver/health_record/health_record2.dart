@@ -18,6 +18,7 @@ import 'package:smart_health/myapp/setting/device/mibfs.dart';
 import 'package:smart_health/caregiver/home/homeapp.dart';
 import 'package:smart_health/caregiver/widget/informationCard.dart';
 import 'package:smart_health/myapp/provider/provider.dart';
+import 'package:smart_health/myapp/setting/device/yuwell%20_glucose.dart';
 import 'package:smart_health/myapp/setting/device/yuwell_bo_yx110_fdg7.dart';
 import 'package:smart_health/myapp/setting/device/yuwell_bp_ye680a.dart';
 import 'package:smart_health/myapp/setting/device/yuwell_ht_yhw.dart';
@@ -150,7 +151,7 @@ class _HealthRecord2State extends State<HealthRecord2> {
     FlutterBluePlus.instance.scanResults.listen((results) {
       if (results.length > 0) {
         ScanResult r = results.last;
-
+        // print(r.device.name);
         if (namescan.contains(r.device.name.toString())) {
           print('{เจอdeviceที่กำหนด}');
           if (convertedListdevice!.contains(r.device.id.toString())) {
@@ -168,6 +169,21 @@ class _HealthRecord2State extends State<HealthRecord2> {
         .asyncMap((_) => flutterBlue.connectedDevices)
         .listen((connectedDevices) {
       connectedDevices.forEach((device) {
+        if (device.name == 'Yuwell Glucose' &&
+            convertedListdevice!.contains(device.id.toString())) {
+          print('อ่านค่าน้ำตาล');
+          Yuwell_Glucose glucose = Yuwell_Glucose(device: device);
+          glucose.parse().listen((glucoses) {
+            if (glucoses != null && glucoses != '') {
+              Map<String, String> val = HashMap();
+              val['glucose'] = glucoses;
+              datas.add(val);
+              setState(() {
+                context.read<DataProvider>().fbs = glucoses;
+              });
+            }
+          });
+        }
         if (device.name == 'HC-08' &&
             convertedListdevice!.contains(device.id.toString())) {
           Hc08 ht = Hc08(device: device);

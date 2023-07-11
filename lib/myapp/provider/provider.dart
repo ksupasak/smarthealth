@@ -40,7 +40,8 @@ class DataProvider with ChangeNotifier {
     'MIBFS', //เครื่องชั่ง
     'HJ-Narigmed', //เครื่องspo2
     'HC-08', //เครื่องวัดอุณหภูมิ
-    'A&D_UA-651BLE_D57B3F' //เครื่องวัดความดัน
+    'A&D_UA-651BLE_D57B3F', //เครื่องวัดความดัน
+    'Yuwell Glucose', //เครื่องวัดน้ำตาล
   ];
   Map<String, String> imagesdevice = {
     // 'FT_F5F30C4C52DE': '',
@@ -51,6 +52,7 @@ class DataProvider with ChangeNotifier {
     'HJ-Narigmed': '',
     'HC-08': '',
     'A&D_UA-651BLE_D57B3F': '',
+    'Yuwell Glucose': '',
   };
   Map<String, String> namedevice = {
     //  'FT_F5F30C4C52DE': 'เครื่องอ่านบัตรประชน',
@@ -61,6 +63,7 @@ class DataProvider with ChangeNotifier {
     'HJ-Narigmed': 'เครื่องวัดspo2',
     'HC-08': 'เครื่องวัดอุณหภูมิ',
     'A&D_UA-651BLE_D57B3F': 'เครื่องวัดความดัน',
+    'Yuwell Glucose': 'เครื่องวัดน้ำตาล',
   };
   List<String> iddevice = [];
   var mapdevices;
