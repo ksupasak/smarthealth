@@ -84,7 +84,7 @@ class _Center_CaregiverState extends State<Center_Caregiver> {
 
   @override
   void initState() {
-    // startReader();
+     startReader();
     // TODO: implement initState
     super.initState();
   }
