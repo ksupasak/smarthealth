@@ -116,6 +116,7 @@ class _DeviceState extends State<Device> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
+        iconTheme: IconThemeData(color: Colors.black),
         backgroundColor: Color.fromARGB(255, 255, 255, 255),
         title: Text(
           'อุปกรณ์',

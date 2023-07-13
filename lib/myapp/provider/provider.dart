@@ -49,9 +49,9 @@ class DataProvider with ChangeNotifier {
     'Yuwell BP-YE680A': 'LINE_ALBUM_yuwell_230618.jpg',
     'Yuwell BO-YX110-FDC7': 'LINE_ALBUM_yuwell_230619.jpg',
     'MIBFS': 'LINE_ALBUM_yuwell_230623.png',
-    'HJ-Narigmed': '',
-    'HC-08': '',
-    'A&D_UA-651BLE_D57B3F': '',
+    'HJ-Narigmed': 'sg-11134201-23010-ka1jtswb8smvff.jpg',
+    'HC-08': 'HTD8808E-Bluetooth-wireless-thermometer_2.jpg',
+    'A&D_UA-651BLE_D57B3F': 'UA-651BLE-complete.jpg',
     'Yuwell Glucose': 'LINE_ALBUM_yuwell_230621.jpg',
   };
   Map<String, String> namedevice = {

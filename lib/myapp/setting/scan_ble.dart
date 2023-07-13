@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import 'package:sembast/sembast.dart';
 import 'package:smart_health/myapp/provider/provider.dart';
@@ -118,8 +119,17 @@ class _ScanBLEState extends State<ScanBLE> {
     await db.close();
   }
 
+  bool hasLocationPermission = false;
+  void requestLocationPermission() async {
+    PermissionStatus status = await Permission.location.request();
+    setState(() {
+      hasLocationPermission = status.isGranted;
+    });
+  }
+
   @override
   void initState() {
+    requestLocationPermission();
     print('เข้าหน้าเเสกน');
     scan();
     // TODO: implement initState
@@ -132,6 +142,7 @@ class _ScanBLEState extends State<ScanBLE> {
     double _height = MediaQuery.of(context).size.height;
     return Scaffold(
       appBar: AppBar(
+        iconTheme: IconThemeData(color: Colors.black),
         title: Text(
           titleappbar,
           style: TextStyle(color: Colors.black),

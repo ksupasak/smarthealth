@@ -53,12 +53,36 @@ class _User_InformationState extends State<User_Information> {
         checkt_queue();
       },
       child: Scaffold(
+        appBar: AppBar(
+          backgroundColor: Colors.white,
+          iconTheme: IconThemeData(color: Colors.grey),
+          title: Text(
+            'ผู้ตรวจ: ${context.read<DataProvider>().user_name}',
+            style: TextStyle(
+                color: Color(0xff48B5AA),
+                fontFamily: context.read<DataProvider>().family,
+                fontSize: 14),
+          ),
+          actions: [
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Container(
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(50),
+                      border: Border.all(color: Colors.grey)),
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Icon(Icons.person, color: Color(0xff1B6286)),
+                  )),
+            )
+          ],
+        ),
         body: Stack(
           children: [
             BackGrund(),
             Positioned(
               child: ListView(children: [
-                Container(height: _height * 0.05),
+                Container(height: _height * 0.04),
                 Center(
                   child: Container(
                       width: _width * 0.9,
@@ -405,29 +429,6 @@ class _choiceState extends State<choice> {
                           child: Text(
                         'ประวัติการตรวจ',
                         style: style,
-                      )),
-                    ],
-                  ),
-                )),
-          ),
-          GestureDetector(
-            onTap: () {
-              Navigator.pop(context);
-            },
-            child: Container(
-                height: _height * 0.06,
-                width: _width * 0.45,
-                decoration: boxDecoration3,
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Row(
-                    children: [
-                      Image.asset('assets/Groupeht2137.png'),
-                      SizedBox(width: _width * 0.01),
-                      Center(
-                          child: Text(
-                        'จบการทำงาน',
-                        style: style2,
                       )),
                     ],
                   ),

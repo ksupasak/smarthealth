@@ -173,6 +173,13 @@ class _Login_UserState extends State<Login_User> {
     super.initState();
   }
 
+  @override
+  void dispose() {
+    _timer!.cancel();
+    // TODO: implement dispose
+    super.dispose();
+  }
+
   Widget build(BuildContext context) {
     double _width = MediaQuery.of(context).size.width;
     double _height = MediaQuery.of(context).size.height;

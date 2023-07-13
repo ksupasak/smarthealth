@@ -43,8 +43,7 @@ class _InitsettingState extends State<Initsetting> {
 
   void sync() async {
     try {
-      var url = Uri.parse(
-          '${context.read<DataProvider>().platfromURL}/list_care_unit');
+      var url = Uri.parse('${platfromURL.text}/list_care_unit');
       var res = await http.post(url, body: {'code': id_hospital.text});
       resTojson2 = json.decode(res.body);
       print(resTojson2);

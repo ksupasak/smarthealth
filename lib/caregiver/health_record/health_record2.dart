@@ -6,6 +6,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import 'package:sembast/sembast.dart';
 import 'package:smart_health/myapp/action/playsound.dart';
@@ -25,6 +26,7 @@ import 'package:smart_health/myapp/setting/device/yuwell_ht_yhw.dart';
 import 'package:smart_health/myapp/setting/local.dart';
 import 'package:smart_health/myapp/widgetdew.dart';
 import 'package:http/http.dart' as http;
+import 'package:smart_health/station/main_app/app.dart';
 
 // import 'package:image_picker/image_picker.dart';
 
@@ -58,6 +60,7 @@ class _HealthRecord2State extends State<HealthRecord2> {
   StreamController<Map<String, String>> datas =
       StreamController<Map<String, String>>();
   Timer? timer;
+
   TextEditingController cc = TextEditingController();
   bool _isChecked1 = false;
   bool _isChecked2 = false;
@@ -752,6 +755,11 @@ class _HealthRecord2State extends State<HealthRecord2> {
                     texthead: 'BloodGlucose',
                     keyvavlue: fbs,
                     image: 'assets/Frame 9184.png',
+                    colorboxShadow: double.tryParse("0${fbs.text}")! == 0
+                        ? Colors.white
+                        : double.tryParse("0${fbs.text}")! < 130
+                            ? Color.fromARGB(255, 58, 253, 133)
+                            : Colors.red,
                   ),
                   Line(height: heightline, color: teamcolor),
                   Container(
