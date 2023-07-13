@@ -48,182 +48,188 @@ class _User_InformationState extends State<User_Information> {
     double _width = MediaQuery.of(context).size.width;
     double _height = MediaQuery.of(context).size.height;
 
-    return Scaffold(
-      body: Stack(
-        children: [
-          BackGrund(),
-          Positioned(
-            child: ListView(children: [
-              Container(height: _height * 0.05),
-              Center(
-                child: Container(
-                    width: _width * 0.9,
-                    height: _height * 0.15,
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(20),
-                      boxShadow: [
-                        BoxShadow(
-                            blurRadius: 2,
-                            spreadRadius: 1,
-                            color: Color(0xff48B5AA),
-                            offset: Offset(0, 3)),
-                      ],
-                    ),
-                    child: Center(
-                        child: InformationCard(
-                      dataidcard: context.read<DataProvider>().resTojson,
-                    ))),
-              ),
-              Container(height: _height * 0.02),
-              Container(
-                height: _height * 0.5,
-                width: _width,
-                child: Column(
-                  children: [
-                    resTojson != null
-                        ? resTojson['health_records'].length != 0
-                            ? Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Container(
-                                  child: Text(
-                                    'ตรวจเสร็จเเล้ว',
-                                    style: TextStyle(
-                                        fontFamily:
-                                            context.read<DataProvider>().family,
-                                        fontSize: 22,
-                                        color: Colors.green,
-                                        fontWeight: FontWeight.w500),
+    return RefreshIndicator(
+      onRefresh: () async {
+        checkt_queue();
+      },
+      child: Scaffold(
+        body: Stack(
+          children: [
+            BackGrund(),
+            Positioned(
+              child: ListView(children: [
+                Container(height: _height * 0.05),
+                Center(
+                  child: Container(
+                      width: _width * 0.9,
+                      height: _height * 0.15,
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(20),
+                        boxShadow: [
+                          BoxShadow(
+                              blurRadius: 2,
+                              spreadRadius: 1,
+                              color: Color(0xff48B5AA),
+                              offset: Offset(0, 3)),
+                        ],
+                      ),
+                      child: Center(
+                          child: InformationCard(
+                        dataidcard: context.read<DataProvider>().resTojson,
+                      ))),
+                ),
+                Container(height: _height * 0.02),
+                Container(
+                  height: _height * 0.5,
+                  width: _width,
+                  child: Column(
+                    children: [
+                      resTojson != null
+                          ? resTojson['health_records'].length != 0
+                              ? Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Container(
+                                    child: Text(
+                                      'ตรวจเสร็จเเล้ว',
+                                      style: TextStyle(
+                                          fontFamily: context
+                                              .read<DataProvider>()
+                                              .family,
+                                          fontSize: 22,
+                                          color: Colors.green,
+                                          fontWeight: FontWeight.w500),
+                                    ),
                                   ),
+                                )
+                              : SizedBox()
+                          : SizedBox(),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          GestureDetector(
+                              onTap: () {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => HealthRecord2()));
+                              },
+                              child: Container(
+                                height: _height * 0.23,
+                                width: _width * 0.45,
+                                decoration: BoxDecoration(
+                                    boxShadow: [
+                                      BoxShadow(
+                                          color: Color.fromARGB(
+                                              255, 129, 129, 129),
+                                          blurRadius: 2,
+                                          spreadRadius: 1,
+                                          offset: Offset(0, 2)),
+                                    ],
+                                    color: Color(0xff48B5AA),
+                                    borderRadius: BorderRadius.circular(15)),
+                                child: Padding(
+                                  padding: const EdgeInsets.all(12.0),
+                                  child: Column(children: [
+                                    Container(
+                                      height: _height * 0.15,
+                                      width: _width * 0.4,
+                                      child: Image.asset(
+                                        "assets/jpfs.png",
+                                        fit: BoxFit.fill,
+                                      ),
+                                    ),
+                                    Container(
+                                      child: Text(
+                                        'ตรวจสุขภาพ',
+                                        style: TextStyle(
+                                            shadows: [
+                                              Shadow(
+                                                  blurRadius: 1,
+                                                  color: Colors.black,
+                                                  offset: Offset(0, 1))
+                                            ],
+                                            color: Colors.white,
+                                            fontFamily: context
+                                                .read<DataProvider>()
+                                                .family,
+                                            fontSize: _width * 0.06),
+                                      ),
+                                    )
+                                  ]),
                                 ),
-                              )
-                            : SizedBox()
-                        : SizedBox(),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        GestureDetector(
-                            onTap: () {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => HealthRecord2()));
-                            },
-                            child: Container(
-                              height: _height * 0.23,
-                              width: _width * 0.45,
-                              decoration: BoxDecoration(
-                                  boxShadow: [
-                                    BoxShadow(
-                                        color:
-                                            Color.fromARGB(255, 129, 129, 129),
-                                        blurRadius: 2,
-                                        spreadRadius: 1,
-                                        offset: Offset(0, 2)),
-                                  ],
-                                  color: Color(0xff48B5AA),
-                                  borderRadius: BorderRadius.circular(15)),
-                              child: Padding(
-                                padding: const EdgeInsets.all(12.0),
-                                child: Column(children: [
-                                  Container(
-                                    height: _height * 0.15,
-                                    width: _width * 0.4,
-                                    child: Image.asset(
-                                      "assets/jpfs.png",
-                                      fit: BoxFit.fill,
+                              )),
+                          GestureDetector(
+                              onTap: () {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => PrePareVideo()));
+                              },
+                              child: Container(
+                                height: _height * 0.23,
+                                width: _width * 0.45,
+                                decoration: BoxDecoration(
+                                    boxShadow: [
+                                      BoxShadow(
+                                          color: Color.fromARGB(
+                                              255, 129, 129, 129),
+                                          blurRadius: 2,
+                                          spreadRadius: 1,
+                                          offset: Offset(0, 2)),
+                                    ],
+                                    color: Color(0xff31D6AA),
+                                    borderRadius: BorderRadius.circular(15)),
+                                child: Padding(
+                                  padding: const EdgeInsets.all(12.0),
+                                  child: Column(children: [
+                                    Container(
+                                      height: _height * 0.15,
+                                      width: _width * 0.4,
+                                      child: Image.asset(
+                                        "assets/pfrt9190.png",
+                                        fit: BoxFit.fill,
+                                      ),
                                     ),
-                                  ),
-                                  Container(
-                                    child: Text(
-                                      'ตรวจสุขภาพ',
-                                      style: TextStyle(
-                                          shadows: [
-                                            Shadow(
-                                                blurRadius: 1,
-                                                color: Colors.black,
-                                                offset: Offset(0, 1))
-                                          ],
-                                          color: Colors.white,
-                                          fontFamily: context
-                                              .read<DataProvider>()
-                                              .family,
-                                          fontSize: _width * 0.06),
-                                    ),
-                                  )
-                                ]),
-                              ),
-                            )),
-                        GestureDetector(
-                            onTap: () {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => PrePareVideo()));
-                            },
-                            child: Container(
-                              height: _height * 0.23,
-                              width: _width * 0.45,
-                              decoration: BoxDecoration(
-                                  boxShadow: [
-                                    BoxShadow(
-                                        color:
-                                            Color.fromARGB(255, 129, 129, 129),
-                                        blurRadius: 2,
-                                        spreadRadius: 1,
-                                        offset: Offset(0, 2)),
-                                  ],
-                                  color: Color(0xff31D6AA),
-                                  borderRadius: BorderRadius.circular(15)),
-                              child: Padding(
-                                padding: const EdgeInsets.all(12.0),
-                                child: Column(children: [
-                                  Container(
-                                    height: _height * 0.15,
-                                    width: _width * 0.4,
-                                    child: Image.asset(
-                                      "assets/pfrt9190.png",
-                                      fit: BoxFit.fill,
-                                    ),
-                                  ),
-                                  Container(
-                                    child: Text(
-                                      'ปรึกษาเเพทย์',
-                                      style: TextStyle(
-                                          shadows: [
-                                            Shadow(
-                                                blurRadius: 1,
-                                                color: Colors.black,
-                                                offset: Offset(0, 1))
-                                          ],
-                                          color: Colors.white,
-                                          fontFamily: context
-                                              .read<DataProvider>()
-                                              .family,
-                                          fontSize: _width * 0.06),
-                                    ),
-                                  )
-                                ]),
-                              ),
-                            )),
-                      ],
-                    ),
-                  ],
+                                    Container(
+                                      child: Text(
+                                        'ปรึกษาเเพทย์',
+                                        style: TextStyle(
+                                            shadows: [
+                                              Shadow(
+                                                  blurRadius: 1,
+                                                  color: Colors.black,
+                                                  offset: Offset(0, 1))
+                                            ],
+                                            color: Colors.white,
+                                            fontFamily: context
+                                                .read<DataProvider>()
+                                                .family,
+                                            fontSize: _width * 0.06),
+                                      ),
+                                    )
+                                  ]),
+                                ),
+                              )),
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-              Container(
-                // color: Colors.amber,
-                height: _height * 0.2,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    choice(),
-                  ],
+                Container(
+                  // color: Colors.amber,
+                  height: _height * 0.2,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      choice(),
+                    ],
+                  ),
                 ),
-              ),
-            ]),
-          ),
-        ],
+              ]),
+            ),
+          ],
+        ),
       ),
     );
   }

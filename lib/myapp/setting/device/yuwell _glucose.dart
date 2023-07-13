@@ -20,17 +20,11 @@ class Yuwell_Glucose {
             if (c.uuid.toString() == '00002a18-0000-1000-8000-00805f9b34fb') {
               c.setNotifyValue(true);
               c.value.listen((values) {
-                // var values = '0x060700E60701010C0D0233C011';
                 String x;
-                print("values= ${values}");
-                String partToConvert = values.toString().substring(22, 24);
-                print("partToConvert= ${partToConvert}");
-                int intValue = int.parse(partToConvert, radix: 16);
-                print("intValue= ${intValue}");
-                double decimalValue = intValue.toDouble();
-                print("decimalValue= ${decimalValue}");
-                x = (decimalValue / 0.0555 / 10).round().toString();
-                print("x= ${x}");
+
+                int value;
+                print("values = ${values}");
+                x = ((values[10] / 0.0555) / 10).round().toString();
                 controller.add(x);
               });
             }

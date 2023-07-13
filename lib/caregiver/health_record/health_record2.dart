@@ -64,6 +64,16 @@ class _HealthRecord2State extends State<HealthRecord2> {
   bool _isChecked21 = false;
   bool _isChecked22 = false;
   bool _isChecked23 = false;
+
+  bool mibfs = false;
+  bool yuwell_HT_YHW = false;
+  bool yuwell_BP_YE680A = false;
+  bool yuwell_BO_YX110_FDC7 = false;
+  bool hJ_Narigmed = false;
+  bool hC_08 = false;
+  bool aD_UA_651BLE_D57B3F = false;
+  bool yuwell_Glucose = false;
+
   void restartdata() {
     String temp_value = '';
     String weight_value = '';
@@ -141,7 +151,6 @@ class _HealthRecord2State extends State<HealthRecord2> {
       });
     });
   }
-  ////
 
   void bleScan() {
     _functionScan = Stream.periodic(Duration(seconds: 5)).listen((_) {
@@ -171,6 +180,18 @@ class _HealthRecord2State extends State<HealthRecord2> {
       connectedDevices.forEach((device) {
         if (device.name == 'Yuwell Glucose' &&
             convertedListdevice!.contains(device.id.toString())) {
+          if (yuwell_Glucose == false) {
+            setState(() {
+              yuwell_Glucose = true;
+            });
+            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                content: Container(
+                    width: MediaQuery.of(context).size.width,
+                    child: Center(
+                        child: Text(
+                      'พบ Yuwell Glucose',
+                    )))));
+          }
           print('อ่านค่าน้ำตาล');
           Yuwell_Glucose glucose = Yuwell_Glucose(device: device);
           glucose.parse().listen((glucoses) {
@@ -186,6 +207,18 @@ class _HealthRecord2State extends State<HealthRecord2> {
         }
         if (device.name == 'HC-08' &&
             convertedListdevice!.contains(device.id.toString())) {
+          if (hC_08 == false) {
+            setState(() {
+              hC_08 = true;
+            });
+            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                content: Container(
+                    width: MediaQuery.of(context).size.width,
+                    child: Center(
+                        child: Text(
+                      'พบ HC-08',
+                    )))));
+          }
           Hc08 ht = Hc08(device: device);
           ht.parse().listen((temp) {
             if (temp != null && temp != '') {
@@ -200,6 +233,18 @@ class _HealthRecord2State extends State<HealthRecord2> {
         }
         if (device.name == 'HJ-Narigmed' &&
             convertedListdevice!.contains(device.id.toString())) {
+          if (hJ_Narigmed == false) {
+            setState(() {
+              hJ_Narigmed = true;
+            });
+            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                content: Container(
+                    width: MediaQuery.of(context).size.width,
+                    child: Center(
+                        child: Text(
+                      'พบ HJ-Narigmed',
+                    )))));
+          }
           print('functionstreamtimeกำลังทำงาน ${device.name}');
           HjNarigmed spo2 = HjNarigmed(device: device);
           spo2.parse().listen((mVal) {
@@ -215,6 +260,18 @@ class _HealthRecord2State extends State<HealthRecord2> {
         }
         if (device.name == 'A&D_UA-651BLE_D57B3F' &&
             convertedListdevice!.contains(device.id.toString())) {
+          if (aD_UA_651BLE_D57B3F == false) {
+            setState(() {
+              aD_UA_651BLE_D57B3F = true;
+            });
+            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                content: Container(
+                    width: MediaQuery.of(context).size.width,
+                    child: Center(
+                        child: Text(
+                      'พบ A&D_UA-651BLE_D57B3F',
+                    )))));
+          }
           print('functionstreamtimeกำลังทำงาน ${device.name}');
           AdUa651ble bp = AdUa651ble(device: device);
           bp.parse().listen((nVal) {
@@ -232,6 +289,18 @@ class _HealthRecord2State extends State<HealthRecord2> {
         }
         if (device.name == 'Yuwell HT-YHW' &&
             convertedListdevice!.contains(device.id.toString())) {
+          if (yuwell_HT_YHW == false) {
+            setState(() {
+              yuwell_HT_YHW = true;
+            });
+            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                content: Container(
+                    width: MediaQuery.of(context).size.width,
+                    child: Center(
+                        child: Text(
+                      'พบ Yuwell HT-YHW',
+                    )))));
+          }
           Yuwell_HT_YHW ht = Yuwell_HT_YHW(device: device);
           ht.parse().listen((temp) {
             if (temp != null && temp != '') {
@@ -246,6 +315,18 @@ class _HealthRecord2State extends State<HealthRecord2> {
         }
         if (device.name == 'Yuwell BO-YX110-FDC7' &&
             convertedListdevice!.contains(device.id.toString())) {
+          if (yuwell_BO_YX110_FDC7 == false) {
+            setState(() {
+              yuwell_BO_YX110_FDC7 = true;
+            });
+            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                content: Container(
+                    width: MediaQuery.of(context).size.width,
+                    child: Center(
+                        child: Text(
+                      'พบ Yuwell BO-YX110-FDC7',
+                    )))));
+          }
           print('functionstreamtimeกำลังทำงาน ${device.name}');
           Yuwell_BO_YX110_FDC7 spo2 = Yuwell_BO_YX110_FDC7(device: device);
           spo2.parse().listen((mVal) {
@@ -262,6 +343,18 @@ class _HealthRecord2State extends State<HealthRecord2> {
         }
         if (device.name == 'Yuwell BP-YE680A' &&
             convertedListdevice!.contains(device.id.toString())) {
+          if (yuwell_BP_YE680A == false) {
+            setState(() {
+              yuwell_BP_YE680A = true;
+            });
+            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                content: Container(
+                    width: MediaQuery.of(context).size.width,
+                    child: Center(
+                        child: Text(
+                      'พบ Yuwell BP-YE680A',
+                    )))));
+          }
           print('functionstreamtimeกำลังทำงาน ${device.name}');
           Yuwell_BP_YE680A bp = Yuwell_BP_YE680A(device: device);
           bp.parse().listen((nVal) {
@@ -280,6 +373,18 @@ class _HealthRecord2State extends State<HealthRecord2> {
         if (device.name == 'MIBFS' &&
             convertedListdevice!.contains(device.id.toString())) {
           print('functionstreamtimeกำลังทำงาน ${device.name}');
+          if (mibfs == false) {
+            setState(() {
+              mibfs = true;
+            });
+            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                content: Container(
+                    width: MediaQuery.of(context).size.width,
+                    child: Center(
+                        child: Text(
+                      'พบ MIBFS ',
+                    )))));
+          }
           Mibfs w = Mibfs(device: device);
           w.parse().listen((weight) {
             Map<String, String> val = HashMap();

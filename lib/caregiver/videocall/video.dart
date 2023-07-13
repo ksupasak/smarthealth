@@ -626,18 +626,6 @@ class _RoomPageState extends State<RoomPage> {
                               ),
                             ),
                           ),
-                          // Positioned(
-                          //   bottom: 5,
-                          //   left: 5,
-                          //   child: Container(
-                          //     height: _height * 0.15,
-                          //     width: _width * 0.2,
-                          //     child: MediaStreamView(
-                          //       borderRadius: BorderRadius.circular(5),
-                          //       participant: localParticipant!,
-                          //     ),
-                          //   ),
-                          // ),
                           Positioned(
                             left: position.dx,
                             top: position.dy,

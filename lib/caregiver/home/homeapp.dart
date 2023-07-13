@@ -201,27 +201,10 @@ class _HomeCareCevierState extends State<HomeCareCevier> {
     }
   }
 
-  Future<void> load_list_patients() async {
-    var resTojson;
-    if (context.read<DataProvider>().user_id != null &&
-        context.read<DataProvider>().user_id != '') {
-      var url =
-          Uri.parse('${context.read<DataProvider>().platfromURL}/get_recep');
-      var res = await http
-          .post(url, body: {'public_id': context.read<DataProvider>().user_id});
-      resTojson = json.decode(res.body);
-
-      setState(() {
-        context.read<DataProvider>().list_patients = resTojson['list'];
-        print("List Patients${context.read<DataProvider>().list_patients}");
-      });
-    }
-  }
-
   @override
   void initState() {
     print('เข้าหน้าHome');
-    load_list_patients();
+    //   load_list_patients();
 
     // TODO: implement initState
     super.initState();

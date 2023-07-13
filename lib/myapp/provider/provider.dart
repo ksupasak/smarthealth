@@ -52,7 +52,7 @@ class DataProvider with ChangeNotifier {
     'HJ-Narigmed': '',
     'HC-08': '',
     'A&D_UA-651BLE_D57B3F': '',
-    'Yuwell Glucose': '',
+    'Yuwell Glucose': 'LINE_ALBUM_yuwell_230621.jpg',
   };
   Map<String, String> namedevice = {
     //  'FT_F5F30C4C52DE': 'เครื่องอ่านบัตรประชน',
@@ -68,3 +68,6 @@ class DataProvider with ChangeNotifier {
   List<String> iddevice = [];
   var mapdevices;
 }
+
+ 
+// bool yuwell_Glucose = false;

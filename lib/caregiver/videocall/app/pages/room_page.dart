@@ -18,12 +18,13 @@ class RoomPage extends StatefulWidget {
   final String userName;
   final String serverUrl;
   final String secret;
-  const RoomPage(
-      {super.key,
-      required this.room,
-      required this.userName,
-      required this.serverUrl,
-      required this.secret});
+  const RoomPage({
+    super.key,
+    required this.room,
+    required this.userName,
+    required this.serverUrl,
+    required this.secret,
+  });
 
   @override
   State<RoomPage> createState() => _RoomPageState();
