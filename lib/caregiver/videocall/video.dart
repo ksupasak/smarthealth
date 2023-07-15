@@ -220,52 +220,6 @@ class _PrePareVideoState extends State<PrePareVideo> {
               ),
             ),
           );
-
-    //  Scaffold(
-    //     body: Stack(
-    //       children: [
-    //         Positioned(
-    //             child: Container(
-    //           height: _height,
-    //           width: _width,
-    //           child: SvgPicture.asset(
-    //             'assets/login.svg',
-    //             fit: BoxFit.fill,
-    //           ),
-    //         )),
-    //         Positioned(
-    //           child: Container(
-    //             height: _height,
-    //             width: _width,
-    //             child: Center(
-    //               child: Container(
-    //                 height: _height * 0.06,
-    //                 width: _width,
-    //                 child: Center(
-    //                   child: Text(
-    //                     'กำลังเชื่อมต่อวีดีโอ',
-    //                     style: TextStyle(
-    //                       fontSize: _width * 0.05,
-    //                       fontWeight: FontWeight.w500,
-    //                       fontFamily: context.read<DataProvider>().family,
-    //                       color: Color(0xff00A3FF),
-    //                       shadows: [
-    //                         Shadow(
-    //                           color: Colors.grey,
-    //                           offset: Offset(2, 2),
-    //                           blurRadius: 4,
-    //                         ),
-    //                       ],
-    //                     ),
-    //                   ),
-    //                 ),
-    //               ),
-    //             ),
-    //           ),
-    //         )
-    //       ],
-    //     ),
-    //   );
   }
 }
 
@@ -388,32 +342,6 @@ class _RoomPageState extends State<RoomPage> {
     }
     Navigator.pop(context);
   }
-
-  // Future<void> status_video() async {
-  //   var url = Uri.parse(
-  //       '${context.read<DataProvider>().platfromURL}/get_video_status');
-  //   var res = await http
-  //       .post(url, body: {'public_id': context.read<DataProvider>().id});
-  //   resTojson2 = json.decode(res.body);
-  //   if (resTojson2 != null) {
-  //     status = resTojson2['message'];
-  //     if (status == 'completed' || status == 'finished' || status == 'end') {
-  //       print('คุยเสร็จเเล้ว');
-  //       _timer?.cancel();
-  //       _openvidu.disconnect();
-  //       Get.offNamed('user_information');
-  //     } else {
-  //       print('คุยยังไม่เสร็จ');
-  //       print(status);
-  //     }
-  //   }
-  // }
-  // void lop() {
-  //   _timer = Timer.periodic(Duration(seconds: 2), (timer) {
-  //     print('เช็คstatus');
-  //     status_video();
-  //   });
-  // }
 
   @override
   Widget build(BuildContext context) {

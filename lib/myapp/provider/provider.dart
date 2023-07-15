@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_blue_plus/gen/flutterblueplus.pb.dart';
 
 class DataProvider with ChangeNotifier {
+  String? creadreader;
   String user_name = '';
   String user_id = '';
   String user_code = '';

@@ -119,17 +119,17 @@ class _ScanBLEState extends State<ScanBLE> {
     await db.close();
   }
 
-  bool hasLocationPermission = false;
-  void requestLocationPermission() async {
-    PermissionStatus status = await Permission.location.request();
-    setState(() {
-      hasLocationPermission = status.isGranted;
-    });
-  }
+  // bool hasLocationPermission = false;
+  // void requestLocationPermission() async {
+  //   PermissionStatus status = await Permission.location.request();
+  //   setState(() {
+  //     hasLocationPermission = status.isGranted;
+  //   });
+  // }
 
   @override
   void initState() {
-    requestLocationPermission();
+    //requestLocationPermission();
     print('เข้าหน้าเเสกน');
     scan();
     // TODO: implement initState
@@ -351,152 +351,168 @@ class _ScanBLEState extends State<ScanBLE> {
                 shrinkWrap: true,
                 itemCount: connected.length,
                 itemBuilder: (BuildContext context, int index) {
-                  return Column(
-                    children: [
-                      ListTile(
-                        title: Container(
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(10),
-                              color: Colors.white,
-                              boxShadow: [
-                                BoxShadow(
-                                    color: Color.fromARGB(255, 42, 100, 45),
-                                    blurRadius: 1,
-                                    offset: Offset(0, 1))
-                              ]),
-                          child: Padding(
-                            padding: const EdgeInsets.all(0.0),
-                            child: Row(
-                              children: [
-                                Container(
-                                  height: _height * 0.1,
-                                  width: _width * 0.2,
-                                  child: context
-                                              .read<DataProvider>()
-                                              .imagesdevice ==
-                                          ''
-                                      ? SizedBox()
-                                      : Padding(
-                                          padding: const EdgeInsets.all(8.0),
-                                          child: Image.asset(
-                                              "assets/${context.read<DataProvider>().imagesdevice[connected[index].name]}"),
-                                        ),
-                                ),
-                                Container(
-                                  width: _width * 0.6,
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
+                  return context
+                              .read<DataProvider>()
+                              .namedevice[connected[index].name] !=
+                          null
+                      ? Column(
+                          children: [
+                            ListTile(
+                              title: Container(
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(10),
+                                    color: Colors.white,
+                                    boxShadow: [
+                                      BoxShadow(
+                                          color:
+                                              Color.fromARGB(255, 42, 100, 45),
+                                          blurRadius: 1,
+                                          offset: Offset(0, 1))
+                                    ]),
+                                child: Padding(
+                                  padding: const EdgeInsets.all(0.0),
+                                  child: Row(
                                     children: [
-                                      Text(context
-                                          .read<DataProvider>()
-                                          .namedevice[connected[index].name]
-                                          .toString()),
-                                      Text("Name : ${connected[index].name}"),
-                                      Text("Id :  ${connected[index].id}")
+                                      Container(
+                                        height: _height * 0.1,
+                                        width: _width * 0.2,
+                                        child: context
+                                                    .read<DataProvider>()
+                                                    .imagesdevice ==
+                                                ''
+                                            ? SizedBox()
+                                            : Padding(
+                                                padding:
+                                                    const EdgeInsets.all(8.0),
+                                                child: Image.asset(
+                                                    "assets/${context.read<DataProvider>().imagesdevice[connected[index].name]}"),
+                                              ),
+                                      ),
+                                      Container(
+                                        width: _width * 0.6,
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Text(context
+                                                .read<DataProvider>()
+                                                .namedevice[
+                                                    connected[index].name]
+                                                .toString()),
+                                            Text(
+                                                "Name : ${connected[index].name}"),
+                                            Text("Id :  ${connected[index].id}")
+                                          ],
+                                        ),
+                                      ),
+                                      GestureDetector(
+                                          onTap: () {
+                                            showDialog(
+                                                context: context,
+                                                builder:
+                                                    (BuildContext context) {
+                                                  return AlertDialog(
+                                                      title: Text(
+                                                        'เพิ่มอุปกรณ์',
+                                                        style: TextStyle(
+                                                            color:
+                                                                Colors.black),
+                                                      ),
+                                                      content: Container(
+                                                        color: Colors.white,
+                                                        width: _width * 0.6,
+                                                        height: _height * 0.08,
+                                                        child: Row(
+                                                          children: [
+                                                            Container(
+                                                              height:
+                                                                  _height * 0.1,
+                                                              width:
+                                                                  _width * 0.1,
+                                                              child: context
+                                                                          .read<
+                                                                              DataProvider>()
+                                                                          .imagesdevice[connected[
+                                                                              index]
+                                                                          .name] ==
+                                                                      ''
+                                                                  ? Image.asset(
+                                                                      "assets/${context.read<DataProvider>().imagesdevice[connected[index].name]}")
+                                                                  : SizedBox(),
+                                                            ),
+                                                            Column(
+                                                              crossAxisAlignment:
+                                                                  CrossAxisAlignment
+                                                                      .start,
+                                                              children: [
+                                                                Text(context
+                                                                    .read<
+                                                                        DataProvider>()
+                                                                    .namedevice[
+                                                                        connected[index]
+                                                                            .name]
+                                                                    .toString()),
+                                                                Text(
+                                                                    "Name : ${connected[index].name}"),
+                                                                Text(
+                                                                    "Id :  ${connected[index].id}")
+                                                              ],
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      ),
+                                                      actions: [
+                                                        Padding(
+                                                          padding:
+                                                              const EdgeInsets
+                                                                  .all(8.0),
+                                                          child:
+                                                              GestureDetector(
+                                                                  onTap: () {
+                                                                    Navigator.pop(
+                                                                        context);
+
+                                                                    adddevice(
+                                                                        connected[index]
+                                                                            .name,
+                                                                        connected[index]
+                                                                            .id
+                                                                            .toString());
+                                                                  },
+                                                                  child: Text(
+                                                                      'เพิ่ม')),
+                                                        ),
+                                                        Padding(
+                                                          padding:
+                                                              const EdgeInsets
+                                                                  .all(8.0),
+                                                          child:
+                                                              GestureDetector(
+                                                                  onTap: () {
+                                                                    Navigator.pop(
+                                                                        context);
+                                                                  },
+                                                                  child: Text(
+                                                                      'กลับ')),
+                                                        )
+                                                      ]);
+                                                });
+                                          },
+                                          child: Container(
+                                            width: _width * 0.1,
+                                            child: Icon(
+                                              Icons.add,
+                                              color: Colors.blue,
+                                            ),
+                                          ))
                                     ],
                                   ),
                                 ),
-                                GestureDetector(
-                                    onTap: () {
-                                      showDialog(
-                                          context: context,
-                                          builder: (BuildContext context) {
-                                            return AlertDialog(
-                                                title: Text(
-                                                  'เพิ่มอุปกรณ์',
-                                                  style: TextStyle(
-                                                      color: Colors.black),
-                                                ),
-                                                content: Container(
-                                                  color: Colors.white,
-                                                  width: _width * 0.6,
-                                                  height: _height * 0.08,
-                                                  child: Row(
-                                                    children: [
-                                                      Container(
-                                                        height: _height * 0.1,
-                                                        width: _width * 0.1,
-                                                        child: context
-                                                                    .read<
-                                                                        DataProvider>()
-                                                                    .imagesdevice[connected[
-                                                                        index]
-                                                                    .name] ==
-                                                                ''
-                                                            ? Image.asset(
-                                                                "assets/${context.read<DataProvider>().imagesdevice[connected[index].name]}")
-                                                            : SizedBox(),
-                                                      ),
-                                                      Column(
-                                                        crossAxisAlignment:
-                                                            CrossAxisAlignment
-                                                                .start,
-                                                        children: [
-                                                          Text(context
-                                                              .read<
-                                                                  DataProvider>()
-                                                              .namedevice[
-                                                                  connected[
-                                                                          index]
-                                                                      .name]
-                                                              .toString()),
-                                                          Text(
-                                                              "Name : ${connected[index].name}"),
-                                                          Text(
-                                                              "Id :  ${connected[index].id}")
-                                                        ],
-                                                      ),
-                                                    ],
-                                                  ),
-                                                ),
-                                                actions: [
-                                                  Padding(
-                                                    padding:
-                                                        const EdgeInsets.all(
-                                                            8.0),
-                                                    child: GestureDetector(
-                                                        onTap: () {
-                                                          Navigator.pop(
-                                                              context);
-
-                                                          adddevice(
-                                                              connected[index]
-                                                                  .name,
-                                                              connected[index]
-                                                                  .id
-                                                                  .toString());
-                                                        },
-                                                        child: Text('เพิ่ม')),
-                                                  ),
-                                                  Padding(
-                                                    padding:
-                                                        const EdgeInsets.all(
-                                                            8.0),
-                                                    child: GestureDetector(
-                                                        onTap: () {
-                                                          Navigator.pop(
-                                                              context);
-                                                        },
-                                                        child: Text('กลับ')),
-                                                  )
-                                                ]);
-                                          });
-                                    },
-                                    child: Container(
-                                      width: _width * 0.1,
-                                      child: Icon(
-                                        Icons.add,
-                                        color: Colors.blue,
-                                      ),
-                                    ))
-                              ],
+                              ),
                             ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  );
+                          ],
+                        )
+                      : Container();
                 },
               ),
             ),

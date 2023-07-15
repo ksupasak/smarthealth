@@ -4,11 +4,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
+import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 import 'package:get/get.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import 'package:sembast/sembast.dart';
 
 import 'package:http/http.dart' as http;
+import 'package:smart_health/caregiver/center/esm_cardread/esm_idcard.dart';
 import 'package:smart_health/caregiver/home/homeapp.dart';
 import 'package:smart_health/myapp/splash_screen/splash_screen.dart';
 import 'package:smart_health/myapp/provider/provider.dart';
@@ -189,9 +192,23 @@ class _InitsettingState extends State<Initsetting> {
     return masked;
   }
 
+  bool hasLocationPermission = false;
+  bool hasbluetoothPermission = false;
+
+  void requestLocationPermission() async {
+    PermissionStatus status = await Permission.location.request();
+    PermissionStatus status2 = await Permission.bluetooth.request();
+    FlutterBluePlus.instance.startScan(timeout: const Duration(seconds: 4));
+    setState(() {
+      hasLocationPermission = status.isGranted;
+      hasbluetoothPermission = status2.isGranted;
+    });
+  }
+
   @override
   void initState() {
     printDatabase();
+    requestLocationPermission();
     // TODO: implement initState
     super.initState();
   }

@@ -137,8 +137,8 @@ class _Login_UserState extends State<Login_User> {
     Future.delayed(const Duration(seconds: 2), () {
       setState(() {
         status = false;
-        Navigator.pushReplacement(
-            context, MaterialPageRoute(builder: (context) => Splash_Screen()));
+        // Navigator.pushReplacement(
+        //     context, MaterialPageRoute(builder: (context) => Splash_Screen()));
       });
     });
     await db.close();
@@ -158,9 +158,8 @@ class _Login_UserState extends State<Login_User> {
     });
     Future.delayed(const Duration(seconds: 2), () {
       setState(() {
-        statusdelete = true;
-        Navigator.push(
-            context, MaterialPageRoute(builder: (context) => Splash_Screen()));
+        statusdelete = false;
+        context.read<DataProvider>().user_name = '';
       });
     });
     await db.close();

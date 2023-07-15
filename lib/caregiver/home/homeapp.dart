@@ -7,8 +7,9 @@ import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 import 'package:provider/provider.dart';
 import 'package:sembast/sembast.dart';
+import 'package:smart_health/caregiver/center/center.dart';
 import 'package:smart_health/caregiver/format_list/format_list.dart';
-import 'package:smart_health/caregiver/home/esm_cardread/esm_idcard.dart';
+import 'package:smart_health/caregiver/center/esm_cardread/esm_idcard.dart';
 import 'package:smart_health/caregiver/login/login.dart';
 import 'package:smart_health/caregiver/user_information/user_information.dart';
 import 'package:smart_health/caregiver/widget/backgrund.dart';
@@ -21,8 +22,11 @@ import 'package:smart_health/myapp/widgetdew.dart';
 import 'package:http/http.dart' as http;
 
 class HomeCareCevier extends StatefulWidget {
-  const HomeCareCevier({super.key});
-
+  HomeCareCevier({
+    super.key,
+    this.navigation,
+  });
+  final VoidCallback? navigation;
   @override
   State<HomeCareCevier> createState() => _HomeCareCevierState();
 }
@@ -214,9 +218,9 @@ class _HomeCareCevierState extends State<HomeCareCevier> {
 
   @override
   void dispose() {
-    reading!.cancel();
-    _functionScan!.cancel();
-    _timer!.cancel();
+    reading?.cancel();
+    _functionScan?.cancel();
+    _timer?.cancel();
     // TODO: implement dispose
     super.dispose();
   }
@@ -225,48 +229,15 @@ class _HomeCareCevierState extends State<HomeCareCevier> {
   Widget build(BuildContext context) {
     double _height = MediaQuery.of(context).size.height;
     double _width = MediaQuery.of(context).size.width;
-    List<Widget> body = [
-      Stack(
-        children: [
-          Positioned(child: BackGrund()),
-          Positioned(child: _width > _height ? style_width() : style_height())
-        ],
-      ),
-      // FormatList(),
-      // Login_User(),
-      // Setting(),
-    ];
+
     return SafeArea(
       child: Scaffold(
-        body: body[0],
-        // bottomNavigationBar: BottomNavigationBar(
-        //   selectedItemColor: Color(0xff48B5AA),
-        //   unselectedItemColor: Color(0x50000000),
-        //   currentIndex: index_bottomNavigationBar,
-        //   items: [
-        //     BottomNavigationBarItem(label: "Home", icon: Icon(Icons.home)),
-        //     BottomNavigationBarItem(
-        //         label: "รายการตรวจ", icon: Icon(Icons.format_list_numbered)),
-        //     BottomNavigationBarItem(label: "User", icon: Icon(Icons.person)),
-        //     BottomNavigationBarItem(
-        //         label: "Settings", icon: Icon(Icons.settings)),
-        //   ],
-        //   onTap: (index) {
-        //     setState(() {
-        //       context.read<DataProvider>().id = '';
-        //       index_bottomNavigationBar = index;
-        //     });
-        //     // setState(() {
-        //     //   if (index == 2) {
-        //     //     Navigator.push(context,
-        //     //         MaterialPageRoute(builder: (context) => Login_User()));
-        //     //   } else if (index == 0) {
-        //     //     Navigator.push(context,
-        //     //         MaterialPageRoute(builder: (context) => Setting()));
-        //     //   }
-        //     // });
-        //   },
-        // ),
+        body: Stack(
+          children: [
+            Positioned(child: BackGrund()),
+            Positioned(child: _width > _height ? style_width() : style_height())
+          ],
+        ),
       ),
     );
   }
@@ -356,16 +327,7 @@ class _HomeCareCevierState extends State<HomeCareCevier> {
                                 right: 0,
                                 bottom: 0,
                                 child: GestureDetector(
-                                    onTap: () {
-                                      setState(() {
-                                        index_bottomNavigationBar = 2;
-                                      });
-                                      // Navigator.push(
-                                      //     context,
-                                      //     MaterialPageRoute(
-                                      //         builder: (context) =>
-                                      //             Login_User()));
-                                    },
+                                    onTap: widget.navigation,
                                     child: Padding(
                                       padding: const EdgeInsets.all(8.0),
                                       child: Container(
@@ -398,82 +360,69 @@ class _HomeCareCevierState extends State<HomeCareCevier> {
                                           ],
                                         ),
                                       ),
-                                    )
-                                    //  Padding(
-                                    //   padding: const EdgeInsets.all(4.0),
-                                    //   child: Icon(
-                                    //     Icons.logout,
-                                    //     color: Color(0xff48B5AA),
-                                    //   ),
-                                    // ),
-                                    ))
+                                    )))
                           ],
                         ),
                       )
-                    : Container(
-                        height: _height * 0.13,
-                        width: _width * 0.85,
-                        decoration: BoxDecoration(
-                            boxShadow: [
-                              BoxShadow(
-                                blurRadius: 2,
-                                offset: Offset(0, 2),
-                                color: Color(0xff48B5AA),
-                              )
-                            ],
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(15)),
-                        child: Stack(
-                          children: [
-                            Positioned(
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Padding(
-                                          padding: const EdgeInsets.all(8.0),
-                                          child: Text(
-                                            'ยังไม่ผู้ตรวจ',
-                                            style: TextStyle(
-                                                fontSize: _width * 0.04,
-                                                color: Color(0xff48B5AA),
-                                                fontFamily: context
-                                                    .read<DataProvider>()
-                                                    .family),
-                                          )),
-                                    ],
-                                  ),
-                                  GestureDetector(
-                                    onTap: () {
-                                      setState(() {
-                                        index_bottomNavigationBar = 2;
-                                      });
-                                      // Navigator.push(
-                                      //     context,
-                                      //     MaterialPageRoute(
-                                      //         builder: (context) =>
-                                      //             Login_User()));
-                                    },
-                                    child: Container(
-                                      height: _height * 0.04,
-                                      width: _height * 0.04,
-                                      decoration: BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(50),
-                                          border: Border.all(
-                                              color: Color(0xff48B5AA))),
-                                      child: Icon(
-                                        Icons.add,
-                                        color: Color(0xff48B5AA),
+                    : GestureDetector(
+                        onTap: widget.navigation,
+                        child: Container(
+                          height: _height * 0.13,
+                          width: _width * 0.85,
+                          decoration: BoxDecoration(
+                              boxShadow: [
+                                BoxShadow(
+                                  blurRadius: 2,
+                                  offset: Offset(0, 2),
+                                  color: Color(0xff48B5AA),
+                                )
+                              ],
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(15)),
+                          child: Stack(
+                            children: [
+                              Positioned(
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Padding(
+                                            padding: const EdgeInsets.all(8.0),
+                                            child: Text(
+                                              'ยังไม่ผู้ตรวจ',
+                                              style: TextStyle(
+                                                  fontSize: _width * 0.04,
+                                                  color: Color(0xff48B5AA),
+                                                  fontFamily: context
+                                                      .read<DataProvider>()
+                                                      .family),
+                                            )),
+                                      ],
+                                    ),
+                                    GestureDetector(
+                                      onTap: widget.navigation,
+                                      child: Container(
+                                        height: _height * 0.04,
+                                        width: _height * 0.04,
+                                        decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(50),
+                                            border: Border.all(
+                                                color: Color(0xff48B5AA))),
+                                        child: Icon(
+                                          Icons.add,
+                                          color: Color(0xff48B5AA),
+                                        ),
                                       ),
                                     ),
-                                  ),
-                                ],
+                                  ],
+                                ),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
                       ),
                 Container(

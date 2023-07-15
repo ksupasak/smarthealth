@@ -49,8 +49,7 @@ class _RegisterState extends State<Register> {
     }
     Future.delayed(Duration(seconds: 2), () {
       setState(() {
-        Navigator.pushReplacement(
-            context, MaterialPageRoute(builder: (context) => Login_User()));
+        Navigator.pop(context);
       });
     });
   }
