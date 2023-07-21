@@ -981,7 +981,7 @@ class _HealthRecord2State extends State<HealthRecord2> {
                       ? GestureDetector(
                           onTap: () {
                             //    context.read<Datafunction>().playsound();
-
+                            keypad_sound();
                             chackrecorddata();
                           },
                           child: BoxWidetdew(

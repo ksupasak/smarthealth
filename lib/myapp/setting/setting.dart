@@ -3,6 +3,7 @@ import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
+import 'package:smart_health/myapp/action/playsound.dart';
 import 'package:smart_health/myapp/provider/provider.dart';
 import 'package:smart_health/myapp/setting/device.dart';
 import 'package:smart_health/myapp/setting/device/requestLocationPermission.dart';
@@ -47,6 +48,7 @@ class _SettingState extends State<Setting> {
                     children: [
                       GestureDetector(
                           onTap: () {
+                            keypad_sound();
                             //    context.read<Datafunction>().playsound();
                             //  Get.toNamed('initsetting');
                             Navigator.push(
@@ -57,6 +59,7 @@ class _SettingState extends State<Setting> {
                           child: BoxSetting(text: 'Init Setting')),
                       GestureDetector(
                           onTap: () {
+                            keypad_sound();
                             //   context.read<Datafunction>().playsound();
                             //   Get.toNamed('device');
                             Navigator.push(
@@ -67,6 +70,7 @@ class _SettingState extends State<Setting> {
                           child: BoxSetting(text: 'Device')),
                       GestureDetector(
                           onTap: () {
+                            keypad_sound();
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
@@ -75,6 +79,7 @@ class _SettingState extends State<Setting> {
                           child: BoxSetting(text: 'Update License')),
                       GestureDetector(
                           onTap: () {
+                            keypad_sound();
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
@@ -83,6 +88,7 @@ class _SettingState extends State<Setting> {
                           child: BoxSetting(text: 'Video')),
                       GestureDetector(
                           onTap: () {
+                            keypad_sound();
                             //  context.read<Datafunction>().playsound();
                             //  Get.offNamed('home');
                             if (context.read<DataProvider>().app == "station") {

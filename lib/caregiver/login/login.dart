@@ -9,6 +9,7 @@ import 'package:sembast/sembast_io.dart';
 import 'package:smart_health/caregiver/home/homeapp.dart';
 import 'package:smart_health/caregiver/login/register.dart';
 import 'package:smart_health/caregiver/widget/backgrund.dart';
+import 'package:smart_health/myapp/action/playsound.dart';
 import 'package:smart_health/myapp/provider/provider.dart';
 
 import 'package:http/http.dart' as http;
@@ -270,6 +271,7 @@ class _Login_UserState extends State<Login_User> {
                                 backgroundColor: Color(0xff48B5AA),
                               ),
                               onPressed: () {
+                                keypad_sound();
                                 setState(() {
                                   status = true;
                                 });
@@ -382,6 +384,7 @@ class _Login_UserState extends State<Login_User> {
                                         bottom: 0,
                                         child: GestureDetector(
                                           onTap: () {
+                                            keypad_sound();
                                             showDialog(
                                                 context: context,
                                                 builder:
@@ -401,6 +404,7 @@ class _Login_UserState extends State<Login_User> {
                                                     actions: [
                                                       GestureDetector(
                                                         onTap: () {
+                                                          keypad_sound();
                                                           Navigator.pop(
                                                               context);
                                                         },
@@ -425,6 +429,7 @@ class _Login_UserState extends State<Login_User> {
                                                           Navigator.pop(
                                                               context);
                                                           delete();
+                                                          keypad_sound();
                                                         },
                                                         child: Padding(
                                                           padding:
@@ -487,6 +492,7 @@ class _Login_UserState extends State<Login_User> {
                           backgroundColor: Color(0xff48B5AA),
                         ),
                         onPressed: () {
+                          keypad_sound();
                           Navigator.push(
                               context,
                               MaterialPageRoute(

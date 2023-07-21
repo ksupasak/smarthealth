@@ -96,7 +96,6 @@ class _Register_PatientState extends State<Register_Patient> {
     if (id.text != '' &&
         first_name.text != '' &&
         last_name.text != '' &&
-        hn.text != '' &&
         prefix_name.text != '' &&
         subdistrict.text != '' &&
         district.text != '' &&
@@ -504,18 +503,18 @@ class _Register_PatientState extends State<Register_Patient> {
                               padding: EdgeInsets.all(4.0),
                               child: TextFormField(
                                 controller: hn,
-                                validator: (value) {
-                                  if (value!.isEmpty) {
-                                    return 'กรุณากรอกรหัสHN';
-                                  }
-                                  return null;
-                                },
+                                // validator: (value) {
+                                //   if (value!.isEmpty) {
+                                //     return 'กรุณากรอกรหัสHN';
+                                //   }
+                                //   return null;
+                                // },
                                 style: textFieldStyle,
-                                decoration: InputDecoration(
-                                  errorText: hn.text.isEmpty
-                                      ? 'กรุณากรอกรหัสHN'
-                                      : null,
-                                ),
+                                // decoration: InputDecoration(
+                                //   errorText: hn.text.isEmpty
+                                //       ? 'กรุณากรอกรหัสHN'
+                                //       : null,
+                                // ),
                               ),
                             ),
                           ),

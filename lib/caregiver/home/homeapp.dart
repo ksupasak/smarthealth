@@ -15,6 +15,7 @@ import 'package:smart_health/caregiver/register_patient/register_patient.dart';
 import 'package:smart_health/caregiver/user_information/user_information.dart';
 import 'package:smart_health/caregiver/widget/backgrund.dart';
 import 'package:smart_health/caregiver/widget/numpad.dart';
+import 'package:smart_health/myapp/action/playsound.dart';
 import 'package:smart_health/myapp/provider/provider.dart';
 import 'package:smart_health/myapp/setting/local.dart';
 import 'package:smart_health/myapp/setting/setting.dart';
@@ -374,6 +375,7 @@ class _HomeCareCevierState extends State<HomeCareCevier> {
                   child: GestureDetector(
                       onTap: () {
                         check();
+                        keypad_sound();
                       },
                       child: BoxWidetdew(
                           color: Color(0xff31D6AA),
@@ -461,6 +463,7 @@ class _PopupState extends State<Popup> {
             GestureDetector(
               onTap: () {
                 Navigator.pop(context);
+                keypad_sound();
               },
               child: Container(
                 child: Center(
@@ -474,6 +477,7 @@ class _PopupState extends State<Popup> {
             ),
             GestureDetector(
               onTap: () {
+                keypad_sound();
                 Navigator.pop(context);
                 if (context.read<DataProvider>().creadreader.length != 0) {
                   if (context.read<DataProvider>().id.toString() ==

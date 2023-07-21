@@ -5,6 +5,7 @@ import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 import 'package:provider/provider.dart';
 import 'package:sembast/sembast.dart';
+import 'package:smart_health/myapp/action/playsound.dart';
 import 'package:smart_health/myapp/provider/provider.dart';
 import 'package:smart_health/myapp/setting/device/blue_on.dart';
 import 'package:smart_health/myapp/setting/local.dart';
@@ -146,6 +147,7 @@ class _DeviceState extends State<Device> {
             child: GestureDetector(
               onTap: () {
                 setState(() {
+                  keypad_sound();
                   addmapdevices();
                 });
               },
@@ -168,6 +170,7 @@ class _DeviceState extends State<Device> {
             padding: const EdgeInsets.all(8.0),
             child: GestureDetector(
               onTap: () {
+                keypad_sound();
                 Navigator.push(context,
                     MaterialPageRoute(builder: (context) => ScanBLE()));
               },

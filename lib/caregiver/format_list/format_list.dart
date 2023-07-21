@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:provider/provider.dart';
+import 'package:smart_health/myapp/action/playsound.dart';
 import 'package:smart_health/myapp/provider/provider.dart';
 import 'package:http/http.dart' as http;
 
@@ -115,9 +116,6 @@ class _FormatListState extends State<FormatList> {
                   Container(
                       width: _width * 0.7,
                       child: Center(child: Text('รายการ', style: textStyle))),
-                  // Container(
-                  //     width: _width * 0.25,
-                  //     child: Center(child: Text('สถานะ', style: textStyle)))
                 ],
               )),
           Container(
@@ -140,41 +138,6 @@ class _FormatListState extends State<FormatList> {
                               .list_patients[index]['status']),
                     ],
                   );
-
-                  // Container(
-                  //     decoration: BoxDecoration(
-                  //         border:
-                  //             Border(bottom: BorderSide(color: Colors.black))),
-                  //     child: Row(
-                  //       mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  //       children: [
-                  //         Text("${index + 1}"),
-                  //         Container(
-                  //           width: _width * 0.33,
-                  //           child: Center(
-                  //             child: Text(
-                  //                 '${context.read<DataProvider>().list_patients[index]['name']}',
-                  //                 style: textStyle),
-                  //           ),
-                  //         ),
-                  //         Container(
-                  //           width: _width * 0.32,
-                  //           child: Center(
-                  //             child: Text(
-                  //                 '${context.read<DataProvider>().list_patients[index]['public_id']}',
-                  //                 style: textStyle),
-                  //           ),
-                  //         ),
-                  //         Container(
-                  //           width: _width * 0.32,
-                  //           child: Center(
-                  //             child: Text(
-                  //                 '${context.read<DataProvider>().list_patients[index]['status']}',
-                  //                 style: textStyle),
-                  //           ),
-                  //         )
-                  //       ],
-                  //     ));
                 }),
           ),
         ],
@@ -209,7 +172,6 @@ class _Pop_cardState extends State<Pop_card> {
 
     setState(() {
       resTojson = json.decode(res.body);
-      //   print(resTojson);
     });
   }
 
@@ -230,6 +192,7 @@ class _Pop_cardState extends State<Pop_card> {
       padding: const EdgeInsets.fromLTRB(5, 2, 0, 0),
       child: GestureDetector(
         onTap: () {
+          keypad_sound();
           setState(() {
             show = !show;
             getdata();

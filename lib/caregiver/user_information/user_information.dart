@@ -10,6 +10,7 @@ import 'package:smart_health/caregiver/videocall/video.dart';
 import 'package:smart_health/caregiver/widget/backgrund.dart';
 import 'package:smart_health/caregiver/widget/boxtime.dart';
 import 'package:smart_health/caregiver/widget/informationCard.dart';
+import 'package:smart_health/myapp/action/playsound.dart';
 import 'package:smart_health/myapp/provider/provider.dart';
 import 'package:http/http.dart' as http;
 
@@ -240,6 +241,7 @@ class _User_InformationState extends State<User_Information> {
                         children: [
                           GestureDetector(
                               onTap: () {
+                                keypad_sound();
                                 Navigator.push(
                                     context,
                                     MaterialPageRoute(
@@ -292,6 +294,7 @@ class _User_InformationState extends State<User_Information> {
                               )),
                           GestureDetector(
                               onTap: () {
+                                keypad_sound();
                                 Navigator.push(
                                     context,
                                     MaterialPageRoute(
@@ -493,6 +496,7 @@ class _choiceState extends State<choice> {
           SizedBox(width: _width * 0.05),
           GestureDetector(
             onTap: () {
+              keypad_sound();
               showModalBottomSheet(
                 backgroundColor: Color.fromARGB(0, 255, 255, 255),
                 isScrollControlled: true,

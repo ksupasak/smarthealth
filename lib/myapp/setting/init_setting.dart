@@ -13,6 +13,7 @@ import 'package:sembast/sembast.dart';
 import 'package:http/http.dart' as http;
 import 'package:smart_health/caregiver/center/esm_cardread/esm_idcard.dart';
 import 'package:smart_health/caregiver/home/homeapp.dart';
+import 'package:smart_health/myapp/action/playsound.dart';
 import 'package:smart_health/myapp/setting/device/requestLocationPermission.dart';
 import 'package:smart_health/myapp/splash_screen/splash_screen.dart';
 import 'package:smart_health/myapp/provider/provider.dart';
@@ -218,6 +219,7 @@ class _InitsettingState extends State<Initsetting> {
                   padding: const EdgeInsets.all(8.0),
                   child: GestureDetector(
                     onTap: () {
+                      keypad_sound();
                       test();
                     },
                     child: Icon(
@@ -230,6 +232,7 @@ class _InitsettingState extends State<Initsetting> {
                   padding: const EdgeInsets.all(8.0),
                   child: GestureDetector(
                     onTap: () {
+                      keypad_sound();
                       safe();
                     },
                     child: status_safe == false
@@ -299,6 +302,7 @@ class _InitsettingState extends State<Initsetting> {
                                             itemBuilder: (context, index) {
                                               return GestureDetector(
                                                 onTap: () {
+                                                  keypad_sound();
                                                   setState(() {
                                                     numindex = index;
                                                     care_unit.text =

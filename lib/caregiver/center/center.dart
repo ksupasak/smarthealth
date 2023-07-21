@@ -7,6 +7,7 @@ import 'package:smart_health/caregiver/format_list/format_list.dart';
 import 'package:smart_health/caregiver/center/esm_cardread/esm_idcard.dart';
 import 'package:smart_health/caregiver/home/homeapp.dart';
 import 'package:smart_health/caregiver/login/login.dart';
+import 'package:smart_health/myapp/action/playsound.dart';
 import 'package:smart_health/myapp/provider/provider.dart';
 import 'package:smart_health/myapp/setting/setting.dart';
 
@@ -79,6 +80,7 @@ class _Center_CaregiverState extends State<Center_Caregiver> {
   }
 
   void navigation() {
+    keypad_sound();
     setState(() {
       index_bottomNavigationBar = 2;
     });
@@ -138,6 +140,7 @@ class _Center_CaregiverState extends State<Center_Caregiver> {
         ],
         onTap: (index) {
           setState(() {
+            keypad_sound();
             if (index != 3) {
               context.read<DataProvider>().id = '';
               index_bottomNavigationBar = index;

@@ -4,6 +4,7 @@ import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
+import 'package:smart_health/myapp/action/playsound.dart';
 import 'package:smart_health/myapp/action/vibrateDevice.dart';
 
 import 'dart:async';
@@ -49,6 +50,7 @@ class _NumpadState extends State<Numpad> {
   }
 
   void chakepasswordslogin() {
+    keypad_sound();
     //   context.read<Datafunction>().playsound();
     if (passwordslogin.length >= 14) {
       setState(() {
