@@ -95,7 +95,7 @@ class ESMIDCard {
   bool isBusy = false;
 
   StreamController<String> entry = StreamController<String>();
-
+  StreamController<String> entryPhoto = StreamController<String>();
   StreamController<String> status = StreamController<String>();
 
   Stream<String> getStatus() {
@@ -790,6 +790,7 @@ class ESMIDCard {
       int returnCode = -1;
       print("get text P ok");
       var parts = await getTextDF();
+
       int endTime = new DateTime.now().millisecondsSinceEpoch;
       double readTextTime = ((endTime - startTime) / 1000);
 
@@ -828,6 +829,9 @@ class ESMIDCard {
       else {
         returnCode = int.parse(parts2[0].trim());
         text = parts2[1].trim();
+        //  print("Get Photo = ${text}");
+        entryPhoto.sink.add(text);
+        print("Get Photo =  true");
       }
 
       if (returnCode != NA_SUCCESS) {
@@ -971,5 +975,9 @@ class ESMIDCard {
 
   Stream<String> getEntry() {
     return entry.stream;
+  }
+
+  Stream<String> getEntryPhoto() {
+    return entryPhoto.stream;
   }
 }

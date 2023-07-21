@@ -57,15 +57,7 @@ class _backgrundState extends State<backgrund> {
           ),
         ],
       ),
-    )
-        //      BackGroundSmart_Health(
-        //   BackGroundColor: [
-        //     Color.fromARGB(255, 255, 255, 255),
-        //     StyleColor.backgroundbegin,
-        //     StyleColor.backgroundbegin,
-        //   ],
-        // )
-        );
+    ));
   }
 }
 

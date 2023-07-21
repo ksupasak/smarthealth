@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 import 'package:smart_health/myapp/provider/provider.dart';
 import 'package:smart_health/myapp/setting/device.dart';
+import 'package:smart_health/myapp/setting/device/requestLocationPermission.dart';
 import 'package:smart_health/myapp/setting/init_setting.dart';
 import 'package:smart_health/myapp/setting/update_license.dart';
 import 'package:smart_health/myapp/setting/videotest.dart';
@@ -18,6 +19,13 @@ class Setting extends StatefulWidget {
 }
 
 class _SettingState extends State<Setting> {
+  @override
+  void initState() {
+    requestLocationPermission();
+    // TODO: implement initState
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     double _width = MediaQuery.of(context).size.width;

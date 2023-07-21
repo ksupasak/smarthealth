@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
+import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 import 'package:provider/provider.dart';
 import 'package:sembast/sembast.dart';
 import 'package:smart_health/myapp/provider/provider.dart';
+import 'package:smart_health/myapp/setting/device/blue_on.dart';
 import 'package:smart_health/myapp/setting/local.dart';
 import 'package:smart_health/myapp/setting/scan_ble.dart';
 
@@ -99,9 +101,25 @@ class _DeviceState extends State<Device> {
     await db.close();
   }
 
+  FlutterBluePlus flutterBlue = FlutterBluePlus.instance;
+  void ble_on() async {
+    bool isBluetoothOn = await flutterBlue.isOn;
+    print("isBluetoothOn=${isBluetoothOn}");
+    if (!isBluetoothOn) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Container(
+              width: MediaQuery.of(context).size.width,
+              child: Center(
+                  child: Text(
+                'กรุณาเปิด Bluetooth',
+              )))));
+    }
+  }
+
   @override
   void initState() {
     print('เข้าหน้าDevice');
+    ble_on();
     addmapdevices();
 
     // TODO: implement initState
@@ -161,94 +179,99 @@ class _DeviceState extends State<Device> {
           ),
         ],
       ),
-      body: SafeArea(
-        child: ListView(
-          children: [
-            Column(
-              children: deviceList_name
-                  .map((d) => Dismissible(
-                        key: ValueKey(d),
-                        child: Container(
-                          width: _width,
-                          child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Container(
-                              decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(10),
-                                  color: Colors.white,
-                                  boxShadow: [
-                                    BoxShadow(
-                                        color: Colors.black,
-                                        blurRadius: 1,
-                                        offset: Offset(0, 1))
-                                  ]),
-                              child: Row(
-                                children: [
-                                  Container(
-                                      height: _height * 0.1,
-                                      width: _height * 0.1,
-                                      child: context
-                                                  .read<DataProvider>()
-                                                  .imagesdevice[d] !=
-                                              ''
-                                          ? Padding(
-                                              padding:
-                                                  const EdgeInsets.all(8.0),
-                                              child: Image.asset(
-                                                  "assets/${context.read<DataProvider>().imagesdevice[d]}"),
-                                            )
-                                          : SizedBox()),
-                                  Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                          '${context.read<DataProvider>().namedevice[d]} '),
-                                      Text('Name : $d'),
-                                      Text(
-                                          'Id :${context.read<DataProvider>().mapdevices[d]}'),
-                                    ],
-                                  ),
-                                ],
+      body: RefreshIndicator(
+        onRefresh: () async {
+          addmapdevices();
+        },
+        child: SafeArea(
+          child: ListView(
+            children: [
+              Column(
+                children: deviceList_name
+                    .map((d) => Dismissible(
+                          key: ValueKey(d),
+                          child: Container(
+                            width: _width,
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Container(
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(10),
+                                    color: Colors.white,
+                                    boxShadow: [
+                                      BoxShadow(
+                                          color: Colors.black,
+                                          blurRadius: 1,
+                                          offset: Offset(0, 1))
+                                    ]),
+                                child: Row(
+                                  children: [
+                                    Container(
+                                        height: _height * 0.1,
+                                        width: _height * 0.1,
+                                        child: context
+                                                    .read<DataProvider>()
+                                                    .imagesdevice[d] !=
+                                                ''
+                                            ? Padding(
+                                                padding:
+                                                    const EdgeInsets.all(8.0),
+                                                child: Image.asset(
+                                                    "assets/${context.read<DataProvider>().imagesdevice[d]}"),
+                                              )
+                                            : SizedBox()),
+                                    Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                            '${context.read<DataProvider>().namedevice[d]} '),
+                                        Text('Name : $d'),
+                                        Text(
+                                            'Id :${context.read<DataProvider>().mapdevices[d]}'),
+                                      ],
+                                    ),
+                                  ],
+                                ),
                               ),
                             ),
                           ),
-                        ),
-                        onDismissed: (direction) {
-                          deleteDiver(d.toString());
+                          onDismissed: (direction) {
+                            deleteDiver(d.toString());
 
-                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                              content: Container(
-                            child: Center(child: Text('กำลังลบอุปกรณ์ $d')),
-                            width: _width,
-                          )));
-                        },
-                        confirmDismiss: (direction) async {
-                          return await showDialog(
-                            context: context,
-                            builder: (BuildContext context) {
-                              return AlertDialog(
-                                title: const Text("Confirm"),
-                                content: const Text("ยกเลิกการเชื่อมต่อ"),
-                                actions: <Widget>[
-                                  TextButton(
-                                      onPressed: () =>
-                                          Navigator.of(context).pop(false),
-                                      child: const Text("CANCEL")),
-                                  TextButton(
-                                      onPressed: () =>
-                                          Navigator.of(context).pop(true),
-                                      child: const Text("DELETE"))
-                                ],
-                              );
-                            },
-                          );
-                        },
-                        background: Container(color: Colors.white),
-                      ))
-                  .toList(),
-            ),
-          ],
+                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                                content: Container(
+                              child: Center(child: Text('กำลังลบอุปกรณ์ $d')),
+                              width: _width,
+                            )));
+                          },
+                          confirmDismiss: (direction) async {
+                            return await showDialog(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return AlertDialog(
+                                  title: const Text("Confirm"),
+                                  content: const Text("ยกเลิกการเชื่อมต่อ"),
+                                  actions: <Widget>[
+                                    TextButton(
+                                        onPressed: () =>
+                                            Navigator.of(context).pop(false),
+                                        child: const Text("CANCEL")),
+                                    TextButton(
+                                        onPressed: () =>
+                                            Navigator.of(context).pop(true),
+                                        child: const Text("DELETE"))
+                                  ],
+                                );
+                              },
+                            );
+                          },
+                          background: Container(color: Colors.white),
+                        ))
+                    .toList(),
+              ),
+            ],
+          ),
         ),
       ),
     );

@@ -6,9 +6,9 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import 'package:sembast/sembast.dart';
+import 'package:smart_health/caregiver/widget/boxtime.dart';
 import 'package:smart_health/myapp/action/playsound.dart';
 import 'package:smart_health/myapp/action/vibrateDevice.dart';
 import 'package:smart_health/myapp/setting/device/ad_ua651ble.dart';
@@ -26,7 +26,6 @@ import 'package:smart_health/myapp/setting/device/yuwell_ht_yhw.dart';
 import 'package:smart_health/myapp/setting/local.dart';
 import 'package:smart_health/myapp/widgetdew.dart';
 import 'package:http/http.dart' as http;
-import 'package:smart_health/station/main_app/app.dart';
 
 // import 'package:image_picker/image_picker.dart';
 
@@ -602,216 +601,257 @@ class _HealthRecord2State extends State<HealthRecord2> {
       fontSize: _width * 0.03,
       color: Color.fromARGB(255, 35, 131, 123),
     );
-    return SafeArea(
-      child: Scaffold(
-        body: Stack(children: [
-          backgrund(),
-          Positioned(
-              child: ListView(children: [
-            Container(height: _height * 0.05),
-            Center(
-              child: Container(
-                  width: _width * 0.9,
-                  height: _height * 0.15,
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(20),
-                    boxShadow: [
-                      BoxShadow(
-                          blurRadius: 2,
-                          spreadRadius: 1,
-                          color: Color(0xff48B5AA),
-                          offset: Offset(0, 3)),
-                    ],
-                  ),
-                  child: Center(
-                      child: InformationCard(
-                    dataidcard: context.read<DataProvider>().resTojson,
-                  ))),
-            ),
-            SizedBox(height: heightsizedbox),
-            BoxDecorate2(
-                child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                  BoxRecord(
-                      image: 'assets/shr.png',
-                      texthead: 'HEIGHT',
-                      keyvavlue: height),
-                  Line(height: heightline, color: teamcolor),
-                  BoxRecord(
-                      image: 'assets/srhnate.png',
-                      texthead: 'WEIGHT',
-                      keyvavlue: weight1),
-                ])),
-            SizedBox(height: heightsizedbox),
-            BoxDecorate2(
-                child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                  BoxRecord(
-                    image: 'assets/jhv.png',
-                    texthead: 'SYS',
-                    keyvavlue: sys,
-                    colorboxShadow: double.tryParse("0${sys.text}")! == 0
-                        ? Colors.white
-                        : double.tryParse("0${sys.text}")! < 89
-                            ? Color.fromARGB(255, 218, 15, 0)
-                            : double.tryParse("0${sys.text}")! < 99
-                                ? Color.fromARGB(255, 253, 159, 105)
-                                : double.tryParse("0${sys.text}")! < 199
-                                    ? Color.fromARGB(255, 58, 253, 133)
-                                    : double.tryParse("0${sys.text}")! > 199
-                                        ? Colors.white
-                                        : Colors.white,
-                  ),
-                  Line(height: heightline, color: teamcolor),
-                  BoxRecord(
-                    image: 'assets/jhvkb.png',
-                    texthead: 'DIA',
-                    keyvavlue: dia,
-                    colorboxShadow: double.tryParse("0${sys.text}")! == 0
-                        ? Colors.white
-                        : double.tryParse("0${dia.text}")! < 39
-                            ? Color.fromARGB(255, 218, 15, 0)
-                            : double.tryParse("0${dia.text}")! < 49
-                                ? Color.fromARGB(255, 253, 159, 105)
-                                : double.tryParse("0${dia.text}")! < 99
-                                    ? Color.fromARGB(255, 58, 253, 133)
-                                    : double.tryParse("0${dia.text}")! < 109
-                                        ? Color.fromARGB(255, 253, 159, 105)
-                                        : double.tryParse("0${dia.text}")! < 129
-                                            ? Color.fromARGB(255, 252, 79, 79)
-                                            : double.tryParse("0${dia.text}")! >
-                                                    129
-                                                ? Color.fromARGB(
-                                                    255, 218, 15, 0)
-                                                : Colors.brown,
-                  ),
-                  Line(height: heightline, color: teamcolor),
-                  BoxRecord(
-                      image: 'assets/jhbjk;.png',
-                      texthead: 'PULSE',
-                      keyvavlue: pulse)
-                ])),
-            SizedBox(height: heightsizedbox),
-            BoxDecorate2(
-                child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                  BoxRecord(
-                      image: 'assets/jhgh.png',
-                      texthead: 'TEMP',
-                      keyvavlue: temp,
-                      colorboxShadow: double.tryParse("0${temp.text}")! == 0
-                          ? Colors.white
-                          : double.tryParse("0${temp.text}")! < 33.9
-                              ? Color.fromARGB(255, 102, 186, 255)
-                              : double.tryParse("0${temp.text}")! < 34.9
-                                  ? Color.fromARGB(255, 150, 208, 255)
-                                  : double.tryParse("0${temp.text}")! < 35.9
-                                      ? Color.fromARGB(255, 137, 255, 182)
-                                      : double.tryParse("0${temp.text}")! < 37.9
-                                          ? Color.fromARGB(255, 58, 253, 133)
-                                          : double.tryParse("0${temp.text}")! <
-                                                  38.9
-                                              ? Color.fromARGB(
-                                                  255, 253, 159, 105)
-                                              : double.tryParse(
-                                                          "0${temp.text}")! <
-                                                      39.9
-                                                  ? Color.fromARGB(
-                                                      255, 252, 79, 79)
-                                                  : double.tryParse(
-                                                              "0${temp.text}")! >
-                                                          39.9
-                                                      ? Color.fromARGB(
-                                                          255, 218, 15, 0)
-                                                      : Colors.brown),
-                  Line(height: heightline, color: teamcolor),
-                  BoxRecord(
-                    image: 'assets/kauo.png',
-                    texthead: 'SPO2',
-                    keyvavlue: spo2,
-                    colorboxShadow: double.tryParse("0${spo2.text}")! == 0
-                        ? Colors.white
-                        : double.tryParse("0${spo2.text}")! < 84
-                            ? Color.fromARGB(255, 218, 15, 0)
-                            : double.tryParse("0${spo2.text}")! < 89
-                                ? Color.fromARGB(255, 252, 79, 79)
-                                : double.tryParse("0${spo2.text}")! < 92
-                                    ? Color.fromARGB(255, 253, 159, 105)
-                                    : double.tryParse("0${spo2.text}")! > 92
-                                        ? Color.fromARGB(255, 58, 253, 133)
-                                        : Colors.brown,
-                  ),
-                ])),
-            SizedBox(height: heightsizedbox),
-            BoxDecorate2(
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        iconTheme: IconThemeData(color: Colors.grey),
+      ),
+      body: Stack(children: [
+        backgrund(),
+        Positioned(
+            child: ListView(children: [
+          BoxTimer(),
+
+          Center(
+            child: Container(
+                width: _width * 0.9,
+                height: _height * 0.15,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(20),
+                  boxShadow: [
+                    BoxShadow(
+                        blurRadius: 2,
+                        spreadRadius: 1,
+                        color: Color(0xff48B5AA),
+                        offset: Offset(0, 3)),
+                  ],
+                ),
+                child: Center(
+                    child: InformationCard(
+                  dataidcard: context.read<DataProvider>().resTojson,
+                ))),
+          ),
+          SizedBox(height: heightsizedbox),
+          BoxDecorate2(
               child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  BoxRecord(
-                    texthead: 'BloodGlucose',
-                    keyvavlue: fbs,
-                    image: 'assets/Frame 9184.png',
-                    colorboxShadow: double.tryParse("0${fbs.text}")! == 0
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                BoxRecord(
+                    image: 'assets/shr.png',
+                    texthead: 'HEIGHT',
+                    keyvavlue: height),
+                Line(height: heightline, color: teamcolor),
+                BoxRecord(
+                    image: 'assets/srhnate.png',
+                    texthead: 'WEIGHT',
+                    keyvavlue: weight1),
+              ])),
+          SizedBox(height: heightsizedbox),
+          BoxDecorate2(
+              child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                BoxRecord(
+                  image: 'assets/jhv.png',
+                  texthead: 'SYS',
+                  keyvavlue: sys,
+                  colorboxShadow: double.tryParse("0${sys.text}")! == 0
+                      ? Colors.white
+                      : double.tryParse("0${sys.text}")! < 89
+                          ? Color.fromARGB(255, 218, 15, 0)
+                          : double.tryParse("0${sys.text}")! < 99
+                              ? Color.fromARGB(255, 253, 159, 105)
+                              : double.tryParse("0${sys.text}")! < 199
+                                  ? Color.fromARGB(255, 58, 253, 133)
+                                  : double.tryParse("0${sys.text}")! > 199
+                                      ? Colors.white
+                                      : Colors.white,
+                ),
+                Line(height: heightline, color: teamcolor),
+                BoxRecord(
+                  image: 'assets/jhvkb.png',
+                  texthead: 'DIA',
+                  keyvavlue: dia,
+                  colorboxShadow: double.tryParse("0${sys.text}")! == 0
+                      ? Colors.white
+                      : double.tryParse("0${dia.text}")! < 39
+                          ? Color.fromARGB(255, 218, 15, 0)
+                          : double.tryParse("0${dia.text}")! < 49
+                              ? Color.fromARGB(255, 253, 159, 105)
+                              : double.tryParse("0${dia.text}")! < 99
+                                  ? Color.fromARGB(255, 58, 253, 133)
+                                  : double.tryParse("0${dia.text}")! < 109
+                                      ? Color.fromARGB(255, 253, 159, 105)
+                                      : double.tryParse("0${dia.text}")! < 129
+                                          ? Color.fromARGB(255, 252, 79, 79)
+                                          : double.tryParse("0${dia.text}")! >
+                                                  129
+                                              ? Color.fromARGB(255, 218, 15, 0)
+                                              : Colors.brown,
+                ),
+                Line(height: heightline, color: teamcolor),
+                BoxRecord(
+                    image: 'assets/jhbjk;.png',
+                    texthead: 'PULSE',
+                    keyvavlue: pulse)
+              ])),
+          SizedBox(height: heightsizedbox),
+          BoxDecorate2(
+              child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                BoxRecord(
+                    image: 'assets/jhgh.png',
+                    texthead: 'TEMP',
+                    keyvavlue: temp,
+                    colorboxShadow: double.tryParse("0${temp.text}")! == 0
                         ? Colors.white
-                        : double.tryParse("0${fbs.text}")! < 130
-                            ? Color.fromARGB(255, 58, 253, 133)
-                            : Colors.red,
-                  ),
-                  Line(height: heightline, color: teamcolor),
-                  Container(
-                    child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Container(
-                              child: Row(
-                            children: [
-                              Text('ก่อนอาหาร', style: textStyle),
-                              Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: GestureDetector(
-                                  onTap: () {
-                                    setState(() {
-                                      if (_isChecked1) {
-                                        _isChecked1 = false;
-                                      } else {
-                                        _isChecked1 = true;
-                                        _isChecked2 = false;
-                                      }
-                                    });
-                                  },
-                                  child: Container(
-                                    width: _width * 0.05,
-                                    height: _width * 0.05,
-                                    decoration: BoxDecoration(
-                                        color: _isChecked1
-                                            ? Colors.green
-                                            : Color.fromARGB(
-                                                255, 216, 216, 216),
-                                        borderRadius:
-                                            BorderRadius.circular(50)),
+                        : double.tryParse("0${temp.text}")! < 33.9
+                            ? Color.fromARGB(255, 102, 186, 255)
+                            : double.tryParse("0${temp.text}")! < 34.9
+                                ? Color.fromARGB(255, 150, 208, 255)
+                                : double.tryParse("0${temp.text}")! < 35.9
+                                    ? Color.fromARGB(255, 137, 255, 182)
+                                    : double.tryParse("0${temp.text}")! < 37.9
+                                        ? Color.fromARGB(255, 58, 253, 133)
+                                        : double.tryParse("0${temp.text}")! <
+                                                38.9
+                                            ? Color.fromARGB(255, 253, 159, 105)
+                                            : double.tryParse(
+                                                        "0${temp.text}")! <
+                                                    39.9
+                                                ? Color.fromARGB(
+                                                    255, 252, 79, 79)
+                                                : double
+                                                            .tryParse(
+                                                                "0${temp.text}")! >
+                                                        39.9
+                                                    ? Color.fromARGB(
+                                                        255, 218, 15, 0)
+                                                    : Colors.brown),
+                Line(height: heightline, color: teamcolor),
+                BoxRecord(
+                  image: 'assets/kauo.png',
+                  texthead: 'SPO2',
+                  keyvavlue: spo2,
+                  colorboxShadow: double.tryParse("0${spo2.text}")! == 0
+                      ? Colors.white
+                      : double.tryParse("0${spo2.text}")! < 84
+                          ? Color.fromARGB(255, 218, 15, 0)
+                          : double.tryParse("0${spo2.text}")! < 89
+                              ? Color.fromARGB(255, 252, 79, 79)
+                              : double.tryParse("0${spo2.text}")! < 92
+                                  ? Color.fromARGB(255, 253, 159, 105)
+                                  : double.tryParse("0${spo2.text}")! > 92
+                                      ? Color.fromARGB(255, 58, 253, 133)
+                                      : Colors.brown,
+                ),
+              ])),
+          SizedBox(height: heightsizedbox),
+          BoxDecorate2(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                BoxRecord(
+                  texthead: 'BloodGlucose',
+                  keyvavlue: fbs,
+                  image: 'assets/Frame 9184.png',
+                  colorboxShadow: double.tryParse("0${fbs.text}")! == 0
+                      ? Colors.white
+                      : double.tryParse("0${fbs.text}")! < 130
+                          ? Color.fromARGB(255, 58, 253, 133)
+                          : Colors.red,
+                ),
+                Line(height: heightline, color: teamcolor),
+                Container(
+                  child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Container(
+                            child: Row(
+                          children: [
+                            Text('ก่อนอาหาร', style: textStyle),
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: GestureDetector(
+                                onTap: () {
+                                  setState(() {
+                                    if (_isChecked1) {
+                                      _isChecked1 = false;
+                                    } else {
+                                      _isChecked1 = true;
+                                      _isChecked2 = false;
+                                    }
+                                  });
+                                },
+                                child: Container(
+                                  width: _width * 0.05,
+                                  height: _width * 0.05,
+                                  decoration: BoxDecoration(
+                                      color: _isChecked1
+                                          ? Colors.green
+                                          : Color.fromARGB(255, 216, 216, 216),
+                                      borderRadius: BorderRadius.circular(50)),
+                                ),
+                              ),
+                            )
+                          ],
+                        )),
+                        Container(
+                            child: Row(
+                          children: [
+                            Text('หลังอาหาร', style: textStyle),
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: GestureDetector(
+                                onTap: () {
+                                  setState(() {
+                                    if (_isChecked2) {
+                                      _isChecked2 = false;
+                                    } else {
+                                      _isChecked1 = false;
+                                      _isChecked2 = true;
+                                    }
+                                  });
+                                },
+                                child: Container(
+                                  width: _width * 0.05,
+                                  height: _width * 0.05,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(50),
+                                    color: _isChecked2
+                                        ? Colors.green
+                                        : Color.fromARGB(255, 216, 216, 216),
                                   ),
                                 ),
-                              )
-                            ],
-                          )),
-                          Container(
-                              child: Row(
+                              ),
+                            )
+                          ],
+                        )),
+                      ]),
+                ),
+                Line(height: heightline, color: teamcolor),
+                Container(
+                  child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        Container(
+                          child: Row(
                             children: [
-                              Text('หลังอาหาร', style: textStyle),
+                              Text('เช้า', style: textStyle),
                               Padding(
                                 padding: const EdgeInsets.all(8.0),
                                 child: GestureDetector(
                                   onTap: () {
                                     setState(() {
-                                      if (_isChecked2) {
-                                        _isChecked2 = false;
+                                      if (_isChecked21) {
+                                        _isChecked21 = false;
                                       } else {
-                                        _isChecked1 = false;
-                                        _isChecked2 = true;
+                                        _isChecked21 = true;
+                                        _isChecked22 = false;
+                                        _isChecked23 = false;
                                       }
                                     });
                                   },
@@ -820,7 +860,7 @@ class _HealthRecord2State extends State<HealthRecord2> {
                                     height: _width * 0.05,
                                     decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(50),
-                                      color: _isChecked2
+                                      color: _isChecked21
                                           ? Colors.green
                                           : Color.fromARGB(255, 216, 216, 216),
                                     ),
@@ -828,187 +868,143 @@ class _HealthRecord2State extends State<HealthRecord2> {
                                 ),
                               )
                             ],
-                          )),
-                        ]),
-                  ),
-                  Line(height: heightline, color: teamcolor),
-                  Container(
-                    child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.end,
-                        children: [
-                          Container(
-                            child: Row(
-                              children: [
-                                Text('เช้า', style: textStyle),
-                                Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: GestureDetector(
-                                    onTap: () {
-                                      setState(() {
-                                        if (_isChecked21) {
-                                          _isChecked21 = false;
-                                        } else {
-                                          _isChecked21 = true;
-                                          _isChecked22 = false;
-                                          _isChecked23 = false;
-                                        }
-                                      });
-                                    },
-                                    child: Container(
-                                      width: _width * 0.05,
-                                      height: _width * 0.05,
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(50),
-                                        color: _isChecked21
-                                            ? Colors.green
-                                            : Color.fromARGB(
-                                                255, 216, 216, 216),
-                                      ),
-                                    ),
-                                  ),
-                                )
-                              ],
-                            ),
                           ),
-                          Container(
-                            child: Row(
-                              children: [
-                                Text('กลางวัน', style: textStyle),
-                                Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: GestureDetector(
-                                    onTap: () {
-                                      setState(() {
-                                        if (_isChecked22) {
-                                          _isChecked22 = false;
-                                        } else {
-                                          _isChecked21 = false;
-                                          _isChecked22 = true;
-                                          _isChecked23 = false;
-                                        }
-                                      });
-                                    },
-                                    child: Container(
-                                      width: _width * 0.05,
-                                      height: _width * 0.05,
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(50),
-                                        color: _isChecked22
-                                            ? Colors.green
-                                            : Color.fromARGB(
-                                                255, 216, 216, 216),
-                                      ),
+                        ),
+                        Container(
+                          child: Row(
+                            children: [
+                              Text('กลางวัน', style: textStyle),
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: GestureDetector(
+                                  onTap: () {
+                                    setState(() {
+                                      if (_isChecked22) {
+                                        _isChecked22 = false;
+                                      } else {
+                                        _isChecked21 = false;
+                                        _isChecked22 = true;
+                                        _isChecked23 = false;
+                                      }
+                                    });
+                                  },
+                                  child: Container(
+                                    width: _width * 0.05,
+                                    height: _width * 0.05,
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(50),
+                                      color: _isChecked22
+                                          ? Colors.green
+                                          : Color.fromARGB(255, 216, 216, 216),
                                     ),
                                   ),
-                                )
-                              ],
-                            ),
+                                ),
+                              )
+                            ],
                           ),
-                          Container(
-                            child: Row(
-                              children: [
-                                Text('เย็น', style: textStyle),
-                                Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: GestureDetector(
-                                    onTap: () {
-                                      setState(() {
-                                        if (_isChecked23) {
-                                          _isChecked23 = false;
-                                        } else {
-                                          _isChecked21 = false;
-                                          _isChecked22 = false;
-                                          _isChecked23 = true;
-                                        }
-                                      });
-                                    },
-                                    child: Container(
-                                      width: _width * 0.05,
-                                      height: _width * 0.05,
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(50),
-                                        color: _isChecked23
-                                            ? Colors.green
-                                            : Color.fromARGB(
-                                                255, 216, 216, 216),
-                                      ),
+                        ),
+                        Container(
+                          child: Row(
+                            children: [
+                              Text('เย็น', style: textStyle),
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: GestureDetector(
+                                  onTap: () {
+                                    setState(() {
+                                      if (_isChecked23) {
+                                        _isChecked23 = false;
+                                      } else {
+                                        _isChecked21 = false;
+                                        _isChecked22 = false;
+                                        _isChecked23 = true;
+                                      }
+                                    });
+                                  },
+                                  child: Container(
+                                    width: _width * 0.05,
+                                    height: _width * 0.05,
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(50),
+                                      color: _isChecked23
+                                          ? Colors.green
+                                          : Color.fromARGB(255, 216, 216, 216),
                                     ),
                                   ),
-                                )
-                              ],
-                            ),
-                          )
-                        ]),
-                  ),
-                ],
-              ),
+                                ),
+                              )
+                            ],
+                          ),
+                        )
+                      ]),
+                ),
+              ],
             ),
-            // SizedBox(height: heightsizedbox),
-            // BoxDecorate2(child: ListImage()),
-            SizedBox(height: heightsizedbox),
-            BoxDecorate2(
-              child: Center(
-                child: TextField(
-                  cursorColor: Color(0xff48B5AA),
-                  keyboardType: TextInputType.multiline,
-                  maxLines: max(4, 4),
-                  maxLength: 200,
-                  textInputAction: TextInputAction.go,
-                  controller: cc,
-                  style: TextStyle(
-                    fontFamily: context.read<DataProvider>().family,
-                    color: Color(0xff48B5AA),
-                    fontSize: _height * 0.02,
-                  ),
-                  decoration: InputDecoration(
-                    labelText: 'รายระเอียดเพิ่มเติม',
+          ),
+          // SizedBox(height: heightsizedbox),
+          // BoxDecorate2(child: ListImage()),
+          SizedBox(height: heightsizedbox),
+          BoxDecorate2(
+            child: Center(
+              child: TextField(
+                cursorColor: Color(0xff48B5AA),
+                keyboardType: TextInputType.multiline,
+                maxLines: max(4, 4),
+                maxLength: 200,
+                textInputAction: TextInputAction.go,
+                controller: cc,
+                style: TextStyle(
+                  fontFamily: context.read<DataProvider>().family,
+                  color: Color(0xff48B5AA),
+                  fontSize: _height * 0.02,
+                ),
+                decoration: InputDecoration(
+                  labelText: 'รายระเอียดเพิ่มเติม',
 
-                    focusedBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(
-                        color: Color(0xff48B5AA),
-                      ),
+                  focusedBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(
+                      color: Color(0xff48B5AA),
                     ),
-                    //   border: InputBorder.none, //เส้นไต้
                   ),
+                  //   border: InputBorder.none, //เส้นไต้
                 ),
               ),
             ),
-            SizedBox(height: _height * 0.01),
-            Container(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  Container(
-                    child: prevent == false
-                        ? GestureDetector(
-                            onTap: () {
-                              //    context.read<Datafunction>().playsound();
+          ),
+          SizedBox(height: _height * 0.01),
+          Container(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                Container(
+                  child: prevent == false
+                      ? GestureDetector(
+                          onTap: () {
+                            //    context.read<Datafunction>().playsound();
 
-                              chackrecorddata();
-                            },
-                            child: BoxWidetdew(
-                                height: 0.06,
-                                width: 0.35,
-                                text: 'บันทึก',
-                                fontSize: 0.05,
-                                radius: 15.0,
-                                color: Color(0xff31D6AA),
-                                textcolor: Colors.white),
-                          )
-                        : Container(
-                            width: MediaQuery.of(context).size.width * 0.07,
-                            height: MediaQuery.of(context).size.width * 0.07,
-                            child: CircularProgressIndicator(),
-                          ),
-                  ),
-                ],
-              ),
+                            chackrecorddata();
+                          },
+                          child: BoxWidetdew(
+                              height: 0.06,
+                              width: 0.35,
+                              text: 'บันทึก',
+                              fontSize: 0.05,
+                              radius: 15.0,
+                              color: Color(0xff31D6AA),
+                              textcolor: Colors.white),
+                        )
+                      : Container(
+                          width: MediaQuery.of(context).size.width * 0.07,
+                          height: MediaQuery.of(context).size.width * 0.07,
+                          child: CircularProgressIndicator(),
+                        ),
+                ),
+              ],
             ),
-            SizedBox(height: _height * 0.05),
-          ])),
-        ]),
-      ),
+          ),
+          SizedBox(height: _height * 0.05),
+        ])),
+      ]),
     );
   }
 }
@@ -1037,7 +1033,6 @@ class _BoxDecorate2State extends State<BoxDecorate2> {
                 Container(
                     //   width: _width * 0.8,
                     width: _width * 0.9,
-                    height: _height * 0.15,
                     decoration: BoxDecoration(
                       color: Colors.white,
                       borderRadius: BorderRadius.circular(10),
@@ -1085,7 +1080,6 @@ class _BoxRecordState extends State<BoxRecord> {
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Container(
-        height: _height * 0.12,
         width: _width * 0.2,
         decoration: BoxDecoration(boxShadow: [
           // BoxShadow(
@@ -1149,39 +1143,3 @@ class _BoxRecordState extends State<BoxRecord> {
     );
   }
 }
-
-// class ListImage extends StatefulWidget {
-//   const ListImage({super.key});
-
-//   @override
-//   State<ListImage> createState() => _ListImageState();
-// }
-
-// class _ListImageState extends State<ListImage> {
-//   final ImagePicker _imagePicker = ImagePicker();
-//   List<File> multiimages = [];
-//   multiimagePicker() async {
-//     final List<XFile> pickedImage = await _imagePicker.pickMultiImage();
-//     if (pickedImage != null) {
-//       pickedImage.forEach((e) {
-//         multiimages.add(File(e.path));
-//       });
-//       setState(() {});
-//     }
-//   }
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Container(
-//       child: Row(
-//         children: [
-//           GestureDetector(
-//               onTap: () {
-//                 multiimagePicker();
-//               },
-//               child: Icon(Icons.add))
-//         ],
-//       ),
-//     );
-//   }
-// }

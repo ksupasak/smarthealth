@@ -11,6 +11,7 @@ import 'package:smart_health/caregiver/center/center.dart';
 import 'package:smart_health/caregiver/format_list/format_list.dart';
 import 'package:smart_health/caregiver/center/esm_cardread/esm_idcard.dart';
 import 'package:smart_health/caregiver/login/login.dart';
+import 'package:smart_health/caregiver/register_patient/register_patient.dart';
 import 'package:smart_health/caregiver/user_information/user_information.dart';
 import 'package:smart_health/caregiver/widget/backgrund.dart';
 import 'package:smart_health/caregiver/widget/numpad.dart';
@@ -43,70 +44,11 @@ class _HomeCareCevierState extends State<HomeCareCevier> {
   Timer? _timer;
   Timer? reading;
   int index_bottomNavigationBar = 0;
-
+  var value_creadreader;
   final idcard = Numpad();
 
   Stream<String>? entry;
   Stream<String>? reader_status;
-
-  void startReader() {
-    try {
-      Future.delayed(const Duration(seconds: 2), () {
-        reader = ESMIDCard.instance;
-
-        // reader?.findReader();
-
-        entry = reader?.getEntry();
-
-        print('->initstate ');
-        if (entry != null) {
-          print('entry!=null');
-          // if (cardReader == null) {
-          if (true) {
-            cardReader = entry?.listen((String data) async {
-              print("IDCard " + data);
-              List<String> splitted = data.split('#');
-              setState(() {});
-              print(
-                  "${context.read<DataProvider>().id} / ${splitted[0].toString()}");
-              context.read<DataProvider>().id = splitted[0].toString();
-              context.read<DataProvider>().user_id = splitted[0].toString();
-              // idcard.setValue(splitted[0]);
-
-              if (context.read<DataProvider>().id == splitted[0].toString()) {
-              } else {}
-            }, onError: (error) {
-              print(error);
-            }, onDone: () {
-              print('Stream closed!');
-            });
-          }
-        } else {
-          print('entry ==null');
-        }
-
-        reader_status = reader?.getStatus();
-        reader_status?.listen((String data) async {
-          print("Reader Status :  " + data);
-
-          if (data == "ADAPTER_READY") {
-            reader?.findReader();
-          } else if (data == "DEVICE_READY") {
-            const oneSec = Duration(seconds: 2);
-            reading = Timer.periodic(oneSec, (Timer t) => checkCard());
-          }
-        });
-      });
-    } on Exception catch (e) {
-      print('error');
-      print(e.toString());
-    }
-  }
-
-  void checkCard() async {
-    print('เช็คการ์ด');
-    reader?.readAuto();
-  }
 
   void check() async {
     setState(() {
@@ -126,42 +68,11 @@ class _HomeCareCevierState extends State<HomeCareCevier> {
         status = false;
       });
       if (resTojson['message'] == 'not found patient') {
+        navigator();
         showDialog(
             context: context,
             builder: (BuildContext context) {
-              return Popup(
-                texthead: 'ไม่พบข้อมูลในระบบ',
-                pathicon: 'assets/warning.png',
-                buttonbar: [
-                  GestureDetector(
-                      onTap: () {
-                        Navigator.pop(context);
-                        Timer(Duration(seconds: 2), () {
-                          setState(() {
-                            // Get.toNamed('regter');
-                          });
-                        });
-                      },
-                      child: BoxWidetdew(
-                          color: Colors.green,
-                          height: 0.05,
-                          width: 0.2,
-                          text: 'สมัคร',
-                          radius: 0.0,
-                          textcolor: Colors.white)),
-                  GestureDetector(
-                      onTap: () {
-                        Navigator.pop(context);
-                      },
-                      child: BoxWidetdew(
-                          color: Colors.red,
-                          height: 0.05,
-                          width: 0.2,
-                          radius: 0.0,
-                          text: 'ออก',
-                          textcolor: Colors.white))
-                ],
-              );
+              return Popup();
             });
       } else {
         setState(() {
@@ -178,38 +89,49 @@ class _HomeCareCevierState extends State<HomeCareCevier> {
         });
       }
     } else {
-      showDialog(
-          context: context,
-          builder: (BuildContext context) {
-            return Popup(
-              texthead: 'เลขบัตรประชาชนไม่ครบ',
-              textbody: 'กรุณากรองเลขบัตรประชาชนไห้ครบ',
-              pathicon: 'assets/warning (1).png',
-              buttonbar: [
-                GestureDetector(
-                    onTap: () {
-                      Navigator.pop(context);
-                    },
-                    child: BoxWidetdew(
-                        color: Color.fromARGB(255, 106, 143, 173),
-                        height: 0.05,
-                        width: 0.2,
-                        text: 'ตกลง',
-                        textcolor: Colors.white))
-              ],
-            );
-          });
+      if (context.read<DataProvider>().id.length == 1) {
+        showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return Popup(
+                texthead: 'เลขบัตรประชาชนไม่ครบ',
+                textbody: 'กรุณากรองเลขบัตรประชาชนไห้ครบ',
+                pathicon: 'assets/warning (1).png',
+                buttonbar: [
+                  GestureDetector(
+                      onTap: () {
+                        Navigator.pop(context);
+                      },
+                      child: BoxWidetdew(
+                          color: Color.fromARGB(255, 106, 143, 173),
+                          height: 0.05,
+                          width: 0.2,
+                          text: 'ตกลง',
+                          textcolor: Colors.white))
+                ],
+              );
+            });
+      }
+
       setState(() {
         status = false;
       });
     }
   }
 
+  void navigator() {
+    _timer = Timer.periodic(Duration(seconds: 1), (t) {
+      if (context.read<DataProvider>().creadreader != value_creadreader) {
+        value_creadreader = context.read<DataProvider>().creadreader;
+        check();
+      }
+    });
+  }
+
   @override
   void initState() {
     print('เข้าหน้าHome');
-    //   load_list_patients();
-
+    navigator();
     // TODO: implement initState
     super.initState();
 
@@ -517,37 +439,81 @@ class _PopupState extends State<Popup> {
     double _width = MediaQuery.of(context).size.width;
     double _height = MediaQuery.of(context).size.height;
     return AlertDialog(
-      icon: widget.pathicon == null
-          ? null
-          : Container(
-              width: _width * 0.8,
-              child: Center(
-                child: Image.asset(
-                  "${widget.pathicon}",
-                  width: _width * 0.5,
-                  height: _height * 0.2,
+      icon: Container(
+        width: _width * 0.8,
+        child: Center(
+          child: Image.asset(
+            "assets/warning.png",
+            width: _width * 0.4,
+            height: _height * 0.18,
+          ),
+        ),
+      ),
+      title: Text(
+        "ไม่พบข้อมูลในระบบ",
+        style: TextStyle(
+            fontFamily: context.read<DataProvider>().family, fontSize: 16),
+      ),
+      actions: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: [
+            GestureDetector(
+              onTap: () {
+                Navigator.pop(context);
+              },
+              child: Container(
+                child: Center(
+                  child: Text('ยกเลิก',
+                      style: TextStyle(
+                          fontFamily: context.read<DataProvider>().family,
+                          fontSize: 16,
+                          color: Colors.red)),
                 ),
               ),
             ),
-      title: widget.texthead == null
-          ? null
-          : Text(
-              "${widget.texthead}",
-              style: TextStyle(
-                  fontFamily: context.read<DataProvider>().family,
-                  fontSize:
-                      widget.fontSize == null ? 16 : _width * widget.fontSize),
+            GestureDetector(
+              onTap: () {
+                Navigator.pop(context);
+                if (context.read<DataProvider>().creadreader.length != 0) {
+                  if (context.read<DataProvider>().id.toString() ==
+                      context.read<DataProvider>().creadreader[0].toString()) {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => Register_Patient()));
+                  } else {
+                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                        content: Container(
+                            width: MediaQuery.of(context).size.width,
+                            child: Center(
+                                child: Text(
+                              'กรุณาเสียบบัตรประชาชน',
+                            )))));
+                  }
+                } else {
+                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                      content: Container(
+                          width: MediaQuery.of(context).size.width,
+                          child: Center(
+                              child: Text(
+                            'กรุณาเสียบบัตรประชาชน...',
+                          )))));
+                }
+              },
+              child: Container(
+                child: Center(
+                  child: Text('ลงทะเบียน',
+                      style: TextStyle(
+                          fontFamily: context.read<DataProvider>().family,
+                          fontSize: 16,
+                          color: Colors.green)),
+                ),
+              ),
             ),
-      content: widget.textbody == null
-          ? null
-          : Text(
-              "${widget.textbody}",
-              style: TextStyle(
-                  fontFamily: context.read<DataProvider>().family,
-                  fontSize:
-                      widget.fontSize == null ? 16 : _width * widget.fontSize),
-            ),
-      actions: widget.buttonbar == null ? null : widget.buttonbar,
+          ],
+        ),
+      ],
     );
   }
 }

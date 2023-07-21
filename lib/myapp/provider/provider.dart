@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_blue_plus/gen/flutterblueplus.pb.dart';
 
 class DataProvider with ChangeNotifier {
-  String? creadreader;
+  List creadreader = [];
+  var photo;
   String user_name = '';
   String user_id = '';
+
   String user_code = '';
   List list_patients = [];
   bool permission_card_reader = true;

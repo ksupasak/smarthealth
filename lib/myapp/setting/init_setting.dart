@@ -13,6 +13,7 @@ import 'package:sembast/sembast.dart';
 import 'package:http/http.dart' as http;
 import 'package:smart_health/caregiver/center/esm_cardread/esm_idcard.dart';
 import 'package:smart_health/caregiver/home/homeapp.dart';
+import 'package:smart_health/myapp/setting/device/requestLocationPermission.dart';
 import 'package:smart_health/myapp/splash_screen/splash_screen.dart';
 import 'package:smart_health/myapp/provider/provider.dart';
 import 'package:smart_health/myapp/setting/local.dart';
@@ -190,19 +191,6 @@ class _InitsettingState extends State<Initsetting> {
         suffix;
 
     return masked;
-  }
-
-  bool hasLocationPermission = false;
-  bool hasbluetoothPermission = false;
-
-  void requestLocationPermission() async {
-    PermissionStatus status = await Permission.location.request();
-    PermissionStatus status2 = await Permission.bluetooth.request();
-    FlutterBluePlus.instance.startScan(timeout: const Duration(seconds: 4));
-    setState(() {
-      hasLocationPermission = status.isGranted;
-      hasbluetoothPermission = status2.isGranted;
-    });
   }
 
   @override

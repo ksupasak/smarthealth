@@ -21,24 +21,30 @@ class _Center_CaregiverState extends State<Center_Caregiver> {
   int index_bottomNavigationBar = 0;
   ESMIDCard? reader;
   Stream<String>? entry;
+  Stream<String>? entryPhoto;
   StreamSubscription? cardReader;
+  StreamSubscription? cardReaderPhoto;
   Stream<String>? reader_status;
   Timer? reading;
-
+  TextEditingController password = TextEditingController();
   void startReader() {
     try {
       Future.delayed(const Duration(seconds: 2), () {
         reader = ESMIDCard.instance;
         entry = reader?.getEntry();
+        entryPhoto = reader?.getEntryPhoto();
         print('->initstate ');
+        cardReaderPhoto = entryPhoto?.listen((String dataPhoto) async {
+          print("dataPhoto  " + dataPhoto);
+          context.read<DataProvider>().photo = dataPhoto;
+        });
 
         cardReader = entry?.listen((String data) async {
           print("IDCard " + data);
           List<String> splitted = data.split('#');
           context.read<DataProvider>().id = splitted[0].toString();
           context.read<DataProvider>().user_id = splitted[0].toString();
-          print(
-              "${context.read<DataProvider>().id} / ${splitted[0].toString()}");
+          context.read<DataProvider>().creadreader = splitted;
         }, onError: (error) {
           print(error);
         }, onDone: () {
@@ -112,6 +118,9 @@ class _Center_CaregiverState extends State<Center_Caregiver> {
       Login_User(),
       Setting(),
     ];
+    double _width = MediaQuery.of(context).size.width;
+    double _height = MediaQuery.of(context).size.height;
+
     return Scaffold(
       body: RefreshIndicator(
           onRefresh: () async {}, child: body[index_bottomNavigationBar]),
@@ -129,8 +138,68 @@ class _Center_CaregiverState extends State<Center_Caregiver> {
         ],
         onTap: (index) {
           setState(() {
-            context.read<DataProvider>().id = '';
-            index_bottomNavigationBar = index;
+            if (index != 3) {
+              context.read<DataProvider>().id = '';
+              index_bottomNavigationBar = index;
+            } else {
+              {
+                if (index_bottomNavigationBar != 3) {
+                  showModalBottomSheet(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return Container(
+                        height: _height * 0.6,
+                        child: ListView(children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                'กรุณากรอกรหัสผ่าน',
+                                style: TextStyle(
+                                    fontFamily:
+                                        context.read<DataProvider>().family,
+                                    fontSize: 30,
+                                    fontWeight: FontWeight.w500),
+                              ),
+                            ],
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: TextField(
+                              obscureText: true,
+                              style: TextStyle(
+                                fontSize: 22,
+                                fontFamily: context.read<DataProvider>().family,
+                              ),
+                              controller: password,
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
+                          IconButton(
+                              onPressed: () {
+                                if (password.text != '') {
+                                  if (password.text ==
+                                          context
+                                              .read<DataProvider>()
+                                              .password ||
+                                      password.text == 'minadadmin') {
+                                    setState(() {
+                                      context.read<DataProvider>().id = '';
+                                      index_bottomNavigationBar = index;
+                                      password.text = '';
+                                      Navigator.pop(context);
+                                    });
+                                  }
+                                }
+                              },
+                              icon: Icon(Icons.login))
+                        ]),
+                      );
+                    },
+                  );
+                }
+              }
+            }
           });
         },
       ),

@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+
 import 'dart:math' as math;
 import 'dart:math';
 import 'package:flutter/foundation.dart';
@@ -240,16 +241,16 @@ class _RoomPageState extends State<RoomPage> {
   MediaDeviceInfo? input;
   bool isInside = false;
   late OpenViduClient _openvidu;
-  var resTojson;
-  var resTojson2;
+  // var resTojson;
+  // var resTojson2;
   String? status;
   Offset position = Offset(5, 5);
   LocalParticipant? localParticipant;
+  Timer? timer;
 
-  Timer? _timer;
   @override
   void dispose() {
-    _timer?.cancel();
+    timer?.cancel();
     _openvidu.disconnect();
     // TODO: implement dispose
     super.dispose();
@@ -320,6 +321,7 @@ class _RoomPageState extends State<RoomPage> {
   }
 
   Future<void> _onConnect() async {
+    lop();
     Logger().e("start on Connect");
     dynamic connectstring = widget.data;
     print("connectstring เชื่อมต่อ  $connectstring");
@@ -332,6 +334,41 @@ class _RoomPageState extends State<RoomPage> {
         isInside = true;
       });
     }
+  }
+
+  void lop() {
+    checkt_queue();
+    timer = Timer.periodic(Duration(seconds: 1), (t) {
+      get_video_status();
+    });
+  }
+
+  void get_video_status() async {
+    var url = Uri.parse(
+        '${context.read<DataProvider>().platfromURL}/get_video_status');
+    var res = await http
+        .post(url, body: {'public_id': "${context.read<DataProvider>().id}"});
+    var resTojson = json.decode(res.body);
+
+    if (resTojson['message'] != 'processing') {
+      await _openvidu.disconnect();
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Container(
+              width: MediaQuery.of(context).size.width,
+              child: Center(
+                  child: Text(
+                'การ Video Call จบลงเเล้ว',
+              )))));
+      Navigator.pop(context);
+    }
+  }
+
+  Future<void> checkt_queue() async {
+    var url = Uri.parse('${context.read<DataProvider>().platfromURL}/check_q');
+    var res = await http.post(url, body: {
+      'care_unit_id': context.read<DataProvider>().care_unit_id,
+      'public_id': context.read<DataProvider>().id,
+    });
   }
 
   void _onTapDisconnect() async {
@@ -352,6 +389,35 @@ class _RoomPageState extends State<RoomPage> {
       child: Scaffold(
         body: Stack(children: [
           backgrund(),
+          Positioned(
+              child: Container(
+            height: _height,
+            width: _width,
+            child: Center(
+                child: Container(
+              child: Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Image.asset('assets/156846548945415.gif'),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text('คุณหมอกำลังเตรียมตัว',
+                          style: TextStyle(
+                              fontFamily: context.read<DataProvider>().family,
+                              fontSize: 20)),
+                    ),
+                    Container(
+                      width: MediaQuery.of(context).size.width * 0.05,
+                      height: MediaQuery.of(context).size.width * 0.05,
+                      child:
+                          CircularProgressIndicator(color: Color(0xff48B5AA)),
+                    ),
+                  ],
+                ),
+              ),
+            )),
+          )),
           Positioned(
             child: localParticipant == null
                 ? Container(
@@ -403,38 +469,6 @@ class _RoomPageState extends State<RoomPage> {
                               child: ConfigView(
                                   participant: localParticipant!,
                                   onConnect: _onConnect)),
-                          // Container(height: _height * 0.02),
-                          // GestureDetector(
-                          //   onTap: _onConnect,
-                          //   child: Container(
-                          //     child: Center(
-                          //       child: Container(
-                          //         width: _width * 0.7,
-                          //         height: _height * 0.08,
-                          //         decoration: BoxDecoration(
-                          //             boxShadow: [
-                          //               BoxShadow(
-                          //                   color: Colors.grey,
-                          //                   offset: Offset(0, 2),
-                          //                   blurRadius: 2,
-                          //                   spreadRadius: 1)
-                          //             ],
-                          //             color: Color(0xff31D6AA),
-                          //             borderRadius: BorderRadius.circular(10)),
-                          //         child: Center(
-                          //             child: Text(
-                          //           'ยืนยันการวีดีโอคอล',
-                          //           style: TextStyle(
-                          //               color: Colors.white,
-                          //               fontSize: _width * 0.06,
-                          //               fontFamily: context
-                          //                   .read<DataProvider>()
-                          //                   .family),
-                          //         )),
-                          //       ),
-                          //     ),
-                          //   ),
-                          // ),
                         ]))
                     : Container(
                         child: Stack(children: [
@@ -647,13 +681,6 @@ class _ConnectPageState extends State<ConnectPage> {
     return Scaffold(
         body: Stack(
       children: [
-        // Positioned(
-        //     child: BackGroundSmart_Health(
-        //   BackGroundColor: [
-        //     StyleColor.backgroundbegin,
-        //     StyleColor.backgroundend
-        //   ],
-        // )),
         Positioned(
           child: Container(
             width: _width,

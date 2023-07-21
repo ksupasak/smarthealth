@@ -1,4 +1,6 @@
+import 'dart:async';
 import 'dart:convert';
+import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
@@ -23,6 +25,10 @@ class _RegisterState extends State<Register> {
   TextEditingController id = TextEditingController();
   TextEditingController officer_code = TextEditingController();
   bool status = false;
+  bool statusdata = false;
+  Timer? timer;
+  Uint8List? bytes;
+  var photo;
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   String textbutton = "ยืนยัน";
   var resTojson;
@@ -32,33 +38,99 @@ class _RegisterState extends State<Register> {
         status = false;
       });
     });
-    var url =
-        Uri.parse('${context.read<DataProvider>().platfromURL}/add_recep');
-    var res = await http.post(url, body: {
-      'care_unit_id': '${context.read<DataProvider>().care_unit_id}',
-      'public_id': '${id.text}',
-      'name': '${first_name.text} ${last_name.text}',
-      'code': '${officer_code.text}',
-    });
-    resTojson = json.decode(res.body);
-    print(resTojson);
-    if (resTojson['message'] == 'success') {
-      setState(() {
-        textbutton = 'สำเร็จ';
+    if (id.text != '' &&
+        first_name.text != '' &&
+        last_name.text != '' &&
+        officer_code.text != '') {
+      var url =
+          Uri.parse('${context.read<DataProvider>().platfromURL}/add_recep');
+      var res = await http.post(url, body: {
+        'care_unit_id': '${context.read<DataProvider>().care_unit_id}',
+        'public_id': '${id.text}',
+        'name': '${first_name.text} ${last_name.text}',
+        'code': '${officer_code.text}',
       });
+      resTojson = json.decode(res.body);
+      print(resTojson);
+      if (resTojson['message'] == 'success') {
+        setState(() {
+          textbutton = 'สำเร็จ';
+        });
+      }
+      Future.delayed(Duration(seconds: 2), () {
+        setState(() {
+          Navigator.pop(context);
+        });
+      });
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Container(
+              width: MediaQuery.of(context).size.width,
+              child: Center(
+                  child: Text(
+                'ข้อมูลไม่ครบ',
+              )))));
     }
+  }
+
+  void getdata() {
     Future.delayed(Duration(seconds: 2), () {
-      setState(() {
-        Navigator.pop(context);
-      });
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Container(
+              width: MediaQuery.of(context).size.width,
+              child: Center(
+                  child: Text(
+                'กรุณาเสียบบัตรประชาชน',
+              )))));
+    });
+    timer = Timer.periodic(Duration(seconds: 1), (t) {
+      if (context.read<DataProvider>().photo != null) {
+        if (photo != context.read<DataProvider>().photo) {
+          bytes = base64Decode(context.read<DataProvider>().photo);
+          photo = context.read<DataProvider>().photo;
+          if (context.read<DataProvider>().creadreader.length != 0) {
+            if (id.text !=
+                context.read<DataProvider>().creadreader[0].toString()) {
+              id.text = context.read<DataProvider>().creadreader[0].toString();
+              first_name.text =
+                  context.read<DataProvider>().creadreader[2].toString();
+              last_name.text =
+                  context.read<DataProvider>().creadreader[4].toString();
+            }
+          }
+          setState(() {
+            //หยุดโหลด
+            statusdata = false;
+          });
+        }
+      }
+      if (context.read<DataProvider>().creadreader.length != 0) {
+        if (id.text != context.read<DataProvider>().creadreader[0].toString()) {
+          setState(() {
+            //โหลด
+            statusdata = true;
+          });
+        }
+      }
     });
   }
 
   @override
   void initState() {
+    context.read<DataProvider>().creadreader = [];
+    context.read<DataProvider>().photo = '';
+    getdata();
+
     // TODO: implement initState
 
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    timer?.cancel();
+    // TODO: implement dispose
+    super.dispose();
   }
 
   @override
@@ -94,7 +166,6 @@ class _RegisterState extends State<Register> {
           color: Colors.black,
         ),
       ),
-      //   border: InputBorder.none, //เส้นไต้
     );
 
     return SafeArea(
@@ -134,35 +205,34 @@ class _RegisterState extends State<Register> {
                                   fontSize: _width * 0.06,
                                   color: Color(0xff1B6286))),
                           Container(
-                            height: _height * 0.1,
-                            width: _height * 0.1,
-                            child: Stack(
-                              children: [
-                                Positioned(
-                                  child: Container(
-                                    height: _height * 0.1,
-                                    width: _height * 0.1,
-                                    decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(50),
-                                        border: Border.all(
-                                            color: Color(0xff1B6286))),
-                                    child: Icon(Icons.person,
-                                        color: Color(0xff1B6286)),
-                                  ),
-                                ),
-                                Positioned(
-                                    right: 0,
-                                    bottom: 0,
-                                    child: Container(
-                                        decoration: BoxDecoration(
-                                            borderRadius:
-                                                BorderRadius.circular(50),
-                                            color: Colors.white),
-                                        child: Icon(Icons.add,
-                                            color: Color(0xff1B6286))))
-                              ],
-                            ),
-                          ),
+                              height: _height * 0.1,
+                              width: _height * 0.1,
+                              child: bytes != null
+                                  ? bytes!.length != 0
+                                      ? Image.memory(bytes!)
+                                      : statusdata == false
+                                          ? Container(
+                                              child: Text(''),
+                                            )
+                                          : Container(
+                                              child: Center(
+                                                child: Container(
+                                                  width: MediaQuery.of(context)
+                                                          .size
+                                                          .width *
+                                                      0.02,
+                                                  height: MediaQuery.of(context)
+                                                          .size
+                                                          .width *
+                                                      0.02,
+                                                  child:
+                                                      CircularProgressIndicator(
+                                                    color: Colors.black,
+                                                  ),
+                                                ),
+                                              ),
+                                            )
+                                  : Container()),
                           Container(
                               height: _height * 0.05,
                               width: _width * 0.8,
@@ -184,16 +254,11 @@ class _RegisterState extends State<Register> {
                                   return null;
                                 },
                                 decoration: InputDecoration(
-                                  // labelText: 'ชื่อ',
                                   errorText: first_name.text.isEmpty
                                       ? 'กรุณากรอกชื่อ'
                                       : null,
                                 ),
                               ),
-                              // TextField(
-                              //     controller: first_name,
-                              //     decoration: textFieldDecoration,
-                              //     style: textFieldStyle),
                             ),
                           ),
                           Container(
@@ -217,16 +282,11 @@ class _RegisterState extends State<Register> {
                                   return null;
                                 },
                                 decoration: InputDecoration(
-                                  // labelText: 'ชื่อ',
                                   errorText: last_name.text.isEmpty
                                       ? 'กรุณากรอกนามสกุล'
                                       : null,
                                 ),
                               ),
-                              //  TextField(
-                              //     controller: last_name,
-                              //     decoration: textFieldDecoration,
-                              //     style: textFieldStyle),
                             ),
                           ),
                           Container(
@@ -281,13 +341,13 @@ class _RegisterState extends State<Register> {
                                 controller: officer_code,
                                 validator: (value) {
                                   if (value!.isEmpty) {
-                                    return 'กรุณากรอกนามรหัสเจ้าหน้าที่';
+                                    return 'กรุณากรอกรหัสเจ้าหน้าที่';
                                   }
                                   return null;
                                 },
                                 decoration: InputDecoration(
                                   errorText: officer_code.text.isEmpty
-                                      ? 'กรุณากรอกนามรหัสเจ้าหน้าที่'
+                                      ? 'กรุณากรอกรหัสเจ้าหน้าที่'
                                       : null,
                                 ),
                               ),

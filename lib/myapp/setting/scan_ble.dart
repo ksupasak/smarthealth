@@ -8,6 +8,8 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import 'package:sembast/sembast.dart';
 import 'package:smart_health/myapp/provider/provider.dart';
+import 'package:smart_health/myapp/setting/device/blue_on.dart';
+import 'package:smart_health/myapp/setting/device/requestLocationPermission.dart';
 import 'package:smart_health/myapp/setting/local.dart';
 
 class ScanBLE extends StatefulWidget {
@@ -119,17 +121,9 @@ class _ScanBLEState extends State<ScanBLE> {
     await db.close();
   }
 
-  // bool hasLocationPermission = false;
-  // void requestLocationPermission() async {
-  //   PermissionStatus status = await Permission.location.request();
-  //   setState(() {
-  //     hasLocationPermission = status.isGranted;
-  //   });
-  // }
-
   @override
   void initState() {
-    //requestLocationPermission();
+    requestLocationPermission();
     print('เข้าหน้าเเสกน');
     scan();
     // TODO: implement initState
@@ -331,6 +325,8 @@ class _ScanBLEState extends State<ScanBLE> {
                                     },
                                     child: Container(
                                       width: _width * 0.1,
+                                      height: _height * 0.05,
+                                      color: Colors.white,
                                       child: Icon(
                                         Icons.add,
                                         color: Colors.green,

@@ -8,6 +8,7 @@ import 'package:provider/provider.dart';
 import 'package:smart_health/caregiver/health_record/health_record2.dart';
 import 'package:smart_health/caregiver/videocall/video.dart';
 import 'package:smart_health/caregiver/widget/backgrund.dart';
+import 'package:smart_health/caregiver/widget/boxtime.dart';
 import 'package:smart_health/caregiver/widget/informationCard.dart';
 import 'package:smart_health/myapp/provider/provider.dart';
 import 'package:http/http.dart' as http;
@@ -21,10 +22,12 @@ class User_Information extends StatefulWidget {
 
 class _User_InformationState extends State<User_Information> {
   var resTojson;
+  var doctor_note;
   @override
   void initState() {
     print('เข้าหน้าuser_information');
     checkt_queue();
+    get_doctor_note();
     // TODO: implement initState
     super.initState();
   }
@@ -43,14 +46,35 @@ class _User_InformationState extends State<User_Information> {
     });
   }
 
+  Future<void> get_doctor_note() async {
+    var url = Uri.parse(
+        '${context.read<DataProvider>().platfromURL}/get_doctor_exam');
+    var res = await http.post(url, body: {
+      'care_unit_id': context.read<DataProvider>().care_unit_id,
+      'public_id': context.read<DataProvider>().id,
+    });
+    setState(() {
+      doctor_note = json.decode(res.body);
+      if (resTojson != null) {
+        print("doctor_note = ${resTojson['data']}");
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     double _width = MediaQuery.of(context).size.width;
     double _height = MediaQuery.of(context).size.height;
 
+    TextStyle style = TextStyle(
+        fontSize: 16,
+        color: const Color.fromARGB(255, 36, 36, 36),
+        fontFamily: context.read<DataProvider>().family,
+        shadows: [Shadow(color: Colors.grey, offset: Offset(0, 0))]);
     return RefreshIndicator(
       onRefresh: () async {
         checkt_queue();
+        get_doctor_note();
       },
       child: Scaffold(
         appBar: AppBar(
@@ -82,7 +106,7 @@ class _User_InformationState extends State<User_Information> {
             BackGrund(),
             Positioned(
               child: ListView(children: [
-                Container(height: _height * 0.04),
+                BoxTimer(),
                 Center(
                   child: Container(
                       width: _width * 0.9,
@@ -105,7 +129,7 @@ class _User_InformationState extends State<User_Information> {
                 ),
                 Container(height: _height * 0.02),
                 Container(
-                  height: _height * 0.5,
+                  //  height: _height * 0.5,
                   width: _width,
                   child: Column(
                     children: [
@@ -126,6 +150,89 @@ class _User_InformationState extends State<User_Information> {
                                     ),
                                   ),
                                 )
+                              : SizedBox()
+                          : SizedBox(),
+                      doctor_note != null
+                          ? doctor_note["data"] != null
+                              ? doctor_note["data"]["doctor_note"] != null ||
+                                      doctor_note["data"]["dx"] != null
+                                  ? Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Container(
+                                        width: _width * 0.9,
+                                        decoration: BoxDecoration(
+                                            border: Border.all(
+                                              color: Colors.grey,
+                                            ),
+                                            borderRadius:
+                                                BorderRadius.circular(10)),
+                                        child: Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: Column(
+                                            children: [
+                                              Text('ผลการตรวจจากคุณหมอ',
+                                                  style: TextStyle(
+                                                      fontSize: 20,
+                                                      color: Colors.green,
+                                                      fontFamily: context
+                                                          .read<DataProvider>()
+                                                          .family,
+                                                      shadows: [
+                                                        Shadow(
+                                                            color: Colors.grey,
+                                                            offset:
+                                                                Offset(0, 1))
+                                                      ])),
+                                              Container(
+                                                child: Row(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: [
+                                                    Container(
+                                                        child: Text(
+                                                            'Doctor Dote :',
+                                                            style: style)),
+                                                    Container(
+                                                        width: _width * 0.5,
+                                                        child: doctor_note[
+                                                                        "data"][
+                                                                    "doctor_note"] !=
+                                                                null
+                                                            ? Text(
+                                                                '${doctor_note["data"]["doctor_note"]}',
+                                                                style: style)
+                                                            : SizedBox())
+                                                  ],
+                                                ),
+                                              ),
+                                              Container(
+                                                child: Row(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: [
+                                                    Container(
+                                                        child: Text(
+                                                            '                 :',
+                                                            style: style)),
+                                                    Container(
+                                                        width: _width * 0.5,
+                                                        child: doctor_note[
+                                                                        "data"]
+                                                                    ["dx"] !=
+                                                                null
+                                                            ? Text(
+                                                                '${doctor_note["data"]["dx"]}',
+                                                                style: style)
+                                                            : SizedBox())
+                                                  ],
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                    )
+                                  : SizedBox()
                               : SizedBox()
                           : SizedBox(),
                       Row(
