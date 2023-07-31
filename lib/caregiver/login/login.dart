@@ -41,72 +41,85 @@ class _Login_UserState extends State<Login_User> {
   }
 
   Future<void> login() async {
-    var url =
-        Uri.parse('${context.read<DataProvider>().platfromURL}/get_recep');
-    var res = await http.post(url, body: {'public_id': id.text});
-    resTojson = json.decode(res.body);
+    if (context.read<DataProvider>().status_internet == true) {
+      var url =
+          Uri.parse('${context.read<DataProvider>().platfromURL}/get_recep');
+      var res = await http.post(url, body: {'public_id': id.text});
+      resTojson = json.decode(res.body);
 
-    print(resTojson);
+      print(resTojson);
 
-    if (resTojson['message'] == 'not found') {
-      Future.delayed(Duration(seconds: 1), () {
-        setState(() {
-          status = false;
-        });
-      });
-      print('ไม่มีบัญชี');
-      showDialog(
-          context: context,
-          builder: (BuildContext context) {
-            return AlertDialog(
-              icon: Container(child: Image.asset('assets/warning.png')),
-              title: Text(
-                'ไม่มีข้อมูล',
-                style: TextStyle(
-                    color: Color(0xff48B5AA),
-                    fontFamily: context.read<DataProvider>().family,
-                    fontSize: 22),
-              ),
-              actions: [
-                GestureDetector(
-                  onTap: () {
-                    Navigator.pop(context);
-                  },
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Text(
-                      'กลับ',
-                      style: TextStyle(
-                          color: Colors.grey,
-                          fontFamily: context.read<DataProvider>().family),
-                    ),
-                  ),
-                ),
-                GestureDetector(
-                  onTap: () {
-                    Navigator.pop(context);
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => Register()));
-                  },
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Text(
-                      'ลงทะเบียน',
-                      style: TextStyle(
-                          color: Colors.green,
-                          fontFamily: context.read<DataProvider>().family),
-                    ),
-                  ),
-                )
-              ],
-            );
+      if (resTojson['message'] == 'not found') {
+        Future.delayed(Duration(seconds: 1), () {
+          setState(() {
+            status = false;
           });
-    } else if (resTojson['message'] == 'success') {
-      Future.delayed(Duration(seconds: 1), () {
-        setState(() {
-          status = false;
-          safe();
         });
+        print('ไม่มีบัญชี');
+        showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return AlertDialog(
+                icon: Container(child: Image.asset('assets/warning.png')),
+                title: Text(
+                  'ไม่มีข้อมูล',
+                  style: TextStyle(
+                      color: Color(0xff48B5AA),
+                      fontFamily: context.read<DataProvider>().family,
+                      fontSize: 22),
+                ),
+                actions: [
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.pop(context);
+                    },
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text(
+                        'กลับ',
+                        style: TextStyle(
+                            color: Colors.grey,
+                            fontFamily: context.read<DataProvider>().family),
+                      ),
+                    ),
+                  ),
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.pop(context);
+                      Navigator.push(context,
+                          MaterialPageRoute(builder: (context) => Register()));
+                    },
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text(
+                        'ลงทะเบียน',
+                        style: TextStyle(
+                            color: Colors.green,
+                            fontFamily: context.read<DataProvider>().family),
+                      ),
+                    ),
+                  )
+                ],
+              );
+            });
+      } else if (resTojson['message'] == 'success') {
+        Future.delayed(Duration(seconds: 1), () {
+          setState(() {
+            status = false;
+            safe();
+          });
+        });
+      }
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Container(
+              width: MediaQuery.of(context).size.width,
+              child: Center(
+                  child: Text(
+                'กรุณาเปิด Internet',
+              )))));
+      setState(() {
+        status = false;
       });
     }
   }

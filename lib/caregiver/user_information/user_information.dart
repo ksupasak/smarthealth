@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
@@ -24,8 +25,21 @@ class User_Information extends StatefulWidget {
 class _User_InformationState extends State<User_Information> {
   var resTojson;
   var doctor_note;
+  Timer? timer;
+  bool? status_internet;
+  void lop() {
+    timer = Timer.periodic(Duration(seconds: 1), (t) {
+      if (status_internet != context.read<DataProvider>().status_internet) {
+        setState(() {
+          status_internet = context.read<DataProvider>().status_internet;
+        });
+      }
+    });
+  }
+
   @override
   void initState() {
+    lop();
     print('เข้าหน้าuser_information');
     checkt_queue();
     get_doctor_note();
@@ -33,33 +47,45 @@ class _User_InformationState extends State<User_Information> {
     super.initState();
   }
 
+  @override
+  void dispose() {
+    timer?.cancel();
+    // TODO: implement dispose
+    super.dispose();
+  }
+
   Future<void> checkt_queue() async {
-    var url = Uri.parse('${context.read<DataProvider>().platfromURL}/check_q');
-    var res = await http.post(url, body: {
-      'care_unit_id': context.read<DataProvider>().care_unit_id,
-      'public_id': context.read<DataProvider>().id,
-    });
-    setState(() {
-      resTojson = json.decode(res.body);
-      if (resTojson != null) {
-        print("health_records = ${resTojson['health_records'].length}");
-      }
-    });
+    if (context.read<DataProvider>().status_internet == true) {
+      var url =
+          Uri.parse('${context.read<DataProvider>().platfromURL}/check_q');
+      var res = await http.post(url, body: {
+        'care_unit_id': context.read<DataProvider>().care_unit_id,
+        'public_id': context.read<DataProvider>().id,
+      });
+      setState(() {
+        resTojson = json.decode(res.body);
+        if (resTojson != null) {
+          print("health_records = ${resTojson['health_records'].length}");
+        }
+      });
+    }
   }
 
   Future<void> get_doctor_note() async {
-    var url = Uri.parse(
-        '${context.read<DataProvider>().platfromURL}/get_doctor_exam');
-    var res = await http.post(url, body: {
-      'care_unit_id': context.read<DataProvider>().care_unit_id,
-      'public_id': context.read<DataProvider>().id,
-    });
-    setState(() {
-      doctor_note = json.decode(res.body);
-      if (resTojson != null) {
-        print("doctor_note = ${resTojson['data']}");
-      }
-    });
+    if (context.read<DataProvider>().status_internet == true) {
+      var url = Uri.parse(
+          '${context.read<DataProvider>().platfromURL}/get_doctor_exam');
+      var res = await http.post(url, body: {
+        'care_unit_id': context.read<DataProvider>().care_unit_id,
+        'public_id': context.read<DataProvider>().id,
+      });
+      setState(() {
+        doctor_note = json.decode(res.body);
+        if (resTojson != null) {
+          print("doctor_note = ${resTojson['data']}");
+        }
+      });
+    }
   }
 
   @override
@@ -76,6 +102,7 @@ class _User_InformationState extends State<User_Information> {
       onRefresh: () async {
         checkt_queue();
         get_doctor_note();
+        setState(() {});
       },
       child: Scaffold(
         appBar: AppBar(
@@ -295,10 +322,16 @@ class _User_InformationState extends State<User_Information> {
                           GestureDetector(
                               onTap: () {
                                 keypad_sound();
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => PrePareVideo()));
+                                if (context
+                                        .read<DataProvider>()
+                                        .status_internet ==
+                                    true) {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              PrePareVideo()));
+                                }
                               },
                               child: Container(
                                 height: _height * 0.23,
@@ -314,35 +347,64 @@ class _User_InformationState extends State<User_Information> {
                                     ],
                                     color: Color(0xff31D6AA),
                                     borderRadius: BorderRadius.circular(15)),
-                                child: Padding(
-                                  padding: const EdgeInsets.all(12.0),
-                                  child: Column(children: [
-                                    Container(
-                                      height: _height * 0.15,
-                                      width: _width * 0.4,
-                                      child: Image.asset(
-                                        "assets/pfrt9190.png",
-                                        fit: BoxFit.fill,
+                                child: Stack(
+                                  children: [
+                                    Positioned(
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(12.0),
+                                        child: Column(children: [
+                                          Container(
+                                            height: _height * 0.15,
+                                            width: _width * 0.4,
+                                            child: Image.asset(
+                                              "assets/pfrt9190.png",
+                                              fit: BoxFit.fill,
+                                            ),
+                                          ),
+                                          Container(
+                                            child: Text(
+                                              'ปรึกษาเเพทย์',
+                                              style: TextStyle(
+                                                  shadows: [
+                                                    Shadow(
+                                                        blurRadius: 1,
+                                                        color: Colors.black,
+                                                        offset: Offset(0, 1))
+                                                  ],
+                                                  color: Colors.white,
+                                                  fontFamily: context
+                                                      .read<DataProvider>()
+                                                      .family,
+                                                  fontSize: _width * 0.06),
+                                            ),
+                                          )
+                                        ]),
                                       ),
                                     ),
-                                    Container(
-                                      child: Text(
-                                        'ปรึกษาเเพทย์',
-                                        style: TextStyle(
-                                            shadows: [
-                                              Shadow(
-                                                  blurRadius: 1,
-                                                  color: Colors.black,
-                                                  offset: Offset(0, 1))
-                                            ],
-                                            color: Colors.white,
-                                            fontFamily: context
+                                    context
                                                 .read<DataProvider>()
-                                                .family,
-                                            fontSize: _width * 0.06),
-                                      ),
-                                    )
-                                  ]),
+                                                .status_internet !=
+                                            true
+                                        ? Positioned(
+                                            child: Container(
+                                            height: _height * 0.23,
+                                            width: _width * 0.45,
+                                            decoration: BoxDecoration(
+                                                color: Color.fromARGB(
+                                                    150, 0, 0, 0),
+                                                borderRadius:
+                                                    BorderRadius.circular(15)),
+                                            child: Padding(
+                                              padding:
+                                                  const EdgeInsets.all(20.0),
+                                              child: Center(
+                                                child: Image.asset(
+                                                    'assets/Group 92251.png'),
+                                              ),
+                                            ),
+                                          ))
+                                        : Container(),
+                                  ],
                                 ),
                               )),
                         ],
@@ -416,18 +478,21 @@ class _choiceState extends State<choice> {
   }
 
   Future<void> checkt_queue() async {
-    var url = Uri.parse('${context.read<DataProvider>().platfromURL}/check_q');
-    var res = await http.post(url, body: {
-      'care_unit_id': context.read<DataProvider>().care_unit_id,
-      'public_id': context.read<DataProvider>().id,
-    });
-    List c = [];
-    setState(() {
-      resTojson = json.decode(res.body);
-      if (resTojson != null) {
-        // print("health_records = ${resTojson['health_records'].length}");
-      }
-    });
+    if (context.read<DataProvider>().status_internet == true) {
+      var url =
+          Uri.parse('${context.read<DataProvider>().platfromURL}/check_q');
+      var res = await http.post(url, body: {
+        'care_unit_id': context.read<DataProvider>().care_unit_id,
+        'public_id': context.read<DataProvider>().id,
+      });
+      List c = [];
+      setState(() {
+        resTojson = json.decode(res.body);
+        if (resTojson != null) {
+          // print("health_records = ${resTojson['health_records'].length}");
+        }
+      });
+    }
   }
 
   @override

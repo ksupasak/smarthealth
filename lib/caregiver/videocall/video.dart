@@ -268,7 +268,9 @@ class _RoomPageState extends State<RoomPage> {
   }
 
   Future<void> initOpenVidu() async {
-    _openvidu = OpenViduClient('https://pcm-life.com:4443/openvidu');
+    _openvidu = OpenViduClient(context
+        .read<DataProvider>()
+        .platfromURLopenvidu); //('https://pcm-life.com:4443/openvidu');
     localParticipant =
         await _openvidu.startLocalPreview(context, StreamMode.frontCamera);
     setState(() {});
@@ -351,6 +353,7 @@ class _RoomPageState extends State<RoomPage> {
     var resTojson = json.decode(res.body);
 
     if (resTojson['message'] != 'processing') {
+      finish_appoint();
       await _openvidu.disconnect();
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           content: Container(
@@ -359,8 +362,16 @@ class _RoomPageState extends State<RoomPage> {
                   child: Text(
                 'การ Video Call จบลงเเล้ว',
               )))));
-      Navigator.pop(context);
     }
+  }
+
+  Future<void> finish_appoint() async {
+    var url =
+        Uri.parse('${context.read<DataProvider>().platfromURL}/finish_appoint');
+    var res = await http
+        .post(url, body: {'public_id': "${context.read<DataProvider>().id}"});
+    var resTojson = json.decode(res.body);
+    Navigator.pop(context);
   }
 
   Future<void> checkt_queue() async {

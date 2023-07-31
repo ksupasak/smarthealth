@@ -6,8 +6,10 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
+import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 import 'package:sembast/sembast.dart';
+import 'package:smart_health/caregiver/health_record/save_offline.dart';
 import 'package:smart_health/caregiver/widget/boxtime.dart';
 import 'package:smart_health/myapp/action/playsound.dart';
 import 'package:smart_health/myapp/action/vibrateDevice.dart';
@@ -441,9 +443,9 @@ class _HealthRecord2State extends State<HealthRecord2> {
 
   @override
   void dispose() {
-    _functionScan!.cancel();
-    _functionReaddata!.cancel();
-    timer!.cancel();
+    _functionScan?.cancel();
+    _functionReaddata?.cancel();
+    timer?.cancel();
     super.dispose();
   }
 
@@ -469,39 +471,7 @@ class _HealthRecord2State extends State<HealthRecord2> {
         dia.text == '' ||
         spo2.text == '' ||
         pulse == '') {
-      showDialog(
-          context: context,
-          builder: (BuildContext context) {
-            return Popup(
-              texthead: 'ข้อมูลไม่ครบ',
-              textbody: 'ต้องการส่งข้อมูลหรือไม่',
-              fontSize: 0.05,
-              pathicon: 'assets/warning.png',
-              buttonbar: [
-                GestureDetector(
-                    onTap: () {
-                      //    context.read<Datafunction>().playsound();
-                      Navigator.pop(context);
-                    },
-                    child: MarkCheck(
-                        pathicon: 'assets/close.png',
-                        height: 0.05,
-                        width: 0.05)),
-                SizedBox(width: 50),
-                GestureDetector(
-                    onTap: () {
-                      recorddata();
-                      Navigator.pop(context);
-                      //   context.read<Datafunction>().playsound();
-                    },
-                    child: MarkCheck(
-                        pathicon: 'assets/check.png',
-                        height: 0.08,
-                        width: 0.08)),
-                SizedBox(width: 50),
-              ],
-            );
-          });
+      recorddata();
     } else {
       print('value!=null');
       recorddata();
@@ -509,81 +479,117 @@ class _HealthRecord2State extends State<HealthRecord2> {
   }
 
   void recorddata() async {
-    setState(() {
-      prevent = true;
-    });
-    var url = Uri.parse('${context.read<DataProvider>().platfromURL}/add_hr');
-    var res = await http.post(url, body: {
-      "public_id": context.read<DataProvider>().id,
-      "care_unit_id": context.read<DataProvider>().care_unit_id,
-      "temp": "${temp.text}",
-      "weight": "${weight1.text}",
-      "bp_sys": "${sys.text}",
-      "bp_dia": "${dia.text}",
-      "pulse_rate": "${pulse.text}",
-      "spo2": "${spo2.text}",
-      "fbs": "${fbs.text}",
-      "height": "${height.text}",
-      "bmi": "",
-      "bp": "${sys.text}/${dia.text}",
-      "rr": "",
-      "cc": "${cc.text}",
-      "recep_public_id": context.read<DataProvider>().user_id,
-    });
-    var resTojson = json.decode(res.body);
-
-    if (res.statusCode == 200) {
+    if (context.read<DataProvider>().status_internet == true) {
       setState(() {
-        if (resTojson['message'] == "success") {
-          setState(() {
-            prevent = false;
+        prevent = true;
+      });
+      var url = Uri.parse('${context.read<DataProvider>().platfromURL}/add_hr');
+      var res = await http.post(url, body: {
+        "public_id": context.read<DataProvider>().id,
+        "care_unit_id": context.read<DataProvider>().care_unit_id,
+        "temp": "${temp.text}",
+        "weight": "${weight1.text}",
+        "bp_sys": "${sys.text}",
+        "bp_dia": "${dia.text}",
+        "pulse_rate": "${pulse.text}",
+        "spo2": "${spo2.text}",
+        "fbs": "${fbs.text}",
+        "height": "${height.text}",
+        "bmi": "",
+        "bp": "${sys.text}/${dia.text}",
+        "rr": "",
+        "cc": "${cc.text}",
+        "recep_public_id": context.read<DataProvider>().user_id,
+      });
+      var resTojson = json.decode(res.body);
 
-            showDialog(
-                context: context,
-                builder: (BuildContext context) {
-                  return Popup(
-                      fontSize: 0.05,
-                      texthead: 'สำเร็จ',
-                      pathicon: 'assets/correct.png');
-                });
-            Future.delayed(Duration(seconds: 1), () {
-              Navigator.pop(context);
-              Navigator.pop(context);
-            });
-
-            // Navigator.pushReplacement(context,
-            //     MaterialPageRoute(builder: (context) => User_Information()));
-          });
-        } else {
-          setState(() {
-            prevent = false;
+      if (res.statusCode == 200) {
+        setState(() {
+          if (resTojson['message'] == "success") {
             setState(() {
               prevent = false;
-              showDialog(
-                  context: context,
-                  builder: (BuildContext context) {
-                    return Popup(
-                        texthead: 'ไม่สำเร็จ',
-                        textbody: 'message unsuccessful',
-                        pathicon: 'assets/warning (1).png');
-                  });
+
+              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                  content: Container(
+                      width: MediaQuery.of(context).size.width,
+                      child: Center(
+                          child: Text(
+                        'สำเร็จ',
+                      )))));
+              Future.delayed(Duration(seconds: 1), () {
+                Navigator.pop(context);
+                Navigator.pop(context);
+              });
             });
-          });
-        }
-      });
-    } else {
-      setState(() {
-        prevent = false;
+          } else {
+            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                content: Container(
+                    width: MediaQuery.of(context).size.width,
+                    child: Center(
+                        child: Text(
+                      'Error',
+                    )))));
+            setState(() {
+              prevent = false;
+            });
+          }
+        });
+      } else {
         setState(() {
           prevent = false;
-          showDialog(
-              context: context,
-              builder: (BuildContext context) {
-                return Popup(
-                    texthead: 'ไม่สำเร็จ',
-                    textbody: 'statusCode 404',
-                    pathicon: 'assets/warning (1).png');
-              });
+          setState(() {
+            prevent = false;
+            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                content: Container(
+                    width: MediaQuery.of(context).size.width,
+                    child: Center(
+                        child: Text(
+                      'Error404',
+                    )))));
+          });
+        });
+      }
+    } else {
+      Map data = {
+        "url": "add_hr", //*${context.read<DataProvider>().platfromURL}
+        "public_id": context.read<DataProvider>().id, //*
+        "care_unit_id": context.read<DataProvider>().care_unit_id, //*
+        "temp": "${temp.text}", //*
+        "weight": "${weight1.text}", //*
+        "bp_sys": "${sys.text}", //*
+        "bp_dia": "${dia.text}", //*
+        "pulse_rate": "${pulse.text}", //*
+        "spo2": "${spo2.text}", //*
+        "fbs": "${fbs.text}", //*
+        "height": "${height.text}", //*
+        "bmi": "",
+        "bp": "${sys.text}/${dia.text}", //*
+        "rr": "",
+        "cc": "${cc.text}", //*
+        "recep_public_id": context.read<DataProvider>().user_id, //*
+        "prefix_name": "",
+        "first_name": "",
+        "last_name": "",
+        "subdistrict": "",
+        "district": "",
+        "province": "",
+      };
+
+      add_map_health_record('health_record', data);
+      setState(() {
+        prevent = true;
+      });
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Container(
+              width: MediaQuery.of(context).size.width,
+              child: Center(
+                  child: Text(
+                'บันทึกเเบบ Offline',
+              )))));
+      Timer(Duration(seconds: 1), () {
+        setState(() {
+          prevent = false;
+          //   Navigator.pop(context);
         });
       });
     }

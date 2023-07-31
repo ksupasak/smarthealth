@@ -57,61 +57,64 @@ class _HomeCareCevierState extends State<HomeCareCevier> {
     });
     // context.read<Datafunction>().playsound();
     if (context.read<DataProvider>().id.length == 13) {
-      var url =
-          Uri.parse('${context.read<DataProvider>().platfromURL}/check_q');
-      var res = await http.post(url, body: {
-        'care_unit_id': context.read<DataProvider>().care_unit_id,
-        'public_id': context.read<DataProvider>().id,
-      });
-      var resTojson = json.decode(res.body);
-      print(resTojson);
-      setState(() {
-        status = false;
-      });
-      if (resTojson['message'] == 'not found patient') {
-        navigator();
-        showDialog(
-            context: context,
-            builder: (BuildContext context) {
-              return Popup();
-            });
+      if (context.read<DataProvider>().status_internet == true) {
+        var url =
+            Uri.parse('${context.read<DataProvider>().platfromURL}/check_q');
+        var res = await http.post(url, body: {
+          'care_unit_id': context.read<DataProvider>().care_unit_id,
+          'public_id': context.read<DataProvider>().id,
+        });
+        var resTojson = json.decode(res.body);
+        print(resTojson);
+        setState(() {
+          status = false;
+        });
+        if (resTojson['message'] == 'not found patient') {
+          // navigator();
+          showDialog(
+              context: context,
+              builder: (BuildContext context) {
+                return Popup();
+              });
+        } else {
+          setState(() {
+            status = false;
+            context.read<DataProvider>().resTojson = resTojson;
+            print(
+                'context.read<DataProvider>().resTojson  = ${context.read<DataProvider>().resTojson}');
+          });
+          Timer(Duration(seconds: 1), () {
+            Navigator.push(context,
+                MaterialPageRoute(builder: (context) => User_Information()));
+            //  Get.toNamed('user_information');
+          });
+        }
       } else {
         setState(() {
           status = false;
-
-          context.read<DataProvider>().resTojson = resTojson;
-          print(
-              '  context.read<DataProvider>().resTojson  = ${context.read<DataProvider>().resTojson}');
+          context.read<DataProvider>().resTojson = null;
         });
         Timer(Duration(seconds: 1), () {
           Navigator.push(context,
               MaterialPageRoute(builder: (context) => User_Information()));
-          //  Get.toNamed('user_information');
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+              content: Container(
+                  width: MediaQuery.of(context).size.width,
+                  child: Center(
+                      child: Text(
+                    'ตรวจเเบบ Offline',
+                  )))));
         });
       }
     } else {
-      if (context.read<DataProvider>().id.length == 1) {
-        showDialog(
-            context: context,
-            builder: (BuildContext context) {
-              return Popup(
-                texthead: 'เลขบัตรประชาชนไม่ครบ',
-                textbody: 'กรุณากรองเลขบัตรประชาชนไห้ครบ',
-                pathicon: 'assets/warning (1).png',
-                buttonbar: [
-                  GestureDetector(
-                      onTap: () {
-                        Navigator.pop(context);
-                      },
-                      child: BoxWidetdew(
-                          color: Color.fromARGB(255, 106, 143, 173),
-                          height: 0.05,
-                          width: 0.2,
-                          text: 'ตกลง',
-                          textcolor: Colors.white))
-                ],
-              );
-            });
+      if (context.read<DataProvider>().id.length > 1) {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            content: Container(
+                width: MediaQuery.of(context).size.width,
+                child: Center(
+                    child: Text(
+                  'กรุณากรอกเลขบัตรประชาชนไห้ครบ13หลัก',
+                )))));
       }
 
       setState(() {

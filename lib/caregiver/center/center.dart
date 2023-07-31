@@ -11,6 +11,8 @@ import 'package:smart_health/myapp/action/playsound.dart';
 import 'package:smart_health/myapp/provider/provider.dart';
 import 'package:smart_health/myapp/setting/setting.dart';
 
+import 'package:dart_ping/dart_ping.dart';
+
 class Center_Caregiver extends StatefulWidget {
   const Center_Caregiver({super.key});
 
@@ -27,6 +29,9 @@ class _Center_CaregiverState extends State<Center_Caregiver> {
   StreamSubscription? cardReaderPhoto;
   Stream<String>? reader_status;
   Timer? reading;
+  Timer? timer_internet;
+  bool? false_internet = false;
+  double? internet;
   TextEditingController password = TextEditingController();
   void startReader() {
     try {
@@ -98,8 +103,56 @@ class _Center_CaregiverState extends State<Center_Caregiver> {
     });
   }
 
+  Future<void> _runPing() async {
+    final ping = Ping('google.com', count: 5);
+    ping.stream.listen((event) {
+      if (event.response?.time!.inMicroseconds.toString() != null) {
+        String originalString =
+            '${event.response?.time!.inMicroseconds.toString()}';
+        double convertedNumber = double.parse(originalString) / 1000;
+        String resultString = convertedNumber.toStringAsFixed(1);
+        internet = double.parse(resultString); //resultString ;
+        // print(resultString);
+      } else {
+        internet = 0;
+      }
+    });
+  }
+
+  void start_runPing() async {
+    timer_internet = Timer.periodic(Duration(seconds: 2), (t) {
+      _runPing();
+      if (internet == 0 && false_internet == false) {
+        setState(() {
+          false_internet = true;
+          context.read<DataProvider>().status_internet = false;
+        });
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            content: Container(
+                width: MediaQuery.of(context).size.width,
+                child: Center(
+                    child: Text(
+                  'Internet Offline',
+                )))));
+      } else if (internet != 0 && false_internet == true) {
+        setState(() {
+          false_internet = false;
+          context.read<DataProvider>().status_internet = true;
+        });
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            content: Container(
+                width: MediaQuery.of(context).size.width,
+                child: Center(
+                    child: Text(
+                  'Internet Online',
+                )))));
+      }
+    });
+  }
+
   @override
   void initState() {
+    start_runPing();
     startReader();
     // TODO: implement initState
     super.initState();
@@ -108,6 +161,7 @@ class _Center_CaregiverState extends State<Center_Caregiver> {
   @override
   void dispose() {
     reading?.cancel();
+    timer_internet?.cancel();
     // TODO: implement dispose
     super.dispose();
   }

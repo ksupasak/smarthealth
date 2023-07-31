@@ -1,18 +1,19 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_blue_plus/gen/flutterblueplus.pb.dart';
 
 class DataProvider with ChangeNotifier {
   List creadreader = [];
   var photo;
   String user_name = '';
   String user_id = '';
-
+  bool? status_internet;
   String user_code = '';
   List list_patients = [];
   bool permission_card_reader = true;
   String app = '';
   String appId = '';
   String platfromURL = 'https://emr-life.com/clinic_master/clinic/Api/';
+  String platfromURLopenvidu =
+      'https://openvidu.pcm-life.com'; //'https://pcm-life.com:4443/openvidu';
   String name_hospital = '';
   String care_unit = '';
   String care_unit_id = '';

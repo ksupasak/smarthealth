@@ -28,48 +28,62 @@ class _RegisterState extends State<Register> {
   bool statusdata = false;
   Timer? timer;
   Uint8List? bytes;
-  var photo;
+  var photo = '';
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   String textbutton = "ยืนยัน";
   var resTojson;
   Future<void> register() async {
-    Future.delayed(Duration(seconds: 2), () {
-      setState(() {
-        status = false;
-      });
-    });
-    if (id.text != '' &&
-        first_name.text != '' &&
-        last_name.text != '' &&
-        officer_code.text != '') {
-      var url =
-          Uri.parse('${context.read<DataProvider>().platfromURL}/add_recep');
-      var res = await http.post(url, body: {
-        'care_unit_id': '${context.read<DataProvider>().care_unit_id}',
-        'public_id': '${id.text}',
-        'name': '${first_name.text} ${last_name.text}',
-        'code': '${officer_code.text}',
-      });
-      resTojson = json.decode(res.body);
-      print(resTojson);
-      if (resTojson['message'] == 'success') {
-        setState(() {
-          textbutton = 'สำเร็จ';
-        });
-      }
+    if (context.read<DataProvider>().status_internet == true) {
       Future.delayed(Duration(seconds: 2), () {
         setState(() {
-          Navigator.pop(context);
+          status = false;
         });
       });
+      if (id.text != '' &&
+          first_name.text != '' &&
+          last_name.text != '' &&
+          officer_code.text != '') {
+        var url =
+            Uri.parse('${context.read<DataProvider>().platfromURL}/add_recep');
+        var res = await http.post(url, body: {
+          'care_unit_id': '${context.read<DataProvider>().care_unit_id}',
+          'public_id': '${id.text}',
+          'name': '${first_name.text} ${last_name.text}',
+          'code': '${officer_code.text}',
+          'pic': '$photo'
+        });
+        resTojson = json.decode(res.body);
+        print(resTojson);
+        if (resTojson['message'] == 'success') {
+          setState(() {
+            textbutton = 'สำเร็จ';
+          });
+        }
+        Future.delayed(Duration(seconds: 2), () {
+          setState(() {
+            Navigator.pop(context);
+          });
+        });
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            content: Container(
+                width: MediaQuery.of(context).size.width,
+                child: Center(
+                    child: Text(
+                  'ข้อมูลไม่ครบ',
+                )))));
+      }
     } else {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           content: Container(
               width: MediaQuery.of(context).size.width,
               child: Center(
                   child: Text(
-                'ข้อมูลไม่ครบ',
+                'กรุณาเปิด Internet',
               )))));
+      setState(() {
+        status = false;
+      });
     }
   }
 

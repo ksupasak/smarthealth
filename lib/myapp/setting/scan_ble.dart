@@ -107,6 +107,7 @@ class _ScanBLEState extends State<ScanBLE> {
     final key = await store.update(db, {
       'mapdevices': mapdevices,
     });
+
     Future.delayed(const Duration(seconds: 1), () {
       setState(() {
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
