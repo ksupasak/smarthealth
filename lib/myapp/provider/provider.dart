@@ -5,7 +5,7 @@ class DataProvider with ChangeNotifier {
   var photo;
   String user_name = '';
   String user_id = '';
-  bool? status_internet;
+  bool status_internet = true;
   String user_code = '';
   List list_patients = [];
   bool permission_card_reader = true;
@@ -71,6 +71,8 @@ class DataProvider with ChangeNotifier {
   };
   List<String> iddevice = [];
   var mapdevices;
+
+  List health_record_offline = [];
 }
 
  

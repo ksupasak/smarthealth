@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 import 'package:path_provider/path_provider.dart';
 import 'package:sembast/sembast.dart';
@@ -26,33 +27,52 @@ Future<void> addData_health_record() async {
 }
 
 Future<void> add_map_health_record(String id, Map data) async {
-  await addData_health_record();
+  // await addData_health_record();
   final db = await openDatabase_list_health_record();
   final store = intMapStoreFactory.store('list_health_record');
-  var records = await store.find(db);
+  var snapshot = await store.find(db);
+  //List datas = [];
 
-  Map<String, Object?> list_health_record = {};
+  int x = 0;
+  for (var records in snapshot) {
+//datas.add(records['list_health_record']);
 
-  List datas = [];
+    print("ข้อมูลที่ $x = $records");
 
-  for (RecordSnapshot<int, Map<String, Object?>> record in records) {
-    var getmapd = record['list_health_record'];
-
-    if (getmapd != null) {
-      list_health_record =
-          Map.fromEntries((getmapd as Map<String, Object?>).entries);
-    }
+    x++;
   }
 
-  print("health_record =${list_health_record['health_record']}");
-  if (list_health_record['health_record'] != null) {
-    datas.add(list_health_record['health_record']);
-  }
-  datas.add(data);
+  // Map<String, Object?> list_health_record = {};
 
-  list_health_record[id] = datas;
-  final key = await store.update(db, {
-    'list_health_record': list_health_record,
+  //datas.add(records);
+  //datas = records as List;
+
+  // datas.add(data);
+
+  // for (RecordSnapshot<int, Map<String, Object?>> record in records) {
+  //   var getmapd = record['list_health_record'];
+
+  //   if (getmapd != null) {
+  //     list_health_record =
+  //         Map.fromEntries((getmapd as Map<String, Object?>).entries);
+  //   }
+  // }
+
+  // print("health_record =${list_health_record['health_record']}");
+  // if (list_health_record['health_record'] != null) {
+  //   datas = list_health_record['health_record'] as List;
+
+  //   // datas.add(list_health_record['health_record']);
+  // } else {
+  //   datas.add([]);
+  // }
+
+  // datas.add(data);
+
+  // list_health_record[id] = datas;
+
+  final key = await store.add(db, {
+    'health_record': data,
   });
   await db.close();
 }

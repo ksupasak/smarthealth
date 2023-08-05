@@ -518,7 +518,6 @@ class _HealthRecord2State extends State<HealthRecord2> {
                       )))));
               Future.delayed(Duration(seconds: 1), () {
                 Navigator.pop(context);
-                Navigator.pop(context);
               });
             });
           } else {
@@ -550,9 +549,26 @@ class _HealthRecord2State extends State<HealthRecord2> {
         });
       }
     } else {
+      // String prefix_name = '';
+      // String first_name = '';
+      // String last_name = '';
+      // String subdistrict = '';
+      // String district = '';
+      // String province = '';
+      setState(() {
+        prevent = true;
+      });
+
       Map data = {
-        "url": "add_hr", //*${context.read<DataProvider>().platfromURL}
+        "url":
+            "${context.read<DataProvider>().platfromURL}/add_hr", //*${context.read<DataProvider>().platfromURL}
         "public_id": context.read<DataProvider>().id, //*
+        "prefix_name": "", //${context.read<DataProvider>().creadreader[1]}",
+        "first_name": "", // ${context.read<DataProvider>().creadreader[2]}",
+        "last_name": "", // ${context.read<DataProvider>().creadreader[4]}",
+        "subdistrict": "", // ${context.read<DataProvider>().creadreader[14]}",
+        "district": "", // ${context.read<DataProvider>().creadreader[15]}",
+        "province": "", // ${context.read<DataProvider>().creadreader[16]}",
         "care_unit_id": context.read<DataProvider>().care_unit_id, //*
         "temp": "${temp.text}", //*
         "weight": "${weight1.text}", //*
@@ -567,12 +583,7 @@ class _HealthRecord2State extends State<HealthRecord2> {
         "rr": "",
         "cc": "${cc.text}", //*
         "recep_public_id": context.read<DataProvider>().user_id, //*
-        "prefix_name": "",
-        "first_name": "",
-        "last_name": "",
-        "subdistrict": "",
-        "district": "",
-        "province": "",
+        "status": 'unsuccessful'
       };
 
       add_map_health_record('health_record', data);
@@ -589,7 +600,7 @@ class _HealthRecord2State extends State<HealthRecord2> {
       Timer(Duration(seconds: 1), () {
         setState(() {
           prevent = false;
-          //   Navigator.pop(context);
+          Navigator.pop(context);
         });
       });
     }

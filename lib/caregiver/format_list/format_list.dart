@@ -7,6 +7,10 @@ import 'package:provider/provider.dart';
 import 'package:smart_health/myapp/action/playsound.dart';
 import 'package:smart_health/myapp/provider/provider.dart';
 import 'package:http/http.dart' as http;
+import 'dart:io';
+import 'package:path_provider/path_provider.dart';
+import 'package:sembast/sembast.dart';
+import 'package:sembast/sembast_io.dart';
 
 class FormatList extends StatefulWidget {
   const FormatList({super.key});
@@ -16,6 +20,8 @@ class FormatList extends StatefulWidget {
 }
 
 class _FormatListState extends State<FormatList> {
+  List data_patients_offline = [];
+
   Future<void> getdatapatient(String id) async {
     var url = Uri.parse('${context.read<DataProvider>().platfromURL}/check_q');
     var res = await http.post(url, body: {
@@ -30,7 +36,8 @@ class _FormatListState extends State<FormatList> {
   Future<void> load_list_patients() async {
     var resTojson;
     if (context.read<DataProvider>().user_id != null &&
-        context.read<DataProvider>().user_id != '') {
+        context.read<DataProvider>().user_id != '' &&
+        context.read<DataProvider>().status_internet != false) {
       var url =
           Uri.parse('${context.read<DataProvider>().platfromURL}/get_recep');
       var res = await http
@@ -44,9 +51,36 @@ class _FormatListState extends State<FormatList> {
     }
   }
 
+  Future<Database> openDatabase_list_health_record() async {
+    Directory app = await getApplicationDocumentsDirectory();
+    String dbpart = app.path + '/health_record/' + 'health_record.db';
+    final db = await databaseFactoryIo.openDatabase(dbpart);
+    return db;
+  }
+
+  Future<List<RecordSnapshot<int, Map<String, Object?>>>>
+      load_health_record() async {
+    final db = await openDatabase_list_health_record();
+    final store = intMapStoreFactory.store('list_health_record');
+    var snapshot = await store.find(db);
+    return snapshot;
+  }
+
+  int x = 0;
+  void load_list_patients_offline() async {
+    var snapshot = await load_health_record();
+    for (var records in snapshot) {
+      print("ข้อมูลที่ $x = $records");
+      data_patients_offline.add(records);
+      x++;
+      setState(() {});
+    }
+  }
+
   @override
   void initState() {
     load_list_patients();
+    load_list_patients_offline();
     // TODO: implement initState
     super.initState();
   }
@@ -55,36 +89,106 @@ class _FormatListState extends State<FormatList> {
   Widget build(BuildContext context) {
     double _width = MediaQuery.of(context).size.width;
     double _height = MediaQuery.of(context).size.height;
-    return context.read<DataProvider>().user_id != '' &&
-            context.read<DataProvider>().user_id != null
-        ? SafeArea(
-            child: Column(children: [
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Container(
-                    // height: _height * 0.01,
-                    // width: _width * 0.4,
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(50),
-                        color: Colors.grey)),
+    return DefaultTabController(
+      length: 2,
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text(
+            'รายการตรวจ',
+            style: TextStyle(
+                color: Color(0xff48B5AA),
+                fontFamily: context.read<DataProvider>().family),
+          ),
+          backgroundColor: Colors.white,
+          bottom: TabBar(indicatorColor: Color(0xff48B5AA), tabs: [
+            Tab(
+              // icon: Icon(Icons.abc),
+              child: Text(
+                "รายการที่ยังไม่ได้ตวรจ/ส่ง",
+                style: TextStyle(
+                    color: Color(0xff48B5AA),
+                    fontFamily: context.read<DataProvider>().family),
               ),
-              context.read<DataProvider>().list_patients.length > 0
-                  ? list_patients()
-                  : Text(
-                      'ไม่มีรายการ',
-                      style: TextStyle(
-                          color: Color(0xff48B5AA),
-                          fontSize: 22,
-                          fontFamily: context.read<DataProvider>().family),
-                    )
-            ]),
+            ),
+            Tab(
+              // icon: Icon(Icons.abc),
+              child: Text(
+                "รายการที่ต้องตรวจ",
+                style: TextStyle(
+                    color: Color(0xff48B5AA),
+                    fontFamily: context.read<DataProvider>().family),
+              ),
+            ),
+          ]),
+        ),
+        body: TabBarView(
+          children: [
+            list_patients_offline(),
+            context.read<DataProvider>().user_id != '' &&
+                    context.read<DataProvider>().user_id != null
+                ? SafeArea(
+                    child: Column(children: [
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Container(
+                            // height: _height * 0.01,
+                            // width: _width * 0.4,
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(50),
+                                color: Colors.grey)),
+                      ),
+                      context.read<DataProvider>().list_patients.length > 0
+                          ? list_patients()
+                          : Text(
+                              'ไม่มีรายการ',
+                              style: TextStyle(
+                                  color: Color(0xff48B5AA),
+                                  fontSize: 22,
+                                  fontFamily:
+                                      context.read<DataProvider>().family),
+                            )
+                    ]),
+                  )
+                : Container(
+                    child: Center(
+                        child: Text('กรุณาล็อคอิน',
+                            style: TextStyle(
+                                fontFamily: context.read<DataProvider>().family,
+                                color: Color(0xffff0000)))),
+                  ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget list_patients_offline() {
+    return data_patients_offline.length != 0
+        ? Container(
+            child: ListView.builder(
+                itemCount: data_patients_offline.length,
+                itemBuilder: (BuildContext context, int index) {
+                  var data = data_patients_offline[index]['health_record'];
+                  return Pop_card_offline(data: data);
+                }),
           )
-        : Container(
-            child: Center(
-                child: Text('กรุณาล็อคอิน',
+        : Padding(
+            padding: const EdgeInsets.all(10.0),
+            child: Container(
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    'ว่าง',
                     style: TextStyle(
-                        fontFamily: context.read<DataProvider>().family,
-                        color: Color(0xffff0000)))),
+                        color: Color(0xff48B5AA),
+                        fontSize: 22,
+                        fontFamily: context.read<DataProvider>().family),
+                  ),
+                ],
+              ),
+            ),
           );
   }
 
@@ -415,5 +519,195 @@ class _Pop_cardState extends State<Pop_card> {
     return data != null
         ? Text("${data} ${measure}", style: style)
         : Text("-- ${measure}", style: style);
+  }
+}
+
+class Pop_card_offline extends StatefulWidget {
+  Pop_card_offline({super.key, this.data});
+  var data;
+  @override
+  State<Pop_card_offline> createState() => _Pop_card_offlineState();
+}
+
+class _Pop_card_offlineState extends State<Pop_card_offline> {
+  bool show = false;
+  @override
+  Widget build(BuildContext context) {
+    double _width = MediaQuery.of(context).size.width;
+    double _height = MediaQuery.of(context).size.height;
+
+    return widget.data['status'] == 'unsuccessful'
+        ? Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: GestureDetector(
+              onTap: () {
+                keypad_sound();
+                setState(() {
+                  show = !show;
+                });
+              },
+              child: Container(
+                decoration: BoxDecoration(
+                    color: Colors.white,
+                    boxShadow: [
+                      BoxShadow(
+                          color: Colors.grey,
+                          blurRadius: 2,
+                          offset: Offset(0, 2))
+                    ],
+                    borderRadius: BorderRadius.circular(5),
+                    border: Border.all()),
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Container(
+                        width: _width,
+                        child: Text(
+                          "${widget.data['prefix_name']} ${widget.data['first_name']} ${widget.data['last_name']}",
+                          style: TextStyle(
+                            color: Color(0xff48B5AA),
+                            fontFamily: context.read<DataProvider>().family,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ),
+                      Container(
+                        width: _width,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              "เลขบัตร : ${widget.data['public_id']}",
+                              style: TextStyle(
+                                color: Color(0xff48B5AA),
+                                fontFamily: context.read<DataProvider>().family,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                            Row(
+                              children: [
+                                Text(
+                                  "สถานะ :",
+                                  style: TextStyle(
+                                    color: Color(0xff48B5AA),
+                                    fontFamily:
+                                        context.read<DataProvider>().family,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                                Text(
+                                  " ยังไม่ส่ง",
+                                  style: TextStyle(
+                                    color: Color(0xffff0000),
+                                    fontFamily:
+                                        context.read<DataProvider>().family,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                      show != false
+                          ? Column(
+                              children: [
+                                Text(
+                                  'ข้อมูลสุขภาพ',
+                                  style: TextStyle(
+                                      color: Color(0xff48B5AA),
+                                      fontFamily:
+                                          context.read<DataProvider>().family,
+                                      fontSize: 18),
+                                ),
+                                Container(
+                                  child: Column(children: [
+                                    box_data(
+                                        'อุณหภูมิ', '${widget.data['temp']}'),
+                                    box_data(
+                                        'น้ำหนัก', '${widget.data['weight']}'),
+                                    box_data('pulse_rate',
+                                        '${widget.data['pulse_rate']}'),
+                                    box_data('bp',
+                                        '${widget.data['bp_sys']}/${widget.data['bp_dia']}'),
+                                    box_data('spo2', '${widget.data['spo2']}'),
+                                    box_data('น้ำตาล', '${widget.data['fbs']}'),
+                                    box_data(
+                                        'ความสูง', '${widget.data['height']}'),
+                                    box_data(
+                                        'รายละเอียด', '${widget.data['cc']}'),
+                                  ]),
+                                ),
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceEvenly,
+                                  children: [
+                                    ElevatedButton(
+                                        style: ElevatedButton.styleFrom(
+                                          primary:
+                                              Color.fromARGB(255, 179, 179, 0),
+                                          onPrimary: Colors.white,
+                                        ),
+                                        onPressed: () {
+                                          keypad_sound();
+                                        },
+                                        child: Text(' เเก้ใข ')),
+                                    ElevatedButton(
+                                        style: ElevatedButton.styleFrom(
+                                          primary: Color(0xff48B5AA),
+                                          onPrimary: Colors.white,
+                                        ),
+                                        onPressed: () {
+                                          keypad_sound();
+                                        },
+                                        child: Text(' ส่ง ')),
+                                    ElevatedButton(
+                                        style: ElevatedButton.styleFrom(
+                                          primary: Color(0xffff0000),
+                                          onPrimary: Colors.white,
+                                        ),
+                                        onPressed: () {
+                                          keypad_sound();
+                                        },
+                                        child: Text(' ลบ ')),
+                                  ],
+                                )
+                              ],
+                            )
+                          : Container()
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          )
+        : Container();
+  }
+
+  Widget box_data(String text, String data) {
+    double _width = MediaQuery.of(context).size.width;
+    double _height = MediaQuery.of(context).size.height;
+    return Container(
+      width: _width,
+      child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+        Text(
+          '$text',
+          style: TextStyle(
+            color: Color(0xff48B5AA),
+            fontFamily: context.read<DataProvider>().family,
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+        Text(
+          '$data',
+          style: TextStyle(
+            color: Color.fromARGB(255, 72, 123, 181),
+            fontFamily: context.read<DataProvider>().family,
+          ),
+        ),
+      ]),
+    );
   }
 }

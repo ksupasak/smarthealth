@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
@@ -10,6 +11,7 @@ import 'package:sembast/sembast.dart';
 import 'package:smart_health/caregiver/center/center.dart';
 import 'package:smart_health/caregiver/format_list/format_list.dart';
 import 'package:smart_health/caregiver/center/esm_cardread/esm_idcard.dart';
+import 'package:smart_health/caregiver/home/fillout.dart';
 import 'package:smart_health/caregiver/login/login.dart';
 import 'package:smart_health/caregiver/register_patient/register_patient.dart';
 import 'package:smart_health/caregiver/user_information/user_information.dart';
@@ -94,17 +96,36 @@ class _HomeCareCevierState extends State<HomeCareCevier> {
           status = false;
           context.read<DataProvider>().resTojson = null;
         });
-        Timer(Duration(seconds: 1), () {
-          Navigator.push(context,
-              MaterialPageRoute(builder: (context) => User_Information()));
+
+        if (context.read<DataProvider>().creadreader.length != 0 &&
+            context.read<DataProvider>().creadreader[0] ==
+                context.read<DataProvider>().id) {
+          Timer(Duration(seconds: 1), () {
+            Navigator.push(context,
+                MaterialPageRoute(builder: (context) => User_Information()));
+            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                content: Container(
+                    width: MediaQuery.of(context).size.width,
+                    child: Center(
+                        child: Text(
+                      'ตรวจเเบบ Offline',
+                    )))));
+          });
+        } else {
           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
               content: Container(
                   width: MediaQuery.of(context).size.width,
                   child: Center(
                       child: Text(
-                    'ตรวจเเบบ Offline',
+                    'กรุณากรอกข้อมูล',
                   )))));
-        });
+          showModalBottomSheet(
+              isScrollControlled: true,
+              context: context,
+              builder: (BuildContext context) {
+                return Fill_Out(id: context.read<DataProvider>().id);
+              });
+        }
       }
     } else {
       if (context.read<DataProvider>().id.length > 1) {

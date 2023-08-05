@@ -169,14 +169,18 @@ class _InformationCardState extends State<InformationCard> {
                 children: [
                   Container(
                     width: MediaQuery.of(context).size.width * 0.55,
-                    child: Text(
-                      "${context.read<DataProvider>().id}",
-                      style: TextStyle(
-                        fontFamily: context.read<DataProvider>().family,
-                        fontSize: MediaQuery.of(context).size.width * 0.05,
-                        color: Color(0xff48B5AA),
-                      ),
-                    ),
+                    child: context.read<DataProvider>().creadreader != [] &&
+                            context.read<DataProvider>().creadreader == null
+                        ? Text(
+                            "${context.read<DataProvider>().creadreader[1]} ${context.read<DataProvider>().creadreader[2]} ${context.read<DataProvider>().creadreader[4]}",
+                            style: TextStyle(
+                              fontFamily: context.read<DataProvider>().family,
+                              fontSize:
+                                  MediaQuery.of(context).size.width * 0.05,
+                              color: Color(0xff48B5AA),
+                            ),
+                          )
+                        : Text(""),
                   ),
                   SizedBox(
                     height: MediaQuery.of(context).size.height * 0.005,

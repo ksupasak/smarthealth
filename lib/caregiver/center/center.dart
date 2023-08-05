@@ -51,6 +51,7 @@ class _Center_CaregiverState extends State<Center_Caregiver> {
           context.read<DataProvider>().id = splitted[0].toString();
           context.read<DataProvider>().user_id = splitted[0].toString();
           context.read<DataProvider>().creadreader = splitted;
+          print(splitted);
         }, onError: (error) {
           print(error);
         }, onDone: () {
@@ -202,55 +203,63 @@ class _Center_CaregiverState extends State<Center_Caregiver> {
               {
                 if (index_bottomNavigationBar != 3) {
                   showModalBottomSheet(
+                    isScrollControlled: true,
                     context: context,
                     builder: (BuildContext context) {
                       return Container(
-                        height: _height * 0.6,
-                        child: ListView(children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text(
-                                'กรุณากรอกรหัสผ่าน',
-                                style: TextStyle(
-                                    fontFamily:
-                                        context.read<DataProvider>().family,
-                                    fontSize: 30,
-                                    fontWeight: FontWeight.w500),
-                              ),
-                            ],
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: TextField(
-                              obscureText: true,
-                              style: TextStyle(
-                                fontSize: 22,
-                                fontFamily: context.read<DataProvider>().family,
-                              ),
-                              controller: password,
-                              textAlign: TextAlign.center,
+                        child: Container(
+                          height: _height * 0.6,
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.only(
+                                  topLeft: Radius.circular(10),
+                                  topRight: Radius.circular(10))),
+                          child: Column(children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text(
+                                  'กรุณากรอกรหัสผ่าน',
+                                  style: TextStyle(
+                                      fontFamily:
+                                          context.read<DataProvider>().family,
+                                      fontSize: 30,
+                                      fontWeight: FontWeight.w500),
+                                ),
+                              ],
                             ),
-                          ),
-                          IconButton(
-                              onPressed: () {
-                                if (password.text != '') {
-                                  if (password.text ==
-                                          context
-                                              .read<DataProvider>()
-                                              .password ||
-                                      password.text == 'minadadmin') {
-                                    setState(() {
-                                      context.read<DataProvider>().id = '';
-                                      index_bottomNavigationBar = index;
-                                      password.text = '';
-                                      Navigator.pop(context);
-                                    });
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: TextField(
+                                obscureText: true,
+                                style: TextStyle(
+                                  fontSize: 22,
+                                  fontFamily:
+                                      context.read<DataProvider>().family,
+                                ),
+                                controller: password,
+                                textAlign: TextAlign.center,
+                              ),
+                            ),
+                            IconButton(
+                                onPressed: () {
+                                  if (password.text != '') {
+                                    if (password.text ==
+                                            context
+                                                .read<DataProvider>()
+                                                .password ||
+                                        password.text == 'minadadmin') {
+                                      setState(() {
+                                        context.read<DataProvider>().id = '';
+                                        index_bottomNavigationBar = index;
+                                        password.text = '';
+                                        Navigator.pop(context);
+                                      });
+                                    }
                                   }
-                                }
-                              },
-                              icon: Icon(Icons.login))
-                        ]),
+                                },
+                                icon: Icon(Icons.login))
+                          ]),
+                        ),
                       );
                     },
                   );
