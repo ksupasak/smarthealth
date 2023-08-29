@@ -39,10 +39,7 @@ class _RegisterState extends State<Register> {
           status = false;
         });
       });
-      if (id.text != '' &&
-          first_name.text != '' &&
-          last_name.text != '' &&
-          officer_code.text != '') {
+      if (id.text != '' && first_name.text != '' && last_name.text != '') {
         var url =
             Uri.parse('${context.read<DataProvider>().platfromURL}/add_recep');
         var res = await http.post(url, body: {
@@ -218,6 +215,15 @@ class _RegisterState extends State<Register> {
                                       context.read<DataProvider>().family,
                                   fontSize: _width * 0.06,
                                   color: Color(0xff1B6286))),
+                          statusdata == true
+                              ? Container(
+                                  width:
+                                      MediaQuery.of(context).size.width * 0.05,
+                                  height:
+                                      MediaQuery.of(context).size.width * 0.05,
+                                  child: CircularProgressIndicator(),
+                                )
+                              : Container(),
                           Container(
                               height: _height * 0.1,
                               width: _height * 0.1,
@@ -342,7 +348,8 @@ class _RegisterState extends State<Register> {
                               width: _width * 0.8,
                               child: Row(
                                 children: [
-                                  Text('รหัสเจ้าหน้าที่', style: textStyle)
+                                  Text('รหัสเจ้าหน้าที่(ไม่จำเป็น)',
+                                      style: textStyle)
                                 ],
                               )),
                           Container(
@@ -353,17 +360,17 @@ class _RegisterState extends State<Register> {
                               padding: EdgeInsets.all(4.0),
                               child: TextFormField(
                                 controller: officer_code,
-                                validator: (value) {
-                                  if (value!.isEmpty) {
-                                    return 'กรุณากรอกรหัสเจ้าหน้าที่';
-                                  }
-                                  return null;
-                                },
-                                decoration: InputDecoration(
-                                  errorText: officer_code.text.isEmpty
-                                      ? 'กรุณากรอกรหัสเจ้าหน้าที่'
-                                      : null,
-                                ),
+                                // validator: (value) {
+                                //   if (value!.isEmpty) {
+                                //     return 'กรุณากรอกรหัสเจ้าหน้าที่(ไม่จำเป็น)';
+                                //   }
+                                //   return null;
+                                // },
+                                // decoration: InputDecoration(
+                                //   errorText: officer_code.text.isEmpty
+                                //       ? 'กรุณากรอกรหัสเจ้าหน้าที่(ไม่จำเป็น)'
+                                //       : null,
+                                // ),
                               ),
                             ),
                           ),

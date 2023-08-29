@@ -32,7 +32,8 @@ import 'package:http/http.dart' as http;
 // import 'package:image_picker/image_picker.dart';
 
 class HealthRecord2 extends StatefulWidget {
-  const HealthRecord2({super.key});
+  HealthRecord2({super.key, required this.listdata});
+  List listdata = [];
 
   @override
   State<HealthRecord2> createState() => _HealthRecord2State();
@@ -164,8 +165,11 @@ class _HealthRecord2State extends State<HealthRecord2> {
     FlutterBluePlus.instance.scanResults.listen((results) {
       if (results.length > 0) {
         ScanResult r = results.last;
-        // print(r.device.name);
-        if (namescan.contains(r.device.name.toString())) {
+        print(r.device.name);
+        if (namescan.contains(r.device.name.toString())
+
+            //    || namescan.contains(r.device.name.toString().substring(0, 15))
+            ) {
           print('{เจอdeviceที่กำหนด}');
           if (convertedListdevice!.contains(r.device.id.toString())) {
             print("name= ${r.device.name} id= ${r.device.id} กำลัง connect");
@@ -317,7 +321,8 @@ class _HealthRecord2State extends State<HealthRecord2> {
             }
           });
         }
-        if (device.name == 'Yuwell BO-YX110-FDC7' &&
+        if (
+            //device.name.substring(0, 15) == 'Yuwell BO-YX110' &&
             convertedListdevice!.contains(device.id.toString())) {
           if (yuwell_BO_YX110_FDC7 == false) {
             setState(() {
@@ -549,44 +554,60 @@ class _HealthRecord2State extends State<HealthRecord2> {
         });
       }
     } else {
-      // String prefix_name = '';
-      // String first_name = '';
-      // String last_name = '';
-      // String subdistrict = '';
-      // String district = '';
-      // String province = '';
       setState(() {
         prevent = true;
       });
-
-      Map data = {
-        "url":
-            "${context.read<DataProvider>().platfromURL}/add_hr", //*${context.read<DataProvider>().platfromURL}
-        "public_id": context.read<DataProvider>().id, //*
-        "prefix_name": "", //${context.read<DataProvider>().creadreader[1]}",
-        "first_name": "", // ${context.read<DataProvider>().creadreader[2]}",
-        "last_name": "", // ${context.read<DataProvider>().creadreader[4]}",
-        "subdistrict": "", // ${context.read<DataProvider>().creadreader[14]}",
-        "district": "", // ${context.read<DataProvider>().creadreader[15]}",
-        "province": "", // ${context.read<DataProvider>().creadreader[16]}",
-        "care_unit_id": context.read<DataProvider>().care_unit_id, //*
-        "temp": "${temp.text}", //*
-        "weight": "${weight1.text}", //*
-        "bp_sys": "${sys.text}", //*
-        "bp_dia": "${dia.text}", //*
-        "pulse_rate": "${pulse.text}", //*
-        "spo2": "${spo2.text}", //*
-        "fbs": "${fbs.text}", //*
-        "height": "${height.text}", //*
+      DateTime dateTime = DateTime.parse('0000-00-00 00:00');
+      dateTime = DateTime.now();
+      String _dateTime = '';
+      _dateTime = "${dateTime.day}/" +
+          "${dateTime.month}/" +
+          "${dateTime.year}-" +
+          "${dateTime.hour}:" +
+          "${dateTime.minute.toString().padLeft(2, '0')}:" +
+          "${dateTime.second.toString().padLeft(2, '0')}";
+      Map<String, dynamic> data = {
+        "public_id": context.read<DataProvider>().id,
+        "prefix_name": "",
+        "first_name": "",
+        "last_name": "",
+        "subdistrict": "",
+        "district": "",
+        "province": "",
+        "care_unit_id": context.read<DataProvider>().care_unit_id,
+        "temp": "${temp.text}",
+        "weight": "${weight1.text}",
+        "bp_sys": "${sys.text}",
+        "bp_dia": "${dia.text}",
+        "pulse_rate": "${pulse.text}",
+        "spo2": "${spo2.text}",
+        "fbs": "${fbs.text}",
+        "height": "${height.text}",
         "bmi": "",
-        "bp": "${sys.text}/${dia.text}", //*
+        "bp": "${sys.text}/${dia.text}",
         "rr": "",
-        "cc": "${cc.text}", //*
-        "recep_public_id": context.read<DataProvider>().user_id, //*
-        "status": 'unsuccessful'
+        "cc": "${cc.text}",
+        "recep_public_id": context.read<DataProvider>().user_id,
+        "url": "${context.read<DataProvider>().platfromURL}/add_hr",
+        "status": 'unsuccessful',
+        "time": "$_dateTime"
       };
 
-      add_map_health_record('health_record', data);
+      if (widget.listdata.length != 0) {
+        data.update("prefix_name", (value) => "${widget.listdata[1]}");
+        data.update("first_name", (value) => "${widget.listdata[2]}");
+        data.update("last_name", (value) => "${widget.listdata[4]}");
+        add_map_health_record(data);
+      } else {
+        data.update("prefix_name",
+            (value) => "${context.read<DataProvider>().creadreader[1]}");
+        data.update("first_name",
+            (value) => "${context.read<DataProvider>().creadreader[2]}");
+        data.update("last_name",
+            (value) => "${context.read<DataProvider>().creadreader[4]}");
+        add_map_health_record(data);
+      }
+
       setState(() {
         prevent = true;
       });
@@ -646,6 +667,7 @@ class _HealthRecord2State extends State<HealthRecord2> {
                 ),
                 child: Center(
                     child: InformationCard(
+                  listdata: widget.listdata,
                   dataidcard: context.read<DataProvider>().resTojson,
                 ))),
           ),

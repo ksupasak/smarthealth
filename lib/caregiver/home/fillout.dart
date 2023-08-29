@@ -31,9 +31,14 @@ class _Fill_OutState extends State<Fill_Out> {
       data.add(last_name.text);
       provider.creadreader = data;
       print(provider.creadreader);
+
       Navigator.pop(context);
       Navigator.push(
-          context, MaterialPageRoute(builder: (context) => User_Information()));
+          context,
+          MaterialPageRoute(
+              builder: (context) => User_Information(
+                    listdata: data,
+                  )));
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           content: Container(
               width: MediaQuery.of(context).size.width,

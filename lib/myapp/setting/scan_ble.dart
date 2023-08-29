@@ -34,7 +34,7 @@ class _ScanBLEState extends State<ScanBLE> {
       button = true;
       refresh = true;
     });
-    Future.delayed(const Duration(seconds: 4), () {
+    Future.delayed(const Duration(seconds: 5), () {
       setState(() {
         button = false;
         refresh = false;
@@ -46,6 +46,7 @@ class _ScanBLEState extends State<ScanBLE> {
     FlutterBluePlus.instance.scanResults.listen((results) {
       if (results.length > 0) {
         ScanResult r = results.last;
+
         if (namescan.contains(r.device.name.toString())) {
           print('เจอdeviceที่กำหนด');
           print("name= ${r.device.name} id= ${r.device.id}");
@@ -53,11 +54,18 @@ class _ScanBLEState extends State<ScanBLE> {
             listscan.add(r);
           }
         }
+        // if ('Yuwell BO-YX110' == r.device.name.toString().substring(0, 15)) {
+        //   if (!listscan.contains(r)) {
+        //     listscan.add(r);
+        //   }
+        // }
       }
     });
   }
 
   Future<void> scanconnected() async {
+    List<BluetoothDevice> devices =
+        await FlutterBluePlus.instance.connectedDevices;
     setState(() {
       button = true;
       refresh = true;
@@ -77,10 +85,8 @@ class _ScanBLEState extends State<ScanBLE> {
     //   print(connectedDevices);
     // });
 
-    List<BluetoothDevice> devices =
-        await FlutterBluePlus.instance.connectedDevices;
-
     setState(() {
+      connected = [];
       print(devices.length);
       devices.forEach((device) {
         print(device.id);

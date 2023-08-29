@@ -7,8 +7,9 @@ import 'package:smart_health/myapp/provider/provider.dart';
 import 'package:http/http.dart' as http;
 
 class InformationCard extends StatefulWidget {
-  InformationCard({super.key, this.dataidcard});
+  InformationCard({super.key, this.dataidcard, required this.listdata});
   var dataidcard;
+  List listdata = [];
   @override
   State<InformationCard> createState() => _InformationCardState();
 }
@@ -169,8 +170,7 @@ class _InformationCardState extends State<InformationCard> {
                 children: [
                   Container(
                     width: MediaQuery.of(context).size.width * 0.55,
-                    child: context.read<DataProvider>().creadreader != [] &&
-                            context.read<DataProvider>().creadreader == null
+                    child: widget.listdata.length == 0
                         ? Text(
                             "${context.read<DataProvider>().creadreader[1]} ${context.read<DataProvider>().creadreader[2]} ${context.read<DataProvider>().creadreader[4]}",
                             style: TextStyle(
@@ -180,7 +180,15 @@ class _InformationCardState extends State<InformationCard> {
                               color: Color(0xff48B5AA),
                             ),
                           )
-                        : Text(""),
+                        : Text(
+                            "${widget.listdata[1]}  ${widget.listdata[2]} ${widget.listdata[4]}",
+                            style: TextStyle(
+                              fontFamily: context.read<DataProvider>().family,
+                              fontSize:
+                                  MediaQuery.of(context).size.width * 0.05,
+                              color: Color(0xff48B5AA),
+                            ),
+                          ),
                   ),
                   SizedBox(
                     height: MediaQuery.of(context).size.height * 0.005,

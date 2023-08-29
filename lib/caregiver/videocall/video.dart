@@ -457,6 +457,7 @@ class _RoomPageState extends State<RoomPage> {
                                 ),
                                 child: Center(
                                     child: InformationCard(
+                                  listdata: [],
                                   dataidcard:
                                       context.read<DataProvider>().resTojson,
                                 ))),

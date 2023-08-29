@@ -216,12 +216,22 @@ class _DeviceState extends State<Device> {
                                                     .read<DataProvider>()
                                                     .imagesdevice[d] !=
                                                 ''
-                                            ? Padding(
-                                                padding:
-                                                    const EdgeInsets.all(8.0),
-                                                child: Image.asset(
-                                                    "assets/${context.read<DataProvider>().imagesdevice[d]}"),
-                                              )
+                                            ? 'Yuwell BO-YX110-A1F0' ==
+                                                    d.toString()
+                                                ? Padding(
+                                                    padding:
+                                                        const EdgeInsets.all(
+                                                            8.0),
+                                                    child: Image.asset(
+                                                        "assets/${context.read<DataProvider>().imagesdevice['Yuwell BO-YX110']}"),
+                                                  )
+                                                : Padding(
+                                                    padding:
+                                                        const EdgeInsets.all(
+                                                            8.0),
+                                                    child: Image.asset(
+                                                        "assets/${context.read<DataProvider>().imagesdevice[d]}"),
+                                                  )
                                             : SizedBox()),
                                     Column(
                                       crossAxisAlignment:
@@ -229,7 +239,7 @@ class _DeviceState extends State<Device> {
                                       children: [
                                         Text(
                                             '${context.read<DataProvider>().namedevice[d]} '),
-                                        Text('Name : $d'),
+                                        Text('Name : ${d}'),
                                         Text(
                                             'Id :${context.read<DataProvider>().mapdevices[d]}'),
                                       ],

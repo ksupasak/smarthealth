@@ -86,8 +86,12 @@ class _HomeCareCevierState extends State<HomeCareCevier> {
                 'context.read<DataProvider>().resTojson  = ${context.read<DataProvider>().resTojson}');
           });
           Timer(Duration(seconds: 1), () {
-            Navigator.push(context,
-                MaterialPageRoute(builder: (context) => User_Information()));
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => User_Information(
+                          listdata: [],
+                        )));
             //  Get.toNamed('user_information');
           });
         }
@@ -101,8 +105,12 @@ class _HomeCareCevierState extends State<HomeCareCevier> {
             context.read<DataProvider>().creadreader[0] ==
                 context.read<DataProvider>().id) {
           Timer(Duration(seconds: 1), () {
-            Navigator.push(context,
-                MaterialPageRoute(builder: (context) => User_Information()));
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => User_Information(
+                          listdata: [],
+                        )));
             ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                 content: Container(
                     width: MediaQuery.of(context).size.width,

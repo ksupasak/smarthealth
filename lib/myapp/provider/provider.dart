@@ -24,6 +24,9 @@ class DataProvider with ChangeNotifier {
   String? family = 'prompt';
   var resTojson;
   String id = '';
+  String? p_name;
+  String? f_name;
+  String? l_name;
   String colortexts = '';
   String audio = 'massad.mp3';
   String temp = '';
@@ -46,17 +49,19 @@ class DataProvider with ChangeNotifier {
     'HC-08', //เครื่องวัดอุณหภูมิ
     'A&D_UA-651BLE_D57B3F', //เครื่องวัดความดัน
     'Yuwell Glucose', //เครื่องวัดน้ำตาล
+    'Yuwell BO-YX110', //เครื่องspo2
   ];
   Map<String, String> imagesdevice = {
     // 'FT_F5F30C4C52DE': '',
     'Yuwell HT-YHW': 'LINE_ALBUM_yuwell_230620.jpg',
     'Yuwell BP-YE680A': 'LINE_ALBUM_yuwell_230618.jpg',
-    'Yuwell BO-YX110-FDC7': 'LINE_ALBUM_yuwell_230619.jpg',
+    'Yuwell BO-YX0-11FDC7': 'LINE_ALBUM_yuwell_230619.jpg',
     'MIBFS': 'LINE_ALBUM_yuwell_230623.png',
     'HJ-Narigmed': 'sg-11134201-23010-ka1jtswb8smvff.jpg',
     'HC-08': 'HTD8808E-Bluetooth-wireless-thermometer_2.jpg',
     'A&D_UA-651BLE_D57B3F': 'UA-651BLE-complete.jpg',
     'Yuwell Glucose': 'LINE_ALBUM_yuwell_230621.jpg',
+    'Yuwell BO-YX110': 'LINE_ALBUM_yuwell_230619.jpg'
   };
   Map<String, String> namedevice = {
     //  'FT_F5F30C4C52DE': 'เครื่องอ่านบัตรประชน',
@@ -68,6 +73,7 @@ class DataProvider with ChangeNotifier {
     'HC-08': 'เครื่องวัดอุณหภูมิ',
     'A&D_UA-651BLE_D57B3F': 'เครื่องวัดความดัน',
     'Yuwell Glucose': 'เครื่องวัดน้ำตาล',
+    //'Yuwell BO-YX110': 'เครื่องวัดspo2'
   };
   List<String> iddevice = [];
   var mapdevices;
@@ -75,5 +81,4 @@ class DataProvider with ChangeNotifier {
   List health_record_offline = [];
 }
 
- 
 // bool yuwell_Glucose = false;

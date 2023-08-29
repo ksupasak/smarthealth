@@ -16,8 +16,8 @@ import 'package:smart_health/myapp/provider/provider.dart';
 import 'package:http/http.dart' as http;
 
 class User_Information extends StatefulWidget {
-  const User_Information({super.key});
-
+  User_Information({super.key, required this.listdata});
+  List listdata = [];
   @override
   State<User_Information> createState() => _User_InformationState();
 }
@@ -152,6 +152,7 @@ class _User_InformationState extends State<User_Information> {
                       ),
                       child: Center(
                           child: InformationCard(
+                        listdata: widget.listdata,
                         dataidcard: context.read<DataProvider>().resTojson,
                       ))),
                 ),
@@ -272,7 +273,9 @@ class _User_InformationState extends State<User_Information> {
                                 Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                        builder: (context) => HealthRecord2()));
+                                        builder: (context) => HealthRecord2(
+                                              listdata: widget.listdata,
+                                            )));
                               },
                               child: Container(
                                 height: _height * 0.23,
@@ -792,15 +795,18 @@ class BoxShoHealth_Records extends StatefulWidget {
 class _BoxShoHealth_RecordsState extends State<BoxShoHealth_Records> {
   var resTojson;
   void information() async {
-    var url = Uri.parse('${context.read<DataProvider>().platfromURL}/check_q');
-    var res = await http.post(url, body: {
-      'care_unit_id': context.read<DataProvider>().care_unit_id,
-      'public_id': context.read<DataProvider>().id,
-    });
-    setState(() {
-      resTojson = json.decode(res.body);
-      print(resTojson);
-    });
+    if (context.read<DataProvider>().status_internet == true) {
+      var url =
+          Uri.parse('${context.read<DataProvider>().platfromURL}/check_q');
+      var res = await http.post(url, body: {
+        'care_unit_id': context.read<DataProvider>().care_unit_id,
+        'public_id': context.read<DataProvider>().id,
+      });
+      setState(() {
+        resTojson = json.decode(res.body);
+        print(resTojson);
+      });
+    }
   }
 
   @override

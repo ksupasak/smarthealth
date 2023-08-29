@@ -1,9 +1,7 @@
-import 'dart:convert';
 import 'dart:io';
 import 'package:path_provider/path_provider.dart';
 import 'package:sembast/sembast.dart';
 import 'package:sembast/sembast_io.dart';
-import 'package:smart_health/myapp/provider/provider.dart';
 
 Future<Database> openDatabase_list_health_record() async {
   Directory app = await getApplicationDocumentsDirectory();
@@ -26,53 +24,56 @@ Future<void> addData_health_record() async {
   }
 }
 
-Future<void> add_map_health_record(String id, Map data) async {
+Future<void> add_map_health_record(Map<String, Object?> data) async {
   // await addData_health_record();
   final db = await openDatabase_list_health_record();
   final store = intMapStoreFactory.store('list_health_record');
-  var snapshot = await store.find(db);
+
+  final key = await store.add(db, data);
+//var snapshot = await store.find(db);
   //List datas = [];
 
-  int x = 0;
-  for (var records in snapshot) {
-//datas.add(records['list_health_record']);
+//   int x = 0;
+//   for (var records in snapshot) {
+// //datas.add(records['list_health_record']);
 
-    print("ข้อมูลที่ $x = $records");
+//     print("ข้อมูลที่ $x = $records");
 
-    x++;
-  }
+//     x++;
+//   }
 
-  // Map<String, Object?> list_health_record = {};
+//   // Map<String, Object?> list_health_record = {};
 
-  //datas.add(records);
-  //datas = records as List;
+//   //datas.add(records);
+//   //datas = records as List;
 
-  // datas.add(data);
+//   // datas.add(data);
 
-  // for (RecordSnapshot<int, Map<String, Object?>> record in records) {
-  //   var getmapd = record['list_health_record'];
+//   // for (RecordSnapshot<int, Map<String, Object?>> record in records) {
+//   //   var getmapd = record['list_health_record'];
 
-  //   if (getmapd != null) {
-  //     list_health_record =
-  //         Map.fromEntries((getmapd as Map<String, Object?>).entries);
-  //   }
-  // }
+//   //   if (getmapd != null) {
+//   //     list_health_record =
+//   //         Map.fromEntries((getmapd as Map<String, Object?>).entries);
+//   //   }
+//   // }
 
-  // print("health_record =${list_health_record['health_record']}");
-  // if (list_health_record['health_record'] != null) {
-  //   datas = list_health_record['health_record'] as List;
+//   // print("health_record =${list_health_record['health_record']}");
+//   // if (list_health_record['health_record'] != null) {
+//   //   datas = list_health_record['health_record'] as List;
 
-  //   // datas.add(list_health_record['health_record']);
-  // } else {
-  //   datas.add([]);
-  // }
+//   //   // datas.add(list_health_record['health_record']);
+//   // } else {
+//   //   datas.add([]);
+//   // }
 
-  // datas.add(data);
+//   // datas.add(data);
 
-  // list_health_record[id] = datas;
+//   // list_health_record[id] = datas;
 
-  final key = await store.add(db, {
-    'health_record': data,
-  });
+//   // final key = await store.add(db, {
+//   //   'health_record': data,
+//   // });
+//   final key = await store.add(db, data);
   await db.close();
 }
