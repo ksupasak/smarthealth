@@ -165,11 +165,8 @@ class _HealthRecord2State extends State<HealthRecord2> {
     FlutterBluePlus.instance.scanResults.listen((results) {
       if (results.length > 0) {
         ScanResult r = results.last;
-        print(r.device.name);
-        if (namescan.contains(r.device.name.toString())
-
-            //    || namescan.contains(r.device.name.toString().substring(0, 15))
-            ) {
+        // print(r.device.name);
+        if (namescan.contains(r.device.name.toString())) {
           print('{เจอdeviceที่กำหนด}');
           if (convertedListdevice!.contains(r.device.id.toString())) {
             print("name= ${r.device.name} id= ${r.device.id} กำลัง connect");
@@ -177,6 +174,11 @@ class _HealthRecord2State extends State<HealthRecord2> {
           } else {
             print(
                 "name= ${r.device.name} id= ${r.device.id} ->ไม่ใช่ที่ต่องการ");
+          }
+        }
+        if (r.device.name.toString().length >= 15) {
+          if ('Yuwell BO-YX110' == r.device.name.toString().substring(0, 15)) {
+            r.device.connect();
           }
         }
       }
@@ -321,34 +323,36 @@ class _HealthRecord2State extends State<HealthRecord2> {
             }
           });
         }
-        if (
-            //device.name.substring(0, 15) == 'Yuwell BO-YX110' &&
-            convertedListdevice!.contains(device.id.toString())) {
-          if (yuwell_BO_YX110_FDC7 == false) {
-            setState(() {
-              yuwell_BO_YX110_FDC7 = true;
-            });
-            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                content: Container(
-                    width: MediaQuery.of(context).size.width,
-                    child: Center(
-                        child: Text(
-                      'พบ Yuwell BO-YX110-FDC7',
-                    )))));
+        if (device.name.toString().length >= 15) {
+          if (device.name.substring(0, 15) == 'Yuwell BO-YX110') {
+            if (convertedListdevice!.contains(device.id.toString())) {
+              if (yuwell_BO_YX110_FDC7 == false) {
+                setState(() {
+                  yuwell_BO_YX110_FDC7 = true;
+                });
+                ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                    content: Container(
+                        width: MediaQuery.of(context).size.width,
+                        child: Center(
+                            child: Text(
+                          'พบ Yuwell BO-YX110-FDC7',
+                        )))));
+              }
+              print('functionstreamtimeกำลังทำงาน ${device.name}');
+              Yuwell_BO_YX110_FDC7 spo2 = Yuwell_BO_YX110_FDC7(device: device);
+              spo2.parse().listen((mVal) {
+                Map<String, String> val = HashMap();
+                val['spo2'] = mVal['spo2'];
+                val['pr'] = mVal['pr'];
+                datas.add(val);
+                setState(() {
+                  context.read<DataProvider>().spo2 = mVal['spo2'];
+                  //    context.read<DataProvider>().pr = mVal['pr'];
+                  context.read<DataProvider>().pul = mVal['pr'];
+                });
+              });
+            }
           }
-          print('functionstreamtimeกำลังทำงาน ${device.name}');
-          Yuwell_BO_YX110_FDC7 spo2 = Yuwell_BO_YX110_FDC7(device: device);
-          spo2.parse().listen((mVal) {
-            Map<String, String> val = HashMap();
-            val['spo2'] = mVal['spo2'];
-            val['pr'] = mVal['pr'];
-            datas.add(val);
-            setState(() {
-              context.read<DataProvider>().spo2 = mVal['spo2'];
-              //    context.read<DataProvider>().pr = mVal['pr'];
-              context.read<DataProvider>().pul = mVal['pr'];
-            });
-          });
         }
         if (device.name == 'Yuwell BP-YE680A' &&
             convertedListdevice!.contains(device.id.toString())) {

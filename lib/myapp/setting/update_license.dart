@@ -1,10 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/material.dart';
 import 'package:smart_health/share/devices/esm_idcard.dart';
-
-
 
 class Update_License extends StatefulWidget {
   const Update_License({super.key});
@@ -19,69 +16,61 @@ class _Update_LicenseState extends State<Update_License> {
 
   ESMIDCard? reader;
 
-
   Stream<String>? entry;
+  // ignore: non_constant_identifier_names
   Stream<String>? reader_status;
 
   void updateLicense() {
+    Future.delayed(const Duration(seconds: 2), () {
+      reader = ESMIDCard.instance;
 
-     Future.delayed(const Duration(seconds: 2), () {
-        reader = ESMIDCard.instance;
- 
-        reader?.getEntry();
-   
+      reader?.getEntry();
 
-        reader_status = reader?.getStatus();
-        reader_status?.listen((String data) async {
-          print("Reader Status :  " + data);
+      reader_status = reader?.getStatus();
+      reader_status?.listen((String data) async {
+        print("Reader Status :  " + data);
 
-          if (data == "ADAPTER_READY") {
-            reader?.findReader();
-          } else if (data == "DEVICE_READY") {
-            reader?.updateLicenseFileDF();
-            // const oneSec = Duration(seconds: 2);
-            // 
-            // reading = Timer.periodic(oneSec, (Timer t) => checkCard());
-          }
-        });
-
+        if (data == "ADAPTER_READY") {
+          reader?.findReader();
+        } else if (data == "DEVICE_READY") {
+          reader?.updateLicenseFileDF();
+          // const oneSec = Duration(seconds: 2);
+          //
+          // reading = Timer.periodic(oneSec, (Timer t) => checkCard());
+        }
+      });
 
       setState(() {
         value = 'Updated Lisense OK ';
       });
-
-     }
-   
-  );
-
-}
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     double _width = MediaQuery.of(context).size.width;
-    double _height = MediaQuery.of(context).size.height;
     return Scaffold(
       appBar: AppBar(
-        title: Text(
+        title: const Text(
           'Update License',
           style: TextStyle(color: Colors.black),
         ),
         backgroundColor: Color(0xffffffff),
-        iconTheme: IconThemeData(color: Colors.black),
+        iconTheme: const IconThemeData(color: Colors.black),
       ),
       body: ListView(children: [
-        Container(
+        SizedBox(
           width: _width,
           child: Center(child: Text('$value')),
         ),
-        Container(
+        SizedBox(
             width: _width,
             child: Center(
                 child: ElevatedButton(
                     onPressed: () {
                       updateLicense();
                     },
-                    child: Text('Update License'))))
+                    child: const Text('Update License'))))
       ]),
     );
   }

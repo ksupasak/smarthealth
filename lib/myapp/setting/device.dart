@@ -216,15 +216,25 @@ class _DeviceState extends State<Device> {
                                                     .read<DataProvider>()
                                                     .imagesdevice[d] !=
                                                 ''
-                                            ? 'Yuwell BO-YX110-A1F0' ==
-                                                    d.toString()
-                                                ? Padding(
-                                                    padding:
-                                                        const EdgeInsets.all(
-                                                            8.0),
-                                                    child: Image.asset(
-                                                        "assets/${context.read<DataProvider>().imagesdevice['Yuwell BO-YX110']}"),
-                                                  )
+                                            ? d.toString().length > 15
+                                                ? 'Yuwell BO-YX110' ==
+                                                        d
+                                                            .toString()
+                                                            .substring(0, 15)
+                                                    ? Padding(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                .all(8.0),
+                                                        child: Image.asset(
+                                                            "assets/${context.read<DataProvider>().imagesdevice['Yuwell BO-YX110']}"),
+                                                      )
+                                                    : Padding(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                .all(8.0),
+                                                        child: Image.asset(
+                                                            "assets/${context.read<DataProvider>().imagesdevice[d]}"),
+                                                      )
                                                 : Padding(
                                                     padding:
                                                         const EdgeInsets.all(
@@ -237,8 +247,13 @@ class _DeviceState extends State<Device> {
                                       crossAxisAlignment:
                                           CrossAxisAlignment.start,
                                       children: [
-                                        Text(
-                                            '${context.read<DataProvider>().namedevice[d]} '),
+                                        context
+                                                    .read<DataProvider>()
+                                                    .namedevice[d] !=
+                                                null
+                                            ? Text(
+                                                '${context.read<DataProvider>().namedevice[d]}')
+                                            : Text('เครื่องวัดspo2'),
                                         Text('Name : ${d}'),
                                         Text(
                                             'Id :${context.read<DataProvider>().mapdevices[d]}'),

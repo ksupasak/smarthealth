@@ -54,11 +54,13 @@ class _ScanBLEState extends State<ScanBLE> {
             listscan.add(r);
           }
         }
-        // if ('Yuwell BO-YX110' == r.device.name.toString().substring(0, 15)) {
-        //   if (!listscan.contains(r)) {
-        //     listscan.add(r);
-        //   }
-        // }
+        if (r.device.name.toString().length >= 15) {
+          if ('Yuwell BO-YX110' == r.device.name.toString().substring(0, 15)) {
+            if (!listscan.contains(r)) {
+              listscan.add(r);
+            }
+          }
+        }
       }
     });
   }
@@ -212,8 +214,22 @@ class _ScanBLEState extends State<ScanBLE> {
                                           ''
                                       ? Padding(
                                           padding: const EdgeInsets.all(8.0),
-                                          child: Image.asset(
-                                              "assets/${context.read<DataProvider>().imagesdevice[listscan[index].device.name]}"),
+                                          child: listscan[index]
+                                                      .device
+                                                      .name
+                                                      .length >=
+                                                  15
+                                              ? 'Yuwell BO-YX110' ==
+                                                      listscan[index]
+                                                          .device
+                                                          .name
+                                                          .substring(0, 15)
+                                                  ? Image.asset(
+                                                      "assets/LINE_ALBUM_yuwell_230619.jpg")
+                                                  : Image.asset(
+                                                      "assets/${context.read<DataProvider>().imagesdevice[listscan[index].device.name]}")
+                                              : Image.asset(
+                                                  "assets/${context.read<DataProvider>().imagesdevice[listscan[index].device.name]}"),
                                         )
                                       : SizedBox(),
                                 ),
@@ -223,11 +239,24 @@ class _ScanBLEState extends State<ScanBLE> {
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: [
-                                      Text(context
-                                          .read<DataProvider>()
-                                          .namedevice[
-                                              listscan[index].device.name]
-                                          .toString()),
+                                      listscan[index].device.name.length >= 15
+                                          ? 'Yuwell BO-YX110' ==
+                                                  listscan[index]
+                                                      .device
+                                                      .name
+                                                      .substring(0, 15)
+                                              ? Text('เครื่องวัดspo2')
+                                              : Text(context
+                                                  .read<DataProvider>()
+                                                  .namedevice[listscan[index]
+                                                      .device
+                                                      .name]
+                                                  .toString())
+                                          : Text(context
+                                              .read<DataProvider>()
+                                              .namedevice[
+                                                  listscan[index].device.name]
+                                              .toString()),
                                       Text(
                                           "Name : ${listscan[index].device.name}"),
                                       Text(
@@ -268,8 +297,20 @@ class _ScanBLEState extends State<ScanBLE> {
                                                                     const EdgeInsets
                                                                             .all(
                                                                         8.0),
-                                                                child: Image.asset(
-                                                                    "assets/${context.read<DataProvider>().imagesdevice[listscan[index].device.name]}"),
+                                                                child: listscan[index]
+                                                                            .device
+                                                                            .name
+                                                                            .length >=
+                                                                        15
+                                                                    ? 'Yuwell BO-YX110' ==
+                                                                            listscan[index].device.name.substring(0,
+                                                                                15)
+                                                                        ? Image.asset(
+                                                                            "assets/LINE_ALBUM_yuwell_230619.jpg")
+                                                                        : Image.asset(
+                                                                            "assets/${context.read<DataProvider>().imagesdevice[listscan[index].device.name]}")
+                                                                    : Image.asset(
+                                                                        "assets/${context.read<DataProvider>().imagesdevice[listscan[index].device.name]}"),
                                                               )
                                                             : SizedBox(),
                                                       ),
@@ -278,15 +319,36 @@ class _ScanBLEState extends State<ScanBLE> {
                                                             CrossAxisAlignment
                                                                 .start,
                                                         children: [
-                                                          Text(context
-                                                              .read<
-                                                                  DataProvider>()
-                                                              .namedevice[
-                                                                  listscan[
-                                                                          index]
+                                                          listscan[index]
                                                                       .device
-                                                                      .name]
-                                                              .toString()),
+                                                                      .name
+                                                                      .length >=
+                                                                  15
+                                                              ? 'Yuwell BO-YX110' ==
+                                                                      listscan[index]
+                                                                          .device
+                                                                          .name
+                                                                          .substring(
+                                                                              0,
+                                                                              15)
+                                                                  ? Text(
+                                                                      'เครื่องวัดspo2')
+                                                                  : Text(context
+                                                                      .read<
+                                                                          DataProvider>()
+                                                                      .namedevice[listscan[index]
+                                                                          .device
+                                                                          .name]
+                                                                      .toString())
+                                                              : Text(context
+                                                                  .read<
+                                                                      DataProvider>()
+                                                                  .namedevice[
+                                                                      listscan[
+                                                                              index]
+                                                                          .device
+                                                                          .name]
+                                                                  .toString()),
                                                           Text(
                                                               "${listscan[index].device.name}"),
                                                           Text(

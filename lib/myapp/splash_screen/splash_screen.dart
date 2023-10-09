@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously, unnecessary_string_interpolations
+
 import 'dart:io';
 
 import 'package:device_info_plus/device_info_plus.dart';
@@ -156,9 +158,7 @@ class _Splash_ScreenState extends State<Splash_Screen> {
 
   @override
   Widget build(BuildContext context) {
-    double _width = MediaQuery.of(context).size.width;
-    double _height = MediaQuery.of(context).size.height;
-    return _width > _height ? style_width() : style_height();
+    return style_height();
   }
 
   Widget style_height() {
@@ -199,49 +199,5 @@ class _Splash_ScreenState extends State<Splash_Screen> {
         ],
       ),
     ));
-  }
-
-  Widget style_width() {
-    double _width = MediaQuery.of(context).size.width;
-    double _height = MediaQuery.of(context).size.height;
-    return Scaffold(
-      body: SafeArea(
-        child: Stack(
-          children: [
-            Positioned(
-              child: Container(
-                width: _width,
-                height: _height,
-                child: SvgPicture.asset(
-                  'assets/splash/backlogo2.svg',
-                  fit: BoxFit.fill,
-                ),
-              ),
-            ),
-            Positioned(
-              child: Container(
-                width: _width,
-                height: _width,
-                child: Center(
-                  child: Container(
-                    width: _height * 0.8,
-                    height: _height * 0.8,
-                    child: SvgPicture.asset('assets/splash/logo.svg'),
-                  ),
-                ),
-              ),
-            ),
-            Positioned(
-              right: 0,
-              child: Container(
-                child: CircularProgressIndicator(
-                  color: Color.fromARGB(255, 0, 139, 130),
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
   }
 }

@@ -42,7 +42,7 @@ class DataProvider with ChangeNotifier {
   List<String> namescan = [
     //  'FT_F5F30C4C52DE', //เครื่องอ่านบัตร
     'Yuwell HT-YHW', //เครื่องวัดอุณหภูมิ D0:05:10:00:02:74
-    'Yuwell BO-YX110-FDC7', //เครื่องspo2  Yuwell_BO_YX110_FDC7
+    // 'Yuwell BO-YX110-FDC7', //เครื่องspo2  Yuwell_BO_YX110_FDC7
     'Yuwell BP-YE680A', //เครื่องวัดความดัน  Yuwell_BP_YE680A
     'MIBFS', //เครื่องชั่ง
     'HJ-Narigmed', //เครื่องspo2
@@ -55,7 +55,7 @@ class DataProvider with ChangeNotifier {
     // 'FT_F5F30C4C52DE': '',
     'Yuwell HT-YHW': 'LINE_ALBUM_yuwell_230620.jpg',
     'Yuwell BP-YE680A': 'LINE_ALBUM_yuwell_230618.jpg',
-    'Yuwell BO-YX0-11FDC7': 'LINE_ALBUM_yuwell_230619.jpg',
+    //'Yuwell BO-YX0-11FDC7': 'LINE_ALBUM_yuwell_230619.jpg',
     'MIBFS': 'LINE_ALBUM_yuwell_230623.png',
     'HJ-Narigmed': 'sg-11134201-23010-ka1jtswb8smvff.jpg',
     'HC-08': 'HTD8808E-Bluetooth-wireless-thermometer_2.jpg',
@@ -67,13 +67,13 @@ class DataProvider with ChangeNotifier {
     //  'FT_F5F30C4C52DE': 'เครื่องอ่านบัตรประชน',
     'Yuwell HT-YHW': 'เครื่องวัดอุณหภูมิ',
     'Yuwell BP-YE680A': 'เครื่องวัดความดัน',
-    'Yuwell BO-YX110-FDC7': 'เครื่องวัดspo2',
+    // 'Yuwell BO-YX110-FDC7': 'เครื่องวัดspo2',
     'MIBFS': 'เครื่องชั่งน้ำหนัก',
     'HJ-Narigmed': 'เครื่องวัดspo2',
     'HC-08': 'เครื่องวัดอุณหภูมิ',
     'A&D_UA-651BLE_D57B3F': 'เครื่องวัดความดัน',
     'Yuwell Glucose': 'เครื่องวัดน้ำตาล',
-    //'Yuwell BO-YX110': 'เครื่องวัดspo2'
+    'Yuwell BO-YX110': 'เครื่องวัด spo2',
   };
   List<String> iddevice = [];
   var mapdevices;
