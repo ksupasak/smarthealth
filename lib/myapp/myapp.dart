@@ -17,7 +17,7 @@ class _MyAppState extends State<MyApp> {
       providers: [
         ChangeNotifierProvider(create: ((context) => DataProvider())),
       ],
-      child: MaterialApp(
+      child: const MaterialApp(
         color: Colors.grey,
         debugShowCheckedModeBanner: false,
         home: Scaffold(body: Splash_Screen()),

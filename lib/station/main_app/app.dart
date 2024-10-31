@@ -1,13 +1,10 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 import 'package:smart_health/station/provider/provider.dart';
 import 'package:smart_health/station/provider/provider_function.dart';
-import 'package:smart_health/station/test/esm_idcard.dart';
-import 'package:smart_health/station/views/pages/numpad.dart';
+
 import 'package:smart_health/station/views/routes/routes_page.dart';
 
 class App extends StatefulWidget {
@@ -24,7 +21,7 @@ class _AppState extends State<App> {
       DeviceOrientation.portraitUp,
       DeviceOrientation.portraitDown,
     ]);
-    // TODO: implement initState
+
     super.initState();
   }
 

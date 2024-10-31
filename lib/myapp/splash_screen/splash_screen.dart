@@ -1,26 +1,19 @@
-// ignore_for_file: use_build_context_synchronously, unnecessary_string_interpolations
+// ignore_for_file: use_build_context_synchronously, unnecessary_string_interpolations, camel_case_types
 
 import 'dart:io';
 
 import 'package:device_info_plus/device_info_plus.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import 'package:sembast/sembast.dart';
 import 'package:smart_health/caregiver/center/center.dart';
 
-import 'package:smart_health/caregiver/home/homeapp.dart';
-import 'package:smart_health/caregiver/login/login.dart';
 import 'package:smart_health/myapp/provider/provider.dart';
-import 'package:smart_health/myapp/setting/init_setting.dart';
 import 'package:smart_health/myapp/setting/local.dart';
 import 'package:smart_health/myapp/setting/setting.dart';
 import 'package:smart_health/myapp/splash_screen/function_splash_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:smart_health/station/main_app/app.dart';
-//import 'package:smart_health/telemed/home/homeapp.dart';
 
 class Splash_Screen extends StatefulWidget {
   const Splash_Screen({super.key});
@@ -38,16 +31,16 @@ class _Splash_ScreenState extends State<Splash_Screen> {
 
     if (Platform.isAndroid) {
       AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
-      print('Device Model: ${androidInfo.model}');
-      print('Device ID: ${androidInfo.androidId}');
+      debugPrint('Device Model: ${androidInfo.model}');
+      debugPrint('Device ID: ${androidInfo.androidId}');
       setState(() {
         context.read<DataProvider>().appId = androidInfo.androidId.toString();
       });
       // และข้อมูลอื่น ๆ ตามที่คุณต้องการ
     } else if (Platform.isIOS) {
       IosDeviceInfo iosInfo = await deviceInfo.iosInfo;
-      print('Device Model: ${iosInfo.model}');
-      print('Device ID: ${iosInfo.identifierForVendor}');
+      debugPrint('Device Model: ${iosInfo.model}');
+      debugPrint('Device ID: ${iosInfo.identifierForVendor}');
       setState(() {
         context.read<DataProvider>().appId =
             iosInfo.identifierForVendor.toString();
@@ -56,32 +49,30 @@ class _Splash_ScreenState extends State<Splash_Screen> {
       // และข้อมูลอื่น ๆ ตามที่คุณต้องการ
     } else if (Platform.isWindows) {
       WindowsDeviceInfo windowsInfo = await deviceInfo.windowsInfo;
-      print('Device Model: ${windowsInfo.computerName}');
-      print('Device ID: ${windowsInfo.numberOfCores}');
+      debugPrint('Device Model: ${windowsInfo.computerName}');
+      debugPrint('Device ID: ${windowsInfo.numberOfCores}');
     }
   }
 
   void setdata() async {
     Future<bool> data = showDataBaseDatauserApp();
-    Future<List<RecordSnapshot<int, Map<String, Object?>>>> recordsdata;
-    if (data != null) {
-      if (!await data) {
-        print('ไม่มีข้อมูล');
-        Future.delayed(const Duration(seconds: 1), () {
-          setState(() {
-            Navigator.pushReplacement(
-                context, MaterialPageRoute(builder: (context) => Setting()));
-          });
+
+    if (!await data) {
+      debugPrint('ไม่มีข้อมูล');
+      Future.delayed(const Duration(seconds: 1), () {
+        setState(() {
+          Navigator.pushReplacement(context,
+              MaterialPageRoute(builder: (context) => const Setting()));
         });
-      } else {
-        print('มีข้อมูล');
-        redDatabase();
-      }
+      });
+    } else {
+      debugPrint('มีข้อมูล');
+      redDatabase();
     }
   }
 
   Future<void> redDatabase() async {
-    print('กำลังโหลดข้อมูล');
+    debugPrint('กำลังโหลดข้อมูล');
     init = await getAllData();
     initUser = await getAllDataUser();
     for (RecordSnapshot<int, Map<String, Object?>> record in init) {
@@ -102,20 +93,20 @@ class _Splash_ScreenState extends State<Splash_Screen> {
       context.read<DataProvider>().user_name = record['name'].toString();
       context.read<DataProvider>().user_code = record['code'].toString();
     }
-    print('App');
-    print('${context.read<DataProvider>().app}');
-    print('${context.read<DataProvider>().name_hospital}');
+    debugPrint('App');
+    debugPrint('${context.read<DataProvider>().app}');
+    debugPrint('${context.read<DataProvider>().name_hospital}');
 
-    print('${context.read<DataProvider>().platfromURL}');
+    debugPrint('${context.read<DataProvider>().platfromURL}');
 
-    print('${context.read<DataProvider>().care_unit}');
-    print('${context.read<DataProvider>().care_unit_id}');
-    print('${context.read<DataProvider>().password}');
-    print('user');
-    print('${context.read<DataProvider>().user_id}');
-    print('${context.read<DataProvider>().user_name}');
-    print('${context.read<DataProvider>().user_code}');
-    print('โหลดเสร็จเเล้ว');
+    debugPrint('${context.read<DataProvider>().care_unit}');
+    debugPrint('${context.read<DataProvider>().care_unit_id}');
+    debugPrint('${context.read<DataProvider>().password}');
+    debugPrint('user');
+    debugPrint('${context.read<DataProvider>().user_id}');
+    debugPrint('${context.read<DataProvider>().user_name}');
+    debugPrint('${context.read<DataProvider>().user_code}');
+    debugPrint('โหลดเสร็จเเล้ว');
     Future.delayed(const Duration(seconds: 1), () {
       setState(() {
         redipDatabase();
@@ -124,34 +115,37 @@ class _Splash_ScreenState extends State<Splash_Screen> {
   }
 
   Future<void> redipDatabase() async {
-    print('กำลังโหลดDevice');
+    debugPrint('กำลังโหลดDevice');
     init = await getdevice();
     for (RecordSnapshot<int, Map<String, Object?>> record in init) {
       context.read<DataProvider>().mapdevices = record['mapdevices'].toString();
     }
 
-    print('ip-device =${context.read<DataProvider>().mapdevices}');
-    print('โหลดเสร็จเเล้ว');
+    debugPrint('ip-device =${context.read<DataProvider>().mapdevices}');
+    debugPrint('โหลดเสร็จเเล้ว');
     myapp();
   }
 
   void myapp() {
     if (context.read<DataProvider>().app == 'care_giver') {
-      Navigator.pushReplacement(
-          context, MaterialPageRoute(builder: (context) => Center_Caregiver()));
+      debugPrint('เข้าสู่->CareGiver');
+      Navigator.pushReplacement(context,
+          MaterialPageRoute(builder: (context) => const Center_Caregiver()));
     } else if (context.read<DataProvider>().app == 'station') {
+      debugPrint('เข้าสู่->Station');
       Navigator.pushReplacement(
-          context, MaterialPageRoute(builder: (context) => App()));
+          context, MaterialPageRoute(builder: (context) => const App()));
     } else {
+      debugPrint('เข้าสู่->Setting');
       Navigator.pushReplacement(
-          context, MaterialPageRoute(builder: (context) => Setting()));
+          context, MaterialPageRoute(builder: (context) => const Setting()));
     }
   }
 
   @override
   void initState() {
     getDeviceInformation();
-    print('เข้าหน้าsplash');
+    debugPrint('เข้าหน้าsplash');
     setdata();
     super.initState();
   }
@@ -161,39 +155,38 @@ class _Splash_ScreenState extends State<Splash_Screen> {
     return style_height();
   }
 
+  // ignore: non_constant_identifier_names
   Widget style_height() {
-    double _width = MediaQuery.of(context).size.width;
-    double _height = MediaQuery.of(context).size.height;
+    double width = MediaQuery.of(context).size.width;
+    double height = MediaQuery.of(context).size.height;
     return Scaffold(
         body: SafeArea(
       child: Stack(
         children: [
           Positioned(
-              child: Container(
-                  width: _width,
-                  height: _height,
+              child: SizedBox(
+                  width: width,
+                  height: height,
                   child: SvgPicture.asset(
                     'assets/splash/backlogo.svg',
                     fit: BoxFit.fill,
                   ))),
           Positioned(
-              child: Container(
-            width: _width,
-            height: _width,
+              child: SizedBox(
+            width: width,
+            height: width,
             child: Center(
-              child: Container(
-                width: _width * 0.8,
-                height: _width * 0.8,
+              child: SizedBox(
+                width: width * 0.8,
+                height: width * 0.8,
                 child: SvgPicture.asset('assets/splash/logo.svg'),
               ),
             ),
           )),
-          Positioned(
+          const Positioned(
             right: 0,
-            child: Container(
-              child: CircularProgressIndicator(
-                color: Color.fromARGB(255, 0, 139, 130),
-              ),
+            child: CircularProgressIndicator(
+              color: Color.fromARGB(255, 0, 139, 130),
             ),
           ),
         ],
