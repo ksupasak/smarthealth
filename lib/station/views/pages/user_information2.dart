@@ -1,17 +1,15 @@
+// ignore_for_file: prefer_typing_uninitialized_variables, non_constant_identifier_names, use_build_context_synchronously, camel_case_types
+
 import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:flutter_pos_printer_platform/esc_pos_utils_platform/esc_pos_utils_platform.dart';
 import 'package:get/get.dart';
-import 'package:openvidu_client/openvidu_client.dart';
 import 'package:provider/provider.dart';
 import 'package:smart_health/station/provider/provider.dart';
 import 'package:smart_health/station/provider/provider_function.dart';
 import 'package:smart_health/station/test/esm_printer.dart';
-import 'package:smart_health/station/views/pages/home.dart';
 import 'package:smart_health/station/views/pages/videocall.dart';
 import 'package:smart_health/station/views/ui/widgetdew.dart/widgetdew.dart';
 import 'package:http/http.dart' as http;
@@ -30,12 +28,12 @@ class _UserInformationState extends State<UserInformation> {
         child: Scaffold(
       body: Stack(
         children: [
-          backgrund(),
+          const backgrund(),
           Positioned(
               child: ListView(
             children: [
               BoxDecorate(
-                  color: Color.fromARGB(255, 43, 179, 161),
+                  color: const Color.fromARGB(255, 43, 179, 161),
                   child: InformationCard(
                       dataidcard: context.read<DataProvider>().dataidcard)),
             ],
@@ -55,7 +53,6 @@ class UserInformation2 extends StatefulWidget {
 
 class _UserInformation2State extends State<UserInformation2> {
   Timer? _timer;
-  Timer? _timer2;
   var resTojson4;
   var resTojson3;
   var resTojson2;
@@ -69,9 +66,8 @@ class _UserInformation2State extends State<UserInformation2> {
   String status = '';
   ESMPrinter? printer;
   bool status2 = false;
-  late OpenViduClient _openvidu;
   bool ontap = false;
-  PrePareVideo? _prePareVideo;
+
   String doctor_note = '--';
   String dx = '--';
 
@@ -96,17 +92,17 @@ class _UserInformation2State extends State<UserInformation2> {
       check_status();
     });
     if (resTojson['health_records'].length != 0) {
-      height = "${resTojson['health_records'][0]['height'].toString()}";
-      weight = "${resTojson['health_records'][0]['weight'].toString()}";
-      temp = "${resTojson['health_records'][0]['temp'].toString()}";
-      sys = "${resTojson['health_records'][0]['bp_sys'].toString()}";
-      dia = "${resTojson['health_records'][0]['bp_dia'].toString()}";
-      spo2 = "${resTojson['health_records'][0]['spo2'].toString()}";
+      height = resTojson['health_records'][0]['height'].toString();
+      weight = resTojson['health_records'][0]['weight'].toString();
+      temp = resTojson['health_records'][0]['temp'].toString();
+      sys = resTojson['health_records'][0]['bp_sys'].toString();
+      dia = resTojson['health_records'][0]['bp_dia'].toString();
+      spo2 = resTojson['health_records'][0]['spo2'].toString();
     }
   }
 
   void lop_queue() {
-    _timer = Timer.periodic(Duration(seconds: 2), (timer) {
+    _timer = Timer.periodic(const Duration(seconds: 2), (timer) {
       setState(() {
         get_queue();
       });
@@ -127,17 +123,19 @@ class _UserInformation2State extends State<UserInformation2> {
                 resTojson2['queue_number'].toString() &&
             resTojson['queue_number'] != '') {
           setState(() {
-            print('ถึงคิว');
+            debugPrint('ถึงคิว');
             _timer?.cancel();
 
             Navigator.push(context,
-                MaterialPageRoute(builder: (context) => PrePareVideo()));
+                MaterialPageRoute(builder: (context) => const PrePareVideo()));
             status2 = true;
           });
         } else {
-          print('ยังไม่ถึงคิว');
-          print("คิวผู้ใช้        ${resTojson['queue_number'].toString()}");
-          print("คิวที่กำลังเรียก  ${resTojson2['queue_number'].toString()}");
+          debugPrint('ยังไม่ถึงคิว');
+          debugPrint(
+              "คิวผู้ใช้        ${resTojson['queue_number'].toString()}");
+          debugPrint(
+              "คิวที่กำลังเรียก  ${resTojson2['queue_number'].toString()}");
         }
       } else {
         setState(() {
@@ -167,9 +165,9 @@ class _UserInformation2State extends State<UserInformation2> {
             status = 'finished';
             stop();
           });
-          print('รายาการวันนี้เสร็จสิ้นเเล้ว');
+          debugPrint('รายาการวันนี้เสร็จสิ้นเเล้ว');
         } else if (resTojson4['message'] == 'completed') {
-          print('คุยเสร็จเเล้ว');
+          debugPrint('คุยเสร็จเเล้ว');
           setState(() {
             status = 'completed';
             stop();
@@ -178,18 +176,18 @@ class _UserInformation2State extends State<UserInformation2> {
           setState(() {
             status = 'processing';
           });
-          print('ถึงคิวเเล้ว');
+          debugPrint('ถึงคิวเเล้ว');
         } else if (resTojson4['message'] == 'waiting') {
-          print('ยังไม่ถึงคิว');
+          debugPrint('ยังไม่ถึงคิว');
         } else if (resTojson4['message'] == 'no queue') {
-          print('มีตรวจ/ยังไม่มีคิว');
+          debugPrint('มีตรวจ/ยังไม่มีคิว');
         } else if (resTojson4['message'] == 'not found today appointment') {
-          print('วันนี้ไม่มีรายการ');
+          debugPrint('วันนี้ไม่มีรายการ');
         } else {
-          print('resTojson4= ${resTojson4['message']}');
+          debugPrint('resTojson4= ${resTojson4['message']}');
         }
       } else {
-        print('resTojson = null');
+        debugPrint('resTojson = null');
       }
     });
   }
@@ -202,7 +200,7 @@ class _UserInformation2State extends State<UserInformation2> {
 
   Future<void> q() async {
     if (resTojson['health_records'].length != 0) {
-      print('รับคิวได้');
+      debugPrint('รับคิวได้');
       var url = Uri.parse('${context.read<DataProvider>().platfromURL}/get_q');
       var res = await http.post(url, body: {
         'public_id': context.read<DataProvider>().id,
@@ -220,7 +218,7 @@ class _UserInformation2State extends State<UserInformation2> {
         });
       }
     } else {
-      print('รับคิวไม่ได้');
+      debugPrint('รับคิวไม่ได้');
       Get.offNamed('healthrecord');
     }
   }
@@ -258,15 +256,15 @@ class _UserInformation2State extends State<UserInformation2> {
             width: PosTextSize.size1, height: PosTextSize.size1));
     bytes += generator.text('\n');
     bytes += generator.text('Doctor  :  pairot tanyajasesn');
-    bytes += generator.text('Results :  ${dx}');
-    bytes += generator.text('        :  ${doctor_note}');
+    bytes += generator.text('Results :  $dx');
+    bytes += generator.text('        :  $doctor_note');
     printer?.printTest(bytes);
   }
 
   Future<void> printq() async {
     List<int> bytes = [];
 
-    final profile = await CapabilityProfile.load(name: 'XP-N160I');
+    final profile = await CapabilityProfile.load(name: 'OFE6'); //XP-N160I
     final generator = Generator(PaperSize.mm58, profile);
     bytes += generator.text(context.read<DataProvider>().name_hospital,
         styles: const PosStyles(align: PosAlign.center));
@@ -349,28 +347,26 @@ class _UserInformation2State extends State<UserInformation2> {
     checkt_queue();
     printer = ESMPrinter([
       {'vendor_id': '19267', 'product_id': '14384'},
-      //   {'vendor_id': '1137', 'product_id': '85'}
     ]);
-    // TODO: implement initState
+
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    double _width = MediaQuery.of(context).size.width;
-    double _height = MediaQuery.of(context).size.height;
+    double width = MediaQuery.of(context).size.width;
+    double height = MediaQuery.of(context).size.height;
     return SafeArea(
         child: Scaffold(
       body: Stack(
         children: [
-          backgrund(),
+          const backgrund(),
           Positioned(
               child: ListView(
             children: resTojson != null
                 ? [
-                    Container(
-                      height: _height * 0.25,
-                      //   color: Color.fromARGB(100, 76, 175, 79),
+                    SizedBox(
+                      height: height * 0.25,
                       child: Column(
                         children: [
                           BoxTime(),
@@ -381,9 +377,8 @@ class _UserInformation2State extends State<UserInformation2> {
                         ],
                       ),
                     ),
-                    Container(
-                      height: _height * 0.5,
-                      //    color: Color.fromARGB(100, 255, 235, 59),
+                    SizedBox(
+                      height: height * 0.5,
                       child: Column(
                         children: [
                           status != ''
@@ -391,10 +386,10 @@ class _UserInformation2State extends State<UserInformation2> {
                                   children: [
                                     BoxStatusinform(status: status),
                                     SizedBox(
-                                      height: _height * 0.01,
+                                      height: height * 0.01,
                                     ),
                                     ontap == true
-                                        ? Container(
+                                        ? SizedBox(
                                             width: MediaQuery.of(context)
                                                     .size
                                                     .width *
@@ -403,7 +398,8 @@ class _UserInformation2State extends State<UserInformation2> {
                                                     .size
                                                     .width *
                                                 0.05,
-                                            child: CircularProgressIndicator(
+                                            child:
+                                                const CircularProgressIndicator(
                                               color: Color(0xff76FFD5),
                                             ),
                                           )
@@ -415,14 +411,15 @@ class _UserInformation2State extends State<UserInformation2> {
                                               exam();
                                             },
                                             child: Container(
-                                                height: _height * 0.05,
-                                                width: _width * 0.3,
+                                                height: height * 0.05,
+                                                width: width * 0.3,
                                                 decoration: BoxDecoration(
-                                                    color: Color(0xff31D6AA),
+                                                    color:
+                                                        const Color(0xff31D6AA),
                                                     borderRadius:
                                                         BorderRadius.circular(
                                                             15),
-                                                    boxShadow: [
+                                                    boxShadow: const [
                                                       BoxShadow(
                                                         color: Colors.grey,
                                                         offset: Offset(0, 4),
@@ -445,7 +442,7 @@ class _UserInformation2State extends State<UserInformation2> {
                                                                       DataProvider>()
                                                                   .fontFamily,
                                                               fontSize:
-                                                                  _width * 0.03,
+                                                                  width * 0.03,
                                                               color:
                                                                   Colors.white))
                                                     ])),
@@ -454,10 +451,8 @@ class _UserInformation2State extends State<UserInformation2> {
                                 )
                               : Column(
                                   children: [
-                                    //  Container(child: Center(child: BoxQueue())),
-                                    BoxToDay(),
-                                    SizedBox(height: _height * 0.01),
-
+                                    const BoxToDay(),
+                                    SizedBox(height: height * 0.01),
                                     ontap == false
                                         ? resTojson['todays'].length != 0
                                             ? resTojson['queue_number'] != ''
@@ -469,16 +464,16 @@ class _UserInformation2State extends State<UserInformation2> {
                                                       printq();
                                                     },
                                                     child: Container(
-                                                        height: _height * 0.05,
-                                                        width: _width * 0.3,
+                                                        height: height * 0.05,
+                                                        width: width * 0.3,
                                                         decoration: BoxDecoration(
-                                                            color: Color(
+                                                            color: const Color(
                                                                 0xff31D6AA),
                                                             borderRadius:
                                                                 BorderRadius
                                                                     .circular(
                                                                         15),
-                                                            boxShadow: [
+                                                            boxShadow: const [
                                                               BoxShadow(
                                                                 color:
                                                                     Colors.grey,
@@ -504,7 +499,7 @@ class _UserInformation2State extends State<UserInformation2> {
                                                                               DataProvider>()
                                                                           .fontFamily,
                                                                       fontSize:
-                                                                          _width *
+                                                                          width *
                                                                               0.03,
                                                                       color: Colors
                                                                           .white))
@@ -518,16 +513,16 @@ class _UserInformation2State extends State<UserInformation2> {
                                                       q();
                                                     },
                                                     child: Container(
-                                                        height: _height * 0.05,
-                                                        width: _width * 0.3,
+                                                        height: height * 0.05,
+                                                        width: width * 0.3,
                                                         decoration: BoxDecoration(
-                                                            color: Color(
+                                                            color: const Color(
                                                                 0xff31D6AA),
                                                             borderRadius:
                                                                 BorderRadius
                                                                     .circular(
                                                                         15),
-                                                            boxShadow: [
+                                                            boxShadow: const [
                                                               BoxShadow(
                                                                 color:
                                                                     Colors.grey,
@@ -553,14 +548,14 @@ class _UserInformation2State extends State<UserInformation2> {
                                                                               DataProvider>()
                                                                           .fontFamily,
                                                                       fontSize:
-                                                                          _width *
+                                                                          width *
                                                                               0.03,
                                                                       color: Colors
                                                                           .white))
                                                             ])),
                                                   )
-                                            : Container()
-                                        : Container(
+                                            : const SizedBox()
+                                        : SizedBox(
                                             width: MediaQuery.of(context)
                                                     .size
                                                     .width *
@@ -569,17 +564,17 @@ class _UserInformation2State extends State<UserInformation2> {
                                                     .size
                                                     .width *
                                                 0.07,
-                                            child: CircularProgressIndicator(
-                                                color: Color(0xff76FFD5)),
+                                            child:
+                                                const CircularProgressIndicator(
+                                                    color: Color(0xff76FFD5)),
                                           )
                                   ],
                                 ),
                         ],
                       ),
                     ),
-                    Container(
-                      //  color: Color.fromARGB(100, 244, 67, 54),
-                      height: _height * 0.15,
+                    SizedBox(
+                      height: height * 0.15,
                       child: Column(
                         children: [
                           choice(cancel: stop),
@@ -588,10 +583,10 @@ class _UserInformation2State extends State<UserInformation2> {
                     ),
                   ]
                 : [
-                    Container(
+                    SizedBox(
                       width: MediaQuery.of(context).size.width * 0.07,
                       height: MediaQuery.of(context).size.width * 0.07,
-                      child: Center(
+                      child: const Center(
                           child: CircularProgressIndicator(
                               color: Color(0xff000000))),
                     ),
@@ -599,8 +594,8 @@ class _UserInformation2State extends State<UserInformation2> {
           ))
         ],
       ),
-      bottomNavigationBar: Container(
-        height: _height * 0.03,
+      bottomNavigationBar: SizedBox(
+        height: height * 0.03,
         child: Row(
           children: [
             Padding(
@@ -615,20 +610,20 @@ class _UserInformation2State extends State<UserInformation2> {
                   });
                 },
                 child: Container(
-                  height: _height * 0.025,
-                  width: _width * 0.15,
+                  height: height * 0.025,
+                  width: width * 0.15,
                   decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(10),
                       border: Border.all(
-                          color: Color.fromARGB(255, 201, 201, 201),
-                          width: _width * 0.002)),
+                          color: const Color.fromARGB(255, 201, 201, 201),
+                          width: width * 0.002)),
                   child: Center(
                       child: Text(
                     '< ย้อนกลับ',
                     style: TextStyle(
                         fontFamily: context.read<DataProvider>().fontFamily,
-                        fontSize: _width * 0.03,
-                        color: Color.fromARGB(255, 201, 201, 201)),
+                        fontSize: width * 0.03,
+                        color: const Color.fromARGB(255, 201, 201, 201)),
                   )),
                 ),
               ),
@@ -641,7 +636,7 @@ class _UserInformation2State extends State<UserInformation2> {
 }
 
 class choice extends StatefulWidget {
-  choice({super.key, this.cancel});
+  const choice({super.key, this.cancel});
   final VoidCallback? cancel;
   @override
   State<choice> createState() => _choiceState();
@@ -656,7 +651,7 @@ class _choiceState extends State<choice> {
     if (resTojson['health_records'].length == 0) {
       context.read<DataProvider>().status_getqueue = 'false';
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          content: Container(
+          content: SizedBox(
               width: MediaQuery.of(context).size.width,
               child: Center(
                   child: Text(
@@ -674,13 +669,15 @@ class _choiceState extends State<choice> {
         'public_id': context.read<DataProvider>().id,
       });
       if (res.statusCode == 200) {
-        print('รับคิว รีเซ็ท');
+        debugPrint('รับคิว รีเซ็ท');
         setState(() {
           resTojson = json.decode(res.body);
           context.read<DataProvider>().status_getqueue == 'true';
           Navigator.pop(context);
-          Navigator.push(context,
-              MaterialPageRoute(builder: (context) => UserInformation2()));
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => const UserInformation2()));
         });
       }
     }
@@ -694,76 +691,26 @@ class _choiceState extends State<choice> {
     });
     setState(() {
       resTojson = json.decode(res.body);
-      if (resTojson != null) {
-        // init();
-      }
+      if (resTojson != null) {}
     });
   }
-
-  // void init() {
-  //   if (resTojson['queue_number'] == '' &&
-  //       resTojson['health_records'].length != 0 &&
-  //       context.read<DataProvider>().status_getqueue == 'false') {
-  //     getqueue();
-  //   } else {
-  //     print('ไม่ผ่าน');
-  //     print(resTojson['queue_number']);
-  //     print(resTojson['health_records']);
-  //     print(context.read<DataProvider>().status_getqueue);
-  //   }
-  // }
-
-  // Future<void> check_status() async {
-  //   var url = Uri.parse(
-  //       '${context.read<DataProvider>().platfromURL}/get_video_status');
-  //   var res = await http.post(url, body: {
-  //     'public_id': context.read<DataProvider>().id,
-  //   });
-  //   setState(() {
-  //     resTojson2 = json.decode(res.body);
-  //     if (resTojson2 != null) {
-  //       if (resTojson2['message'] == 'finished') {
-  //         setState(() {
-  //           status = 'finished';
-  //         });
-  //         print('รายาการวันนี้เสร็จสิ้นเเล้ว');
-  //       } else if (resTojson2['message'] == 'completed') {
-  //         print('คุยเสร็จเเล้ว');
-  //         setState(() {
-  //           status = 'completed';
-  //         });
-  //       } else if (resTojson2['message'] == 'processing') {
-  //         print('ถึงคิวเเล้ว');
-  //       } else if (resTojson2['message'] == 'waiting') {
-  //         print('ยังไม่ถึงคิว');
-  //       } else if (resTojson2['message'] == 'no queue') {
-  //         print('มีตรวจ/ยังไม่มีคิว');
-  //       } else if (resTojson2['message'] == 'not found today appointment') {
-  //         print('วันนี้ไม่มีรายการ');
-  //       } else {
-  //         print('resTojson2= ${resTojson2['message']}');
-  //       }
-  //     }
-  //   });
-  // }
 
   @override
   void initState() {
     checkt_queue();
-    // check_status();
-    // TODO: implement initState
+
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    double _width = MediaQuery.of(context).size.width;
-    double _height = MediaQuery.of(context).size.height;
+    double width = MediaQuery.of(context).size.width;
+    double height = MediaQuery.of(context).size.height;
     BoxDecoration boxDecoration1 = BoxDecoration(
       color: Colors.white,
       borderRadius: BorderRadius.circular(10),
-      border: Border.all(color: Color.fromARGB(255, 245, 245, 245)),
-      boxShadow: [
+      border: Border.all(color: const Color.fromARGB(255, 245, 245, 245)),
+      boxShadow: const [
         BoxShadow(
             color: Color(0xffFFA800),
             offset: Offset(0, 3),
@@ -774,8 +721,8 @@ class _choiceState extends State<choice> {
     BoxDecoration boxDecoration2 = BoxDecoration(
       color: Colors.white,
       borderRadius: BorderRadius.circular(10),
-      border: Border.all(color: Color.fromARGB(255, 245, 245, 245)),
-      boxShadow: [
+      border: Border.all(color: const Color.fromARGB(255, 245, 245, 245)),
+      boxShadow: const [
         BoxShadow(
             color: Color(0xff0076B1),
             offset: Offset(0, 3),
@@ -785,125 +732,113 @@ class _choiceState extends State<choice> {
     );
     TextStyle style = TextStyle(
         fontFamily: context.read<DataProvider>().fontFamily,
-        fontSize: _width * 0.035,
-        color: Color(0xff1B6286));
-    return Container(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
-        children: [
-          // GestureDetector(
-          //     onTap: () {
-          //       getqueue();
-          //     },
-          //     child: Container(
-          //       width: 100,
-          //       height: 100,
-          //       color: Colors.black,
-          //     )),
-          //  ButtonQueue(),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              GestureDetector(
-                onTap: () {
-                  showModalBottomSheet(
-                    backgroundColor: Color.fromARGB(0, 255, 255, 255),
-                    isScrollControlled: true,
-                    shape: RoundedRectangleBorder(
-                        borderRadius:
-                            BorderRadius.vertical(top: Radius.circular(10))),
-                    context: context,
-                    builder: (context) => Container(
-                      height: _height * 0.6,
-                      decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.only(
-                              topLeft: Radius.circular(20),
-                              topRight: Radius.circular(20))),
-                      child: Column(children: [
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Container(
-                              height: _height * 0.01,
-                              width: _width * 0.4,
-                              decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(50),
-                                  color: Colors.grey)),
-                        ),
-                        HeadBoxAppointments(),
-                        BoxAppointments(),
-                      ]),
-                    ),
-                  );
-                },
-                child: Container(
-                    height: _height * 0.05,
-                    width: _width * 0.35,
-                    decoration: boxDecoration1,
-                    child: Row(
-                      children: [
-                        Image.asset('assets/pasd.png'),
-                        Center(
-                            child: Text(
-                          'การนัดหมาย',
-                          style: style,
-                        )),
-                      ],
-                    )),
-              ),
-              SizedBox(
-                width: _width * 0.05,
-              ),
-              GestureDetector(
-                onTap: () {
-                  showModalBottomSheet(
-                    backgroundColor: Color.fromARGB(0, 255, 255, 255),
-                    isScrollControlled: true,
-                    shape: RoundedRectangleBorder(
-                        borderRadius:
-                            BorderRadius.vertical(top: Radius.circular(10))),
-                    context: context,
-                    builder: (context) => Container(
-                      height: _height * 0.6,
-                      decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.only(
-                              topLeft: Radius.circular(20),
-                              topRight: Radius.circular(20))),
-                      child: Column(children: [
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Container(
-                              height: _height * 0.01,
-                              width: _width * 0.4,
-                              decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(50),
-                                  color: Colors.grey)),
-                        ),
-                        BoxShoHealth_Records(),
-                      ]),
-                    ),
-                  );
-                },
-                child: Container(
-                    height: _height * 0.05,
-                    width: _width * 0.35,
-                    decoration: boxDecoration2,
-                    child: Row(
-                      children: [
-                        Image.asset('assets/ksjope.png'),
-                        Center(
-                            child: Text(
-                          'ประวัติสุขภาพ',
-                          style: style,
-                        )),
-                      ],
-                    )),
-              ),
-            ],
-          ),
-        ],
-      ),
+        fontSize: width * 0.035,
+        color: const Color(0xff1B6286));
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.spaceAround,
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            GestureDetector(
+              onTap: () {
+                showModalBottomSheet(
+                  backgroundColor: const Color.fromARGB(0, 255, 255, 255),
+                  isScrollControlled: true,
+                  shape: const RoundedRectangleBorder(
+                      borderRadius:
+                          BorderRadius.vertical(top: Radius.circular(10))),
+                  context: context,
+                  builder: (context) => Container(
+                    height: height * 0.6,
+                    decoration: const BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(20),
+                            topRight: Radius.circular(20))),
+                    child: Column(children: [
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Container(
+                            height: height * 0.01,
+                            width: width * 0.4,
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(50),
+                                color: Colors.grey)),
+                      ),
+                      const HeadBoxAppointments(),
+                      BoxAppointments(),
+                    ]),
+                  ),
+                );
+              },
+              child: Container(
+                  height: height * 0.05,
+                  width: width * 0.35,
+                  decoration: boxDecoration1,
+                  child: Row(
+                    children: [
+                      Image.asset('assets/pasd.png'),
+                      Center(
+                          child: Text(
+                        'การนัดหมาย',
+                        style: style,
+                      )),
+                    ],
+                  )),
+            ),
+            SizedBox(
+              width: width * 0.05,
+            ),
+            GestureDetector(
+              onTap: () {
+                showModalBottomSheet(
+                  backgroundColor: const Color.fromARGB(0, 255, 255, 255),
+                  isScrollControlled: true,
+                  shape: const RoundedRectangleBorder(
+                      borderRadius:
+                          BorderRadius.vertical(top: Radius.circular(10))),
+                  context: context,
+                  builder: (context) => Container(
+                    height: height * 0.6,
+                    decoration: const BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(20),
+                            topRight: Radius.circular(20))),
+                    child: Column(children: [
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Container(
+                            height: height * 0.01,
+                            width: width * 0.4,
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(50),
+                                color: Colors.grey)),
+                      ),
+                      BoxShoHealth_Records(),
+                    ]),
+                  ),
+                );
+              },
+              child: Container(
+                  height: height * 0.05,
+                  width: width * 0.35,
+                  decoration: boxDecoration2,
+                  child: Row(
+                    children: [
+                      Image.asset('assets/ksjope.png'),
+                      Center(
+                          child: Text(
+                        'ประวัติสุขภาพ',
+                        style: style,
+                      )),
+                    ],
+                  )),
+            ),
+          ],
+        ),
+      ],
     );
   }
 }

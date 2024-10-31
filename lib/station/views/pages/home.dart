@@ -13,7 +13,6 @@ import 'package:http/http.dart' as http;
 import 'package:smart_health/station/provider/provider.dart';
 import 'package:smart_health/station/provider/provider_function.dart';
 
-import 'package:smart_health/myapp/menu/menuhome.dart';
 import 'package:smart_health/station/views/pages/numpad.dart';
 import 'package:smart_health/station/views/ui/widgetdew.dart/popup.dart';
 import 'package:smart_health/station/views/ui/widgetdew.dart/widgetdew.dart';
@@ -327,34 +326,6 @@ class _HomeappState extends State<Homeapp> {
                         ],
                       ),
                     ),
-                    GestureDetector(
-                      onTap: () {
-                        //  Navigator.pop(context);
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => const MenuHome()));
-                      },
-                      child: SizedBox(
-                        height: height * 0.05,
-                        width: width * 0.4,
-                        child: Center(
-                            child: Text(
-                          'กลับ',
-                          style: TextStyle(
-                              shadows: const [
-                                Shadow(
-                                    color: Colors.black,
-                                    blurRadius: 1,
-                                    offset: Offset(0, 1))
-                              ],
-                              color: Colors.white,
-                              fontFamily:
-                                  context.read<DataProvider>().fontFamily,
-                              fontSize: width * 0.04),
-                        )),
-                      ),
-                    )
                   ],
                 )),
               ),
