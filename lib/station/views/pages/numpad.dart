@@ -1,8 +1,6 @@
-import 'package:flutter/cupertino.dart';
+// ignore_for_file: must_be_immutable
+
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/container.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 import 'package:smart_health/myapp/setting/setting.dart';
 import 'package:smart_health/station/provider/provider.dart';
@@ -15,18 +13,10 @@ class Numpad extends StatefulWidget {
   @override
   State<Numpad> createState() => _NumpadState();
 
-  // final Stream<String> entry;
   StreamController<String>? entry;
 
   void setValue(String val) {
-    // setState(() {
-    //   passwordslogin = val;
-    //   context.read<Datafunction>().playsound();
-    // });
-
     entry?.sink.add(val);
-
-    //  state.setValue(val);
   }
 }
 
@@ -57,14 +47,12 @@ class _NumpadState extends State<Numpad> {
         setState(() {
           context.read<DataProvider>().colortexts = 'green';
           context.read<DataProvider>().id = passwordslogin;
-          //  print(context.read<DataProvider>().id);
         });
       } else {
         setState(() {
           colortexts = 'red';
           context.read<DataProvider>().colortexts = 'red';
           context.read<DataProvider>().id = passwordslogin;
-          //  print(context.read<DataProvider>().id);
         });
       }
     } else {
@@ -72,7 +60,6 @@ class _NumpadState extends State<Numpad> {
       context.read<DataProvider>().colortexts = 'back';
       setState(() {
         context.read<DataProvider>().id = passwordslogin;
-        //  print(context.read<DataProvider>().id);
       });
     }
   }
@@ -93,10 +80,7 @@ class _NumpadState extends State<Numpad> {
   @override
   void initState() {
     passwordslogin = '';
-    // TODO: implement initState
-
-    this.widget.entry = entry;
-
+    widget.entry = entry;
     entry.stream.listen((String data) {
       setState(() {
         context.read<DataProvider>().colortexts = 'green';
@@ -110,8 +94,7 @@ class _NumpadState extends State<Numpad> {
 
   @override
   Widget build(BuildContext context) {
-    bool show = false;
-    Decoration decoration = BoxDecoration(boxShadow: [
+    Decoration decoration = BoxDecoration(boxShadow: const [
       BoxShadow(
           color: Color.fromARGB(255, 170, 170, 170),
           offset: Offset(1, 1),
@@ -122,45 +105,15 @@ class _NumpadState extends State<Numpad> {
                 MediaQuery.of(context).size.height) *
             0.012,
         fontWeight: FontWeight.w600);
-    double _width = MediaQuery.of(context).size.width;
-    double _height = MediaQuery.of(context).size.height;
     return Column(
       children: [
-        // Container(
-        //   height: _height * 0.05,
-        //   width: _width * 0.7,
-        //   decoration: BoxDecoration(boxShadow: [
-        //     BoxShadow(
-        //         color: Color.fromARGB(255, 170, 170, 170),
-        //         offset: Offset(0, 0),
-        //         blurRadius: 1)
-        //   ], color: Colors.white, borderRadius: BorderRadius.circular(5)),
-        //   child: Row(
-        //     mainAxisAlignment: MainAxisAlignment.center,
-        //     children: [
-        //       Text(
-        //         "$passwordslogin",
-        //         style: TextStyle(
-        //             color: colortexts == "back"
-        //                 ? Colors.black
-        //                 : colortexts == "red"
-        //                     ? Colors.red
-        //                     : Colors.green,
-        //             fontSize: (MediaQuery.of(context).size.width +
-        //                     MediaQuery.of(context).size.height) *
-        //                 0.012,
-        //             fontWeight: FontWeight.w600),
-        //       )
-        //     ],
-        //   ),
-        // ),
         SizedBox(
           height: MediaQuery.of(context).size.height * 0.005,
         ),
         Container(
             height: MediaQuery.of(context).size.height * 0.25,
             width: MediaQuery.of(context).size.width * 0.7,
-            decoration: BoxDecoration(boxShadow: [
+            decoration: BoxDecoration(boxShadow: const [
               BoxShadow(
                   color: Color.fromARGB(255, 170, 170, 170),
                   offset: Offset(0, 0),
@@ -178,7 +131,7 @@ class _NumpadState extends State<Numpad> {
                             child: GestureDetector(
                                 onTap: () {
                                   setState(() {
-                                    passwordslogin = passwordslogin + '7';
+                                    passwordslogin = '${passwordslogin}7';
                                     chakepasswordslogin();
                                   });
                                 },
@@ -195,7 +148,7 @@ class _NumpadState extends State<Numpad> {
                             child: GestureDetector(
                                 onTap: () {
                                   setState(() {
-                                    passwordslogin = passwordslogin + '8';
+                                    passwordslogin = '${passwordslogin}8';
                                     chakepasswordslogin();
                                   });
                                 },
@@ -212,7 +165,7 @@ class _NumpadState extends State<Numpad> {
                             child: GestureDetector(
                                 onTap: () {
                                   setState(() {
-                                    passwordslogin = passwordslogin + '9';
+                                    passwordslogin = '${passwordslogin}9';
                                     chakepasswordslogin();
                                   });
                                 },
@@ -235,7 +188,7 @@ class _NumpadState extends State<Numpad> {
                             child: GestureDetector(
                                 onTap: () {
                                   setState(() {
-                                    passwordslogin = passwordslogin + '4';
+                                    passwordslogin = '${passwordslogin}4';
                                     chakepasswordslogin();
                                   });
                                 },
@@ -252,7 +205,7 @@ class _NumpadState extends State<Numpad> {
                             child: GestureDetector(
                                 onTap: () {
                                   setState(() {
-                                    passwordslogin = passwordslogin + '5';
+                                    passwordslogin = '${passwordslogin}5';
                                     chakepasswordslogin();
                                   });
                                 },
@@ -269,7 +222,7 @@ class _NumpadState extends State<Numpad> {
                             child: GestureDetector(
                                 onTap: () {
                                   setState(() {
-                                    passwordslogin = passwordslogin + '6';
+                                    passwordslogin = '${passwordslogin}6';
                                     chakepasswordslogin();
                                   });
                                 },
@@ -292,7 +245,7 @@ class _NumpadState extends State<Numpad> {
                             child: GestureDetector(
                                 onTap: () {
                                   setState(() {
-                                    passwordslogin = passwordslogin + '1';
+                                    passwordslogin = '${passwordslogin}1';
                                     chakepasswordslogin();
                                   });
                                 },
@@ -309,7 +262,7 @@ class _NumpadState extends State<Numpad> {
                             child: GestureDetector(
                                 onTap: () {
                                   setState(() {
-                                    passwordslogin = passwordslogin + '2';
+                                    passwordslogin = '${passwordslogin}2';
                                     chakepasswordslogin();
                                   });
                                 },
@@ -326,7 +279,7 @@ class _NumpadState extends State<Numpad> {
                             child: GestureDetector(
                                 onTap: () {
                                   setState(() {
-                                    passwordslogin = passwordslogin + '3';
+                                    passwordslogin = '${passwordslogin}3';
                                     chakepasswordslogin();
                                   });
                                 },
@@ -352,12 +305,12 @@ class _NumpadState extends State<Numpad> {
                                           .read<DataProvider>()
                                           .passwordsetting ==
                                       context.read<DataProvider>().id) {
-                                    //    Get.offNamed('setting');
                                     Navigator.push(
                                         context,
                                         MaterialPageRoute(
-                                            builder: (context) => Setting()));
-                                    print('ตั่งค่า');
+                                            builder: (context) =>
+                                                const Setting()));
+                                    debugPrint('ตั่งค่า');
                                   }
                                 },
                                 child: Container(
@@ -372,7 +325,7 @@ class _NumpadState extends State<Numpad> {
                             child: GestureDetector(
                                 onTap: () {
                                   setState(() {
-                                    passwordslogin = passwordslogin + '0';
+                                    passwordslogin = '${passwordslogin}0';
                                     chakepasswordslogin();
                                   });
                                 },
@@ -426,12 +379,13 @@ class _BoxIDState extends State<BoxID> {
   var id = '';
   @override
   void initState() {
+    super.initState();
     id == '';
     start();
   }
 
   void start() {
-    timer = Timer.periodic(Duration(microseconds: 200), (Timer t) {
+    timer = Timer.periodic(const Duration(microseconds: 200), (Timer t) {
       setState(() {
         id = context.read<DataProvider>().id;
       });
@@ -447,18 +401,18 @@ class _BoxIDState extends State<BoxID> {
   @override
   void dispose() {
     stop();
-    // TODO: implement dispose
+
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    double _width = MediaQuery.of(context).size.width;
-    double _height = MediaQuery.of(context).size.height;
+    double width = MediaQuery.of(context).size.width;
+    double height = MediaQuery.of(context).size.height;
     return Container(
-      height: _height * 0.05,
-      width: _width * 0.6,
-      decoration: BoxDecoration(boxShadow: [
+      height: height * 0.05,
+      width: width * 0.6,
+      decoration: BoxDecoration(boxShadow: const [
         BoxShadow(
             color: Color.fromARGB(255, 170, 170, 170),
             offset: Offset(0, 0),

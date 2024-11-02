@@ -1,10 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/container.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:get/get.dart';
-import 'package:provider/provider.dart';
-import 'package:smart_health/station/background/background.dart';
-import 'package:smart_health/station/background/color/style_color.dart';
 import 'package:smart_health/station/views/ui/widgetdew.dart/widgetdew.dart';
 
 class Menu extends StatefulWidget {
@@ -17,15 +12,14 @@ class Menu extends StatefulWidget {
 class _MenuState extends State<Menu> {
   @override
   Widget build(BuildContext context) {
-    double _width = MediaQuery.of(context).size.width;
-    double _height = MediaQuery.of(context).size.height;
+    double height = MediaQuery.of(context).size.height;
     return Scaffold(
         body: Stack(children: [
-      backgrund(),
+      const backgrund(),
       Positioned(
         child: Center(
-            child: Container(
-                height: _height * 0.45,
+            child: SizedBox(
+                height: height * 0.45,
                 child: Column(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
@@ -39,7 +33,7 @@ class _MenuState extends State<Menu> {
                               text: 'เช็คสุขภาพ',
                               fontSize: 0.05,
                               textcolor: Colors.white,
-                              color: Color.fromARGB(255, 76, 199, 45))),
+                              color: const Color.fromARGB(255, 76, 199, 45))),
                       GestureDetector(
                           onTap: (() {
                             Get.toNamed('checkqueue');
@@ -50,7 +44,7 @@ class _MenuState extends State<Menu> {
                               text: 'เช็คคิว',
                               fontSize: 0.05,
                               textcolor: Colors.white,
-                              color: Color.fromARGB(255, 7, 171, 200))),
+                              color: const Color.fromARGB(255, 7, 171, 200))),
                       GestureDetector(
                           onTap: (() {}),
                           child: BoxWidetdew(
@@ -59,7 +53,7 @@ class _MenuState extends State<Menu> {
                               text: 'อื่นๆ',
                               fontSize: 0.05,
                               textcolor: Colors.white,
-                              color: Color.fromARGB(255, 4, 156, 130))),
+                              color: const Color.fromARGB(255, 4, 156, 130))),
                       GestureDetector(
                           onTap: (() {
                             Get.offNamed('home');
@@ -70,7 +64,7 @@ class _MenuState extends State<Menu> {
                               fontSize: 0.05,
                               text: 'ออกจากระบบ',
                               textcolor: Colors.white,
-                              color: Color.fromARGB(255, 231, 29, 29))),
+                              color: const Color.fromARGB(255, 231, 29, 29))),
                     ]))),
       )
     ]));

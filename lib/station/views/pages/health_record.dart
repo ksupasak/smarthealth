@@ -1,16 +1,15 @@
+// ignore_for_file: unrelated_type_equality_checks
+
 import 'dart:async';
 import 'dart:collection';
 import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/container.dart';
-import 'package:flutter/src/widgets/framework.dart';
+
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 
 import 'package:http/http.dart' as http;
-import 'package:smart_health/station/background/background.dart';
-import 'package:smart_health/station/background/color/style_color.dart';
 import 'package:smart_health/station/device/ad_ua651ble.dart';
 import 'package:smart_health/station/device/hc08.dart';
 import 'package:smart_health/station/device/hj_narigmed.dart';
@@ -52,57 +51,57 @@ class _HealthRecordState extends State<HealthRecord> {
   }
 
   void test() {
-    String temp_value = '';
-    String weight_value = '';
-    String sys_value = '';
-    String dia_value = '';
-    String spo2_value = '';
-    String pr_value = '';
-    String pulse_value = '';
-    String fbs_value = '';
-    String si_value = '';
-    String uric_value = '';
+    String tempValue = '';
+    String weightValue = '';
+    String sysValue = '';
+    String diaValue = '';
+    String spo2Value = '';
+    String prValue = '';
+    String pulseValue = '';
+    String fbsValue = '';
+    String siValue = '';
+    String uricValue = '';
     timer = Timer.periodic(const Duration(seconds: 2), (_) {
       setState(() {
-        if (temp_value != context.read<DataProvider>().temp) {
+        if (tempValue != context.read<DataProvider>().temp) {
           temp.text = context.read<DataProvider>().temp;
-          temp_value = context.read<DataProvider>().temp;
+          tempValue = context.read<DataProvider>().temp;
         }
-        if (weight_value != context.read<DataProvider>().weight) {
+        if (weightValue != context.read<DataProvider>().weight) {
           weight.text = context.read<DataProvider>().weight;
-          weight_value = context.read<DataProvider>().weight;
+          weightValue = context.read<DataProvider>().weight;
         }
-        if (sys_value != context.read<DataProvider>().sys) {
+        if (sysValue != context.read<DataProvider>().sys) {
           sys.text = context.read<DataProvider>().sys;
-          sys_value = context.read<DataProvider>().sys;
+          sysValue = context.read<DataProvider>().sys;
         }
-        if (dia_value != context.read<DataProvider>().dia) {
+        if (diaValue != context.read<DataProvider>().dia) {
           dia.text = context.read<DataProvider>().dia;
-          dia_value = context.read<DataProvider>().dia;
+          diaValue = context.read<DataProvider>().dia;
         }
-        if (spo2_value != context.read<DataProvider>().spo2) {
+        if (spo2Value != context.read<DataProvider>().spo2) {
           spo2.text = context.read<DataProvider>().spo2;
-          spo2_value = context.read<DataProvider>().spo2;
+          spo2Value = context.read<DataProvider>().spo2;
         }
-        if (pr_value != context.read<DataProvider>().pr) {
+        if (prValue != context.read<DataProvider>().pr) {
           pr.text = context.read<DataProvider>().pr;
-          pr_value = context.read<DataProvider>().pr;
+          prValue = context.read<DataProvider>().pr;
         }
-        if (pulse_value != context.read<DataProvider>().pul) {
+        if (pulseValue != context.read<DataProvider>().pul) {
           pulse.text = context.read<DataProvider>().pul;
-          pulse_value = context.read<DataProvider>().pul;
+          pulseValue = context.read<DataProvider>().pul;
         }
-        if (fbs_value != context.read<DataProvider>().fbs) {
+        if (fbsValue != context.read<DataProvider>().fbs) {
           fbs.text = context.read<DataProvider>().fbs;
-          fbs_value = context.read<DataProvider>().fbs;
+          fbsValue = context.read<DataProvider>().fbs;
         }
-        if (si_value != context.read<DataProvider>().si) {
+        if (siValue != context.read<DataProvider>().si) {
           si.text = context.read<DataProvider>().si;
-          si_value = context.read<DataProvider>().si;
+          siValue = context.read<DataProvider>().si;
         }
-        if (uric_value != context.read<DataProvider>().uric) {
+        if (uricValue != context.read<DataProvider>().uric) {
           uric.text = context.read<DataProvider>().uric;
-          uric_value = context.read<DataProvider>().uric;
+          uricValue = context.read<DataProvider>().uric;
         }
       });
     });
@@ -158,7 +157,7 @@ class _HealthRecordState extends State<HealthRecord> {
                         pathicon: 'assets/close.png',
                         height: 0.05,
                         width: 0.05)),
-                SizedBox(width: 50),
+                const SizedBox(width: 50),
                 GestureDetector(
                     onTap: () {
                       recorddata();
@@ -169,12 +168,12 @@ class _HealthRecordState extends State<HealthRecord> {
                         pathicon: 'assets/check.png',
                         height: 0.08,
                         width: 0.08)),
-                SizedBox(width: 50),
+                const SizedBox(width: 50),
               ],
             );
           });
     } else {
-      print('value!=null');
+      debugPrint('value!=null');
       recorddata();
     }
   }
@@ -187,14 +186,14 @@ class _HealthRecordState extends State<HealthRecord> {
     var res = await http.post(url, body: {
       "public_id": context.read<DataProvider>().id,
       "care_unit_id": context.read<DataProvider>().care_unit_id,
-      "temp": "${temp.text}",
-      "weight": "${weight.text}",
-      "bp_sys": "${sys.text}",
-      "bp_dia": "${dia.text}",
-      "pulse_rate": "${pulse.text}",
-      "spo2": "${spo2.text}",
-      "fbs": "${fbs.text}",
-      "height": "${height.text}",
+      "temp": temp.text,
+      "weight": weight.text,
+      "bp_sys": sys.text,
+      "bp_dia": dia.text,
+      "pulse_rate": pulse.text,
+      "spo2": spo2.text,
+      "fbs": fbs.text,
+      "height": height.text,
       "bmi": "",
       "bp": "${sys.text}/${dia.text}",
       "rr": "",
@@ -215,13 +214,13 @@ class _HealthRecordState extends State<HealthRecord> {
             //           texthead: 'สำเร็จ',
             //           pathicon: 'assets/correct.png');
             //     });
-            Timer(Duration(seconds: 1), () {
+            Timer(const Duration(seconds: 1), () {
               stop();
               Get.offNamed('user_information');
             });
           });
         } else {
-          print(resTojson);
+          debugPrint(resTojson);
           setState(() {
             prevent = false;
             setState(() {
@@ -272,15 +271,15 @@ class _HealthRecordState extends State<HealthRecord> {
   }
 
   void bleScan() {
-    var namescan;
+    List<String> namescan;
 
     FlutterBluePlus flutterBlue = FlutterBluePlus.instance;
-    final Map<String, String> online_devices = HashMap();
+    final Map<String, String> onlineDevices = HashMap();
     namescan = DataProvider().namescan;
     StreamController<Map<String, String>> datas =
         StreamController<Map<String, String>>();
     FlutterBluePlus.instance.scanResults.listen((results) {
-      if (results.length > 0) {
+      if (results.isNotEmpty) {
         ScanResult r = results.last;
 
         if (namescan.contains(r.device.name.toString())) {
@@ -289,10 +288,11 @@ class _HealthRecordState extends State<HealthRecord> {
       } else {}
     });
 
-    _streamSubscription = Stream.periodic(Duration(seconds: 5)).listen((_) {
+    _streamSubscription =
+        Stream.periodic(const Duration(seconds: 5)).listen((_) {
       FlutterBluePlus.instance.startScan(timeout: const Duration(seconds: 4));
       FlutterBluePlus.instance.scanResults.listen((results) {
-        if (results.length > 0) {
+        if (results.isNotEmpty) {
           ScanResult r = results.last;
           // print(r.device.name);
           if (namescan.contains(r.device.id.toString())) {
@@ -302,17 +302,15 @@ class _HealthRecordState extends State<HealthRecord> {
       });
     });
 
-    _functionSubscription = Stream.periodic(Duration(seconds: 4))
+    _functionSubscription = Stream.periodic(const Duration(seconds: 4))
         .asyncMap((_) => flutterBlue.connectedDevices)
         .listen((connectedDevices) {
-      connectedDevices.forEach((device) {
-        print('functionstreamtimeกำลังทำงาน ');
-        if (online_devices.containsKey(device.id.toString()) == false) {
-          online_devices[device.id.toString()] = device.name;
+      for (var device in connectedDevices) {
+        debugPrint('functionstreamtimeกำลังทำงาน ');
+        if (onlineDevices.containsKey(device.id.toString()) == false) {
+          onlineDevices[device.id.toString()] = device.name;
           if (device.name == 'HC-08') {
-            print('functionstreamtimeกำลังทำงาน ${device.name}');
-            //HC-08
-            // print("${device.id}");
+            debugPrint('functionstreamtimeกำลังทำงาน ${device.name}');
             Hc08 hc08 = Hc08(device: device);
             hc08.parse().listen((temp) {
               if (temp != null && temp != '') {
@@ -325,7 +323,7 @@ class _HealthRecordState extends State<HealthRecord> {
               }
             });
           } else if (device.name == 'HJ-Narigmed') {
-            print('functionstreamtimeกำลังทำงาน ${device.name}');
+            debugPrint('functionstreamtimeกำลังทำงาน ${device.name}');
             HjNarigmed hjNarigmed = HjNarigmed(device: device);
             hjNarigmed.parse().listen((mVal) {
               Map<String, String> val = HashMap();
@@ -338,7 +336,7 @@ class _HealthRecordState extends State<HealthRecord> {
               });
             });
           } else if (device.name == 'A&D_UA-651BLE_D57B3F') {
-            print('functionstreamtimeกำลังทำงาน ${device.name}');
+            debugPrint('functionstreamtimeกำลังทำงาน ${device.name}');
             AdUa651ble adUa651ble = AdUa651ble(device: device);
             adUa651ble.parse().listen((nVal) {
               Map<String, String> val = HashMap();
@@ -353,7 +351,7 @@ class _HealthRecordState extends State<HealthRecord> {
               });
             });
           } else if (device.name == 'MIBFS') {
-            print('functionstreamtimeกำลังทำงาน ${device.name}');
+            debugPrint('functionstreamtimeกำลังทำงาน ${device.name}');
             Mibfs mibfs = Mibfs(device: device);
             mibfs.parse().listen((weight) {
               Map<String, String> val = HashMap();
@@ -364,41 +362,35 @@ class _HealthRecordState extends State<HealthRecord> {
             });
           }
         }
-      });
+      }
     });
   }
 
-  // Timer scanTimer([int milliseconds = 6]) =>
-  //     Timer.periodic(Duration(seconds: milliseconds), (Timer timer) {
-  //       FlutterBluePlus.instance.startScan(timeout: Duration(seconds: 5));
-  //     });
   @override
   void initState() {
     clearprovider();
     restartdata();
-    //   scanTimer();
     bleScan();
-    // TODO: implement initState
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    double _width = MediaQuery.of(context).size.width;
-    double _height = MediaQuery.of(context).size.height;
-    double heightsizedbox = _height * 0.02;
-    double heightline = _height * 0.03;
-    Color teamcolor = Color.fromARGB(255, 47, 174, 164);
+    double width = MediaQuery.of(context).size.width;
+    double height = MediaQuery.of(context).size.height;
+    double heightsizedbox = height * 0.02;
+    double heightline = height * 0.03;
+    Color teamcolor = const Color.fromARGB(255, 47, 174, 164);
 
     return SafeArea(
       child: Scaffold(
         body: Stack(children: [
-          backgrund(),
+          const backgrund(),
           Positioned(
               child: ListView(children: [
             BoxTime(),
             BoxDecorate2(
-                color: Color.fromARGB(255, 43, 179, 161),
+                color: const Color.fromARGB(255, 43, 179, 161),
                 child: InformationCard(
                     dataidcard: context.read<DataProvider>().dataidcard)),
             SizedBox(height: heightsizedbox),
@@ -450,66 +442,42 @@ class _HealthRecordState extends State<HealthRecord> {
                       keyvavlue: spo2),
                 ])),
             SizedBox(height: heightsizedbox),
-            // BoxDecorate2(
-            //   child: Column(
-            //     children: [
-            //       Text('ค่าน้ำตาล',
-            //           style: TextStyle(
-            //               fontFamily: context.read<DataProvider>().fontFamily,
-            //               fontSize: _width * 0.04,
-            //               color: teamcolor)),
-            //       SizedBox(height: heightsizedbox),
-            //       Row(
-            //           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            //           children: [
-            //             BoxRecord(texthead: 'FBS', keyvavlue: fbs),
-            //             Line(height: heightline, color: teamcolor),
-            //             BoxRecord(texthead: 'SI', keyvavlue: si),
-            //             Line(height: heightline, color: teamcolor),
-            //             BoxRecord(texthead: 'URIC', keyvavlue: uric)
-            //           ]),
-            //     ],
-            //   ),
-            // ),
-            // SizedBox(height: heightsizedbox),
-            Container(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  Container(
-                      height: _height * 0.2,
-                      child: Image.asset('assets/hraej.png')),
-                  SizedBox(height: _height * 0.01),
-                  Container(
-                    child: prevent == false
-                        ? GestureDetector(
-                            onTap: () {
-                              context.read<Datafunction>().playsound();
+            Column(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                SizedBox(
+                    height: height * 0.2,
+                    child: Image.asset('assets/hraej.png')),
+                SizedBox(height: height * 0.01),
+                Container(
+                  child: prevent == false
+                      ? GestureDetector(
+                          onTap: () {
+                            context.read<Datafunction>().playsound();
 
-                              chackrecorddata();
-                            },
-                            child: BoxWidetdew(
-                                height: 0.06,
-                                width: 0.3,
-                                text: 'บันทึก',
-                                fontSize: 0.05,
-                                radius: 15.0,
-                                color: Color(0xff31D6AA),
-                                textcolor: Colors.white),
-                          )
-                        : Container(
-                            width: MediaQuery.of(context).size.width * 0.07,
-                            height: MediaQuery.of(context).size.width * 0.07,
-                            child: CircularProgressIndicator(),
-                          ),
-                  ),
-                ],
-              ),
+                            chackrecorddata();
+                          },
+                          child: BoxWidetdew(
+                              height: 0.06,
+                              width: 0.3,
+                              text: 'บันทึก',
+                              fontSize: 0.05,
+                              radius: 15.0,
+                              color: Color(0xff31D6AA),
+                              textcolor: Colors.white),
+                        )
+                      : SizedBox(
+                          width: MediaQuery.of(context).size.width * 0.07,
+                          height: MediaQuery.of(context).size.width * 0.07,
+                          child: const CircularProgressIndicator(),
+                        ),
+                ),
+              ],
             ),
           ]))
         ]),
-        bottomNavigationBar: Container(
-          height: _height * 0.03,
+        bottomNavigationBar: SizedBox(
+          height: height * 0.03,
           child: Row(
             children: [
               Padding(
@@ -520,20 +488,20 @@ class _HealthRecordState extends State<HealthRecord> {
                     context.read<Datafunction>().playsound();
                   },
                   child: Container(
-                    height: _height * 0.025,
-                    width: _width * 0.15,
+                    height: height * 0.025,
+                    width: width * 0.15,
                     decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(10),
                         border: Border.all(
-                            color: Color.fromARGB(255, 201, 201, 201),
-                            width: _width * 0.002)),
+                            color: const Color.fromARGB(255, 201, 201, 201),
+                            width: width * 0.002)),
                     child: Center(
                         child: Text(
                       '< ย้อนกลับ',
                       style: TextStyle(
                           fontFamily: context.read<DataProvider>().fontFamily,
-                          fontSize: _width * 0.03,
-                          color: Color.fromARGB(255, 201, 201, 201)),
+                          fontSize: width * 0.03,
+                          color: const Color.fromARGB(255, 201, 201, 201)),
                     )),
                   ),
                 ),
