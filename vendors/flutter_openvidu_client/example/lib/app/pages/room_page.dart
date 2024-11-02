@@ -42,14 +42,13 @@ class _RoomPageState extends State<RoomPage> {
     super.initState();
     initOpenVidu();
     _listenSessionEvents();
-	
-	 logger.e("finish init");
-	 _onConnect();
-	
+
+    logger.e("finish init");
+    _onConnect();
   }
 
   Future<void> initOpenVidu() async {
-    _openvidu = OpenViduClient('https://pcm-life.com:4443/openvidu');
+    _openvidu = OpenViduClient('https://openvidu.pcm-life.com');
     localParticipant =
         await _openvidu.startLocalPreview(context, StreamMode.frontCamera);
     setState(() {});
@@ -60,7 +59,6 @@ class _RoomPageState extends State<RoomPage> {
       await _openvidu.subscribeRemoteStream(params["id"]);
     });
     _openvidu.on(OpenViduEvent.userPublished, (params) {
-
       logger.e("userPublished");
 
       _openvidu.subscribeRemoteStream(params["id"],
@@ -103,15 +101,14 @@ class _RoomPageState extends State<RoomPage> {
   }
 
   Future<void> _onConnect() async {
-     logger.e("start on Connect");
-    
+    logger.e("start on Connect");
+
 // localParticipant = await _openvidu.publishLocalStream(
 //             token: widget.room.token!, userName: widget.userName);
 //         setState(() {
 
 //           isInside = true;
 //         });
-
 
     final dio = Dio();
     dio.options.baseUrl = '${widget.serverUrl}/openvidu/api';
@@ -127,7 +124,7 @@ class _RoomPageState extends State<RoomPage> {
       if (statusCode >= 200 && statusCode < 300) {
         logger.i(response.data);
         final connection = Connection.fromJson(response.data);
-      logger.i(connection.token!);
+        logger.i(connection.token!);
         localParticipant = await _openvidu.publishLocalStream(
             token: connection.token!, userName: widget.userName);
         setState(() {

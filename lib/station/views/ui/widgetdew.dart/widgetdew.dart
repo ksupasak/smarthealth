@@ -202,7 +202,6 @@ class _BoxWidetdewState extends State<BoxWidetdew> {
             : Text(
                 widget.text.toString(),
                 style: TextStyle(
-                  fontFamily: context.read<DataProvider>().fontFamily,
                   fontSize:
                       widget.fontSize == null ? 20 : _width * widget.fontSize,
                   color: widget.textcolor == null

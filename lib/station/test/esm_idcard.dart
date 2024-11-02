@@ -4,7 +4,6 @@ import 'package:flutter/services.dart';
 import 'data-service.dart';
 import 'dart:async';
 import 'dart:developer';
-import 'package:permission_handler/permission_handler.dart';
 import 'palette.dart';
 import 'dart:convert';
 import 'dart:io';
@@ -63,7 +62,7 @@ class ESMIDCard {
 
   late Uint8List bytesPhoto = Uint8List.fromList([]);
   late Uint8List bytesAppPhoto = Uint8List.fromList([]);
-  Map<Permission, PermissionStatus> statuses = new Map();
+  // Map<Permission, PermissionStatus> statuses = new Map();
 
   String sAppName = "";
   String readerName = 'Reader: ';
@@ -229,16 +228,16 @@ class ESMIDCard {
     // var sdkInt = androidInfo.version.sdkInt;
     var sdkInt = 31;
 
-    if (sdkInt >= 31) {
-      await Permission.bluetoothScan.request();
-      await Permission.bluetoothConnect.request();
-    } else {
-      await Permission.location.request();
+    // if (sdkInt >= 31) {
+    //   await Permission.bluetoothScan.request();
+    //   await Permission.bluetoothConnect.request();
+    // } else {
+    //   await Permission.location.request();
 
-      if (await Permission.location.isDenied) {
-        textResult = textResult + "\n\n" + '-32 Location permission error.';
-      }
-    }
+    //   if (await Permission.location.isDenied) {
+    //     textResult = textResult + "\n\n" + '-32 Location permission error.';
+    //   }
+    // }
 
     // setState(() {
     textResult = textResult;
@@ -350,31 +349,31 @@ class ESMIDCard {
               ((listOption & NA_BT) != 0 ||
                   (listOption & NA_BLE1) != 0 ||
                   (listOption & NA_BLE0) != 0)) {
-            var isBluetoothScan = await Permission.bluetoothScan.request();
-            var isBluetoothConnected =
-                await Permission.bluetoothConnect.request();
-            if (isBluetoothScan != PermissionStatus.granted &&
-                isBluetoothConnected != PermissionStatus.granted) {
-              listOption = listOption -
-                  (NA_SCAN +
-                      NA_BLE1 +
-                      NA_BLE0 +
-                      NA_BT); //remove BLE0, BT Scanning
-            }
+            //   var isBluetoothScan = await Permission.bluetoothScan.request();
+            // var isBluetoothConnected =
+            //     await Permission.bluetoothConnect.request();
+            // if (isBluetoothScan != PermissionStatus.granted &&
+            //     isBluetoothConnected != PermissionStatus.granted) {
+            //   listOption = listOption -
+            //       (NA_SCAN +
+            //           NA_BLE1 +
+            //           NA_BLE0 +
+            //           NA_BT); //remove BLE0, BT Scanning
+            // }
           }
         } else {
           if ((listOption & NA_SCAN) != 0 &&
               ((listOption & NA_BT) != 0 ||
                   (listOption & NA_BLE1) != 0 ||
                   (listOption & NA_BLE0) != 0)) {
-            var isLocationDenied = await Permission.location.status.isDenied;
-            if (isLocationDenied) {
-              listOption = listOption -
-                  (NA_SCAN +
-                      NA_BLE1 +
-                      NA_BLE0 +
-                      NA_BT); //remove BLE0, BT Scanning
-            }
+            // var isLocationDenied = await Permission.location.status.isDenied;
+            // if (isLocationDenied) {
+            //   listOption = listOption -
+            //       (NA_SCAN +
+            //           NA_BLE1 +
+            //           NA_BLE0 +
+            //           NA_BT); //remove BLE0, BT Scanning
+            // }
           }
         }
 

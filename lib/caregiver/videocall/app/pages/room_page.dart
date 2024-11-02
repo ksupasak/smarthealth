@@ -49,7 +49,7 @@ class _RoomPageState extends State<RoomPage> {
   }
 
   Future<void> initOpenVidu() async {
-    _openvidu = OpenViduClient('https://pcm-life.com:4443/openvidu');
+    _openvidu = OpenViduClient('https://openvidu.pcm-life.com');
     localParticipant =
         await _openvidu.startLocalPreview(context, StreamMode.frontCamera);
     setState(() {});

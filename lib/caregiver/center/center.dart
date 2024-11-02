@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import 'package:smart_health/caregiver/format_list/format_list.dart';
 import 'package:smart_health/caregiver/center/esm_cardread/esm_idcard.dart';
@@ -96,11 +95,11 @@ class _Center_CaregiverState extends State<Center_Caregiver> {
   bool hasLocationPermission = false;
   bool hasbluetoothPermission = false;
   void requestLocationPermission() async {
-    PermissionStatus status = await Permission.location.request();
-    PermissionStatus status2 = await Permission.bluetooth.request();
+    // PermissionStatus status = await Permission.location.request();
+    // PermissionStatus status2 = await Permission.bluetooth.request();
     setState(() {
-      hasLocationPermission = status.isGranted;
-      hasbluetoothPermission = status2.isGranted;
+      // hasLocationPermission = status.isGranted;
+      // hasbluetoothPermission = status2.isGranted;
     });
   }
 

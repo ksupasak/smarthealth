@@ -48,7 +48,7 @@ class _RoomPageState extends State<RoomPage> {
   }
 
   Future<void> initOpenVidu() async {
-    _openvidu = OpenViduClient('https://pcm-life.com:4443/openvidu');
+    _openvidu = OpenViduClient('https://openvidu.pcm-life.com');
     localParticipant =
         await _openvidu.startLocalPreview(context, StreamMode.frontCamera);
     setState(() {});
@@ -103,12 +103,11 @@ class _RoomPageState extends State<RoomPage> {
   Future<void> _onConnect() async {
     logger.e("start on Connect");
 
-// localParticipant = await _openvidu.publishLocalStream(
-//             token: widget.room.token!, userName: widget.userName);
-//         setState(() {
-
-//           isInside = true;
-//         });
+    localParticipant = await _openvidu.publishLocalStream(
+        token: widget.room.token!, userName: widget.userName);
+    setState(() {
+      isInside = true;
+    });
 
     final dio = Dio();
     dio.options.baseUrl = '${widget.serverUrl}/openvidu/api';

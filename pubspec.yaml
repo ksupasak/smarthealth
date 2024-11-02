@@ -48,11 +48,11 @@ dependencies:
   http: ^0.13.4
   sembast: ^3.2.0+1
   flutter_blue_plus: ^1.4.0
-  zego_uikit_prebuilt_call: ^3.1.1
+  #zego_uikit_prebuilt_call: ^3.1.1
   pdf: ^3.10.1
   collection: ^1.17.0
   google_fonts: ^4.0.3
-  permission_handler: ^10.2.0
+  #permission_handler: ^11.3.1
   shared_preferences: ^2.0.18
   flutter_spinkit: ^5.1.0
   eva_icons_flutter: ^3.1.0
@@ -69,6 +69,7 @@ dependencies:
   device_info_plus: ^2.1.2
   flutter_launcher_icons: ^0.13.1 # flutter pub add flutter_launcher_icons
    
+
   openvidu_client:
     path: "vendors/flutter_openvidu_client"  
   quick_usb:

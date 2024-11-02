@@ -21,7 +21,7 @@ class _Test_VideoState extends State<Test_Video> {
   late OpenViduClient _openvidu;
   Map<String, RemoteParticipant> remoteParticipants = {};
   Future<void> initOpenVidu() async {
-    _openvidu = OpenViduClient('https://pcm-life.com:4443/openvidu');
+    _openvidu = OpenViduClient('https://openvidu.pcm-life.com');
     localParticipant =
         await _openvidu.startLocalPreview(context, StreamMode.frontCamera);
     setState(() {});

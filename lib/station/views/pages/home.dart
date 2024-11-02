@@ -42,13 +42,13 @@ class _HomeappState extends State<Homeapp> {
     context.read<Datafunction>().playsound();
     if (context.read<DataProvider>().id.length == 13) {
       var url =
-          Uri.parse('${context.read<DataProvider>().platfromURL}/check_q');
+          Uri.parse('https://emr-life.com/clinic_master/clinic/Api/check_q');
       var res = await http.post(url, body: {
         'care_unit_id': context.read<DataProvider>().care_unit_id,
         'public_id': context.read<DataProvider>().id,
       });
       var resTojson = json.decode(res.body);
-      debugPrint(resTojson);
+
       setState(() {
         status = false;
       });
@@ -204,7 +204,7 @@ class _HomeappState extends State<Homeapp> {
       context.read<DataProvider>().id = '';
     });
 
-    readerID();
+    // readerID();
 
     super.initState();
   }
