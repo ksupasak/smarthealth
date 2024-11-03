@@ -216,6 +216,11 @@ class _HomeappState extends State<Homeapp> {
   void initState() {
     setState(() {
       context.read<DataProvider>().id = '';
+      context
+          .read<DataProvider>()
+          .updateuserinformation({"pid": "", "claimTypes": []});
+      context.read<DataProvider>().claimType = '';
+      context.read<DataProvider>().claimTypeName = '';
     });
     getIdCard();
     // readerID();

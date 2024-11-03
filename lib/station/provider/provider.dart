@@ -47,6 +47,7 @@ class DataProvider with ChangeNotifier {
   void updateuserinformation(Map data) {
     dataUser = data;
     id = data["pid"];
+
     notifyListeners();
   }
 

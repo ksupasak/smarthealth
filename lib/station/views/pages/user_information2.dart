@@ -385,51 +385,54 @@ class _UserInformation2State extends State<UserInformation2> {
               ),
             ),
             !statusPopupClaimType
-                ? SizedBox(
-                    height: height * 0.5,
-                    child: ListView.builder(
-                      itemCount: context
-                          .read<DataProvider>()
-                          .dataUser["claimTypes"]
-                          .length,
-                      itemBuilder: (context, index) => SizedBox(
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: GestureDetector(
-                            onTap: () {
-                              context.read<DataProvider>().updateclaimType(
-                                  context
-                                      .read<DataProvider>()
-                                      .dataUser["claimTypes"][index]);
-                              setState(() {
-                                statusPopupClaimType = true;
-                              });
-                            },
-                            child: Container(
-                              height: height * 0.08,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(15),
-                                color: Colors.white,
-                                boxShadow: const [
-                                  BoxShadow(
-                                      blurRadius: 2,
-                                      spreadRadius: 2,
-                                      color: Color.fromARGB(255, 188, 188, 188),
-                                      offset: Offset(0, 2)),
-                                ],
-                              ),
-                              child: Center(
-                                child: Text(context
-                                        .read<DataProvider>()
-                                        .dataUser["claimTypes"][index]
-                                    ["claimTypeName"]),
+                ? context.read<DataProvider>().dataUser != {}
+                    ? SizedBox(
+                        height: height * 0.5,
+                        child: ListView.builder(
+                          itemCount: context
+                              .read<DataProvider>()
+                              .dataUser["claimTypes"]
+                              .length,
+                          itemBuilder: (context, index) => SizedBox(
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: GestureDetector(
+                                onTap: () {
+                                  context.read<DataProvider>().updateclaimType(
+                                      context
+                                          .read<DataProvider>()
+                                          .dataUser["claimTypes"][index]);
+                                  setState(() {
+                                    statusPopupClaimType = true;
+                                  });
+                                },
+                                child: Container(
+                                  height: height * 0.08,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(15),
+                                    color: Colors.white,
+                                    boxShadow: const [
+                                      BoxShadow(
+                                          blurRadius: 2,
+                                          spreadRadius: 2,
+                                          color: Color.fromARGB(
+                                              255, 188, 188, 188),
+                                          offset: Offset(0, 2)),
+                                    ],
+                                  ),
+                                  child: Center(
+                                    child: Text(context
+                                            .read<DataProvider>()
+                                            .dataUser["claimTypes"][index]
+                                        ["claimTypeName"]),
+                                  ),
+                                ),
                               ),
                             ),
                           ),
                         ),
-                      ),
-                    ),
-                  )
+                      )
+                    : const SizedBox()
                 : Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Column(
