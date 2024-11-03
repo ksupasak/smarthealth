@@ -84,8 +84,7 @@ class _Splash_ScreenState extends State<Splash_Screen> {
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
     return Scaffold(
-        body: //Homeapp()
-            Stack(
+        body: Stack(
       children: [
         Positioned(
           child: Center(
