@@ -34,7 +34,7 @@ class _HomeappState extends State<Homeapp> {
   Timer? reading;
   bool shownumpad = false;
   Timer? _timer;
-
+  Timer? timerreadIDCard;
   void check2() async {
     setState(() {
       status = true;
@@ -165,6 +165,16 @@ class _HomeappState extends State<Homeapp> {
   //     debugPrint(e.toString());
   //   }
   // }
+
+  void getIdCard() async {
+    timerreadIDCard = Timer.periodic(const Duration(seconds: 5), (timer) async {
+      var url = Uri.parse('http://localhost:8189/api/smartcard/read');
+      var res = await http.get(url);
+      var resTojson = json.decode(res.body);
+      debugPrint(resTojson);
+      if (res.statusCode == 200) {}
+    });
+  }
 
   void checkCard() {
     reader?.readAuto();
