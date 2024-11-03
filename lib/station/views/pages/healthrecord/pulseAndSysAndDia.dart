@@ -13,7 +13,6 @@ class PulseAndSysAndDia extends StatefulWidget {
 class _PulseAndSysAndDiaState extends State<PulseAndSysAndDia> {
   TextEditingController sysHealthrecord = TextEditingController();
   TextEditingController diaHealthrecord = TextEditingController();
-  TextEditingController pulseHealthrecord = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +20,7 @@ class _PulseAndSysAndDiaState extends State<PulseAndSysAndDia> {
     double width = MediaQuery.of(context).size.width;
     DataProvider dataProvider = context.read<DataProvider>();
     return SizedBox(
-        height: height,
+        height: height * 0.7,
         width: width,
         child: ListView(children: [
           Center(
@@ -36,25 +35,26 @@ class _PulseAndSysAndDiaState extends State<PulseAndSysAndDia> {
                     image: 'assets/jhvkb.png',
                     texthead: 'DIA',
                     keyvavlue: diaHealthrecord),
-                BoxRecord(
-                    image: 'assets/jhbjk;.png',
-                    texthead: 'PULSE',
-                    keyvavlue: pulseHealthrecord)
               ],
             ),
           ),
-          Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-            ElevatedButton(
-                onPressed: () {
-                  dataProvider.updateviewhealthrecord("heightAndWidth");
-                },
-                child: const Text("ย้อนกลับ")),
-            ElevatedButton(
-                onPressed: () {
-                  dataProvider.updateviewhealthrecord("spo2");
-                },
-                child: const Text("ถัดไป"))
-          ])
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  ElevatedButton(
+                      onPressed: () {
+                        dataProvider.updateviewhealthrecord("heightAndWidth");
+                      },
+                      child: const Text("ย้อนกลับ")),
+                  ElevatedButton(
+                      onPressed: () {
+                        dataProvider.updateviewhealthrecord("spo2");
+                      },
+                      child: const Text("ถัดไป"))
+                ]),
+          )
         ]));
   }
 }

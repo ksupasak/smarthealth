@@ -372,7 +372,7 @@ class _UserInformation2State extends State<UserInformation2> {
 
   @override
   void dispose() {
-    timerCheckQuick!.cancel();
+    timerCheckQuick?.cancel();
 
     super.dispose();
   }
@@ -499,6 +499,7 @@ class _UserInformation2State extends State<UserInformation2> {
                                   onPressed: () {
                                     if (resToJsonCheckQuick["message"] ==
                                         "health_record") {
+                                      timerCheckQuick?.cancel();
                                       Get.toNamed('healthRecord2');
                                     }
                                   },
@@ -748,6 +749,12 @@ class _UserInformation2State extends State<UserInformation2> {
                 ),
               ),
             ),
+            ElevatedButton(
+                onPressed: () {
+                  timerCheckQuick?.cancel();
+                  Get.toNamed('healthRecord2');
+                },
+                child: const Text("เทส Health Record")),
           ],
         ),
       ),

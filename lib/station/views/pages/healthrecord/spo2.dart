@@ -12,6 +12,7 @@ class Spo2Healthrecord extends StatefulWidget {
 
 class _Spo2HealthrecordState extends State<Spo2Healthrecord> {
   TextEditingController spo2Healthrecord = TextEditingController();
+  TextEditingController pulseHealthrecord = TextEditingController();
   List availablePorts = [];
   void initPorts() {
     try {
@@ -35,7 +36,7 @@ class _Spo2HealthrecordState extends State<Spo2Healthrecord> {
     double width = MediaQuery.of(context).size.width;
     DataProvider dataProvider = context.read<DataProvider>();
     return SizedBox(
-        height: height,
+        height: height * 0.7,
         width: width,
         child: ListView(children: [
           Center(
@@ -46,23 +47,35 @@ class _Spo2HealthrecordState extends State<Spo2Healthrecord> {
                     image: 'assets/kauo.png',
                     texthead: 'SPO2',
                     keyvavlue: spo2Healthrecord),
+                BoxRecord(
+                    image: 'assets/jhbjk;.png',
+                    texthead: 'PULSE',
+                    keyvavlue: pulseHealthrecord)
               ],
             ),
           ),
-          Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-            ElevatedButton(
-                onPressed: () {
-                  dataProvider.updateviewhealthrecord("pulseAndSysAndDia");
-                  debugPrint(
-                      context.read<DataProvider>().viewhealthrecord.toString());
-                },
-                child: const Text("ย้อนกลับ")),
-            ElevatedButton(
-                onPressed: () {
-                  dataProvider.updateviewhealthrecord("sum");
-                },
-                child: const Text("ถัดไป"))
-          ])
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  ElevatedButton(
+                      onPressed: () {
+                        dataProvider
+                            .updateviewhealthrecord("pulseAndSysAndDia");
+                        debugPrint(context
+                            .read<DataProvider>()
+                            .viewhealthrecord
+                            .toString());
+                      },
+                      child: const Text("ย้อนกลับ")),
+                  ElevatedButton(
+                      onPressed: () {
+                        dataProvider.updateviewhealthrecord("sum");
+                      },
+                      child: const Text("ถัดไป"))
+                ]),
+          )
         ]));
   }
 }

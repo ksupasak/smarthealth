@@ -58,7 +58,7 @@ class _SumHealthrecordState extends State<SumHealthrecord> {
     double width = MediaQuery.of(context).size.width;
     DataProvider dataProvider = context.read<DataProvider>();
     return SizedBox(
-        height: height,
+        height: height * 0.7,
         width: width,
         child: ListView(children: [
           const Text("รวม"),
@@ -107,20 +107,25 @@ class _SumHealthrecordState extends State<SumHealthrecord> {
               ],
             ),
           ),
-          Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-            ElevatedButton(
-                onPressed: () {
-                  dataProvider.updateviewhealthrecord("spo2");
-                },
-                child: const Text("ย้อนกลับ")),
-            ElevatedButton(
-                onPressed: () {
-                  sendDataHealthrecord();
-                  // dataProvider.updateviewhealthrecord("");
-                  // dataProvider.updateViewHome("waiting_for_the_doctor");
-                },
-                child: const Text("ส่ง"))
-          ])
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  ElevatedButton(
+                      onPressed: () {
+                        dataProvider.updateviewhealthrecord("spo2");
+                      },
+                      child: const Text("ย้อนกลับ")),
+                  ElevatedButton(
+                      onPressed: () {
+                        sendDataHealthrecord();
+                        // dataProvider.updateviewhealthrecord("");
+                        // dataProvider.updateViewHome("waiting_for_the_doctor");
+                      },
+                      child: const Text("ส่ง"))
+                ]),
+          )
         ]));
   }
 }
