@@ -52,8 +52,10 @@ class _ConfigViewState extends State<ConfigView> {
     _audioOutputs = devices.where((d) => d.kind == 'audiooutput').toList();
     _videoInputs = devices.where((d) => d.kind == 'videoinput').toList();
     selectedAudioInput = _audioInputs?.first;
-    selectedVideoInput = _videoInputs?.first;
-    setState(() {});
+    selectedVideoInput = _videoInputs?.last;
+    setState(() {
+      debugPrint(selectedVideoInput.toString());
+    });
   }
 
   void _selectAudioInput(MediaDevice? device) async {
@@ -72,7 +74,9 @@ class _ConfigViewState extends State<ConfigView> {
     if (selectedVideoInput?.deviceId != device.deviceId) {
       widget.participant.setVideoInput(device.deviceId);
       selectedVideoInput = device;
-      setState(() {});
+      setState(() {
+        debugPrint(device.toString());
+      });
     }
   }
 

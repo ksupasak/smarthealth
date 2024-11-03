@@ -44,12 +44,22 @@ class _PulseAndSysAndDiaState extends State<PulseAndSysAndDia> {
                       onPressed: () {
                         dataProvider.updateviewhealthrecord("heightAndWidth");
                       },
-                      child: const Text("ย้อนกลับ")),
+                      child: Text(
+                        "ย้อนกลับ",
+                        style: TextStyle(
+                          fontSize: width * 0.03,
+                        ),
+                      )),
                   ElevatedButton(
                       onPressed: () {
                         dataProvider.updateviewhealthrecord("spo2");
                       },
-                      child: const Text("ถัดไป"))
+                      child: Text(
+                        "ถัดไป",
+                        style: TextStyle(
+                          fontSize: width * 0.03,
+                        ),
+                      ))
                 ]),
           )
         ]));

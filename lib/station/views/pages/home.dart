@@ -167,7 +167,7 @@ class _HomeappState extends State<Homeapp> {
   }
 
   void getIdCard() async {
-    timerreadIDCard = Timer.periodic(const Duration(seconds: 5), (timer) async {
+    timerreadIDCard = Timer.periodic(const Duration(seconds: 2), (timer) async {
       var url = Uri.parse('http://localhost:8189/api/smartcard/read');
       var res = await http.get(url);
       var resTojson = json.decode(res.body);

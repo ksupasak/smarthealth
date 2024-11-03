@@ -36,7 +36,7 @@ class _HeightAndWidthState extends State<HeightAndWidth> {
                     keyvavlue: context.read<DataProvider>().weightHealthrecord),
                 BoxRecord(
                     image: 'assets/jhgh.png',
-                    texthead: 'WEIGHT',
+                    texthead: 'TEMP',
                     keyvavlue: context.read<DataProvider>().tempHealthrecord),
               ],
             ),
@@ -54,7 +54,12 @@ class _HeightAndWidthState extends State<HeightAndWidth> {
                             .viewhealthrecord
                             .toString());
                       },
-                      child: const Text("ย้อนกลับ")),
+                      child: Text(
+                        "ย้อนกลับ",
+                        style: TextStyle(
+                          fontSize: width * 0.03,
+                        ),
+                      )),
                   ElevatedButton(
                       onPressed: () {
                         dataProvider
@@ -65,7 +70,12 @@ class _HeightAndWidthState extends State<HeightAndWidth> {
                             .viewhealthrecord
                             .toString());
                       },
-                      child: const Text("ถัดไป"))
+                      child: Text(
+                        "ถัดไป",
+                        style: TextStyle(
+                          fontSize: width * 0.03,
+                        ),
+                      ))
                 ]),
           )
         ]));

@@ -477,10 +477,15 @@ class _UserInformation2State extends State<UserInformation2> {
                                                 ],
                                               ),
                                               child: Center(
-                                                child: Text(context
-                                                        .read<DataProvider>()
-                                                        .dataUser["claimTypes"]
-                                                    [index]["claimTypeName"]),
+                                                child: Text(
+                                                  context
+                                                          .read<DataProvider>()
+                                                          .dataUser["claimTypes"]
+                                                      [index]["claimTypeName"],
+                                                  style: TextStyle(
+                                                    fontSize: width * 0.03,
+                                                  ),
+                                                ),
                                               ),
                                             ),
                                           ),
@@ -505,7 +510,11 @@ class _UserInformation2State extends State<UserInformation2> {
                                           child: ListView(children: [
                                             Center(
                                               child: Text(
-                                                  "${context.watch<DataProvider>().claimTypeName}/(${context.watch<DataProvider>().claimType})"),
+                                                "${context.watch<DataProvider>().claimTypeName}/(${context.watch<DataProvider>().claimType})",
+                                                style: TextStyle(
+                                                  fontSize: width * 0.03,
+                                                ),
+                                              ),
                                             ),
                                             const Center(
                                               child: CircularProgressIndicator(
@@ -539,7 +548,11 @@ class _UserInformation2State extends State<UserInformation2> {
                           ),
                           child: Center(
                             child: Text(
-                                context.read<DataProvider>().claimTypeName),
+                              context.read<DataProvider>().claimTypeName,
+                              style: TextStyle(
+                                fontSize: width * 0.03,
+                              ),
+                            ),
                           ),
                         ),
                         Padding(
@@ -562,7 +575,12 @@ class _UserInformation2State extends State<UserInformation2> {
                                       statusPopupClaimType = false;
                                     });
                                   },
-                                  child: const Text("ยกเลิก")),
+                                  child: Text(
+                                    "ยกเลิก",
+                                    style: TextStyle(
+                                      fontSize: width * 0.03,
+                                    ),
+                                  )),
                               ElevatedButton(
                                   style: ElevatedButton.styleFrom(
                                     backgroundColor: Colors.green,
@@ -574,7 +592,12 @@ class _UserInformation2State extends State<UserInformation2> {
                                       Get.toNamed('healthRecord2');
                                     }
                                   },
-                                  child: const Text("ยืนยัน")),
+                                  child: Text(
+                                    "ยืนยัน",
+                                    style: TextStyle(
+                                      fontSize: width * 0.03,
+                                    ),
+                                  )),
                             ],
                           ),
                         ),

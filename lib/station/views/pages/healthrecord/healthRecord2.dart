@@ -15,6 +15,24 @@ class HealthRecord2 extends StatefulWidget {
 }
 
 class _HealthRecord2State extends State<HealthRecord2> {
+  void setsHealthrecord() {
+    context.read<DataProvider>().sysHealthrecord.text = "";
+    context.read<DataProvider>().diaHealthrecord.text = "";
+    context.read<DataProvider>().heightHealthrecord.text = "";
+    context.read<DataProvider>().weightHealthrecord.text = "";
+    context.read<DataProvider>().tempHealthrecord.text = "";
+    context.read<DataProvider>().pulseHealthrecord.text = "";
+    context.read<DataProvider>().spo2Healthrecord.text = "";
+    context.read<DataProvider>().updateviewhealthrecord("");
+  }
+
+  @override
+  void initState() {
+    setsHealthrecord();
+    // TODO: implement initState
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     DataProvider dataProvider = context.watch<DataProvider>();

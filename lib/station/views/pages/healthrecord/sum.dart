@@ -102,7 +102,7 @@ class _SumHealthrecordState extends State<SumHealthrecord> {
                     keyvavlue: context.read<DataProvider>().spo2Healthrecord),
                 BoxRecord(
                     image: 'assets/jhgh.png',
-                    texthead: 'WEIGHT',
+                    texthead: 'TEMP',
                     keyvavlue: context.read<DataProvider>().tempHealthrecord),
               ],
             ),
@@ -116,14 +116,24 @@ class _SumHealthrecordState extends State<SumHealthrecord> {
                       onPressed: () {
                         dataProvider.updateviewhealthrecord("spo2");
                       },
-                      child: const Text("ย้อนกลับ")),
+                      child: Text(
+                        "ย้อนกลับ",
+                        style: TextStyle(
+                          fontSize: width * 0.03,
+                        ),
+                      )),
                   ElevatedButton(
                       onPressed: () {
                         sendDataHealthrecord();
                         // dataProvider.updateviewhealthrecord("");
                         // dataProvider.updateViewHome("waiting_for_the_doctor");
                       },
-                      child: const Text("ส่ง"))
+                      child: Text(
+                        "ส่ง",
+                        style: TextStyle(
+                          fontSize: width * 0.03,
+                        ),
+                      ))
                 ]),
           )
         ]));

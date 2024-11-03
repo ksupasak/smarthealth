@@ -52,7 +52,7 @@ class _ConfigViewState extends State<ConfigView> {
     _audioOutputs = devices.where((d) => d.kind == 'audiooutput').toList();
     _videoInputs = devices.where((d) => d.kind == 'videoinput').toList();
     selectedAudioInput = _audioInputs?.first;
-    selectedVideoInput = _videoInputs?.first;
+    selectedVideoInput = _videoInputs?.last;
     setState(() {});
   }
 

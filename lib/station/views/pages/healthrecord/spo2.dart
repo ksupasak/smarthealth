@@ -66,12 +66,22 @@ class _Spo2HealthrecordState extends State<Spo2Healthrecord> {
                             .viewhealthrecord
                             .toString());
                       },
-                      child: const Text("ย้อนกลับ")),
+                      child: Text(
+                        "ย้อนกลับ",
+                        style: TextStyle(
+                          fontSize: width * 0.03,
+                        ),
+                      )),
                   ElevatedButton(
                       onPressed: () {
                         dataProvider.updateviewhealthrecord("sum");
                       },
-                      child: const Text("ถัดไป"))
+                      child: Text(
+                        "ถัดไป",
+                        style: TextStyle(
+                          fontSize: width * 0.03,
+                        ),
+                      ))
                 ]),
           )
         ]));
