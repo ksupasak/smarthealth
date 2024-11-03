@@ -42,6 +42,22 @@ class DataProvider with ChangeNotifier {
   // 'MIBFS',
   // 'HJ-Narigmed',
   // 'A&D_UA-651BLE_D57B3F'
+  Map dataUser = {};
+
+  void updateuserinformation(Map data) {
+    dataUser = data;
+    id = data["pid"];
+    notifyListeners();
+  }
+
+  String claimType = '';
+  String claimTypeName = '';
+  void updateclaimType(Map data) {
+    claimType = data["claimType"];
+    claimTypeName = data["claimTypeName"];
+    notifyListeners();
+    debugPrint(data.toString());
+  }
 
   String id = '';
   String colortexts = '';

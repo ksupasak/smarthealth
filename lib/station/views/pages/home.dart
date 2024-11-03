@@ -127,52 +127,56 @@ class _HomeappState extends State<Homeapp> {
     }
   }
 
-  // void readerID() {
-  //   try {
-  //     Future.delayed(const Duration(seconds: 1), () {
-  //       reader = ESMIDCard.instance;
-  //       entry = reader?.getEntry();
+  void readerID() {
+    try {
+      Future.delayed(const Duration(seconds: 1), () {
+        reader = ESMIDCard.instance;
+        entry = reader?.getEntry();
 
-  //       debugPrint('->initstate');
-  //       if (entry != null) {
-  //         entry?.listen((String data) async {
-  //           List<String> splitted = data.split('#');
-  //           debugPrint("IDCard $data");
-  //           context.read<DataProvider>().id = splitted[0].toString();
-  //           context.read<DataProvider>().regter_data = splitted;
-  //           setState(() {
-  //             context.read<DataProvider>().regter_data = splitted;
-  //             context.read<DataProvider>().id = splitted[0].toString();
-  //           });
-  //           debugPrint(
-  //               "${context.read<DataProvider>().id} / ${splitted[0].toString()}");
+        debugPrint('->initstate');
+        if (entry != null) {
+          entry?.listen((String data) async {
+            List<String> splitted = data.split('#');
+            debugPrint("IDCard $data");
+            context.read<DataProvider>().id = splitted[0].toString();
+            context.read<DataProvider>().regter_data = splitted;
+            setState(() {
+              context.read<DataProvider>().regter_data = splitted;
+              context.read<DataProvider>().id = splitted[0].toString();
+            });
+            debugPrint(
+                "${context.read<DataProvider>().id} / ${splitted[0].toString()}");
 
-  //           idcard.setValue(splitted[0]);
-  //           if (context.read<DataProvider>().id == splitted[0].toString()) {
-  //             check2();
-  //           } else {}
-  //         }, onError: (error) {
-  //           debugPrint(error);
-  //         }, onDone: () {
-  //           debugPrint('Stream closed!');
-  //         });
-  //       } else {}
-  //       const oneSec = Duration(seconds: 1);
-  //       reading = Timer.periodic(oneSec, (Timer t) => checkCard());
-  //     });
-  //   } on Exception catch (e) {
-  //     debugPrint('error');
-  //     debugPrint(e.toString());
-  //   }
-  // }
+            idcard.setValue(splitted[0]);
+            if (context.read<DataProvider>().id == splitted[0].toString()) {
+              check2();
+            } else {}
+          }, onError: (error) {
+            debugPrint(error);
+          }, onDone: () {
+            debugPrint('Stream closed!');
+          });
+        } else {}
+        const oneSec = Duration(seconds: 1);
+        reading = Timer.periodic(oneSec, (Timer t) => checkCard());
+      });
+    } on Exception catch (e) {
+      debugPrint('error');
+      debugPrint(e.toString());
+    }
+  }
 
   void getIdCard() async {
     timerreadIDCard = Timer.periodic(const Duration(seconds: 5), (timer) async {
       var url = Uri.parse('http://localhost:8189/api/smartcard/read');
       var res = await http.get(url);
       var resTojson = json.decode(res.body);
-      debugPrint(resTojson);
-      if (res.statusCode == 200) {}
+      debugPrint(resTojson.toString());
+      if (res.statusCode == 200) {
+        context.read<DataProvider>().updateuserinformation(resTojson);
+        check2();
+        timerreadIDCard?.cancel();
+      }
     });
   }
 
@@ -185,7 +189,7 @@ class _HomeappState extends State<Homeapp> {
     readingtime?.cancel();
     reading?.cancel();
     _timer?.cancel();
-
+    timerreadIDCard?.cancel();
     super.dispose();
   }
 
@@ -213,7 +217,7 @@ class _HomeappState extends State<Homeapp> {
     setState(() {
       context.read<DataProvider>().id = '';
     });
-
+    getIdCard();
     // readerID();
 
     super.initState();

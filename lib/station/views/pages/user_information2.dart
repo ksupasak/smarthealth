@@ -67,9 +67,19 @@ class _UserInformation2State extends State<UserInformation2> {
   ESMPrinter? printer;
   bool status2 = false;
   bool ontap = false;
-
+  bool statusPopupClaimType = false;
   String doctor_note = '--';
   String dx = '--';
+
+  Future<void> checkQuick() async {
+    var url =
+        Uri.parse('${context.read<DataProvider>().platfromURL}/check_quick');
+    var res = await http.post(url, body: {
+      'care_unit_id': context.read<DataProvider>().care_unit_id,
+      'public_id': context.read<DataProvider>().id,
+    });
+    resTojson = json.decode(res.body);
+  }
 
   Future<void> checkt_queue() async {
     var url = Uri.parse('${context.read<DataProvider>().platfromURL}/check_q');
@@ -362,236 +372,322 @@ class _UserInformation2State extends State<UserInformation2> {
         children: [
           const backgrund(),
           Positioned(
-              child: ListView(
-            children: resTojson != null
-                ? [
-                    SizedBox(
-                      height: height * 0.25,
-                      child: Column(
-                        children: [
-                          BoxTime(),
-                          BoxDecorate(
-                              child: InformationCard(
-                                  dataidcard:
-                                      context.read<DataProvider>().dataidcard)),
-                        ],
+              child: ListView(children: [
+            SizedBox(
+              height: height * 0.25,
+              child: Column(
+                children: [
+                  BoxTime(),
+                  BoxDecorate(
+                      child: InformationCard(
+                          dataidcard: context.read<DataProvider>().dataidcard)),
+                ],
+              ),
+            ),
+            !statusPopupClaimType
+                ? SizedBox(
+                    height: height * 0.5,
+                    child: ListView.builder(
+                      itemCount: context
+                          .read<DataProvider>()
+                          .dataUser["claimTypes"]
+                          .length,
+                      itemBuilder: (context, index) => SizedBox(
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: GestureDetector(
+                            onTap: () {
+                              context.read<DataProvider>().updateclaimType(
+                                  context
+                                      .read<DataProvider>()
+                                      .dataUser["claimTypes"][index]);
+                              setState(() {
+                                statusPopupClaimType = true;
+                              });
+                            },
+                            child: Container(
+                              height: height * 0.08,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(15),
+                                color: Colors.white,
+                                boxShadow: const [
+                                  BoxShadow(
+                                      blurRadius: 2,
+                                      spreadRadius: 2,
+                                      color: Color.fromARGB(255, 188, 188, 188),
+                                      offset: Offset(0, 2)),
+                                ],
+                              ),
+                              child: Center(
+                                child: Text(context
+                                        .read<DataProvider>()
+                                        .dataUser["claimTypes"][index]
+                                    ["claimTypeName"]),
+                              ),
+                            ),
+                          ),
+                        ),
                       ),
                     ),
-                    SizedBox(
-                      height: height * 0.5,
-                      child: Column(
-                        children: [
-                          status != ''
-                              ? Column(
-                                  children: [
-                                    BoxStatusinform(status: status),
-                                    SizedBox(
-                                      height: height * 0.01,
-                                    ),
-                                    ontap == true
-                                        ? SizedBox(
-                                            width: MediaQuery.of(context)
-                                                    .size
-                                                    .width *
-                                                0.05,
-                                            height: MediaQuery.of(context)
-                                                    .size
-                                                    .width *
-                                                0.05,
-                                            child:
-                                                const CircularProgressIndicator(
-                                              color: Color(0xff76FFD5),
-                                            ),
-                                          )
-                                        : GestureDetector(
-                                            onTap: () {
-                                              setState(() {
-                                                ontap = true;
-                                              });
-                                              exam();
-                                            },
-                                            child: Container(
-                                                height: height * 0.05,
-                                                width: width * 0.3,
-                                                decoration: BoxDecoration(
-                                                    color:
-                                                        const Color(0xff31D6AA),
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            15),
-                                                    boxShadow: const [
-                                                      BoxShadow(
-                                                        color: Colors.grey,
-                                                        offset: Offset(0, 4),
-                                                        blurRadius: 5,
-                                                      )
-                                                    ]),
-                                                child: Row(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment.start,
-                                                    children: [
-                                                      Image.asset(
-                                                          'assets/jhb.png'),
-                                                      Text('  ปริ้นผลตรวจ',
-                                                          style: TextStyle(
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .w500,
-                                                              fontFamily: context
-                                                                  .read<
-                                                                      DataProvider>()
-                                                                  .fontFamily,
-                                                              fontSize:
-                                                                  width * 0.03,
+                  )
+                : Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Column(
+                      children: [
+                        Container(
+                          height: height * 0.08,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(15),
+                            color: Colors.white,
+                            boxShadow: const [
+                              BoxShadow(
+                                  blurRadius: 2,
+                                  spreadRadius: 2,
+                                  color: Color.fromARGB(255, 188, 188, 188),
+                                  offset: Offset(0, 2)),
+                            ],
+                          ),
+                          child: Center(
+                            child: Text(
+                                context.read<DataProvider>().claimTypeName),
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              ElevatedButton(
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: Colors.red,
+                                  ),
+                                  onPressed: () {
+                                    context
+                                        .read<DataProvider>()
+                                        .updateclaimType({
+                                      "claimType": "",
+                                      "claimTypeName": ""
+                                    });
+                                    setState(() {
+                                      statusPopupClaimType = false;
+                                    });
+                                  },
+                                  child: const Text("ยกเลิก")),
+                              ElevatedButton(
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: Colors.green,
+                                  ),
+                                  onPressed: () {},
+                                  child: const Text("ยืนยัน")),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+            resTojson != null
+                ? SizedBox(
+                    height: height * 0.5,
+                    child: Column(
+                      children: [
+                        status != ''
+                            ? Column(
+                                children: [
+                                  BoxStatusinform(status: status),
+                                  SizedBox(
+                                    height: height * 0.01,
+                                  ),
+                                  ontap == true
+                                      ? SizedBox(
+                                          width: MediaQuery.of(context)
+                                                  .size
+                                                  .width *
+                                              0.05,
+                                          height: MediaQuery.of(context)
+                                                  .size
+                                                  .width *
+                                              0.05,
+                                          child:
+                                              const CircularProgressIndicator(
+                                            color: Color(0xff76FFD5),
+                                          ),
+                                        )
+                                      : GestureDetector(
+                                          onTap: () {
+                                            setState(() {
+                                              ontap = true;
+                                            });
+                                            exam();
+                                          },
+                                          child: Container(
+                                              height: height * 0.05,
+                                              width: width * 0.3,
+                                              decoration: BoxDecoration(
+                                                  color:
+                                                      const Color(0xff31D6AA),
+                                                  borderRadius:
+                                                      BorderRadius.circular(15),
+                                                  boxShadow: const [
+                                                    BoxShadow(
+                                                      color: Colors.grey,
+                                                      offset: Offset(0, 4),
+                                                      blurRadius: 5,
+                                                    )
+                                                  ]),
+                                              child: Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.start,
+                                                  children: [
+                                                    Image.asset(
+                                                        'assets/jhb.png'),
+                                                    Text('  ปริ้นผลตรวจ',
+                                                        style: TextStyle(
+                                                            fontWeight:
+                                                                FontWeight.w500,
+                                                            fontFamily: context
+                                                                .read<
+                                                                    DataProvider>()
+                                                                .fontFamily,
+                                                            fontSize:
+                                                                width * 0.03,
+                                                            color:
+                                                                Colors.white))
+                                                  ])),
+                                        )
+                                ],
+                              )
+                            : Column(
+                                children: [
+                                  const BoxToDay(),
+                                  SizedBox(height: height * 0.01),
+                                  ontap == false
+                                      ? resTojson['todays'].length != 0
+                                          ? resTojson['queue_number'] != ''
+                                              ? GestureDetector(
+                                                  onTap: () {
+                                                    setState(() {
+                                                      ontap = true;
+                                                    });
+                                                    printq();
+                                                  },
+                                                  child: Container(
+                                                      height: height * 0.05,
+                                                      width: width * 0.3,
+                                                      decoration: BoxDecoration(
+                                                          color: const Color(
+                                                              0xff31D6AA),
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(15),
+                                                          boxShadow: const [
+                                                            BoxShadow(
                                                               color:
-                                                                  Colors.white))
-                                                    ])),
-                                          )
-                                  ],
-                                )
-                              : Column(
-                                  children: [
-                                    const BoxToDay(),
-                                    SizedBox(height: height * 0.01),
-                                    ontap == false
-                                        ? resTojson['todays'].length != 0
-                                            ? resTojson['queue_number'] != ''
-                                                ? GestureDetector(
-                                                    onTap: () {
-                                                      setState(() {
-                                                        ontap = true;
-                                                      });
-                                                      printq();
-                                                    },
-                                                    child: Container(
-                                                        height: height * 0.05,
-                                                        width: width * 0.3,
-                                                        decoration: BoxDecoration(
-                                                            color: const Color(
-                                                                0xff31D6AA),
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .circular(
-                                                                        15),
-                                                            boxShadow: const [
-                                                              BoxShadow(
-                                                                color:
-                                                                    Colors.grey,
-                                                                offset: Offset(
-                                                                    0, 4),
-                                                                blurRadius: 5,
-                                                              )
-                                                            ]),
-                                                        child: Row(
-                                                            mainAxisAlignment:
-                                                                MainAxisAlignment
-                                                                    .start,
-                                                            children: [
-                                                              Image.asset(
-                                                                  'assets/jhb.png'),
-                                                              Text('  ปริ้น',
-                                                                  style: TextStyle(
-                                                                      fontWeight:
-                                                                          FontWeight
-                                                                              .w500,
-                                                                      fontFamily: context
-                                                                          .read<
-                                                                              DataProvider>()
-                                                                          .fontFamily,
-                                                                      fontSize:
-                                                                          width *
-                                                                              0.03,
-                                                                      color: Colors
-                                                                          .white))
-                                                            ])),
-                                                  )
-                                                : GestureDetector(
-                                                    onTap: () {
-                                                      setState(() {
-                                                        ontap = true;
-                                                      });
-                                                      q();
-                                                    },
-                                                    child: Container(
-                                                        height: height * 0.05,
-                                                        width: width * 0.3,
-                                                        decoration: BoxDecoration(
-                                                            color: const Color(
-                                                                0xff31D6AA),
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .circular(
-                                                                        15),
-                                                            boxShadow: const [
-                                                              BoxShadow(
-                                                                color:
-                                                                    Colors.grey,
-                                                                offset: Offset(
-                                                                    0, 4),
-                                                                blurRadius: 5,
-                                                              )
-                                                            ]),
-                                                        child: Row(
-                                                            mainAxisAlignment:
-                                                                MainAxisAlignment
-                                                                    .start,
-                                                            children: [
-                                                              Image.asset(
-                                                                  'assets/jhb.png'),
-                                                              Text('  รับคิว',
-                                                                  style: TextStyle(
-                                                                      fontWeight:
-                                                                          FontWeight
-                                                                              .w500,
-                                                                      fontFamily: context
-                                                                          .read<
-                                                                              DataProvider>()
-                                                                          .fontFamily,
-                                                                      fontSize:
-                                                                          width *
-                                                                              0.03,
-                                                                      color: Colors
-                                                                          .white))
-                                                            ])),
-                                                  )
-                                            : const SizedBox()
-                                        : SizedBox(
-                                            width: MediaQuery.of(context)
-                                                    .size
-                                                    .width *
-                                                0.07,
-                                            height: MediaQuery.of(context)
-                                                    .size
-                                                    .width *
-                                                0.07,
-                                            child:
-                                                const CircularProgressIndicator(
-                                                    color: Color(0xff76FFD5)),
-                                          )
-                                  ],
-                                ),
-                        ],
-                      ),
+                                                                  Colors.grey,
+                                                              offset:
+                                                                  Offset(0, 4),
+                                                              blurRadius: 5,
+                                                            )
+                                                          ]),
+                                                      child: Row(
+                                                          mainAxisAlignment:
+                                                              MainAxisAlignment
+                                                                  .start,
+                                                          children: [
+                                                            Image.asset(
+                                                                'assets/jhb.png'),
+                                                            Text('  ปริ้น',
+                                                                style: TextStyle(
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .w500,
+                                                                    fontFamily: context
+                                                                        .read<
+                                                                            DataProvider>()
+                                                                        .fontFamily,
+                                                                    fontSize:
+                                                                        width *
+                                                                            0.03,
+                                                                    color: Colors
+                                                                        .white))
+                                                          ])),
+                                                )
+                                              : GestureDetector(
+                                                  onTap: () {
+                                                    setState(() {
+                                                      ontap = true;
+                                                    });
+                                                    q();
+                                                  },
+                                                  child: Container(
+                                                      height: height * 0.05,
+                                                      width: width * 0.3,
+                                                      decoration: BoxDecoration(
+                                                          color: const Color(
+                                                              0xff31D6AA),
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(15),
+                                                          boxShadow: const [
+                                                            BoxShadow(
+                                                              color:
+                                                                  Colors.grey,
+                                                              offset:
+                                                                  Offset(0, 4),
+                                                              blurRadius: 5,
+                                                            )
+                                                          ]),
+                                                      child: Row(
+                                                          mainAxisAlignment:
+                                                              MainAxisAlignment
+                                                                  .start,
+                                                          children: [
+                                                            Image.asset(
+                                                                'assets/jhb.png'),
+                                                            Text('  รับคิว',
+                                                                style: TextStyle(
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .w500,
+                                                                    fontFamily: context
+                                                                        .read<
+                                                                            DataProvider>()
+                                                                        .fontFamily,
+                                                                    fontSize:
+                                                                        width *
+                                                                            0.03,
+                                                                    color: Colors
+                                                                        .white))
+                                                          ])),
+                                                )
+                                          : const SizedBox()
+                                      : SizedBox(
+                                          width: MediaQuery.of(context)
+                                                  .size
+                                                  .width *
+                                              0.07,
+                                          height: MediaQuery.of(context)
+                                                  .size
+                                                  .width *
+                                              0.07,
+                                          child:
+                                              const CircularProgressIndicator(
+                                                  color: Color(0xff76FFD5)),
+                                        )
+                                ],
+                              ),
+                      ],
                     ),
-                    SizedBox(
-                      height: height * 0.15,
-                      child: Column(
-                        children: [
-                          choice(cancel: stop),
-                        ],
-                      ),
-                    ),
-                  ]
-                : [
-                    SizedBox(
-                      width: MediaQuery.of(context).size.width * 0.07,
-                      height: MediaQuery.of(context).size.width * 0.07,
-                      child: const Center(
-                          child: CircularProgressIndicator(
-                              color: Color(0xff000000))),
-                    ),
-                  ],
-          ))
+                  )
+                : const Text("-"),
+            SizedBox(
+              height: height * 0.15,
+              child: Column(
+                children: [
+                  choice(cancel: stop),
+                ],
+              ),
+            ),
+          ]))
         ],
       ),
       bottomNavigationBar: SizedBox(

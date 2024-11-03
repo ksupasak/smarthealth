@@ -430,7 +430,7 @@ class _InformationCardState extends State<InformationCard> {
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(15),
                 color: Colors.white,
-                boxShadow: [
+                boxShadow: const [
                   BoxShadow(
                       blurRadius: 2,
                       spreadRadius: 2,
