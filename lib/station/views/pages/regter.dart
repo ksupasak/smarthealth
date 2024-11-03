@@ -1,4 +1,4 @@
-// ignore_for_file: non_constant_identifier_names, use_build_context_synchronously
+// ignore_for_file: non_constant_identifier_names, use_build_context_synchronously, sort_child_properties_last
 
 import 'dart:convert';
 
@@ -31,13 +31,13 @@ class _RegterState extends State<Regter> {
   }
 
   void setvalue() {
-    debugPrint(context.read<DataProvider>().regter_data.toString());
-    if (context.read<DataProvider>().regter_data != null) {
+    debugPrint(context.read<DataProvider>().dataUser.toString());
+    if (context.read<DataProvider>().dataUser != null) {
       setState(() {
-        id.text = context.read<DataProvider>().regter_data![0];
-        prefix_name.text = context.read<DataProvider>().regter_data![1];
-        first_name.text = context.read<DataProvider>().regter_data![2];
-        last_name.text = context.read<DataProvider>().regter_data![4];
+        id.text = context.read<DataProvider>().dataUser["pid"];
+        prefix_name.text = context.read<DataProvider>().dataUser["titleName"];
+        first_name.text = context.read<DataProvider>().dataUser["fname"];
+        last_name.text = context.read<DataProvider>().dataUser["lname"];
       });
     } else {
       setState(() {
@@ -55,14 +55,14 @@ class _RegterState extends State<Regter> {
     var res = await http.post(url, body: {
       'care_unit_id': context.read<DataProvider>().care_unit_id,
       'public_id': id.text,
-      'prefix_name': prefix_name.text,
+      'prefix_name': "",
       'first_name': first_name.text,
       'last_name': last_name.text,
       'hn': hn.text
     });
 
     var resTojson2 = json.decode(res.body);
-    debugPrint(resTojson2);
+    debugPrint(resTojson2.toString());
     if (res.statusCode == 200) {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           content: Container(
@@ -220,156 +220,6 @@ class _RegterState extends State<Regter> {
                       ),
                     ),
                   ),
-
-                  // Container(
-                  //   height: _height * 0.6,
-                  //   width: _width * 0.8,
-                  //   child: Row(
-                  //     children: [
-                  //       Container(
-                  //         height: _height * 0.6,
-                  //         width: _width * 0.4,
-                  //         child: Column(
-                  //           crossAxisAlignment: CrossAxisAlignment.start,
-                  //           children: [
-                  // Boxheab(child: 'เลขบัตรประชาชน'),
-                  // Boxheab(child: 'คำนำหน้าชื่อ'),
-                  // Boxheab(child: 'ชื่อ'),
-                  // Boxheab(child: 'นามสกุล'),
-                  // Boxheab(child: 'Prefix'),
-                  // Boxheab(child: 'FirstName'),
-                  // Boxheab(child: 'SurName'),
-                  // Boxheab(child: 'เลขที่'),
-                  // Boxheab(child: 'หมู่'),
-                  // Boxheab(child: 'ซอย/เเยก'),
-                  // Boxheab(child: 'เเขวง/ตำบล'),
-                  // Boxheab(child: 'เขต'),
-                  // Boxheab(child: 'จังหวัด'),
-                  //           ],
-                  //         ),
-                  //       ),
-                  //       context.read<DataProvider>().regter_data != null
-                  //           ? Container(
-                  //               height: _height * 0.6,
-                  //               width: _width * 0.4,
-                  //               child: Column(
-                  //                   crossAxisAlignment:
-                  //                       CrossAxisAlignment.start,
-                  //                   children: [
-                  //                     BoxData(
-                  //                         child: context
-                  //                             .read<DataProvider>()
-                  //                             .regter_data![0]),
-                  //                     BoxData(
-                  //                         child: context
-                  //                             .read<DataProvider>()
-                  //                             .regter_data![1]),
-                  //                     BoxData(
-                  //                         child: context
-                  //                             .read<DataProvider>()
-                  //                             .regter_data![2]),
-                  //                     BoxData(
-                  //                         child: context
-                  //                             .read<DataProvider>()
-                  //                             .regter_data![4]),
-                  //                     BoxData(
-                  //                         child: context
-                  //                             .read<DataProvider>()
-                  //                             .regter_data![5]),
-                  //                     BoxData(
-                  //                         child: context
-                  //                             .read<DataProvider>()
-                  //                             .regter_data![6]),
-                  //                     BoxData(
-                  //                         child: context
-                  //                             .read<DataProvider>()
-                  //                             .regter_data![8]),
-                  //                     BoxData(
-                  //                         child: context
-                  //                             .read<DataProvider>()
-                  //                             .regter_data![9]),
-                  //                     BoxData(
-                  //                         child: context
-                  //                             .read<DataProvider>()
-                  //                             .regter_data![10]),
-                  //                     BoxData(
-                  //                         child: context
-                  //                             .read<DataProvider>()
-                  //                             .regter_data![12]),
-                  //                     BoxData(
-                  //                         child: context
-                  //                             .read<DataProvider>()
-                  //                             .regter_data![14]),
-                  //                     BoxData(
-                  //                         child: context
-                  //                             .read<DataProvider>()
-                  //                             .regter_data![15]),
-                  //                     BoxData(
-                  //                         child: context
-                  //                             .read<DataProvider>()
-                  //                             .regter_data![16]),
-                  //                   ]),
-                  //             )
-                  //           : Container(
-                  //               child: Column(children: [
-                  //                 BoxData(),
-                  //                 BoxData(),
-                  //                 BoxData(),
-                  //                 BoxData(),
-                  //                 BoxData(),
-                  //                 BoxData(),
-                  //                 BoxData(),
-                  //                 BoxData(),
-                  //                 BoxData(),
-                  //                 BoxData(),
-                  //                 BoxData(),
-                  //                 BoxData(),
-                  //                 BoxData(),
-                  //               ]),
-                  //             )
-                  //     ],
-                  //   ),
-                  // ),
-                  // Container(
-                  //   height: _height * 0.3,
-                  //   width: _width,
-                  //   child: Row(
-                  //     mainAxisAlignment: MainAxisAlignment.center,
-                  //     children: [
-                  //       GestureDetector(
-                  //           onTap: () {
-                  //             //  regter();
-                  //             setState(() {
-                  //               context.read<DataProvider>().id = '';
-                  //             });
-                  //           },
-                  //           child: BoxWidetdew(
-                  //               color: Colors.green,
-                  //               height: 0.05,
-                  //               width: 0.2,
-                  //               text: 'สมัคร',
-                  //               radius: 0.0,
-                  //               textcolor: Colors.white)),
-                  //       SizedBox(
-                  //         width: _width * 0.1,
-                  //       ),
-                  //       GestureDetector(
-                  //           onTap: () {
-                  //             setState(() {
-                  //               context.read<DataProvider>().id = '';
-                  //             });
-                  //             Navigator.pop(context);
-                  //           },
-                  //           child: BoxWidetdew(
-                  //               color: Colors.red,
-                  //               height: 0.05,
-                  //               width: 0.2,
-                  //               text: 'ยกเลิก',
-                  //               radius: 0.0,
-                  //               textcolor: Colors.white)),
-                  //     ],
-                  //   ),
-                  // )
                 ],
               ),
             ),
