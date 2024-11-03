@@ -51,6 +51,12 @@ class DataProvider with ChangeNotifier {
     notifyListeners();
   }
 
+  String viewhealthrecord = "";
+  void updateviewhealthrecord(String nameview) {
+    viewhealthrecord = nameview;
+    notifyListeners();
+  }
+
   String claimType = '';
   String claimTypeName = '';
   void updateclaimType(Map data) {

@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:smart_health/station/views/pages/checkqueue.dart';
 
 import 'package:smart_health/station/views/pages/health_record.dart';
+import 'package:smart_health/station/views/pages/healthrecord/healthRecord2.dart';
 import 'package:smart_health/station/views/pages/home.dart';
 import 'package:smart_health/station/views/pages/menu.dart';
 import 'package:smart_health/station/views/pages/pages_setting/device.dart';
@@ -26,6 +27,7 @@ class Routes {
   static const String user_information = '/user_information';
   static const String printqueue = '/printqueue';
   static const String regter = '/regter';
+  static const String healthRecord2 = '/healthRecord2';
   static final routes = [
         GetPage(name: splash, page: (() => const Splash_Screen())),
         GetPage(name: home, page: (() => const Homeapp())),
@@ -37,6 +39,7 @@ class Routes {
         GetPage(name: user_information, page: (() => const UserInformation2())),
         GetPage(name: printqueue, page: (() => const PrintQueue())),
         GetPage(name: regter, page: (() => const Regter())),
+        GetPage(name: healthRecord2, page: (() => const HealthRecord2())),
       ] +
       TestRoutes.routes;
 }

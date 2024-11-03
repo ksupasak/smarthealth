@@ -70,15 +70,22 @@ class _UserInformation2State extends State<UserInformation2> {
   bool statusPopupClaimType = false;
   String doctor_note = '--';
   String dx = '--';
-
+// -------
+  var resToJsonCheckQuick;
+  Timer? timerCheckQuick;
   Future<void> checkQuick() async {
-    var url =
-        Uri.parse('${context.read<DataProvider>().platfromURL}/check_quick');
-    var res = await http.post(url, body: {
-      'care_unit_id': context.read<DataProvider>().care_unit_id,
-      'public_id': context.read<DataProvider>().id,
+    timerCheckQuick = Timer.periodic(const Duration(seconds: 2), (timer) async {
+      var url =
+          Uri.parse('${context.read<DataProvider>().platfromURL}/check_quick');
+      var res = await http.post(url, body: {
+        'care_unit_id': context.read<DataProvider>().care_unit_id,
+        'public_id': context.read<DataProvider>().id,
+      });
+      resToJsonCheckQuick = json.decode(res.body);
+      if (res.statusCode == 200) {
+        debugPrint(resToJsonCheckQuick["message"].toString());
+      }
     });
-    resTojson = json.decode(res.body);
   }
 
   Future<void> checkt_queue() async {
@@ -354,12 +361,20 @@ class _UserInformation2State extends State<UserInformation2> {
 
   @override
   void initState() {
+    checkQuick();
     checkt_queue();
     printer = ESMPrinter([
       {'vendor_id': '19267', 'product_id': '14384'},
     ]);
 
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    timerCheckQuick!.cancel();
+
+    super.dispose();
   }
 
   @override
@@ -385,7 +400,8 @@ class _UserInformation2State extends State<UserInformation2> {
               ),
             ),
             !statusPopupClaimType
-                ? context.read<DataProvider>().dataUser != {}
+                ? context.read<DataProvider>().dataUser["claimTypes"].length !=
+                        0
                     ? SizedBox(
                         height: height * 0.5,
                         child: ListView.builder(
@@ -480,7 +496,12 @@ class _UserInformation2State extends State<UserInformation2> {
                                   style: ElevatedButton.styleFrom(
                                     backgroundColor: Colors.green,
                                   ),
-                                  onPressed: () {},
+                                  onPressed: () {
+                                    if (resToJsonCheckQuick["message"] ==
+                                        "health_record") {
+                                      Get.toNamed('healthRecord2');
+                                    }
+                                  },
                                   child: const Text("ยืนยัน")),
                             ],
                           ),
