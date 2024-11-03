@@ -11,9 +11,6 @@ class PulseAndSysAndDia extends StatefulWidget {
 }
 
 class _PulseAndSysAndDiaState extends State<PulseAndSysAndDia> {
-  TextEditingController sysHealthrecord = TextEditingController();
-  TextEditingController diaHealthrecord = TextEditingController();
-
   @override
   Widget build(BuildContext context) {
     double height = MediaQuery.of(context).size.height;
@@ -30,11 +27,11 @@ class _PulseAndSysAndDiaState extends State<PulseAndSysAndDia> {
                 BoxRecord(
                     image: 'assets/jhv.png',
                     texthead: 'SYS',
-                    keyvavlue: sysHealthrecord),
+                    keyvavlue: context.read<DataProvider>().sysHealthrecord),
                 BoxRecord(
                     image: 'assets/jhvkb.png',
                     texthead: 'DIA',
-                    keyvavlue: diaHealthrecord),
+                    keyvavlue: context.read<DataProvider>().diaHealthrecord),
               ],
             ),
           ),

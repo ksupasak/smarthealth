@@ -1,10 +1,7 @@
 import 'dart:async';
-import 'dart:collection';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_blue_plus/gen/flutterblueplus.pb.dart';
-import 'package:just_audio/just_audio.dart';
 
 class DataProvider with ChangeNotifier {
   String name_hospital = ''; //NAME OF HOSPITAL
@@ -78,6 +75,15 @@ class DataProvider with ChangeNotifier {
   String fbs = '';
   String si = '';
   String uric = '';
+  //NEW Healthrecord
+  TextEditingController sysHealthrecord = TextEditingController();
+  TextEditingController diaHealthrecord = TextEditingController();
+  TextEditingController pulseHealthrecord = TextEditingController();
+  TextEditingController heightHealthrecord = TextEditingController();
+  TextEditingController weightHealthrecord = TextEditingController();
+  TextEditingController spo2Healthrecord = TextEditingController();
+  TextEditingController tempHealthrecord = TextEditingController();
+
   List<String> deviceId = [];
   StreamController<List<String>> _deviceIdStreamController =
       StreamController<List<String>>();

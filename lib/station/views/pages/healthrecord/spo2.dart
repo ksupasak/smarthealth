@@ -11,8 +11,6 @@ class Spo2Healthrecord extends StatefulWidget {
 }
 
 class _Spo2HealthrecordState extends State<Spo2Healthrecord> {
-  TextEditingController spo2Healthrecord = TextEditingController();
-  TextEditingController pulseHealthrecord = TextEditingController();
   List availablePorts = [];
   void initPorts() {
     try {
@@ -46,11 +44,11 @@ class _Spo2HealthrecordState extends State<Spo2Healthrecord> {
                 BoxRecord(
                     image: 'assets/kauo.png',
                     texthead: 'SPO2',
-                    keyvavlue: spo2Healthrecord),
+                    keyvavlue: context.read<DataProvider>().spo2Healthrecord),
                 BoxRecord(
                     image: 'assets/jhbjk;.png',
                     texthead: 'PULSE',
-                    keyvavlue: pulseHealthrecord)
+                    keyvavlue: context.read<DataProvider>().pulseHealthrecord)
               ],
             ),
           ),

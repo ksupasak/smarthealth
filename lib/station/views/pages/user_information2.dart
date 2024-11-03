@@ -71,6 +71,7 @@ class _UserInformation2State extends State<UserInformation2> {
   String doctor_note = '--';
   String dx = '--';
 // -------
+
   var resToJsonCheckQuick;
   Timer? timerCheckQuick;
   Future<void> checkQuick() async {
@@ -84,6 +85,37 @@ class _UserInformation2State extends State<UserInformation2> {
       resToJsonCheckQuick = json.decode(res.body);
       if (res.statusCode == 200) {
         debugPrint(resToJsonCheckQuick["message"].toString());
+        // debugPrint(resToJsonCheckQuick["health_records"][0].toString());
+        if (resToJsonCheckQuick["health_records"].length != 0) {
+          context.read<DataProvider>().heightHealthrecord.text =
+              resToJsonCheckQuick["health_records"][0]["height"];
+          context.read<DataProvider>().weightHealthrecord.text =
+              resToJsonCheckQuick["health_records"][0]["weight"];
+          context.read<DataProvider>().tempHealthrecord.text =
+              resToJsonCheckQuick["health_records"][0]["temp"];
+          context.read<DataProvider>().sysHealthrecord.text =
+              resToJsonCheckQuick["health_records"][0]["bp_sys"];
+          context.read<DataProvider>().diaHealthrecord.text =
+              resToJsonCheckQuick["health_records"][0]["bp_dia"];
+          context.read<DataProvider>().pulseHealthrecord.text =
+              resToJsonCheckQuick["health_records"][0]["pulse_rate"];
+          context.read<DataProvider>().spo2Healthrecord.text =
+              resToJsonCheckQuick["health_records"][0]["spo2"];
+
+          debugPrint(context.read<DataProvider>().heightHealthrecord.text);
+          debugPrint(context.read<DataProvider>().weightHealthrecord.text);
+          debugPrint(context.read<DataProvider>().tempHealthrecord.text);
+          debugPrint(context.read<DataProvider>().sysHealthrecord.text);
+          debugPrint(context.read<DataProvider>().diaHealthrecord.text);
+          debugPrint(context.read<DataProvider>().pulseHealthrecord.text);
+          debugPrint(context.read<DataProvider>().spo2Healthrecord.text);
+        }
+        setState(() {});
+      }
+      if (resToJsonCheckQuick["message"] == "processing") {
+        timerCheckQuick?.cancel();
+        Navigator.push(
+            context, MaterialPageRoute(builder: (context) => PrePareVideo()));
       }
     });
   }
@@ -362,7 +394,7 @@ class _UserInformation2State extends State<UserInformation2> {
   @override
   void initState() {
     checkQuick();
-    checkt_queue();
+    // checkt_queue();
     printer = ESMPrinter([
       {'vendor_id': '19267', 'product_id': '14384'},
     ]);
@@ -402,50 +434,89 @@ class _UserInformation2State extends State<UserInformation2> {
             !statusPopupClaimType
                 ? context.read<DataProvider>().dataUser["claimTypes"].length !=
                         0
-                    ? SizedBox(
-                        height: height * 0.5,
-                        child: ListView.builder(
-                          itemCount: context
-                              .read<DataProvider>()
-                              .dataUser["claimTypes"]
-                              .length,
-                          itemBuilder: (context, index) => SizedBox(
-                            child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: GestureDetector(
-                                onTap: () {
-                                  context.read<DataProvider>().updateclaimType(
-                                      context
+                    ? Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: SizedBox(
+                          height: height * 0.5,
+                          child: resToJsonCheckQuick != null
+                              ? resToJsonCheckQuick["message"] ==
+                                      "health_record"
+                                  ? ListView.builder(
+                                      itemCount: context
                                           .read<DataProvider>()
-                                          .dataUser["claimTypes"][index]);
-                                  setState(() {
-                                    statusPopupClaimType = true;
-                                  });
-                                },
-                                child: Container(
-                                  height: height * 0.08,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(15),
-                                    color: Colors.white,
-                                    boxShadow: const [
-                                      BoxShadow(
-                                          blurRadius: 2,
-                                          spreadRadius: 2,
-                                          color: Color.fromARGB(
-                                              255, 188, 188, 188),
-                                          offset: Offset(0, 2)),
-                                    ],
-                                  ),
-                                  child: Center(
-                                    child: Text(context
-                                            .read<DataProvider>()
-                                            .dataUser["claimTypes"][index]
-                                        ["claimTypeName"]),
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
+                                          .dataUser["claimTypes"]
+                                          .length,
+                                      itemBuilder: (context, index) => SizedBox(
+                                        child: Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: GestureDetector(
+                                            onTap: () {
+                                              context
+                                                  .read<DataProvider>()
+                                                  .updateclaimType(context
+                                                          .read<DataProvider>()
+                                                          .dataUser[
+                                                      "claimTypes"][index]);
+                                              setState(() {
+                                                statusPopupClaimType = true;
+                                              });
+                                            },
+                                            child: Container(
+                                              height: height * 0.08,
+                                              decoration: BoxDecoration(
+                                                borderRadius:
+                                                    BorderRadius.circular(15),
+                                                color: Colors.white,
+                                                boxShadow: const [
+                                                  BoxShadow(
+                                                      blurRadius: 2,
+                                                      spreadRadius: 2,
+                                                      color: Color.fromARGB(
+                                                          255, 188, 188, 188),
+                                                      offset: Offset(0, 2)),
+                                                ],
+                                              ),
+                                              child: Center(
+                                                child: Text(context
+                                                        .read<DataProvider>()
+                                                        .dataUser["claimTypes"]
+                                                    [index]["claimTypeName"]),
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    )
+                                  : resToJsonCheckQuick["message"] == "waiting"
+                                      ? Container(
+                                          decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(15),
+                                            color: Colors.white,
+                                            boxShadow: const [
+                                              BoxShadow(
+                                                  blurRadius: 2,
+                                                  spreadRadius: 2,
+                                                  color: Color.fromARGB(
+                                                      255, 188, 188, 188),
+                                                  offset: Offset(0, 2)),
+                                            ],
+                                          ),
+                                          child: ListView(children: [
+                                            Center(
+                                              child: Text(
+                                                  "${context.watch<DataProvider>().claimTypeName}/(${context.watch<DataProvider>().claimType})"),
+                                            ),
+                                            const Center(
+                                              child: CircularProgressIndicator(
+                                                color: Color.fromARGB(
+                                                    255, 0, 139, 130),
+                                              ),
+                                            ),
+                                          ]),
+                                        )
+                                      : const SizedBox()
+                              : const SizedBox(),
                         ),
                       )
                     : const SizedBox()

@@ -13,10 +13,6 @@ class HeightAndWidth extends StatefulWidget {
 }
 
 class _HeightAndWidthState extends State<HeightAndWidth> {
-  TextEditingController heightHealthrecord = TextEditingController();
-  TextEditingController weightHealthrecord = TextEditingController();
-
-  TextEditingController TempHealthrecord = TextEditingController();
   @override
   Widget build(BuildContext context) {
     double height = MediaQuery.of(context).size.height;
@@ -33,15 +29,15 @@ class _HeightAndWidthState extends State<HeightAndWidth> {
                 BoxRecord(
                     image: 'assets/shr.png',
                     texthead: 'HEIGHT',
-                    keyvavlue: heightHealthrecord),
+                    keyvavlue: context.read<DataProvider>().heightHealthrecord),
                 BoxRecord(
                     image: 'assets/srhnate.png',
                     texthead: 'WEIGHT',
-                    keyvavlue: weightHealthrecord),
+                    keyvavlue: context.read<DataProvider>().weightHealthrecord),
                 BoxRecord(
                     image: 'assets/jhgh.png',
                     texthead: 'WEIGHT',
-                    keyvavlue: TempHealthrecord),
+                    keyvavlue: context.read<DataProvider>().tempHealthrecord),
               ],
             ),
           ),
@@ -63,9 +59,6 @@ class _HeightAndWidthState extends State<HeightAndWidth> {
                       onPressed: () {
                         dataProvider
                             .updateviewhealthrecord("pulseAndSysAndDia");
-
-                        context.read<DataProvider>().weight =
-                            weightHealthrecord.text;
 
                         debugPrint(context
                             .read<DataProvider>()

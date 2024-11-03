@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 import 'package:http/http.dart' as http;
 import 'package:smart_health/station/provider/provider.dart';
@@ -14,42 +15,38 @@ class SumHealthrecord extends StatefulWidget {
 }
 
 class _SumHealthrecordState extends State<SumHealthrecord> {
-  TextEditingController sysHealthrecord = TextEditingController();
-  TextEditingController diaHealthrecord = TextEditingController();
-  TextEditingController pulseHealthrecord = TextEditingController();
-  TextEditingController heightHealthrecord = TextEditingController();
-  TextEditingController weightHealthrecord = TextEditingController();
-  TextEditingController spo2Healthrecord = TextEditingController();
-
   void sendDataHealthrecord() async {
     var url = Uri.parse('${context.read<DataProvider>().platfromURL}/add_hr');
     var res = await http.post(url, body: {
-      "public_id": "1710501456572",
-      "care_unit_id": "63edead4790f9b775b00004f",
-      "temp": " ",
-      "weight": "",
-      "bp_sys": "",
-      "bp_dia": "",
-      "pulse_rate": "",
-      "spo2": "",
+      "public_id": context.read<DataProvider>().id,
+      "care_unit_id": context.read<DataProvider>().care_unit_id,
+      "temp": context.read<DataProvider>().tempHealthrecord.text,
+      "weight": context.read<DataProvider>().weightHealthrecord.text,
+      "bp_sys": context.read<DataProvider>().sysHealthrecord.text,
+      "bp_dia": context.read<DataProvider>().diaHealthrecord.text,
+      "pulse_rate": context.read<DataProvider>().pulseHealthrecord.text,
+      "spo2": context.read<DataProvider>().spo2Healthrecord.text,
       "fbs": "",
-      "height": "",
+      "height": context.read<DataProvider>().heightHealthrecord.text,
       "bmi": "",
-      "bp": "",
+      "bp":
+          "${context.read<DataProvider>().sysHealthrecord.text}/${context.read<DataProvider>().diaHealthrecord.text}",
       "rr": "",
       "cc": "",
       "recep_public_id": "",
     });
     var resTojson = json.decode(res.body);
-    if (res.statusCode == 200) {}
+    if (res.statusCode == 200) {
+      debugPrint("ส่งค่าHealthrecord สำเร็จ");
+      debugPrint(resTojson.toString());
+      Get.offNamed('user_information');
+    }
   }
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-
-    weightHealthrecord.text = context.read<DataProvider>().weight.toString();
   }
 
   @override
@@ -61,7 +58,6 @@ class _SumHealthrecordState extends State<SumHealthrecord> {
         height: height * 0.7,
         width: width,
         child: ListView(children: [
-          const Text("รวม"),
           Center(
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -69,11 +65,11 @@ class _SumHealthrecordState extends State<SumHealthrecord> {
                 BoxRecord(
                     image: 'assets/shr.png',
                     texthead: 'HEIGHT',
-                    keyvavlue: heightHealthrecord),
+                    keyvavlue: context.read<DataProvider>().heightHealthrecord),
                 BoxRecord(
                     image: 'assets/srhnate.png',
                     texthead: 'WEIGHT',
-                    keyvavlue: weightHealthrecord),
+                    keyvavlue: context.read<DataProvider>().weightHealthrecord),
               ],
             ),
           ),
@@ -84,15 +80,15 @@ class _SumHealthrecordState extends State<SumHealthrecord> {
                 BoxRecord(
                     image: 'assets/jhv.png',
                     texthead: 'SYS',
-                    keyvavlue: sysHealthrecord),
+                    keyvavlue: context.read<DataProvider>().sysHealthrecord),
                 BoxRecord(
                     image: 'assets/jhvkb.png',
                     texthead: 'DIA',
-                    keyvavlue: diaHealthrecord),
+                    keyvavlue: context.read<DataProvider>().diaHealthrecord),
                 BoxRecord(
                     image: 'assets/jhbjk;.png',
                     texthead: 'PULSE',
-                    keyvavlue: pulseHealthrecord)
+                    keyvavlue: context.read<DataProvider>().pulseHealthrecord)
               ],
             ),
           ),
@@ -103,7 +99,11 @@ class _SumHealthrecordState extends State<SumHealthrecord> {
                 BoxRecord(
                     image: 'assets/kauo.png',
                     texthead: 'SPO2',
-                    keyvavlue: spo2Healthrecord),
+                    keyvavlue: context.read<DataProvider>().spo2Healthrecord),
+                BoxRecord(
+                    image: 'assets/jhgh.png',
+                    texthead: 'WEIGHT',
+                    keyvavlue: context.read<DataProvider>().tempHealthrecord),
               ],
             ),
           ),
