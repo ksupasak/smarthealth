@@ -1,14 +1,10 @@
+// ignore_for_file: non_constant_identifier_names, use_build_context_synchronously
+
 import 'dart:convert';
-import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/src/animation/animation_controller.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter/src/widgets/placeholder.dart';
-import 'package:flutter/src/widgets/ticker_provider.dart';
-import 'package:flutter/widgets.dart';
+
 import 'package:get/get.dart';
-//import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:smart_health/station/provider/provider.dart';
 import 'package:smart_health/station/views/ui/widgetdew.dart/widgetdew.dart';
@@ -22,10 +18,6 @@ class Regter extends StatefulWidget {
 }
 
 class _RegterState extends State<Regter> {
-  // File? imagepath;
-  // String? imagename;
-  // String? imagedata;
-  // ImagePicker imagePicker = new ImagePicker();
   TextEditingController prefix_name = TextEditingController();
   TextEditingController first_name = TextEditingController();
   TextEditingController last_name = TextEditingController();
@@ -34,12 +26,12 @@ class _RegterState extends State<Regter> {
   @override
   void initState() {
     setvalue();
-    // TODO: implement initState
+
     super.initState();
   }
 
   void setvalue() {
-    print(context.read<DataProvider>().regter_data);
+    debugPrint(context.read<DataProvider>().regter_data.toString());
     if (context.read<DataProvider>().regter_data != null) {
       setState(() {
         id.text = context.read<DataProvider>().regter_data![0];
@@ -70,7 +62,7 @@ class _RegterState extends State<Regter> {
     });
 
     var resTojson2 = json.decode(res.body);
-    print(resTojson2);
+    debugPrint(resTojson2);
     if (res.statusCode == 200) {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           content: Container(
@@ -86,43 +78,34 @@ class _RegterState extends State<Regter> {
     }
   }
 
-  // Future<void> getImage() async {
-  //   var getimage = await imagePicker.pickImage(source: ImageSource.camera);
-  //   setState(() {
-  //     imagepath = File(getimage!.path);
-  //     imagename = getimage.path.split('/').last;
-  //     imagedata = base64Encode(imagepath!.readAsBytesSync());
-  //   });
-  // }
-
   Widget BoxData({String? child}) {
-    double _width = MediaQuery.of(context).size.width;
-    double _height = MediaQuery.of(context).size.height;
+    double width = MediaQuery.of(context).size.width;
+    double height = MediaQuery.of(context).size.height;
     return Container(
-        width: _width * 0.4,
-        height: _height * 0.027,
+        width: width * 0.4,
+        height: height * 0.027,
         decoration: BoxDecoration(
-            border: Border.all(color: Color.fromARGB(255, 0, 0, 0))),
+            border: Border.all(color: const Color.fromARGB(255, 0, 0, 0))),
         child: child != null
-            ? Text("$child",
+            ? Text(child,
                 style: TextStyle(
-                  color: Color.fromARGB(255, 0, 28, 155),
+                  color: const Color.fromARGB(255, 0, 28, 155),
                   fontFamily: context.read<DataProvider>().fontFamily,
                 ))
-            : Text('-'));
+            : const Text('-'));
   }
 
   Widget Boxheab({required String child}) {
-    double _width = MediaQuery.of(context).size.width;
-    double _height = MediaQuery.of(context).size.height;
+    double width = MediaQuery.of(context).size.width;
+    double height = MediaQuery.of(context).size.height;
     return Container(
-        width: _width * 0.4,
-        height: _height * 0.027,
+        width: width * 0.4,
+        height: height * 0.027,
         decoration: BoxDecoration(
-            border: Border.all(color: Color.fromARGB(255, 0, 0, 0))),
+            border: Border.all(color: const Color.fromARGB(255, 0, 0, 0))),
         child: Text(child,
             style: TextStyle(
-              color: Color.fromARGB(255, 3, 58, 58),
+              color: const Color.fromARGB(255, 3, 58, 58),
               fontFamily: context.read<DataProvider>().fontFamily,
             )));
   }
