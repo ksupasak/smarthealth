@@ -849,6 +849,13 @@ class _UserInformation2State extends State<UserInformation2> {
                   Get.toNamed('healthRecord2');
                 },
                 child: const Text("เทส Health Record")),
+
+            ElevatedButton(
+                onPressed: () {
+                  timerCheckQuick?.cancel();
+                  Get.toNamed('device_manager');
+                },
+                child: const Text("Devices"))
           ],
         ),
       ),

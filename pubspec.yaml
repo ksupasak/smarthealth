@@ -72,9 +72,10 @@ dependencies:
 
   openvidu_client:
     path: "vendors/flutter_openvidu_client"  
-  quick_usb:
-    path: "vendors/quick_usb" 
-  
+    # path: "vendors/quick_usb" 
+  #flutter_launcher_icons: ^0.13.1
+  usb_serial: ^0.5.2
+  flutter_libserialport: ^0.2.3
 
 
 flutter_launcher_icons:
