@@ -122,6 +122,15 @@ String intArrayToString(List<int> intArray) {
         height: height * 0.7,
         width: width,
         child: ListView(children: [
+          SizedBox(
+              height: height * 0.4,
+              width: height * 0.4,
+              child: Center(
+                child: Image.asset(
+                  "assets/ye990.png",
+                  fit: BoxFit.fill,
+                ),
+              )),
           Center(
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,

@@ -111,6 +111,15 @@ class _Spo2HealthrecordState extends State<Spo2Healthrecord> {
         height: height * 0.7,
         width: width,
         child: ListView(children: [
+          SizedBox(
+              height: height * 0.4,
+              width: height * 0.4,
+              child: Center(
+                child: Image.asset(
+                  "assets/unnamed.jpg",
+                  fit: BoxFit.fill,
+                ),
+              )),
           Center(
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,

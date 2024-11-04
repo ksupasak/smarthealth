@@ -23,6 +23,8 @@ class _RegterState extends State<Regter> {
   TextEditingController last_name = TextEditingController();
   TextEditingController id = TextEditingController();
   TextEditingController hn = TextEditingController();
+
+  TextEditingController phone = TextEditingController();
   @override
   void initState() {
     setvalue();
@@ -65,6 +67,7 @@ class _RegterState extends State<Regter> {
       'prefix_name': "",
       'first_name': first_name.text,
       'last_name': last_name.text,
+      'tle': phone.text,
       'hn': hn.text
     });
 
@@ -189,6 +192,8 @@ class _RegterState extends State<Regter> {
                                     textdatauser(child: last_name),
                                     Text('เลขประจำตัวประชาชน', style: style2),
                                     textdatauser(child: id),
+                                    Text('เบอร์โทร', style: style2),
+                                    textdatauser(child: phone),
                                     Text('รหัส HN', style: style2),
                                     textdatauser(child: hn),
                                   ]),
