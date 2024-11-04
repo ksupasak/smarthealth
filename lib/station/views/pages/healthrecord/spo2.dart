@@ -13,70 +13,55 @@ class Spo2Healthrecord extends StatefulWidget {
   State<Spo2Healthrecord> createState() => _Spo2HealthrecordState();
 }
 
+class _Spo2HealthrecordState extends State<Spo2Healthrecord> {
+  List availablePorts = [];
 
+  void start() async {
+    final name = SerialPort.availablePorts.first;
+    final port = SerialPort(name);
+    int status = 0;
+    if (!port.openReadWrite()) {
+      print(SerialPort.lastError);
+      exit(-1);
+    }
+    SerialPortConfig config = port.config;
+    config.baudRate = 38400;
+    port.config = config;
 
-void start(){
+    List<int> buffer = [];
+    final reader = SerialPortReader(port);
+    reader.stream.listen((data) {
+      if (data[0] == 42) {
+        status = 1;
+      }
 
-final name = SerialPort.availablePorts.first;
-final port = SerialPort(name);
-int status = 0;
-if (!port.openReadWrite()) {
-  print(SerialPort.lastError);
-  exit(-1);
-}
+      if (status == 1) {
+        buffer.addAll(data);
 
-SerialPortConfig config = port.config; 
-config.baudRate = 38400;   
-port.config = config;    
-
-  List<int> buffer = [];
-     final reader = SerialPortReader(port);
-      reader.stream.listen((data) {
-     
-    
-      
-       if (data[0] == 42) {
-          status = 1;
-          
-        }
-
-        if(status==1){
-          buffer.addAll(data);
-
-          if(buffer.length==11){
-               debugPrint('Buffer: $buffer');
-          if(buffer[2]==83){
+        if (buffer.length == 11) {
+          debugPrint('Buffer: $buffer');
+          if (buffer[2] == 83) {
             int spo2 = buffer[5];
             int pulse = buffer[6];
             debugPrint('SpO2: $spo2, Pulse:$pulse');
-            // context.read<DataProvider>().spo2Healthrecord
-          
+            context.read<DataProvider>().spo2Healthrecord.text =
+                spo2.toString();
+            context.read<DataProvider>().pulseHealthrecord.text =
+                pulse.toString();
           }
-          
+
           buffer = [];
-      
 
-
-            status = 0 ;
-          }
-        
+          status = 0;
         }
-
-
-
-
-    }); 
+      }
+    });
   }
 
-
-class _Spo2HealthrecordState extends State<Spo2Healthrecord> {
-  List availablePorts = [];
   void initPorts() {
     try {
       //    setState(() => availablePorts = SerialPort.availablePorts);
       debugPrint('Available ports: ${availablePorts.length}');
-
-
     } catch (e) {
       debugPrint('Error retrieving ports: $e');
       setState(() => availablePorts = []);
@@ -85,10 +70,8 @@ class _Spo2HealthrecordState extends State<Spo2Healthrecord> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     start();
-
   }
 
   @override

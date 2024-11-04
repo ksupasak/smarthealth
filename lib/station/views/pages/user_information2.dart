@@ -85,7 +85,6 @@ class _UserInformation2State extends State<UserInformation2> {
       resToJsonCheckQuick = json.decode(res.body);
       if (res.statusCode == 200) {
         debugPrint(resToJsonCheckQuick["message"].toString());
-        // debugPrint(resToJsonCheckQuick["health_records"][0].toString());
         if (resToJsonCheckQuick["health_records"].length != 0) {
           context.read<DataProvider>().heightHealthrecord.text =
               resToJsonCheckQuick["health_records"][0]["height"];
@@ -432,7 +431,10 @@ class _UserInformation2State extends State<UserInformation2> {
               ),
             ),
             !statusPopupClaimType
-                ? context.read<DataProvider>().dataUser["claimTypes"].length !=
+                ? context
+                            .read<DataProvider>()
+                            .dataUserIDCard["claimTypes"]
+                            .length !=
                         0
                     ? Padding(
                         padding: const EdgeInsets.all(8.0),
@@ -444,7 +446,7 @@ class _UserInformation2State extends State<UserInformation2> {
                                   ? ListView.builder(
                                       itemCount: context
                                           .read<DataProvider>()
-                                          .dataUser["claimTypes"]
+                                          .dataUserIDCard["claimTypes"]
                                           .length,
                                       itemBuilder: (context, index) => SizedBox(
                                         child: Padding(
@@ -455,8 +457,9 @@ class _UserInformation2State extends State<UserInformation2> {
                                                   .read<DataProvider>()
                                                   .updateclaimType(context
                                                           .read<DataProvider>()
-                                                          .dataUser[
+                                                          .dataUserIDCard[
                                                       "claimTypes"][index]);
+
                                               setState(() {
                                                 statusPopupClaimType = true;
                                               });
@@ -479,9 +482,10 @@ class _UserInformation2State extends State<UserInformation2> {
                                               child: Center(
                                                 child: Text(
                                                   context
-                                                          .read<DataProvider>()
-                                                          .dataUser["claimTypes"]
-                                                      [index]["claimTypeName"],
+                                                              .read<DataProvider>()
+                                                              .dataUserIDCard[
+                                                          "claimTypes"][index]
+                                                      ["claimTypeName"],
                                                   style: TextStyle(
                                                     fontSize: width * 0.03,
                                                   ),
@@ -849,7 +853,6 @@ class _UserInformation2State extends State<UserInformation2> {
                   Get.toNamed('healthRecord2');
                 },
                 child: const Text("เทส Health Record")),
-
             ElevatedButton(
                 onPressed: () {
                   timerCheckQuick?.cancel();

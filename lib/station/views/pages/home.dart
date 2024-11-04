@@ -41,14 +41,15 @@ class _HomeappState extends State<Homeapp> {
     });
     context.read<Datafunction>().playsound();
     if (context.read<DataProvider>().id.length == 13) {
-      var url =
-          Uri.parse('https://emr-life.com/clinic_master/clinic/Api/check_q');
+      var url = Uri.parse(
+          'https://emr-life.com/clinic_master/clinic/Api/check_quick');
       var res = await http.post(url, body: {
         'care_unit_id': context.read<DataProvider>().care_unit_id,
         'public_id': context.read<DataProvider>().id,
       });
       var resTojson = json.decode(res.body);
-
+      context.read<DataProvider>().updatedatausercheckquick(resTojson);
+      debugPrint(context.read<DataProvider>().dataUserCheckQuick.toString());
       setState(() {
         status = false;
       });
@@ -174,6 +175,7 @@ class _HomeappState extends State<Homeapp> {
       debugPrint(resTojson.toString());
       if (res.statusCode == 200) {
         context.read<DataProvider>().updateuserinformation(resTojson);
+        context.read<DataProvider>().upcorrelationId(resTojson);
         check2();
         timerreadIDCard?.cancel();
       }
@@ -240,7 +242,8 @@ class _HomeappState extends State<Homeapp> {
               child: SafeArea(
             child: ListView(children: [
               BoxTime(),
-              const BoxRunQueue2(),
+              //    const BoxRunQueue2(),
+              SizedBox(height: height * 0.1),
               SizedBox(
                 width: width,
                 height: height * 0.7,
@@ -345,14 +348,12 @@ class _HomeappState extends State<Homeapp> {
                         ],
                       ),
                     ),
-                 
-                  ElevatedButton(
-                onPressed: () {
-              
-                  Get.toNamed('device_manager');
-                },
-                child: const Text("Devices"))
-                 ],
+                    ElevatedButton(
+                        onPressed: () {
+                          Get.toNamed('device_manager');
+                        },
+                        child: const Text("Devices"))
+                  ],
                 )),
               ),
             ]),

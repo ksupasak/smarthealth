@@ -37,13 +37,14 @@ class _RegterState extends State<Regter> {
   // }
 
   void setvalue() {
-    debugPrint(context.read<DataProvider>().dataUser.toString());
-    if (context.read<DataProvider>().dataUser != null) {
+    debugPrint(context.read<DataProvider>().dataUserIDCard.toString());
+    if (context.read<DataProvider>().dataUserIDCard != null) {
       setState(() {
-        id.text = context.read<DataProvider>().dataUser["pid"];
-        prefix_name.text = context.read<DataProvider>().dataUser["titleName"];
-        first_name.text = context.read<DataProvider>().dataUser["fname"];
-        last_name.text = context.read<DataProvider>().dataUser["lname"];
+        id.text = context.read<DataProvider>().dataUserIDCard["pid"];
+        prefix_name.text =
+            context.read<DataProvider>().dataUserIDCard["titleName"];
+        first_name.text = context.read<DataProvider>().dataUserIDCard["fname"];
+        last_name.text = context.read<DataProvider>().dataUserIDCard["lname"];
       });
     } else {
       setState(() {

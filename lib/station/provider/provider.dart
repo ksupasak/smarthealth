@@ -39,12 +39,18 @@ class DataProvider with ChangeNotifier {
   // 'MIBFS',
   // 'HJ-Narigmed',
   // 'A&D_UA-651BLE_D57B3F'
-  Map dataUser = {};
+  Map dataUserIDCard = {};
 
   void updateuserinformation(Map data) {
-    dataUser = data;
+    dataUserIDCard = data;
     id = data["pid"];
 
+    notifyListeners();
+  }
+
+  Map dataUserCheckQuick = {};
+  void updatedatausercheckquick(Map data) {
+    dataUserCheckQuick = data;
     notifyListeners();
   }
 
@@ -61,9 +67,14 @@ class DataProvider with ChangeNotifier {
   void updateclaimType(Map data) {
     claimType = data["claimType"];
     claimTypeName = data["claimTypeName"];
-    correlationId = data["correlationId"];
     notifyListeners();
     debugPrint(data.toString());
+  }
+
+  void upcorrelationId(Map data) {
+    correlationId = data["correlationId"];
+    notifyListeners();
+    debugPrint("correlationId :${data["correlationId"]}");
   }
 
   String id = '';
