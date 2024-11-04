@@ -43,18 +43,6 @@ class _SumHealthrecordState extends State<SumHealthrecord> {
     }
   }
 
-  Future<void> send() async {
-    var url = Uri.parse('http://localhost:8189/api/smartcard/confirm-save');
-    var res = await http.post(url, body: {
-      "pid": context.read<DataProvider>().id,
-      "claimType": context.read<DataProvider>().claimType,
-      "mobile": "",
-      "correlationId": context.read<DataProvider>().correlationId,
-      "hn": ""
-    });
-    var resTojson = json.decode(res.body);
-  }
-
   @override
   void initState() {
     // TODO: implement initState

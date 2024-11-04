@@ -119,6 +119,18 @@ class _UserInformation2State extends State<UserInformation2> {
     });
   }
 
+  Future<void> send() async {
+    var url = Uri.parse('http://localhost:8189/api/smartcard/confirm-save');
+    var res = await http.post(url, body: {
+      "pid": context.read<DataProvider>().id,
+      "claimType": context.read<DataProvider>().claimType,
+      "mobile": "",
+      "correlationId": context.read<DataProvider>().correlationId,
+      "hn": ""
+    });
+    var resTojson = json.decode(res.body);
+  }
+
   Future<void> checkt_queue() async {
     var url = Uri.parse('${context.read<DataProvider>().platfromURL}/check_q');
     var res = await http.post(url, body: {
