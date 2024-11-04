@@ -30,6 +30,12 @@ class _RegterState extends State<Regter> {
     super.initState();
   }
 
+  // Future<void> getImage() async {
+  //   var url = Uri.parse('http://localhost:8189/api/smartcard/read-cead-only');
+  //   var res = await http.post(url);
+  //   var resTojson2 = json.decode(res.body);
+  // }
+
   void setvalue() {
     debugPrint(context.read<DataProvider>().dataUser.toString());
     if (context.read<DataProvider>().dataUser != null) {

@@ -56,9 +56,12 @@ class DataProvider with ChangeNotifier {
 
   String claimType = '';
   String claimTypeName = '';
+  String correlationId = '';
+
   void updateclaimType(Map data) {
     claimType = data["claimType"];
     claimTypeName = data["claimTypeName"];
+    correlationId = data["correlationId"];
     notifyListeners();
     debugPrint(data.toString());
   }

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:smart_health/station/provider/provider.dart';
 import 'package:smart_health/station/views/ui/widgetdew.dart/widgetdew.dart';
-import 'package:flutter_libserialport/flutter_libserialport.dart';
 import 'dart:io';
 import 'dart:typed_data';
 
@@ -14,11 +13,6 @@ class PulseAndSysAndDia extends StatefulWidget {
 }
 
 class _PulseAndSysAndDiaState extends State<PulseAndSysAndDia> {
-
-
-
-
-
   @override
   Widget build(BuildContext context) {
     double height = MediaQuery.of(context).size.height;
