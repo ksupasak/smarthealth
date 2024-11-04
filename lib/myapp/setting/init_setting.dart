@@ -110,7 +110,7 @@ class _InitsettingState extends State<Initsetting> {
         setState(() {
           status_safe = false;
           Navigator.pushReplacement(context,
-              MaterialPageRoute(builder: (context) => Splash_Screen()));
+              MaterialPageRoute(builder: (context) => const Splash_Screen()));
         });
       });
     });

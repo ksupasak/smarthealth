@@ -473,7 +473,9 @@ class _UserInformation2State extends State<UserInformation2> {
                         child: SizedBox(
                           height: height * 0.5,
                           child: resToJsonCheckQuick != null
-                              ? resToJsonCheckQuick["message"] == "completed"
+                              ? resToJsonCheckQuick["message"] == "completed" ||
+                                      resToJsonCheckQuick["message"] ==
+                                          "finished"
                                   ? ListView(
                                       children: [
                                         Padding(
