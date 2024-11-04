@@ -15,48 +15,76 @@ class Spo2Healthrecord extends StatefulWidget {
 
 class _Spo2HealthrecordState extends State<Spo2Healthrecord> {
   List availablePorts = [];
+  SerialPort? current_port = null;
+  
+ void start() async {
+    bool connect = false;
 
-  void start() async {
-    final name = SerialPort.availablePorts.first;
-    final port = SerialPort(name);
-    int status = 0;
-    if (!port.openReadWrite()) {
-      print(SerialPort.lastError);
-      exit(-1);
-    }
-    SerialPortConfig config = port.config;
-    config.baudRate = 38400;
-    port.config = config;
+    // while (true) {
+      try {
+      
+        // final name = SerialPort.availablePorts.first;
+        for (var name in SerialPort.availablePorts) {
+          debugPrint('scan $name');
+          final port = SerialPort(name);
+          if (port.vendorId == 1659) {
+            debugPrint("found SPO2");
+            int status = 0;
+            if (!port.openReadWrite()) {
+              print(SerialPort.lastError);
+              exit(-1);
+            }
+            current_port = port;
 
-    List<int> buffer = [];
-    final reader = SerialPortReader(port);
-    reader.stream.listen((data) {
-      if (data[0] == 42) {
-        status = 1;
-      }
+                        debugPrint("open SPO2");
 
-      if (status == 1) {
-        buffer.addAll(data);
+            SerialPortConfig config = port.config;
+            config.baudRate = 38400;
+            port.config = config;
 
-        if (buffer.length == 11) {
-          debugPrint('Buffer: $buffer');
-          if (buffer[2] == 83) {
-            int spo2 = buffer[5];
-            int pulse = buffer[6];
-            debugPrint('SpO2: $spo2, Pulse:$pulse');
-            context.read<DataProvider>().spo2Healthrecord.text =
-                spo2.toString();
-            context.read<DataProvider>().pulseHealthrecord.text =
-                pulse.toString();
+            List<int> buffer = [];
+            final reader = SerialPortReader(port);
+
+                        debugPrint("reader SPO2");
+
+            reader.stream.listen((data) {
+              if (data[0] == 42) {
+                status = 1;
+              }
+
+              if (status == 1) {
+                buffer.addAll(data);
+
+                if (buffer.length == 11) {
+                  debugPrint('Buffer: $buffer');
+                  if (buffer[2] == 83) {
+                    int spo2 = buffer[5];
+                    int pulse = buffer[6];
+                    debugPrint('SpO2: $spo2, Pulse:$pulse');
+                    if(spo2>0&&pulse>0){
+                      context.read<DataProvider>().spo2Healthrecord.text =
+                        spo2.toString();
+                     context.read<DataProvider>().pulseHealthrecord.text =
+                        pulse.toString();
+                    }
+                 
+                  }
+
+                  buffer = [];
+
+                  status = 0;
+                }
+              }
+            });
           }
-
-          buffer = [];
-
-          status = 0;
         }
+      } on Exception catch (_) {
+        print("throwing new error");
+        // throw Exception("Error on server");
       }
-    });
+    // }
   }
+
 
   void initPorts() {
     try {
@@ -132,4 +160,17 @@ class _Spo2HealthrecordState extends State<Spo2Healthrecord> {
           )
         ]));
   }
+
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+
+    if(current_port!=null){
+      current_port?.close();
+    }
+
+  }
+
 }

@@ -45,7 +45,160 @@ class _DeviceManagerState extends State<DeviceManager> {
   
 
   }
-  void start(){
+
+
+
+String intArrayToString(List<int> intArray) {
+  // Filter out values greater than 127
+  List<int> filteredIntArray = intArray.where((value) => value <= 127).toList();
+
+  return String.fromCharCodes(filteredIntArray);
+}
+ void startBP() async {
+    bool connect = false;
+
+    // while (true) {
+      try {
+      
+        // final name = SerialPort.availablePorts.first;
+        for (var name in SerialPort.availablePorts) {
+          debugPrint('scan $name');
+          final port = SerialPort(name);
+          if (port.vendorId == 8137) {
+            debugPrint("found BP");
+            int status = 0;
+            if (!port.openReadWrite()) {
+              print(SerialPort.lastError);
+            
+            }
+
+            debugPrint("open BP");
+
+            SerialPortConfig config = port.config;
+            config.baudRate = 9600;
+            port.config = config;
+
+            List<int> buffer = [];
+            final reader = SerialPortReader(port);
+
+                        debugPrint("reader BP");
+
+            reader.stream.listen((data) {
+
+                  debugPrint('$data');
+
+              if (data[0] == 50) {
+                status = 1;
+              }
+
+              if (status == 1) {
+              
+                buffer.addAll(data);
+
+                if (true) {
+                  debugPrint('Buffer: $buffer');
+                 
+
+                    String txt = intArrayToString(buffer);
+                    debugPrint('$txt');
+
+
+                    List<String> splitList = txt.split(";");
+
+          
+                    int sys = int.parse(splitList[3].split(":")[1].split(" ")[0]);
+
+                    int dia = int.parse(splitList[5].split(":")[1].split(" ")[0]);
+
+
+
+                    debugPrint('Sys: $sys, Dia:$dia');
+                    // context.read<DataProvider>().spo2Healthrecord.text =
+                    //     spo2.toString();
+                    //  context.read<DataProvider>().pulseHealthrecord.text =
+                    //     pulse.toString();
+                  
+
+                  buffer = [];
+
+                  status = 0;
+                }
+              }
+            });
+          }
+        }
+      } on Exception catch (_) {
+        print("throwing new error");
+        // throw Exception("Error on server");
+      }
+    // }
+  }
+ void start() async {
+    bool connect = false;
+
+    // while (true) {
+      try {
+      
+        // final name = SerialPort.availablePorts.first;
+        for (var name in SerialPort.availablePorts) {
+          debugPrint('scan $name');
+          final port = SerialPort(name);
+          if (port.vendorId == 1659) {
+            debugPrint("found SPO2");
+            int status = 0;
+            if (!port.openReadWrite()) {
+              print(SerialPort.lastError);
+              exit(-1);
+            }
+
+                        debugPrint("open SPO2");
+
+            SerialPortConfig config = port.config;
+            config.baudRate = 38400;
+            port.config = config;
+
+            List<int> buffer = [];
+            final reader = SerialPortReader(port);
+
+                        debugPrint("reader SPO2");
+
+            reader.stream.listen((data) {
+              if (data[0] == 42) {
+                status = 1;
+              }
+
+              if (status == 1) {
+                buffer.addAll(data);
+
+                if (buffer.length == 11) {
+                  debugPrint('Buffer: $buffer');
+                  if (buffer[2] == 83) {
+                    int spo2 = buffer[5];
+                    int pulse = buffer[6];
+                    debugPrint('SpO2: $spo2, Pulse:$pulse');
+                    // context.read<DataProvider>().spo2Healthrecord.text =
+                    //     spo2.toString();
+                    // context.read<DataProvider>().pulseHealthrecord.text =
+                    //     pulse.toString();
+                  }
+
+                  buffer = [];
+
+                  status = 0;
+                }
+              }
+            });
+          }
+        }
+      } on Exception catch (_) {
+        print("throwing new error");
+        // throw Exception("Error on server");
+      }
+    // }
+  }
+
+
+  void start2(){
 
 final name = SerialPort.availablePorts.first;
 final port = SerialPort(name);
@@ -131,7 +284,7 @@ port.config = config;
         ),
         floatingActionButton: FloatingActionButton(
           child: Icon(Icons.refresh),
-          onPressed: start,
+          onPressed: startBP,
         ),
       
       ),
