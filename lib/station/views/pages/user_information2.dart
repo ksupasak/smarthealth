@@ -67,7 +67,6 @@ class _UserInformation2State extends State<UserInformation2> {
   ESMPrinter? printer;
   bool status2 = false;
   bool ontap = false;
-  bool statusPopupClaimType = false;
   String doctor_note = '--';
   String dx = '--';
 // -------
@@ -83,6 +82,7 @@ class _UserInformation2State extends State<UserInformation2> {
         'public_id': context.read<DataProvider>().id,
       });
       resToJsonCheckQuick = json.decode(res.body);
+      setState(() {});
       if (res.statusCode == 200) {
         debugPrint(resToJsonCheckQuick["message"].toString());
         if (resToJsonCheckQuick["health_records"].length != 0) {
@@ -109,7 +109,6 @@ class _UserInformation2State extends State<UserInformation2> {
           //   debugPrint(context.read<DataProvider>().pulseHealthrecord.text);
           //   debugPrint(context.read<DataProvider>().spo2Healthrecord.text);
         }
-        setState(() {});
       }
       if (resToJsonCheckQuick["message"] == "processing") {
         timerCheckQuick?.cancel();
@@ -118,35 +117,10 @@ class _UserInformation2State extends State<UserInformation2> {
       }
       if (resToJsonCheckQuick["message"] == "completed") {
         debugPrint("ตรวจเสร็จเเล้ว message completed");
-        exam();
         timerCheckQuick?.cancel();
+        exam();
       }
     });
-  }
-
-  void checkClaimCode(Map data) async {
-    // var url = Uri.parse('http://localhost:8189/api/smartcard/confirm-save');
-    // var res = await http.post(url, body: {
-    //   "pid": context.read<DataProvider>().id,
-    //   "claimType": context.read<DataProvider>().claimType,
-    //   "mobile": "",
-    //   "correlationId": context.read<DataProvider>().correlationId,
-    //   "hn": ""
-    // });
-    // var resTojson = json.decode(res.body);
-    debugPrint("checkClaimCode");
-  }
-
-  Future<void> getClaimCode() async {
-    var url = Uri.parse('http://localhost:8189/api/smartcard/confirm-save');
-    var res = await http.post(url, body: {
-      "pid": context.read<DataProvider>().id,
-      "claimType": context.read<DataProvider>().claimType,
-      "mobile": "",
-      "correlationId": context.read<DataProvider>().correlationId,
-      "hn": ""
-    });
-    var resTojson = json.decode(res.body);
   }
 
   Future<void> checkt_queue() async {
@@ -426,6 +400,7 @@ class _UserInformation2State extends State<UserInformation2> {
   void initState() {
     checkQuick();
     // checkt_queue();
+
     printer = ESMPrinter([
       {'vendor_id': '19267', 'product_id': '14384'},
     ]);
@@ -462,168 +437,128 @@ class _UserInformation2State extends State<UserInformation2> {
                 ],
               ),
             ),
-            !statusPopupClaimType
-                ? context
-                            .read<DataProvider>()
-                            .dataUserIDCard["claimTypes"]
-                            .length !=
-                        0
-                    ? Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: SizedBox(
-                          height: height * 0.5,
-                          child: resToJsonCheckQuick != null
-                              ? resToJsonCheckQuick["message"] == "completed" ||
-                                      resToJsonCheckQuick["message"] ==
-                                          "finished"
-                                  ? ListView(
-                                      children: [
-                                        Padding(
-                                          padding: const EdgeInsets.all(8.0),
-                                          child: Row(
+            context.read<DataProvider>().dataUserIDCard["claimTypes"].length !=
+                    0
+                ? Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: SizedBox(
+                      height: height * 0.5,
+                      child: resToJsonCheckQuick != null
+                          ? resToJsonCheckQuick["message"] == "completed" ||
+                                  resToJsonCheckQuick["message"] == "finished"
+                              ? ListView(
+                                  children: [
+                                    Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Text("การตรวจเสร็จสิ้น",
+                                              style: TextStyle(
+                                                fontSize: width * 0.05,
+                                                color: Color(0xff48B5AA),
+                                              ))
+                                        ],
+                                      ),
+                                    ),
+                                    Center(
+                                      child: Container(
+                                        height: height * 0.3,
+                                        width: width * 0.8,
+                                        decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(15),
+                                          color: Colors.white,
+                                          boxShadow: const [
+                                            BoxShadow(
+                                                blurRadius: 2,
+                                                spreadRadius: 2,
+                                                color: Color.fromARGB(
+                                                    255, 188, 188, 188),
+                                                offset: Offset(0, 2)),
+                                          ],
+                                        ),
+                                        child: ListView(children: [
+                                          Row(
                                             mainAxisAlignment:
                                                 MainAxisAlignment.center,
                                             children: [
-                                              Text("การตรวจเสร็จสิ้น",
+                                              Text("ผลการตรวจ",
                                                   style: TextStyle(
-                                                    fontSize: width * 0.05,
-                                                    color: Color(0xff48B5AA),
-                                                  ))
+                                                      fontSize: width * 0.04)),
                                             ],
                                           ),
+                                          Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              children: [
+                                                Text("DX :",
+                                                    style: TextStyle(
+                                                        fontSize:
+                                                            width * 0.03)),
+                                                Text(dx,
+                                                    style: TextStyle(
+                                                        fontSize:
+                                                            width * 0.03)),
+                                              ]),
+                                          Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              children: [
+                                                Text("Doctor Note :",
+                                                    style: TextStyle(
+                                                        fontSize:
+                                                            width * 0.03)),
+                                                Text(doctor_note,
+                                                    style: TextStyle(
+                                                        fontSize:
+                                                            width * 0.03)),
+                                              ]),
+                                          SizedBox(height: height * 0.05),
+                                          Center(
+                                            child: ElevatedButton(
+                                                onPressed: () {},
+                                                child: Text("ปริ้นผลตรวจ",
+                                                    style: TextStyle(
+                                                        fontSize:
+                                                            width * 0.03))),
+                                          )
+                                        ]),
+                                      ),
+                                    ),
+                                  ],
+                                )
+                              : resToJsonCheckQuick["message"] ==
+                                      "health_record"
+                                  ? ListView(
+                                      children: [
+                                        Container(
+                                          width: width,
+                                          height: height * 0.1,
+                                          decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(15),
+                                            color: Colors.white,
+                                            boxShadow: const [
+                                              BoxShadow(
+                                                  blurRadius: 2,
+                                                  spreadRadius: 2,
+                                                  color: Color.fromARGB(
+                                                      255, 188, 188, 188),
+                                                  offset: Offset(0, 2)),
+                                            ],
+                                          ),
+                                          child: Center(
+                                            child: Text(
+                                                "${context.watch<DataProvider>().claimTypeName} (${context.watch<DataProvider>().claimType})"),
+                                          ),
                                         ),
-                                        Center(
+                                        Padding(
+                                          padding: const EdgeInsets.fromLTRB(
+                                              0, 10, 0, 0),
                                           child: Container(
-                                            height: height * 0.3,
-                                            width: width * 0.8,
-                                            decoration: BoxDecoration(
-                                              borderRadius:
-                                                  BorderRadius.circular(15),
-                                              color: Colors.white,
-                                              boxShadow: const [
-                                                BoxShadow(
-                                                    blurRadius: 2,
-                                                    spreadRadius: 2,
-                                                    color: Color.fromARGB(
-                                                        255, 188, 188, 188),
-                                                    offset: Offset(0, 2)),
-                                              ],
-                                            ),
-                                            child: ListView(children: [
-                                              Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.center,
-                                                children: [
-                                                  Text("ผลการตรวจ",
-                                                      style: TextStyle(
-                                                          fontSize:
-                                                              width * 0.04)),
-                                                ],
-                                              ),
-                                              Row(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment.center,
-                                                  children: [
-                                                    Text("DX :",
-                                                        style: TextStyle(
-                                                            fontSize:
-                                                                width * 0.03)),
-                                                    Text(dx,
-                                                        style: TextStyle(
-                                                            fontSize:
-                                                                width * 0.03)),
-                                                  ]),
-                                              Row(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment.center,
-                                                  children: [
-                                                    Text("Doctor Note :",
-                                                        style: TextStyle(
-                                                            fontSize:
-                                                                width * 0.03)),
-                                                    Text(doctor_note,
-                                                        style: TextStyle(
-                                                            fontSize:
-                                                                width * 0.03)),
-                                                  ]),
-                                              SizedBox(height: height * 0.05),
-                                              Center(
-                                                child: ElevatedButton(
-                                                    onPressed: () {},
-                                                    child: Text("ปริ้นผลตรวจ",
-                                                        style: TextStyle(
-                                                            fontSize:
-                                                                width * 0.03))),
-                                              )
-                                            ]),
-                                          ),
-                                        ),
-                                      ],
-                                    )
-                                  : resToJsonCheckQuick["message"] ==
-                                          "health_record"
-                                      ? ListView.builder(
-                                          itemCount: context
-                                              .read<DataProvider>()
-                                              .dataUserIDCard["claimTypes"]
-                                              .length,
-                                          itemBuilder: (context, index) =>
-                                              SizedBox(
-                                            child: Padding(
-                                              padding:
-                                                  const EdgeInsets.all(8.0),
-                                              child: GestureDetector(
-                                                onTap: () {
-                                                  context
-                                                      .read<DataProvider>()
-                                                      .updateclaimType(context
-                                                              .read<DataProvider>()
-                                                              .dataUserIDCard[
-                                                          "claimTypes"][index]);
-                                                  setState(() {
-                                                    statusPopupClaimType = true;
-                                                  });
-                                                  //  checkClaimCode();
-                                                },
-                                                child: Container(
-                                                  height: height * 0.08,
-                                                  decoration: BoxDecoration(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            15),
-                                                    color: Colors.white,
-                                                    boxShadow: const [
-                                                      BoxShadow(
-                                                          blurRadius: 2,
-                                                          spreadRadius: 2,
-                                                          color: Color.fromARGB(
-                                                              255,
-                                                              188,
-                                                              188,
-                                                              188),
-                                                          offset: Offset(0, 2)),
-                                                    ],
-                                                  ),
-                                                  child: Center(
-                                                    child: Text(
-                                                        context
-                                                                    .read<
-                                                                        DataProvider>()
-                                                                    .dataUserIDCard[
-                                                                "claimTypes"][index]
-                                                            ["claimTypeName"],
-                                                        style: TextStyle(
-                                                            fontSize:
-                                                                width * 0.03)),
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                        )
-                                      : resToJsonCheckQuick["message"] ==
-                                              "waiting"
-                                          ? Container(
+                                              width: width,
                                               decoration: BoxDecoration(
                                                 borderRadius:
                                                     BorderRadius.circular(15),
@@ -637,29 +572,233 @@ class _UserInformation2State extends State<UserInformation2> {
                                                       offset: Offset(0, 2)),
                                                 ],
                                               ),
-                                              child: ListView(children: [
-                                                Center(
+                                              child: Padding(
+                                                padding:
+                                                    const EdgeInsets.all(8.0),
+                                                child: Column(
+                                                  children: [
+                                                    Text("ตรวจสอบข้อมูล",
+                                                        style: TextStyle(
+                                                            fontSize:
+                                                                width * 0.04)),
+                                                    Row(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .spaceBetween,
+                                                      children: [
+                                                        Text("เลขบัตรประชาชน",
+                                                            style: TextStyle(
+                                                                fontSize:
+                                                                    width *
+                                                                        0.03)),
+                                                        Text(
+                                                            context
+                                                                .watch<
+                                                                    DataProvider>()
+                                                                .id,
+                                                            style: TextStyle(
+                                                                fontSize:
+                                                                    width *
+                                                                        0.03)),
+                                                      ],
+                                                    ),
+                                                    Row(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .spaceBetween,
+                                                      children: [
+                                                        Text("ชื่อ - นามสกุล",
+                                                            style: TextStyle(
+                                                                fontSize:
+                                                                    width *
+                                                                        0.03)),
+                                                        Text(
+                                                            "${context.watch<DataProvider>().dataUserIDCard['fname']}  ${context.read<DataProvider>().dataUserIDCard['lname']}",
+                                                            style: TextStyle(
+                                                                fontSize:
+                                                                    width *
+                                                                        0.03)),
+                                                      ],
+                                                    ),
+                                                    Row(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .spaceBetween,
+                                                      children: [
+                                                        Text(
+                                                            "วันเดือนปีเกิด(ปปปป/ดด/วว)",
+                                                            style: TextStyle(
+                                                                fontSize:
+                                                                    width *
+                                                                        0.03)),
+                                                        Text(
+                                                            "${context.watch<DataProvider>().dataUserIDCard['birthDate']} ",
+                                                            style: TextStyle(
+                                                                fontSize:
+                                                                    width *
+                                                                        0.03)),
+                                                      ],
+                                                    ),
+                                                    Row(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .spaceBetween,
+                                                      children: [
+                                                        Text("claimType",
+                                                            style: TextStyle(
+                                                                fontSize:
+                                                                    width *
+                                                                        0.03)),
+                                                        Text(
+                                                            context
+                                                                .watch<
+                                                                    DataProvider>()
+                                                                .claimType,
+                                                            style: TextStyle(
+                                                                fontSize:
+                                                                    width *
+                                                                        0.03)),
+                                                      ],
+                                                    ),
+                                                    Row(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .spaceBetween,
+                                                      children: [
+                                                        Text("correlationId",
+                                                            style: TextStyle(
+                                                                fontSize:
+                                                                    width *
+                                                                        0.03)),
+                                                        Text(
+                                                            context
+                                                                    .watch<
+                                                                        DataProvider>()
+                                                                    .dataUserIDCard[
+                                                                'correlationId'],
+                                                            style: TextStyle(
+                                                                fontSize:
+                                                                    width *
+                                                                        0.03)),
+                                                      ],
+                                                    ),
+                                                    Row(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .spaceBetween,
+                                                      children: [
+                                                        Text(
+                                                            "เบอร์โทร : ${context.read<DataProvider>().phone.text}",
+                                                            style: TextStyle(
+                                                                fontSize:
+                                                                    width *
+                                                                        0.03)),
+                                                        SizedBox(
+                                                            width: width * 0.5,
+                                                            child: TextField(
+                                                                controller: context
+                                                                    .read<
+                                                                        DataProvider>()
+                                                                    .phone)),
+                                                      ],
+                                                    ),
+                                                    Row(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .spaceBetween,
+                                                      children: [
+                                                        Text("HN :",
+                                                            style: TextStyle(
+                                                                fontSize:
+                                                                    width *
+                                                                        0.03)),
+                                                        SizedBox(
+                                                            width: width * 0.5,
+                                                            child: TextField(
+                                                                controller: context
+                                                                    .read<
+                                                                        DataProvider>()
+                                                                    .hn)),
+                                                      ],
+                                                    ),
+                                                    SizedBox(
+                                                        height: height * 0.02)
+                                                  ],
+                                                ),
+                                              )),
+                                        ),
+                                        Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.end,
+                                            children: [
+                                              ElevatedButton(
+                                                  style:
+                                                      ElevatedButton.styleFrom(
+                                                    backgroundColor:
+                                                        Colors.green,
+                                                  ),
+                                                  onPressed: () {
+                                                    if (resToJsonCheckQuick[
+                                                            "message"] ==
+                                                        "health_record") {
+                                                      timerCheckQuick?.cancel();
+                                                      Get.toNamed(
+                                                          'healthRecord2');
+                                                    }
+                                                  },
                                                   child: Text(
-                                                    "${context.watch<DataProvider>().claimTypeName}/(${context.watch<DataProvider>().claimType})",
+                                                    "ยืนยัน",
                                                     style: TextStyle(
                                                       fontSize: width * 0.03,
                                                     ),
-                                                  ),
+                                                  )),
+                                            ],
+                                          ),
+                                        ),
+                                      ],
+                                    )
+                                  : resToJsonCheckQuick["message"] == "waiting"
+                                      ? Container(
+                                          decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(15),
+                                            color: Colors.white,
+                                            boxShadow: const [
+                                              BoxShadow(
+                                                  blurRadius: 2,
+                                                  spreadRadius: 2,
+                                                  color: Color.fromARGB(
+                                                      255, 188, 188, 188),
+                                                  offset: Offset(0, 2)),
+                                            ],
+                                          ),
+                                          child: ListView(children: [
+                                            Center(
+                                              child: Text(
+                                                "${context.watch<DataProvider>().claimTypeName}/(${context.watch<DataProvider>().claimType})",
+                                                style: TextStyle(
+                                                  fontSize: width * 0.03,
                                                 ),
-                                                const Center(
-                                                  child:
-                                                      CircularProgressIndicator(
-                                                    color: Color.fromARGB(
-                                                        255, 0, 139, 130),
-                                                  ),
-                                                ),
-                                              ]),
-                                            )
-                                          : const SizedBox()
-                              : const SizedBox(),
-                        ),
-                      )
-                    : const SizedBox()
+                                              ),
+                                            ),
+                                            const Center(
+                                              child: CircularProgressIndicator(
+                                                color: Color.fromARGB(
+                                                    255, 0, 139, 130),
+                                              ),
+                                            ),
+                                          ]),
+                                        )
+                                      : const SizedBox()
+                          : const Center(
+                              child: CircularProgressIndicator(
+                                color: Color.fromARGB(255, 0, 139, 130),
+                              ),
+                            ),
+                    ),
+                  )
                 : Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Column(
@@ -679,120 +818,11 @@ class _UserInformation2State extends State<UserInformation2> {
                           ),
                           child: Center(
                             child: Text(
-                              context.read<DataProvider>().claimTypeName,
+                              "${context.watch<DataProvider>().claimType} : ${context.watch<DataProvider>().claimTypeName}",
                               style: TextStyle(
                                 fontSize: width * 0.03,
                               ),
                             ),
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.fromLTRB(0, 10, 0, 0),
-                          child: Container(
-                              width: width,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(15),
-                                color: Colors.white,
-                                boxShadow: const [
-                                  BoxShadow(
-                                      blurRadius: 2,
-                                      spreadRadius: 2,
-                                      color: Color.fromARGB(255, 188, 188, 188),
-                                      offset: Offset(0, 2)),
-                                ],
-                              ),
-                              child: Column(
-                                children: [
-                                  Text("ตรวจสอบข้อมูล",
-                                      style: TextStyle(fontSize: width * 0.03)),
-                                  Row(
-                                    children: [
-                                      Text("claimCode",
-                                          style: TextStyle(
-                                              fontSize: width * 0.03)),
-                                      Text("data",
-                                          style: TextStyle(
-                                              fontSize: width * 0.03)),
-                                    ],
-                                  ),
-                                  Text(
-                                      context
-                                              .read<DataProvider>()
-                                              .dataUserCheckQuick["personal"]
-                                          ["mobile"],
-                                      style: TextStyle(fontSize: width * 0.03)),
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Text("PHONE : ",
-                                          style: TextStyle(
-                                              fontSize: width * 0.03)),
-                                      SizedBox(
-                                          width: width * 0.5,
-                                          child: TextField()),
-                                    ],
-                                  ),
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Text("HN : ",
-                                          style: TextStyle(
-                                              fontSize: width * 0.03)),
-                                      SizedBox(
-                                          width: width * 0.5,
-                                          child: TextField()),
-                                    ],
-                                  ),
-                                  SizedBox(height: height * 0.02)
-                                ],
-                              )),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              ElevatedButton(
-                                  style: ElevatedButton.styleFrom(
-                                    backgroundColor: Colors.red,
-                                  ),
-                                  onPressed: () {
-                                    context
-                                        .read<DataProvider>()
-                                        .updateclaimType({
-                                      "claimType": "",
-                                      "claimTypeName": ""
-                                    });
-                                    setState(() {
-                                      statusPopupClaimType = false;
-                                    });
-                                  },
-                                  child: Text(
-                                    "ยกเลิก",
-                                    style: TextStyle(
-                                      fontSize: width * 0.03,
-                                    ),
-                                  )),
-                              ElevatedButton(
-                                  style: ElevatedButton.styleFrom(
-                                    backgroundColor: Colors.green,
-                                  ),
-                                  onPressed: () {
-                                    if (resToJsonCheckQuick["message"] ==
-                                        "health_record") {
-                                      timerCheckQuick?.cancel();
-                                      Get.toNamed('healthRecord2');
-                                    }
-                                  },
-                                  child: Text(
-                                    "ยืนยัน",
-                                    style: TextStyle(
-                                      fontSize: width * 0.03,
-                                    ),
-                                  )),
-                            ],
                           ),
                         ),
                       ],

@@ -81,9 +81,8 @@ class _BoxTimeState extends State<BoxTime> {
     timer = Timer.periodic(Duration(seconds: 1), (Timer t) {
       setState(() {
         dateTime = DateTime.now();
-        data = "${dateTime.hour}:" +
-            "${dateTime.minute.toString().padLeft(2, '0')}:" +
-            "${dateTime.second.toString().padLeft(2, '0')}";
+        data =
+            "${dateTime.hour}:${dateTime.minute.toString().padLeft(2, '0')}:${dateTime.second.toString().padLeft(2, '0')}";
       });
     });
   }
@@ -96,44 +95,44 @@ class _BoxTimeState extends State<BoxTime> {
 
   @override
   Widget build(BuildContext context) {
-    double _width = MediaQuery.of(context).size.width;
-    double _height = MediaQuery.of(context).size.height;
+    double width = MediaQuery.of(context).size.width;
+    double height = MediaQuery.of(context).size.height;
     TextStyle style = TextStyle(
         fontFamily: context.read<DataProvider>().fontFamily,
-        color: Color.fromARGB(255, 255, 255, 255),
-        fontSize: _width * 0.03,
+        color: const Color.fromARGB(255, 255, 255, 255),
+        fontSize: width * 0.03,
         fontWeight: FontWeight.w600);
-    return Container(
-        height: _height * 0.1,
-        width: _width,
+    return SizedBox(
+        height: height * 0.1,
+        width: width,
         child: Padding(
           padding: const EdgeInsets.all(15.0),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Container(
-                width: _width * 0.45,
+              SizedBox(
+                width: width * 0.45,
                 child: Column(
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Row(
-                        children: [WidgetNameHospital()],
+                        children: const [WidgetNameHospital()],
                       ),
                       Text(context.read<DataProvider>().care_unit,
                           style: style),
                     ]),
               ),
-              Container(
-                  width: _width * 0.35,
-                  height: _height * 0.07,
+              SizedBox(
+                  width: width * 0.35,
+                  height: height * 0.07,
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
-                      Container(
-                          width: _width * 0.2,
-                          height: _height * 0.03,
+                      SizedBox(
+                          width: width * 0.2,
+                          height: height * 0.03,
                           child: Row(
                             children: [
                               Text(data.toString(), style: style),

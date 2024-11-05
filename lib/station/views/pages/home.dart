@@ -48,6 +48,7 @@ class _HomeappState extends State<Homeapp> {
         'public_id': context.read<DataProvider>().id,
       });
       var resTojson = json.decode(res.body);
+      debugPrint("check_quick ######################");
       context.read<DataProvider>().updatedatausercheckquick(resTojson);
       debugPrint(context.read<DataProvider>().dataUserCheckQuick.toString());
       setState(() {
@@ -168,14 +169,19 @@ class _HomeappState extends State<Homeapp> {
   }
 
   void getIdCard() async {
-    timerreadIDCard = Timer.periodic(const Duration(seconds: 2), (timer) async {
+    timerreadIDCard = Timer.periodic(const Duration(seconds: 4), (timer) async {
       var url = Uri.parse('http://localhost:8189/api/smartcard/read');
       var res = await http.get(url);
       var resTojson = json.decode(res.body);
+      debugPrint("Crde Reader--------------------------------=");
       debugPrint(resTojson.toString());
       if (res.statusCode == 200) {
         context.read<DataProvider>().updateuserinformation(resTojson);
         context.read<DataProvider>().upcorrelationId(resTojson);
+        debugPrint(resTojson["claimTypes"][0].toString());
+        context
+            .read<DataProvider>()
+            .updateclaimType(resTojson["claimTypes"][0]);
         check2();
         timerreadIDCard?.cancel();
       }
