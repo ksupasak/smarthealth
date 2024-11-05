@@ -123,6 +123,35 @@ class _UserInformation2State extends State<UserInformation2> {
     });
   }
 
+<<<<<<< HEAD
+=======
+  void checkClaimCode(Map data) async {
+    // var url = Uri.parse('http://localhost:8189/api/smartcard/confirm-save');
+    // var res = await http.post(url, body: {
+    //   "pid": context.read<DataProvider>().id,
+    //   "claimType": context.read<DataProvider>().claimType,
+    //   "mobile": "",
+    //   "correlationId": context.read<DataProvider>().correlationId,
+    //   "hn": ""
+    // });
+    // var resTojson = json.decode(res.body);
+    debugPrint("checkClaimCode");
+  }
+
+  Future<void> getClaimCode() async {
+    var url = Uri.parse('http://localhost:8189/api/smartcard/confirm-save');
+    var res = await http.post(url, body: {
+      "pid": context.read<DataProvider>().id, // op ทั่วไป
+      "claimType": context.read<DataProvider>().claimType,
+      "mobile": "",
+      "correlationId":
+          context.read<DataProvider>().correlationId, // smartcard/read
+      "hn": ""
+    });
+    var resTojson = json.decode(res.body);
+  }
+
+>>>>>>> 2ebf93aa4dbd126195e140d9220769e7bbbbbc1b
   Future<void> checkt_queue() async {
     var url = Uri.parse('${context.read<DataProvider>().platfromURL}/check_q');
     var res = await http.post(url, body: {
