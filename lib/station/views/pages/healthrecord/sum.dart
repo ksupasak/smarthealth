@@ -21,15 +21,17 @@ class _SumHealthrecordState extends State<SumHealthrecord> {
     debugPrint("mobile : ${context.read<DataProvider>().phone.text}");
     debugPrint("correlationId : ${context.read<DataProvider>().correlationId}");
     debugPrint("hn : ${context.read<DataProvider>().hn.text}");
-    var url = Uri.parse('http://localhost:8189/api/smartcard/confirm-save');
+
+    var url = Uri.parse('http://localhost:8189/api/nhso-service/confirm-save');
     var res = await http.post(url, body: {
       "pid": "1710501456572",
       "claimType": "PG0060001",
       "mobile": "0982934303",
-      "correlationId": "ff6d2244-f957-4d1a-8a9e-9d06f9c1229a",
+      "correlationId": "d3a0df57-1038-4dde-978b-047daf2e1ab8",
       "hn": ""
     });
     var resTojson = json.decode(res.body);
+
     debugPrint("confirm-save /////////////////////////////");
     debugPrint(resTojson.toString());
     debugPrint("confirm-save /////////////////////////////");
@@ -145,8 +147,8 @@ class _SumHealthrecordState extends State<SumHealthrecord> {
                   ElevatedButton(
                       onPressed: () {
                         getClaimCode();
-                        //   sendDataHealthrecord();
-                        // dataProvider.updateviewhealthrecord("");
+                        //r  sendDataHealthrecord();
+                        dataProvider.updateviewhealthrecord("");
                         // dataProvider.updateViewHome("waiting_for_the_doctor");
                       },
                       child: Text(

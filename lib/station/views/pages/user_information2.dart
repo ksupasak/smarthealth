@@ -86,20 +86,20 @@ class _UserInformation2State extends State<UserInformation2> {
       if (res.statusCode == 200) {
         debugPrint(resToJsonCheckQuick["message"].toString());
         if (resToJsonCheckQuick["health_records"].length != 0) {
-          context.read<DataProvider>().heightHealthrecord.text =
-              resToJsonCheckQuick["health_records"][0]["height"];
-          context.read<DataProvider>().weightHealthrecord.text =
-              resToJsonCheckQuick["health_records"][0]["weight"];
-          context.read<DataProvider>().tempHealthrecord.text =
-              resToJsonCheckQuick["health_records"][0]["temp"];
-          context.read<DataProvider>().sysHealthrecord.text =
-              resToJsonCheckQuick["health_records"][0]["bp_sys"];
-          context.read<DataProvider>().diaHealthrecord.text =
-              resToJsonCheckQuick["health_records"][0]["bp_dia"];
-          context.read<DataProvider>().pulseHealthrecord.text =
-              resToJsonCheckQuick["health_records"][0]["pulse_rate"];
-          context.read<DataProvider>().spo2Healthrecord.text =
-              resToJsonCheckQuick["health_records"][0]["spo2"];
+          // context.read<DataProvider>().heightHealthrecord.text =
+          //     resToJsonCheckQuick["health_records"][0]["height"];
+          // context.read<DataProvider>().weightHealthrecord.text =
+          //     resToJsonCheckQuick["health_records"][0]["weight"];
+          // context.read<DataProvider>().tempHealthrecord.text =
+          //     resToJsonCheckQuick["health_records"][0]["temp"];
+          // context.read<DataProvider>().sysHealthrecord.text =
+          //     resToJsonCheckQuick["health_records"][0]["bp_sys"];
+          // context.read<DataProvider>().diaHealthrecord.text =
+          //     resToJsonCheckQuick["health_records"][0]["bp_dia"];
+          // context.read<DataProvider>().pulseHealthrecord.text =
+          //     resToJsonCheckQuick["health_records"][0]["pulse_rate"];
+          // context.read<DataProvider>().spo2Healthrecord.text =
+          //     resToJsonCheckQuick["health_records"][0]["spo2"];
 
           //   debugPrint(context.read<DataProvider>().heightHealthrecord.text);
           //   debugPrint(context.read<DataProvider>().weightHealthrecord.text);
@@ -551,7 +551,9 @@ class _UserInformation2State extends State<UserInformation2> {
                                           ),
                                           child: Center(
                                             child: Text(
-                                                "${context.watch<DataProvider>().claimTypeName} (${context.watch<DataProvider>().claimType})"),
+                                                "${context.watch<DataProvider>().claimTypeName} (${context.watch<DataProvider>().claimType})",
+                                                style: TextStyle(
+                                                    fontSize: width * 0.03)),
                                           ),
                                         ),
                                         Padding(
