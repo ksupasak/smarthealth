@@ -140,10 +140,11 @@ class _UserInformation2State extends State<UserInformation2> {
   Future<void> getClaimCode() async {
     var url = Uri.parse('http://localhost:8189/api/smartcard/confirm-save');
     var res = await http.post(url, body: {
-      "pid": context.read<DataProvider>().id,
+      "pid": context.read<DataProvider>().id, // op ทั่วไป
       "claimType": context.read<DataProvider>().claimType,
       "mobile": "",
-      "correlationId": context.read<DataProvider>().correlationId,
+      "correlationId":
+          context.read<DataProvider>().correlationId, // smartcard/read
       "hn": ""
     });
     var resTojson = json.decode(res.body);

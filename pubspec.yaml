@@ -67,7 +67,7 @@ dependencies:
   vibration: ^1.7.5
   carousel_slider: ^4.2.1
   device_info_plus: ^2.1.2
-  flutter_launcher_icons: ^0.13.1 # flutter pub add flutter_launcher_icons
+  #flutter_launcher_icons: ^0.13.1 # flutter pub add flutter_launcher_icons
    
 
   openvidu_client:
