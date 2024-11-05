@@ -262,7 +262,7 @@ class _BoxRecordState extends State<BoxRecord> {
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Container(
-        //  height: _height * 0.1,
+        // height: _height * 0.1,
         width: _width * 0.2,
         color: Colors.white,
         child: Column(
