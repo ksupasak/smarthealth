@@ -91,9 +91,7 @@ class _PulseAndSysAndDiaState extends State<PulseAndSysAndDia> {
       }
     } on Exception catch (_) {
       print("throwing new error");
-      // throw Exception("Error on server");
     }
-    // }
   }
 
   @override

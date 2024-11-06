@@ -689,6 +689,23 @@ class _UserInformation2State extends State<UserInformation2> {
                                                           MainAxisAlignment
                                                               .spaceBetween,
                                                       children: [
+                                                        Text("HN :",
+                                                            style: TextStyle(
+                                                                fontSize:
+                                                                    width *
+                                                                        0.03)),
+                                                        Text(context
+                                                            .read<
+                                                                DataProvider>()
+                                                            .hn
+                                                            .text),
+                                                      ],
+                                                    ),
+                                                    Row(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .spaceBetween,
+                                                      children: [
                                                         Text(
                                                             "เบอร์โทร : ${context.read<DataProvider>().phone.text}",
                                                             style: TextStyle(
@@ -702,25 +719,6 @@ class _UserInformation2State extends State<UserInformation2> {
                                                                     .read<
                                                                         DataProvider>()
                                                                     .phone)),
-                                                      ],
-                                                    ),
-                                                    Row(
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .spaceBetween,
-                                                      children: [
-                                                        Text("HN :",
-                                                            style: TextStyle(
-                                                                fontSize:
-                                                                    width *
-                                                                        0.03)),
-                                                        SizedBox(
-                                                            width: width * 0.5,
-                                                            child: TextField(
-                                                                controller: context
-                                                                    .read<
-                                                                        DataProvider>()
-                                                                    .hn)),
                                                       ],
                                                     ),
                                                     SizedBox(

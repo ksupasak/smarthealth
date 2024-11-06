@@ -47,15 +47,16 @@ class _HealthRecord2State extends State<HealthRecord2> {
                 BoxDecorate(
                     child: InformationCard(
                         dataidcard: context.read<DataProvider>().dataidcard)),
-                SizedBox(
-                  child: dataProvider.viewhealthrecord == "pulseAndSysAndDia"
-                      ? const PulseAndSysAndDia()
-                      : dataProvider.viewhealthrecord == "spo2"
-                          ? const Spo2Healthrecord()
-                          : dataProvider.viewhealthrecord == "sum"
-                              ? const SumHealthrecord()
-                              : const HeightAndWidth(),
-                ),
+                const SizedBox(child: SumHealthrecord()
+
+                    //  dataProvider.viewhealthrecord == "pulseAndSysAndDia"
+                    //     ? const PulseAndSysAndDia()
+                    //     : dataProvider.viewhealthrecord == "spo2"
+                    //         ? const Spo2Healthrecord()
+                    //         : dataProvider.viewhealthrecord == "sum"
+                    //             ? const SumHealthrecord()
+                    //             : const HeightAndWidth(),
+                    ),
               ],
             ),
           ),

@@ -356,9 +356,9 @@ class _HomeappState extends State<Homeapp> {
                     ),
                     ElevatedButton(
                         onPressed: () {
-                          Get.toNamed('device_manager');
+                          Get.toNamed('regter');
                         },
-                        child: const Text("Devices"))
+                        child: const Text("regter"))
                   ],
                 )),
               ),

@@ -27,8 +27,8 @@ class _RegterState extends State<Regter> {
   TextEditingController phone = TextEditingController();
   @override
   void initState() {
-    setvalue();
-
+    //   setvalue();
+    gitimage();
     super.initState();
   }
 
@@ -37,6 +37,14 @@ class _RegterState extends State<Regter> {
   //   var res = await http.post(url);
   //   var resTojson2 = json.decode(res.body);
   // }
+
+  void gitimage() async {
+    var url = Uri.parse(
+        'http://localhost:8189/api/smartcard/read?readImageFlag=true');
+    var res = await http.get(url);
+    var resTojson = json.decode(res.body);
+    debugPrint(resTojson["image"]);
+  }
 
   void setvalue() {
     debugPrint(context.read<DataProvider>().dataUserIDCard.toString());
