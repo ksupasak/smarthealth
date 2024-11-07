@@ -74,7 +74,7 @@ class _UserInformation2State extends State<UserInformation2> {
   var resToJsonCheckQuick;
   Timer? timerCheckQuick;
   Future<void> checkQuick() async {
-    timerCheckQuick = Timer.periodic(const Duration(seconds: 5), (timer) async {
+    timerCheckQuick = Timer.periodic(const Duration(seconds: 4), (timer) async {
       var url =
           Uri.parse('${context.read<DataProvider>().platfromURL}/check_quick');
       var res = await http.post(url, body: {
@@ -116,10 +116,23 @@ class _UserInformation2State extends State<UserInformation2> {
       if (resToJsonCheckQuick["message"] == "completed") {
         debugPrint("ตรวจเสร็จเเล้ว message completed");
         timerCheckQuick?.cancel();
+       finished(); exam();
+      }
+      if(resToJsonCheckQuick["message"]== "finished"){
+        debugPrint("ตรวจเสร็จเเล้ว message finished");
+        timerCheckQuick?.cancel();
         exam();
       }
     });
   }
+
+Future<void> finished() async {  var url =
+          Uri.parse('${context.read<DataProvider>().platfromURL}/finish_appoint');
+      await http.post(url, body: {
+       
+        'public_id': context.read<DataProvider>().id,
+      });}
+
 
   Future<void> checkt_queue() async {
     var url = Uri.parse('${context.read<DataProvider>().platfromURL}/check_q');
@@ -287,14 +300,14 @@ class _UserInformation2State extends State<UserInformation2> {
         debugPrint(dx);
         debugPrint(doctor_note);
         setState(() {
-          // ontap = false;
-          //  printexam();
+          
         });
       }
     });
   }
 
   void printexam() async {
+    debugPrint("inti Printer");
     List<int> bytes = [];
 
     final profile = await CapabilityProfile.load(name: 'XP-N160I');
@@ -310,89 +323,90 @@ class _UserInformation2State extends State<UserInformation2> {
     bytes += generator.text('Doctor  :  pairot tanyajasesn');
     bytes += generator.text('Results :  $dx');
     bytes += generator.text('        :  $doctor_note');
-    printer?.printTest(bytes);
+    // printer?.printTest(bytes);
   }
 
-  Future<void> printq() async {
-    List<int> bytes = [];
+  // Future<void> printq() async {
+  //   List<int> bytes = [];
 
-    final profile = await CapabilityProfile.load(name: 'OFE6'); //XP-N160I
-    final generator = Generator(PaperSize.mm58, profile);
-    bytes += generator.text(context.read<DataProvider>().name_hospital,
-        styles: const PosStyles(align: PosAlign.center));
-    bytes += generator.text("Q ${resTojson['queue_number']}",
-        styles: const PosStyles(
-            align: PosAlign.center,
-            width: PosTextSize.size6,
-            height: PosTextSize.size6,
-            fontType: PosFontType.fontA));
-    bytes += generator.text('\n');
-    bytes +=
-        generator.text('Doctor :   ${resTojson['todays'][0]['doctor_name']}');
-    bytes += generator.text(
-        'Care   :  ${resTojson['todays'][0]['care_name']} / ( ${resTojson['todays'][0]['slot']} )');
-    bytes += generator.text('\n');
-    bytes += generator.text('Health Information',
-        styles: const PosStyles(align: PosAlign.center));
-    bytes += generator.row([
-      PosColumn(
-          width: 4,
-          text: 'height',
-          styles: const PosStyles(align: PosAlign.center, codeTable: 'CP1252')),
-      PosColumn(
-          width: 4,
-          text: 'weight',
-          styles: const PosStyles(align: PosAlign.center, codeTable: 'CP1252')),
-      PosColumn(
-          width: 4,
-          text: 'temp',
-          styles: const PosStyles(align: PosAlign.center, codeTable: 'CP1252')),
-    ]);
-    bytes += generator.row([
-      PosColumn(
-          width: 4,
-          text: height,
-          styles: const PosStyles(align: PosAlign.center, codeTable: 'CP1252')),
-      PosColumn(
-          width: 4,
-          text: weight,
-          styles: const PosStyles(align: PosAlign.center, codeTable: 'CP1252')),
-      PosColumn(
-          width: 4,
-          text: temp,
-          styles: const PosStyles(align: PosAlign.center, codeTable: 'CP1252')),
-    ]);
-    bytes += generator.row([
-      PosColumn(
-          width: 4,
-          text: 'sys',
-          styles: const PosStyles(align: PosAlign.center, codeTable: 'CP1252')),
-      PosColumn(
-          width: 4,
-          text: 'dia',
-          styles: const PosStyles(align: PosAlign.center, codeTable: 'CP1252')),
-      PosColumn(
-          width: 4,
-          text: 'spo2',
-          styles: const PosStyles(align: PosAlign.center, codeTable: 'CP1252')),
-    ]);
-    bytes += generator.row([
-      PosColumn(
-          width: 4,
-          text: sys,
-          styles: const PosStyles(align: PosAlign.center, codeTable: 'CP1252')),
-      PosColumn(
-          width: 4,
-          text: dia,
-          styles: const PosStyles(align: PosAlign.center, codeTable: 'CP1252')),
-      PosColumn(
-          width: 4,
-          text: spo2,
-          styles: const PosStyles(align: PosAlign.center, codeTable: 'CP1252')),
-    ]);
-    ontap = false;
-    printer?.printTest(bytes);
-  }
+  //   final profile = await CapabilityProfile.load(name: 'OFE6'); //XP-N160I
+  //   final generator = Generator(PaperSize.mm58, profile);
+  //   bytes += generator.text(context.read<DataProvider>().name_hospital,
+  //       styles: const PosStyles(align: PosAlign.center));
+  //   bytes += generator.text("Q ${resTojson['queue_number']}",
+  //       styles: const PosStyles(
+  //           align: PosAlign.center,
+  //           width: PosTextSize.size6,
+  //           height: PosTextSize.size6,
+  //           fontType: PosFontType.fontA));
+  //   bytes += generator.text('\n');
+  //   bytes +=
+  //       generator.text('Doctor :   ${resTojson['todays'][0]['doctor_name']}');
+  //   bytes += generator.text(
+  //       'Care   :  ${resTojson['todays'][0]['care_name']} / ( ${resTojson['todays'][0]['slot']} )');
+  //   bytes += generator.text('\n');
+  //   bytes += generator.text('Health Information',
+  //       styles: const PosStyles(align: PosAlign.center));
+  //   bytes += generator.row([
+  //     PosColumn(
+  //         width: 4,
+  //         text: 'height',
+  //         styles: const PosStyles(align: PosAlign.center, codeTable: 'CP1252')),
+  //     PosColumn(
+  //         width: 4,
+  //         text: 'weight',
+  //         styles: const PosStyles(align: PosAlign.center, codeTable: 'CP1252')),
+  //     PosColumn(
+  //         width: 4,
+  //         text: 'temp',
+  //         styles: const PosStyles(align: PosAlign.center, codeTable: 'CP1252')),
+  //   ]);
+  //   bytes += generator.row([
+  //     PosColumn(
+  //         width: 4,
+  //         text: height,
+  //         styles: const PosStyles(align: PosAlign.center, codeTable: 'CP1252')),
+  //     PosColumn(
+  //         width: 4,
+  //         text: weight,
+  //         styles: const PosStyles(align: PosAlign.center, codeTable: 'CP1252')),
+  //     PosColumn(
+  //         width: 4,
+  //         text: temp,
+  //         styles: const PosStyles(align: PosAlign.center, codeTable: 'CP1252')),
+  //   ]);
+  //   bytes += generator.row([
+  //     PosColumn(
+  //         width: 4,
+  //         text: 'sys',
+  //         styles: const PosStyles(align: PosAlign.center, codeTable: 'CP1252')),
+  //     PosColumn(
+  //         width: 4,
+  //         text: 'dia',
+  //         styles: const PosStyles(align: PosAlign.center, codeTable: 'CP1252')),
+  //     PosColumn(
+  //         width: 4,
+  //         text: 'spo2',
+  //         styles: const PosStyles(align: PosAlign.center, codeTable: 'CP1252')),
+  //   ]);
+  //   bytes += generator.row([
+  //     PosColumn(
+  //         width: 4,
+  //         text: sys,
+  //         styles: const PosStyles(align: PosAlign.center, codeTable: 'CP1252')),
+  //     PosColumn(
+  //         width: 4,
+  //         text: dia,
+  //         styles: const PosStyles(align: PosAlign.center, codeTable: 'CP1252')),
+  //     PosColumn(
+  //         width: 4,
+  //         text: spo2,
+  //         styles: const PosStyles(align: PosAlign.center, codeTable: 'CP1252')),
+  //   ]);
+  //   ontap = false;
+  //   printer?.printTest(bytes);
+  // }
+
 
   @override
   void initState() {
@@ -442,8 +456,7 @@ class _UserInformation2State extends State<UserInformation2> {
                     child: SizedBox(
                       height: height * 0.5,
                       child: resToJsonCheckQuick != null
-                          ? resToJsonCheckQuick["message"] == "completed" ||
-                                  resToJsonCheckQuick["message"] == "finished"
+                          ? resToJsonCheckQuick["message"] == "completed"  || resToJsonCheckQuick["message"] == "finished" 
                               ? ListView(
                                   children: [
                                     Padding(
@@ -514,9 +527,10 @@ class _UserInformation2State extends State<UserInformation2> {
                                                             width * 0.03)),
                                               ]),
                                           SizedBox(height: height * 0.05),
+
                                           Center(
                                             child: ElevatedButton(
-                                                onPressed: () {},
+                                                onPressed: () {printexam();},
                                                 child: Text("ปริ้นผลตรวจ",
                                                     style: TextStyle(
                                                         fontSize:
@@ -957,9 +971,9 @@ class _UserInformation2State extends State<UserInformation2> {
                                               ? GestureDetector(
                                                   onTap: () {
                                                     setState(() {
-                                                      ontap = true;
+                                                     // ontap = true;
                                                     });
-                                                    printq();
+                                                   // printq();
                                                   },
                                                   child: Container(
                                                       height: height * 0.05,

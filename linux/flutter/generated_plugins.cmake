@@ -6,6 +6,8 @@ list(APPEND FLUTTER_PLUGIN_LIST
   flutter_libserialport
   flutter_webrtc
   openvidu_client
+  screen_retriever
+  window_manager
 )
 
 list(APPEND FLUTTER_FFI_PLUGIN_LIST

@@ -19,17 +19,18 @@ class Regter extends StatefulWidget {
 }
 
 class _RegterState extends State<Regter> {
+ Uint8List? resTojsonImage;  
   TextEditingController prefix_name = TextEditingController();
   TextEditingController first_name = TextEditingController();
   TextEditingController last_name = TextEditingController();
   TextEditingController id = TextEditingController();
-  TextEditingController hn = TextEditingController();
 
+  TextEditingController hn = TextEditingController();
   TextEditingController phone = TextEditingController();
-  Uint8List? resTojsonImage;
+ 
   @override
   void initState() {
-    //   setvalue();
+   
     gitimage();
     super.initState();
   }
@@ -45,30 +46,53 @@ class _RegterState extends State<Regter> {
         'http://localhost:8189/api/smartcard/read?readImageFlag=true');
     var res = await http.get(url);
     var resTojson = json.decode(res.body);
+    debugPrint(resTojson.toString());
     debugPrint("Imgge: ${resTojson["image"]}");
+    id.text = resTojson["pid"];
+    first_name.text = resTojson["fname"];
+    last_name.text = resTojson["lname"];
+     prefix_name.text = getprefix_name(resTojson["titleName"].toString());
+ 
     resTojsonImage = base64Decode(resTojson["image"]);
     setState(() {});
   }
+String getprefix_name(String titleName){
+ if(titleName == "001"){
+   return "เด็กชาย"; 
+ }else if(titleName == "002"){
+  return "เด็กหญิง";
+ }else if (titleName == "003"){
+  return "นาย";
+ }if (titleName == "004"){
+  return "นางสาว";
+ }if (titleName == "005"){
+  return "นาง";
+ }
+ else{
+  return "--";
+ }
+   }
+ 
 
-  void setvalue() {
-    debugPrint(context.read<DataProvider>().dataUserIDCard.toString());
-    if (context.read<DataProvider>().dataUserIDCard != null) {
-      setState(() {
-        id.text = context.read<DataProvider>().dataUserIDCard["pid"];
-        prefix_name.text =
-            context.read<DataProvider>().dataUserIDCard["titleName"];
-        first_name.text = context.read<DataProvider>().dataUserIDCard["fname"];
-        last_name.text = context.read<DataProvider>().dataUserIDCard["lname"];
-      });
-    } else {
-      setState(() {
-        id.text = '--';
-        prefix_name.text = '--';
-        first_name.text = '--';
-        last_name.text = '--';
-      });
-    }
-  }
+  // void setvalue() {
+  //   debugPrint(context.read<DataProvider>().dataUserIDCard.toString());
+  //   if (context.read<DataProvider>().dataUserIDCard != null) {
+  //     setState(() {
+  //       id.text = context.read<DataProvider>().dataUserIDCard["pid"];
+  //       prefix_name.text =
+  //           context.read<DataProvider>().dataUserIDCard["titleName"];
+  //       first_name.text = context.read<DataProvider>().dataUserIDCard["fname"];
+  //       last_name.text = context.read<DataProvider>().dataUserIDCard["lname"];
+  //     });
+  //   } else {
+  //     setState(() {
+  //       id.text = '--';
+  //       prefix_name.text = '--';
+  //       first_name.text = '--';
+  //       last_name.text = '--';
+  //     });
+  //   }
+  // }
 
   void regter() async {
     var url =
@@ -186,7 +210,7 @@ class _RegterState extends State<Regter> {
                     child: Center(
                       child: Container(
                         width: _width * 0.85,
-                        height: _height * 0.6,
+                       
                         decoration: boxDecorate,
                         child: Column(
                           children: [
@@ -203,7 +227,7 @@ class _RegterState extends State<Regter> {
                                                 height: _height * 0.2,
                                                 child: Image.memory(
                                                     resTojsonImage!))
-                                            : const Icon(Icons.person)),
+                                            : const CircularProgressIndicator(color: Color.fromARGB(255, 54, 110, 56),) ),
                                     Text('คำนำหน้าชื่อ', style: style2),
                                     textdatauser(child: prefix_name),
                                     Text('ชื่อ', style: style2),

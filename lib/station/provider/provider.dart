@@ -4,6 +4,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class DataProvider with ChangeNotifier {
+
+  bool windowManagersetFullScreen =true;
   String name_hospital = ''; //NAME OF HOSPITAL
   String care_unit = ''; //Care Unit
   String platfromURL = ''; //https://emr-life.com/clinic_master/clinic/Api/

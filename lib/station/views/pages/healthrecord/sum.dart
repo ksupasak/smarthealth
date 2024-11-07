@@ -299,8 +299,8 @@ class _SumHealthrecordState extends State<SumHealthrecord> {
   void initState() {
     super.initState();
     startH_W();
-    // startBP();
-    //  startSpo2();
+     startBP();
+    startSpo2();
   }
 
   @override

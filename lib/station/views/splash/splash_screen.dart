@@ -1,6 +1,7 @@
-// ignore_for_file: prefer_typing_uninitialized_variables, non_constant_identifier_names, camel_case_types
+// ignore_for_file: prefer_typing_uninitialized_variables, non_constant_identifier_names, camel_case_types, use_build_context_synchronously
 
 import 'dart:async';
+import 'dart:io';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -10,6 +11,7 @@ import 'package:smart_health/station/provider/provider.dart';
 import 'package:smart_health/station/test/esm_idcard.dart';
 import 'package:smart_health/station/views/pages/home.dart';
 import 'package:smart_health/station/views/pages/numpad.dart';
+import 'package:window_manager/window_manager.dart';
 
 class Splash_Screen extends StatefulWidget {
   const Splash_Screen({super.key});
@@ -63,13 +65,19 @@ class _Splash_ScreenState extends State<Splash_Screen> {
     });
   }
 
-  @override
-  void dispose() {
-    super.dispose();
+void fullscreen()async{
+
+  if(Platform.isWindows){
+await windowManager.ensureInitialized();
+  windowManager.setFullScreen(context.read<DataProvider>().windowManagersetFullScreen);
   }
+}
+
+
 
   @override
   void initState() {
+    fullscreen();
     printDatabase();
     Future.delayed(const Duration(seconds: 1), () {
       Navigator.push(
@@ -77,6 +85,10 @@ class _Splash_ScreenState extends State<Splash_Screen> {
     });
 
     super.initState();
+  }
+  @override
+  void dispose() {
+    super.dispose();
   }
 
   @override
