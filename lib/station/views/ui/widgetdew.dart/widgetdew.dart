@@ -243,11 +243,12 @@ class _WidgetNameHospitalState extends State<WidgetNameHospital> {
 }
 
 class BoxRecord extends StatefulWidget {
-  BoxRecord({super.key, this.keyvavlue, this.texthead, this.icon, this.image});
+  BoxRecord({super.key, this.keyvavlue, this.texthead, this.icon, this.image,this.color});
   var keyvavlue;
   var texthead;
   var image;
   Widget? icon;
+  Color? color;
   @override
   State<BoxRecord> createState() => _BoxRecordState();
 }
@@ -286,7 +287,7 @@ class _BoxRecordState extends State<BoxRecord> {
             TextField(
               cursorColor: teamcolor,
               onChanged: (value) {
-                if (value.length > 0) {
+                if (value.isNotEmpty) {
                   context.read<Datafunction>().playsound();
                 }
               },
@@ -303,7 +304,7 @@ class _BoxRecordState extends State<BoxRecord> {
                 color: teamcolor,
                 fontSize: _height * 0.03,
               ),
-              controller: widget.keyvavlue,
+              controller:widget.color ?? widget.keyvavlue,
               keyboardType: TextInputType.number,
               textAlign: TextAlign.center,
             ),
@@ -344,7 +345,7 @@ class _BoxDecorateState extends State<BoxDecorate> {
                     decoration: BoxDecoration(
                       color: Colors.white,
                       borderRadius: BorderRadius.circular(10),
-                      boxShadow: [
+                      boxShadow:const [
                         BoxShadow(
                             blurRadius: 0.5,
                             color: Color(0xff48B5AA),

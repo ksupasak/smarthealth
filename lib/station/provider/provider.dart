@@ -70,7 +70,7 @@ class DataProvider with ChangeNotifier {
   String viewhealthrecord = "";
   void updateviewhealthrecord(String nameview) {
     viewhealthrecord = nameview;
-    notifyListeners();
+   // notifyListeners();
   }
 
   String claimType = '';

@@ -1,6 +1,7 @@
 // ignore_for_file: non_constant_identifier_names, unused_local_variable, use_build_context_synchronously
 
 import 'dart:convert';
+import 'dart:ffi';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -200,8 +201,64 @@ class _SumHealthrecordState extends State<SumHealthrecord> {
           final reader = SerialPortReader(port);
           debugPrint("reader W_H");
 
+
           reader.stream.listen((data) {
-            debugPrint('$data');
+           debugPrint(data.toString());
+            buffer.addAll(data);
+            if(data[data.length-1]==10){
+
+              String txt = intArrayToString(buffer);
+              debugPrint(txt);
+              
+               List<String> splitList = txt.split(" ");
+
+              if(splitList.length==1){
+
+                double temp = double.parse(splitList[0].split(":")[1]);
+                context.read<DataProvider>().tempHealthrecord.text = temp.toString();
+
+              }else{
+
+                double weight = double.parse(splitList[0].split(":")[1]);
+                context.read<DataProvider>().weightHealthrecord.text = weight.toString();
+                double height = double.parse(splitList[1].split(":")[1]);
+                context.read<DataProvider>().heightHealthrecord.text = height.toString();
+
+
+              }
+                // int sys = int.parse(splitList[3].split(":")[1].split(" ")[0]);
+
+                // int dia = int.parse(splitList[5].split(":")[1].split(" ")[0]);
+
+                // int pr = int.parse(splitList[6].split(":")[1].split(" ")[0]);
+
+                // debugPrint('Sys: $sys, Dia:$dia pr: $pr');
+                // context.read<DataProvider>().sysHealthrecord.text =
+                //     sys.toString();
+                // context.read<DataProvider>().diaHealthrecord.text =
+                //     dia.toString();
+                // context.read<DataProvider>().pulseHealthrecord.text =
+                //     pr.toString();
+
+              
+              
+              
+              
+              buffer=[];
+
+
+            }else{
+               
+            }
+
+            // if (data.length == 17) {
+            //   debugPrint("น้ำหนักส่วนสูง");
+            //   debugPrint('$data');
+            // }
+            // if (data.length == 8) {
+            //   debugPrint("อุณหภูมิ");
+            //   debugPrint('$data');
+            // }
           });
         }
       }
@@ -266,7 +323,7 @@ class _SumHealthrecordState extends State<SumHealthrecord> {
 
     debugPrint("getClaimCode สำเร็จ ");
     debugPrint(resTojson.toString());
-    
+
     if (res.statusCode == 200) {
       context.read<DataProvider>().updateclaimCode(resTojson);
       sendclaimCode();
@@ -288,8 +345,7 @@ class _SumHealthrecordState extends State<SumHealthrecord> {
     if (res.statusCode == 200) {
       debugPrint("sendClaimCode สำเร็จ ");
       setState(() {
-        buttonsend =
-         true;
+        buttonsend = true;
       });
       Get.offNamed('user_information');
     }
@@ -299,8 +355,8 @@ class _SumHealthrecordState extends State<SumHealthrecord> {
   void initState() {
     super.initState();
     startH_W();
-     startBP();
-    startSpo2();
+    //  startBP();
+    // startSpo2();
   }
 
   @override
@@ -424,9 +480,7 @@ class _SumHealthrecordState extends State<SumHealthrecord> {
                               fontSize: width * 0.03,
                             ),
                           ))
-                      :const SizedBox(
-                          
-                          child:   CircularProgressIndicator()),
+                      : const SizedBox(child: CircularProgressIndicator()),
                 ]),
           )
         ]));
