@@ -50,17 +50,17 @@ class DataProvider with ChangeNotifier {
 
   Map dataUserCheckQuick = {};
   TextEditingController hn = TextEditingController();
-  TextEditingController phone = TextEditingController();
+  TextEditingController tel = TextEditingController();
 
   void updatedatausercheckquick(Map data) {
     dataUserCheckQuick = data;
     if (data["personal"]["hn"] != null) {
       hn.text = data["personal"]["hn"];
     }
-    if (data["personal"]["mobile"] != null) {
-      phone.text = data["personal"]["mobile"];
+    if (data["personal"]["tel"] != null) {
+      tel.text = data["personal"]["tel"];
     }
-    debugPrint("เบอร์โทร ${phone.text}");
+    debugPrint("เบอร์โทร ${tel.text}");
     debugPrint("HN ${hn.text}");
     notifyListeners();
   }
@@ -78,6 +78,14 @@ class DataProvider with ChangeNotifier {
   void updateclaimType(Map data) {
     claimType = data["claimType"];
     claimTypeName = data["claimTypeName"];
+    notifyListeners();
+  }
+
+  String claimCode = '';
+  void updateclaimCode(Map data) {
+    
+      claimCode = data["claimCode"];
+     debugPrint("claimCode : $claimCode");
     notifyListeners();
   }
 

@@ -92,7 +92,7 @@ class _PrePareVideoState extends State<PrePareVideo> {
                     height: _height,
                     width: _width,
                     child: Center(
-                      child: Container(
+                      child: SizedBox(
                         height: _height * 0.06,
                         width: _width,
                         child: Center(
@@ -103,8 +103,8 @@ class _PrePareVideoState extends State<PrePareVideo> {
                               fontWeight: FontWeight.w500,
                               fontFamily:
                                   context.read<DataProvider>().fontFamily,
-                              color: Color(0xff00A3FF),
-                              shadows: [
+                              color:const Color(0xff00A3FF),
+                              shadows:const [
                                 Shadow(
                                   color: Colors.grey,
                                   offset: Offset(2, 2),
@@ -149,7 +149,7 @@ class _RoomPageState extends State<RoomPage> {
   Timer? _timer;
 
   void initState() {
-    //  lop();
+    
     super.initState();
     initOpenVidu();
     _listenSessionEvents();
@@ -250,15 +250,14 @@ class _RoomPageState extends State<RoomPage> {
         await _openvidu.disconnect();
         Get.offNamed('user_information');
       } else {
-        print('คุยยังไม่เสร็จ');
-        print(status);
+        print('คุยยังไม่เสร็จ : startus $status');
+         
       }
     }
   }
 
   void lop() {
-    _timer = Timer.periodic(Duration(seconds: 2), (timer) {
-      print('เช็คstatus');
+    _timer = Timer.periodic(const Duration(seconds: 4), (timer) {  
       status_video();
     });
   }
@@ -339,9 +338,8 @@ class _RoomPageState extends State<RoomPage> {
                           ),
                           Positioned(
                             bottom: -10,
-                            child: Container(
-                              //  color: Color.fromARGB(50, 255, 193, 7),
-                              height: _height * 0.07,
+                            child: SizedBox(
+                               height: _height * 0.07,
                               width: _width,
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.end,
@@ -350,18 +348,16 @@ class _RoomPageState extends State<RoomPage> {
                                     onTap: () {
                                       _onTapDisconnect();
                                     },
-                                    child: Container(
-                                      child: Image.asset('assets/skrhjk.png'),
-                                    ),
+                                    child: Image.asset('assets/skrhjk.png'),
                                   ),
                                   GestureDetector(
                                     onTap: () {
                                       onTap:
                                       showModalBottomSheet(
-                                          backgroundColor: Color.fromARGB(
+                                          backgroundColor:const Color.fromARGB(
                                               255, 255, 255, 255),
                                           isScrollControlled: true,
-                                          shape: RoundedRectangleBorder(
+                                          shape:const RoundedRectangleBorder(
                                               borderRadius:
                                                   BorderRadius.vertical(
                                                       top:
@@ -370,9 +366,7 @@ class _RoomPageState extends State<RoomPage> {
                                           builder: (context) => ControlsWidget(
                                               _openvidu, localParticipant!));
                                     },
-                                    child: Container(
-                                      child: Image.asset('assets/gjdz.png'),
-                                    ),
+                                    child: Image.asset('assets/gjdz.png'),
                                   ),
                                 ],
                               ),
@@ -432,9 +426,10 @@ class _RoomPageState extends State<RoomPage> {
                           Positioned(
                             bottom: 5,
                             left: 5,
-                            child: Container(
-                              height: _height * 0.15,
-                              width: _width * 0.2,
+                            child: SizedBox(
+                              height: _height * 0.25,
+                              width: _width * 0.3
+                              ,
                               child: MediaStreamView(
                                 borderRadius: BorderRadius.circular(5),
                                 participant: localParticipant!,
@@ -446,7 +441,7 @@ class _RoomPageState extends State<RoomPage> {
           )
         ]),
         bottomNavigationBar: !isInside
-            ? Container(
+            ? SizedBox(
                 height: _height * 0.03,
                 child: Row(
                   children: [
@@ -455,7 +450,6 @@ class _RoomPageState extends State<RoomPage> {
                       child: GestureDetector(
                         onTap: () {
                           _timer?.cancel();
-                          context.read<Datafunction>().playsound();
                           setState(() {
                             Get.offNamed('user_information');
                           });
@@ -466,7 +460,7 @@ class _RoomPageState extends State<RoomPage> {
                           decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(10),
                               border: Border.all(
-                                  color: Color.fromARGB(255, 201, 201, 201),
+                                  color:const Color.fromARGB(255, 201, 201, 201),
                                   width: _width * 0.002)),
                           child: Center(
                               child: Text(
@@ -475,7 +469,7 @@ class _RoomPageState extends State<RoomPage> {
                                 fontFamily:
                                     context.read<DataProvider>().fontFamily,
                                 fontSize: _width * 0.03,
-                                color: Color.fromARGB(255, 201, 201, 201)),
+                                color:const Color.fromARGB(255, 201, 201, 201)),
                           )),
                         ),
                       ),
@@ -523,7 +517,7 @@ class _ConnectPageState extends State<ConnectPage> {
     var resTojson = json.decode(res.body);
     data = resTojson['data'];
     if (data != null) {
-      Timer(Duration(seconds: 1), () {
+      Timer(const Duration(seconds: 1), () {
         setState(() {
           _connect(context);
         });
@@ -541,31 +535,31 @@ class _ConnectPageState extends State<ConnectPage> {
 
   @override
   Widget build(BuildContext context) {
-    double _width = MediaQuery.of(context).size.width;
-    double _height = MediaQuery.of(context).size.height;
+    double width = MediaQuery.of(context).size.width;
+    double height = MediaQuery.of(context).size.height;
     return Scaffold(
         body: Stack(
       children: [
         Positioned(
             child: BackGroundSmart_Health(
-          BackGroundColor: [
+          BackGroundColor:const [
             StyleColor.backgroundbegin,
             StyleColor.backgroundend
           ],
         )),
         Positioned(
-          child: Container(
-            width: _width,
-            height: _height,
+          child: SizedBox(
+            width: width,
+            height: height,
             child: Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text('กำลังโหลด'),
-                  Container(
-                      width: _width * 0.2,
-                      height: _width * 0.2,
-                      child: CircularProgressIndicator()),
+                const  Text('กำลังโหลด'),
+                  SizedBox(
+                      width: width * 0.2,
+                      height: width * 0.2,
+                      child:const CircularProgressIndicator()),
                 ],
               ),
             ),

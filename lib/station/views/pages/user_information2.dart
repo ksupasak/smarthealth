@@ -74,7 +74,7 @@ class _UserInformation2State extends State<UserInformation2> {
   var resToJsonCheckQuick;
   Timer? timerCheckQuick;
   Future<void> checkQuick() async {
-    timerCheckQuick = Timer.periodic(const Duration(seconds: 2), (timer) async {
+    timerCheckQuick = Timer.periodic(const Duration(seconds: 5), (timer) async {
       var url =
           Uri.parse('${context.read<DataProvider>().platfromURL}/check_quick');
       var res = await http.post(url, body: {
@@ -112,8 +112,6 @@ class _UserInformation2State extends State<UserInformation2> {
       }
       if (resToJsonCheckQuick["message"] == "processing") {
         timerCheckQuick?.cancel();
-        Navigator.push(
-            context, MaterialPageRoute(builder: (context) => PrePareVideo()));
       }
       if (resToJsonCheckQuick["message"] == "completed") {
         debugPrint("ตรวจเสร็จเเล้ว message completed");
@@ -694,11 +692,16 @@ class _UserInformation2State extends State<UserInformation2> {
                                                                 fontSize:
                                                                     width *
                                                                         0.03)),
-                                                        Text(context
-                                                            .read<
-                                                                DataProvider>()
-                                                            .hn
-                                                            .text),
+                                                        Text(
+                                                            context
+                                                                .read<
+                                                                    DataProvider>()
+                                                                .hn
+                                                                .text,
+                                                            style: TextStyle(
+                                                                fontSize:
+                                                                    width *
+                                                                        0.03)),
                                                       ],
                                                     ),
                                                     Row(
@@ -706,19 +709,21 @@ class _UserInformation2State extends State<UserInformation2> {
                                                           MainAxisAlignment
                                                               .spaceBetween,
                                                       children: [
-                                                        Text(
-                                                            "เบอร์โทร : ${context.read<DataProvider>().phone.text}",
+                                                        Text("เบอร์โทร : ",
                                                             style: TextStyle(
                                                                 fontSize:
                                                                     width *
                                                                         0.03)),
-                                                        SizedBox(
-                                                            width: width * 0.5,
-                                                            child: TextField(
-                                                                controller: context
-                                                                    .read<
-                                                                        DataProvider>()
-                                                                    .phone)),
+                                                        Text(
+                                                            context
+                                                                .read<
+                                                                    DataProvider>()
+                                                                .tel
+                                                                .text,
+                                                            style: TextStyle(
+                                                                fontSize:
+                                                                    width *
+                                                                        0.03)),
                                                       ],
                                                     ),
                                                     SizedBox(
@@ -775,12 +780,22 @@ class _UserInformation2State extends State<UserInformation2> {
                                             ],
                                           ),
                                           child: ListView(children: [
-                                            Center(
-                                              child: Text(
-                                                "${context.watch<DataProvider>().claimTypeName}/(${context.watch<DataProvider>().claimType})",
-                                                style: TextStyle(
-                                                  fontSize: width * 0.03,
-                                                ),
+                                            Text(
+                                              " claimTypeName : ${context.watch<DataProvider>().claimTypeName} ",
+                                              style: TextStyle(
+                                                fontSize: width * 0.03,
+                                              ),
+                                            ),
+                                            Text(
+                                              "claimType :(${context.watch<DataProvider>().claimType})",
+                                              style: TextStyle(
+                                                fontSize: width * 0.03,
+                                              ),
+                                            ),
+                                            Text(
+                                              "claimCode :${context.watch<DataProvider>().claimCode} ",
+                                              style: TextStyle(
+                                                fontSize: width * 0.03,
                                               ),
                                             ),
                                             const Center(
@@ -791,7 +806,40 @@ class _UserInformation2State extends State<UserInformation2> {
                                             ),
                                           ]),
                                         )
-                                      : const SizedBox()
+                                      : resToJsonCheckQuick["message"] ==
+                                              "processing"
+                                          ? SizedBox(
+                                              child: ListView(children: [
+                                                Center(
+                                                  child: Text(
+                                                      'กด VideoCall เพื่อเข้าตรวจ',
+                                                      style: TextStyle(
+                                                          fontFamily: context
+                                                              .read<
+                                                                  DataProvider>()
+                                                              .fontFamily,
+                                                          fontSize:
+                                                              width * 0.03,
+                                                          color: const Color
+                                                                  .fromARGB(255,
+                                                              35, 131, 123))),
+                                                ),
+                                                Center(
+                                                  child: ElevatedButton(
+                                                      onPressed: () {
+                                                        Navigator.push(
+                                                            context,
+                                                            MaterialPageRoute(
+                                                                builder:
+                                                                    (context) =>
+                                                                        const PrePareVideo()));
+                                                      },
+                                                      child: const Text(
+                                                          "VideoCall")),
+                                                )
+                                              ]),
+                                            )
+                                          : const SizedBox()
                           : const Center(
                               child: CircularProgressIndicator(
                                 color: Color.fromARGB(255, 0, 139, 130),

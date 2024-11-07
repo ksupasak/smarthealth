@@ -280,7 +280,7 @@ class _BoxRecordState extends State<BoxRecord> {
                               fontFamily:
                                   context.read<DataProvider>().fontFamily,
                               fontSize: _width * 0.03,
-                              color: teamcolor)),
+                              color: teamcolor)), 
                     ],
                   ),
             TextField(

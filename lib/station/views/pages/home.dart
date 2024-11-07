@@ -229,6 +229,7 @@ class _HomeappState extends State<Homeapp> {
           .updateuserinformation({"pid": "", "claimTypes": []});
       context.read<DataProvider>().claimType = '';
       context.read<DataProvider>().claimTypeName = '';
+       context.read<DataProvider>().claimCode = '';
     });
     getIdCard();
     // readerID();

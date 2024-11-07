@@ -1,4 +1,4 @@
-// ignore_for_file: non_constant_identifier_names
+// ignore_for_file: non_constant_identifier_names, unused_local_variable, use_build_context_synchronously
 
 import 'dart:convert';
 import 'dart:io';
@@ -21,7 +21,7 @@ class SumHealthrecord extends StatefulWidget {
 class _SumHealthrecordState extends State<SumHealthrecord> {
   List availablePorts = [];
   SerialPort? current_port = null;
-
+  bool buttonsend = true;
 ////////////////////////////////////////////////////////////////////////////////
   void initPorts() {
     try {
@@ -181,9 +181,7 @@ class _SumHealthrecordState extends State<SumHealthrecord> {
 /////////////////////////////////////////////////////////////////////////////
 
   void startH_W() async {
-    // while (true) {
     try {
-      // final name = SerialPort.availablePorts.first;
       for (var name in SerialPort.availablePorts) {
         debugPrint('scan $name');
         final port = SerialPort(name);
@@ -194,16 +192,12 @@ class _SumHealthrecordState extends State<SumHealthrecord> {
             print(SerialPort.lastError);
           }
           current_port = port;
-
           debugPrint("open W_H");
-
           SerialPortConfig config = port.config;
           config.baudRate = 9600;
           port.config = config;
-
           List<int> buffer = [];
           final reader = SerialPortReader(port);
-
           debugPrint("reader W_H");
 
           reader.stream.listen((data) {
@@ -218,32 +212,9 @@ class _SumHealthrecordState extends State<SumHealthrecord> {
   }
 
 ////////////////////////////////////////////////////////////////////////////
-  void getClaimCode() async {
-    debugPrint("pid : ${context.read<DataProvider>().id}");
-    debugPrint("claimType : ${context.read<DataProvider>().claimType}");
-    debugPrint("mobile : ${context.read<DataProvider>().phone.text}");
-    debugPrint("correlationId : ${context.read<DataProvider>().correlationId}");
-    debugPrint("hn : ${context.read<DataProvider>().hn.text}");
-
-    var url = Uri.parse('http://localhost:8189/api/nhso-service/confirm-save');
-
-    var body = jsonEncode({
-      "pid": context.read<DataProvider>().id,
-      "claimType": context.read<DataProvider>().claimType,
-      "mobile": "0982934303",
-      "correlationId": context.read<DataProvider>().correlationId,
-      "hn": context.read<DataProvider>().hn.text
-    });
-
-    var res = await http.post(url,
-        headers: {'Content-Type': 'application/json'}, body: body);
-    var resTojson = json.decode(res.body);
-
-    debugPrint("getClaimCode สำเร็จ ");
-    debugPrint(resTojson.toString());
-  }
 
   void sendDataHealthrecord() async {
+    debugPrint("ส่งค่าHealthrecord");
     var url = Uri.parse('${context.read<DataProvider>().platfromURL}/add_hr');
     var res = await http.post(url, body: {
       "public_id": context.read<DataProvider>().id,
@@ -268,6 +239,58 @@ class _SumHealthrecordState extends State<SumHealthrecord> {
       debugPrint("ส่งค่าHealthrecord สำเร็จ");
       debugPrint(resTojson.toString());
       getClaimCode();
+    }
+  }
+
+  void getClaimCode() async {
+    debugPrint("getClaimCode");
+    debugPrint("pid : ${context.read<DataProvider>().id}");
+    debugPrint("claimType : ${context.read<DataProvider>().claimType}");
+    debugPrint("mobile : ${context.read<DataProvider>().tel.text}");
+    debugPrint("correlationId : ${context.read<DataProvider>().correlationId}");
+    debugPrint("hn : ${context.read<DataProvider>().hn.text}");
+
+    var url = Uri.parse('http://localhost:8189/api/nhso-service/confirm-save');
+
+    var body = jsonEncode({
+      "pid": context.read<DataProvider>().id,
+      "claimType": context.read<DataProvider>().claimType,
+      "mobile": context.read<DataProvider>().tel.text,
+      "correlationId": context.read<DataProvider>().correlationId,
+      "hn": context.read<DataProvider>().hn.text
+    });
+
+    var res = await http.post(url,
+        headers: {'Content-Type': 'application/json'}, body: body);
+    var resTojson = json.decode(res.body);
+
+    debugPrint("getClaimCode สำเร็จ ");
+    debugPrint(resTojson.toString());
+    
+    if (res.statusCode == 200) {
+      context.read<DataProvider>().updateclaimCode(resTojson);
+      sendclaimCode();
+    }
+  }
+
+  void sendclaimCode() async {
+    debugPrint("sendClaimCode ");
+    var url =
+        Uri.parse('${context.read<DataProvider>().platfromURL}/set_claim_code');
+    var res = await http.post(url, body: {
+      "claim_code": context.read<DataProvider>().claimCode,
+      "claim_type": context.read<DataProvider>().claimType,
+      "claim_type_name": context.read<DataProvider>().claimTypeName,
+      "public_id": context.read<DataProvider>().id,
+    });
+    var resTojson = json.decode(res.body);
+    debugPrint(resTojson.toString());
+    if (res.statusCode == 200) {
+      debugPrint("sendClaimCode สำเร็จ ");
+      setState(() {
+        buttonsend =
+         true;
+      });
       Get.offNamed('user_information');
     }
   }
@@ -277,7 +300,7 @@ class _SumHealthrecordState extends State<SumHealthrecord> {
     super.initState();
     startH_W();
     // startBP();
-    // startSpo2();
+    //  startSpo2();
   }
 
   @override
@@ -386,19 +409,24 @@ class _SumHealthrecordState extends State<SumHealthrecord> {
                           fontSize: width * 0.03,
                         ),
                       )),
-                  ElevatedButton(
-                      onPressed: () {
-                        // getClaimCode();
-                        sendDataHealthrecord();
-                        dataProvider.updateviewhealthrecord("");
-                        // dataProvider.updateViewHome("waiting_for_the_doctor");
-                      },
-                      child: Text(
-                        "ส่ง",
-                        style: TextStyle(
-                          fontSize: width * 0.03,
-                        ),
-                      ))
+                  buttonsend
+                      ? ElevatedButton(
+                          onPressed: () {
+                            setState(() {
+                              buttonsend = !buttonsend;
+                            });
+                            sendDataHealthrecord();
+                            dataProvider.updateviewhealthrecord("");
+                          },
+                          child: Text(
+                            "ส่ง",
+                            style: TextStyle(
+                              fontSize: width * 0.03,
+                            ),
+                          ))
+                      :const SizedBox(
+                          
+                          child:   CircularProgressIndicator()),
                 ]),
           )
         ]));
