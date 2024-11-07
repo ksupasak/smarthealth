@@ -1,6 +1,7 @@
 // ignore_for_file: non_constant_identifier_names, use_build_context_synchronously, sort_child_properties_last
 
 import 'dart:convert';
+import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 
@@ -25,6 +26,7 @@ class _RegterState extends State<Regter> {
   TextEditingController hn = TextEditingController();
 
   TextEditingController phone = TextEditingController();
+  Uint8List? resTojsonImage;
   @override
   void initState() {
     //   setvalue();
@@ -44,6 +46,8 @@ class _RegterState extends State<Regter> {
     var res = await http.get(url);
     var resTojson = json.decode(res.body);
     debugPrint("Imgge: ${resTojson["image"]}");
+    resTojsonImage = base64Decode(resTojson["image"]);
+    setState(() {});
   }
 
   void setvalue() {
@@ -192,6 +196,14 @@ class _RegterState extends State<Regter> {
                               child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
+                                    Center(
+                                        child: resTojsonImage != null
+                                            ? SizedBox(
+                                                width: _width * 0.2,
+                                                height: _height * 0.2,
+                                                child: Image.memory(
+                                                    resTojsonImage!))
+                                            : const Icon(Icons.person)),
                                     Text('คำนำหน้าชื่อ', style: style2),
                                     textdatauser(child: prefix_name),
                                     Text('ชื่อ', style: style2),
@@ -213,9 +225,9 @@ class _RegterState extends State<Regter> {
                                 width: _width * 0.35,
                                 height: _height * 0.06,
                                 decoration: BoxDecoration(
-                                    color: Color(0xff31D6AA),
+                                    color: const Color(0xff31D6AA),
                                     borderRadius: BorderRadius.circular(10),
-                                    boxShadow: [
+                                    boxShadow: const [
                                       BoxShadow(
                                           color: Colors.grey,
                                           offset: Offset(0, 2),
