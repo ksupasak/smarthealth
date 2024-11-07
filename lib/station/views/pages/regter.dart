@@ -43,7 +43,7 @@ class _RegterState extends State<Regter> {
         'http://localhost:8189/api/smartcard/read?readImageFlag=true');
     var res = await http.get(url);
     var resTojson = json.decode(res.body);
-    debugPrint(resTojson["image"]);
+    debugPrint("Imgge: ${resTojson["image"]}");
   }
 
   void setvalue() {

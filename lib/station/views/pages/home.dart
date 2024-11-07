@@ -48,8 +48,7 @@ class _HomeappState extends State<Homeapp> {
         'public_id': context.read<DataProvider>().id,
       });
       var resTojson = json.decode(res.body);
-      debugPrint("check_quick ######################");
-      context.read<DataProvider>().updatedatausercheckquick(resTojson);
+      debugPrint("resTojson check_quick ${resTojson.toString()}");
       debugPrint(context.read<DataProvider>().dataUserCheckQuick.toString());
       setState(() {
         status = false;
@@ -95,6 +94,7 @@ class _HomeappState extends State<Homeapp> {
       } else {
         setState(() {
           status = false;
+          context.read<DataProvider>().updatedatausercheckquick(resTojson);
           context.read<DataProvider>().dataidcard = resTojson;
         });
         Timer(const Duration(seconds: 1), () {
@@ -229,7 +229,7 @@ class _HomeappState extends State<Homeapp> {
           .updateuserinformation({"pid": "", "claimTypes": []});
       context.read<DataProvider>().claimType = '';
       context.read<DataProvider>().claimTypeName = '';
-       context.read<DataProvider>().claimCode = '';
+      context.read<DataProvider>().claimCode = '';
     });
     getIdCard();
     // readerID();
