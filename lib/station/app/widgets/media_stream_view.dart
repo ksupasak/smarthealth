@@ -51,7 +51,7 @@ class _MediaStreamViewState extends State<MediaStreamView> {
           _render.srcObject = widget.participant.stream;
           return Container(
             decoration: BoxDecoration(
-              color: Colors.black,
+              color: Color.fromARGB(255, 187, 187, 187),
               borderRadius: widget.borderRadius,
               border: Border.all(color: Colors.grey),
             ),
@@ -59,13 +59,14 @@ class _MediaStreamViewState extends State<MediaStreamView> {
             child: Stack(
               children: [
                 (widget.participant.videoActive)
-                    ? RTCVideoView(
-                        _render,
-                        objectFit:
-                            RTCVideoViewObjectFit.RTCVideoViewObjectFitCover,
-                        mirror: widget.mirror,
-                      )
-                    : const NoVideoWidget(),
+                    ?
+                     RTCVideoView(
+                       _render,
+                      objectFit:
+                       RTCVideoViewObjectFit.RTCVideoViewObjectFitCover,
+                      mirror: widget.mirror,
+                     )
+                    :  const NoVideoWidget(),
                 if (widget.userName != null && widget.userName?.trim() != '')
                   Container(
                     margin: const EdgeInsets.only(top: 5.0, left: 5.0),
@@ -82,7 +83,9 @@ class _MediaStreamViewState extends State<MediaStreamView> {
                           .bodyMedium
                           ?.copyWith(color: Colors.white),
                     ),
-                  ),
+                  ) 
+                   
+                  ,
                 if (widget.participant.metadata != null)
                   Container(
                     color: Colors.black.withOpacity(0.3),

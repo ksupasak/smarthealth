@@ -111,7 +111,7 @@ class _UserInformation2State extends State<UserInformation2> {
         }
       }
       if (resToJsonCheckQuick["message"] == "processing") {
-        timerCheckQuick?.cancel();
+       // timerCheckQuick?.cancel();
       }
       if (resToJsonCheckQuick["message"] == "completed") {
         debugPrint("ตรวจเสร็จเเล้ว message completed");

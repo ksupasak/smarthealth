@@ -297,7 +297,7 @@ class _RoomPageState extends State<RoomPage> {
                                       fontFamily: context
                                           .read<DataProvider>()
                                           .fontFamily,
-                                      color: Color(0xff48B5AA)),
+                                      color:const Color(0xff48B5AA)),
                                 ),
                               ),
                             ),
@@ -310,31 +310,30 @@ class _RoomPageState extends State<RoomPage> {
                     : Container(
                         child: Stack(children: [
                           Positioned(
-                            child: Container(
-                              child: ListView.builder(
-                                  itemCount:
-                                      math.max(0, remoteParticipants.length),
-                                  itemBuilder:
-                                      (BuildContext context, int index) {
-                                    final remote = remoteParticipants.values
-                                        .elementAt(index);
-                                    return Container(
-                                      width: _width /
-                                          math.max(
-                                              1, remoteParticipants.length),
-                                      height: _height /
-                                          math.max(
-                                              1, remoteParticipants.length),
-                                      child: Expanded(
-                                        child: MediaStreamView(
-                                          borderRadius:
-                                              BorderRadius.circular(5),
-                                          participant: remote,
-                                        ),
+                            child: ListView.builder(
+                                itemCount:
+                                    math.max(0, remoteParticipants.length),
+                                itemBuilder:
+                                    (BuildContext context, int index) {
+                                  final remote = remoteParticipants.values
+                                      .elementAt(index);
+                                  return SizedBox(
+                                    width: _width /
+                                        math.max(
+                                            1, remoteParticipants.length),
+                                    height: _height /
+                                        math.max(
+                                            1, remoteParticipants.length),
+                                    child:  
+                                    Expanded(
+                                      child: MediaStreamView(
+                                        borderRadius:
+                                            BorderRadius.circular(5),
+                                        participant: remote,
                                       ),
-                                    );
-                                  }),
-                            ),
+                                    ),
+                                  );
+                                }),
                           ),
                           Positioned(
                             bottom: -10,
