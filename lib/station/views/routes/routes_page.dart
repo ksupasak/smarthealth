@@ -13,6 +13,7 @@ import 'package:smart_health/station/views/pages/printqueue.dart';
 import 'package:smart_health/station/views/pages/regter.dart';
 import 'package:smart_health/station/views/pages/user_information2.dart';
 import 'package:smart_health/station/util/device_manager.dart';
+import 'package:smart_health/station/views/pages/videocall.dart';
 import 'package:smart_health/station/views/pages/videocall/preparationvideocall.dart';
 import 'package:smart_health/station/views/splash/splash_screen.dart';
 
@@ -32,6 +33,8 @@ class Routes {
   static const String healthRecord2 = '/healthRecord2';
   static const String device_manager = '/device_manager';
 
+  static const String preparevideo = '/preparevideo';
+
   static const String preparation_videocall = '/preparation_videocall';
   static final routes = [
         GetPage(name: splash, page: (() => const Splash_Screen())),
@@ -46,6 +49,7 @@ class Routes {
         GetPage(name: regter, page: (() => const Regter())),
         GetPage(name: healthRecord2, page: (() => const HealthRecord2())),
         GetPage(name: device_manager, page: (() => const DeviceManager())),
+        GetPage(name: preparevideo, page: (() => const PrePareVideo())),
         GetPage(
             name: preparation_videocall, page: (() => PreparationVideoCall())),
       ] +

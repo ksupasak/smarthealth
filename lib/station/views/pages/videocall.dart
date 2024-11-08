@@ -224,8 +224,7 @@ class _RoomPageState extends State<RoomPage> {
     final result = await context.showDisconnectDialog();
     if (result == true) {
       await _openvidu.disconnect();
-      // Navigator.pushReplacement(context,
-      //     MaterialPageRoute(builder: (context) => const UserInformation()));
+      _timer?.cancel();
     }
   }
 
@@ -253,6 +252,14 @@ class _RoomPageState extends State<RoomPage> {
     _timer = Timer.periodic(const Duration(seconds: 4), (timer) {
       status_video();
     });
+  }
+
+  @override
+  void dispose() async {
+    _timer?.cancel();
+    await _openvidu.disconnect();
+
+    super.dispose();
   }
 
   @override
