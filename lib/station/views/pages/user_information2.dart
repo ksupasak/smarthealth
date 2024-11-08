@@ -338,7 +338,7 @@ class _UserInformation2State extends State<UserInformation2> {
     final pdf = pw.Document();
 
     // Define 80mm width and auto height for a thermal printer
-    final pageFormat = PdfPageFormat(78 * PdfPageFormat.mm, double.infinity);
+    final pageFormat = PdfPageFormat(80 * PdfPageFormat.mm, double.infinity);
 
     //  msg =  'ส่วนสูง:${resToJsonCheckQuick["health_records"][0]["height"]} ';
     //  msg += ' น้ำหนัก:${resToJsonCheckQuick["health_records"][0]["weight"]}';
@@ -1368,14 +1368,7 @@ class _choiceState extends State<choice> {
     });
   }
 
-  @override
-  void initState() {
-    checkt_queue();
-
-    super.initState();
-    
-   
-  }
+  
 
   @override
   Widget build(BuildContext context) {
