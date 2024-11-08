@@ -113,9 +113,9 @@ class _ConnectPageState extends State<ConnectPage> {
     super.initState();
     _textSessionController.text = 'Session622';
     _textUserNameController.text = 'Participante${Random().nextInt(1000)}';
-    _textUrlController.text = 'pcm-life.com';
+    _textUrlController.text = 'openvidu.pcm-life.com';
     _textSecretController.text = 'minadadmin';
-    _textPortController.text = '4443';
+    _textPortController.text = '';
     _textIceServersController.text = 'stun.l.google.com:19302';
     _readPrefs();
   }

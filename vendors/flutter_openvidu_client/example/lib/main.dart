@@ -1,6 +1,8 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:openvidu_client_example/app/pages/room_page.dart';
+import 'package:openvidu_client_example/app/pages/video.dart';
 
 import 'app/pages/connect_page.dart';
 import 'app/utils/global_http_overrides.dart';
@@ -18,8 +20,8 @@ class App extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => MaterialApp(
-        title: 'OpenViduClient Flutter Example',
-        theme: OpenViduTheme().buildThemeData(context),
-        home: const ConnectPage(),
+      title: 'OpenViduClient Flutter Example',
+      theme: OpenViduTheme().buildThemeData(context),
+      home: TestVideo() // ConnectPage(),
       );
 }
