@@ -8,6 +8,7 @@ list(APPEND FLUTTER_PLUGIN_LIST
   flutter_webrtc
   network_info_plus
   openvidu_client
+  printing
   screen_retriever
   window_manager
 )
