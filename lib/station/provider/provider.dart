@@ -4,8 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class DataProvider with ChangeNotifier {
-
-  bool windowManagersetFullScreen =true;
+  bool windowManagersetFullScreen = true;
   String name_hospital = ''; //NAME OF HOSPITAL
   String care_unit = ''; //Care Unit
   String platfromURL = ''; //https://emr-life.com/clinic_master/clinic/Api/
@@ -14,7 +13,7 @@ class DataProvider with ChangeNotifier {
   String care_unit_id = ''; //63d79d61790f9bc857000006
   String passwordsetting = ''; //
   String fontFamily = 'Prompt'; //
-
+  dynamic dataVideoCall;
   var dataidcard;
   var checkqueue = '';
   Color color_name_hospital = Color.fromARGB(255, 255, 255, 255);
@@ -70,7 +69,7 @@ class DataProvider with ChangeNotifier {
   String viewhealthrecord = "";
   void updateviewhealthrecord(String nameview) {
     viewhealthrecord = nameview;
-   // notifyListeners();
+    // notifyListeners();
   }
 
   String claimType = '';
@@ -85,9 +84,8 @@ class DataProvider with ChangeNotifier {
 
   String claimCode = '';
   void updateclaimCode(Map data) {
-    
-      claimCode = data["claimCode"];
-     debugPrint("claimCode : $claimCode");
+    claimCode = data["claimCode"];
+    debugPrint("claimCode : $claimCode");
     notifyListeners();
   }
 

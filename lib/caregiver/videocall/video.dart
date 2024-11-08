@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_typing_uninitialized_variables, non_constant_identifier_names, must_be_immutable
+
 import 'dart:async';
 import 'dart:convert';
 
@@ -36,7 +38,6 @@ class _PrePareVideoState extends State<PrePareVideo> {
 
   String? status;
   Timer? timer;
-  late OpenViduClient _openvidu;
 
   Future<void> get_path_video() async {
     var url =
@@ -52,7 +53,7 @@ class _PrePareVideoState extends State<PrePareVideo> {
 
   void check_statusconnectvideo() async {
     await get_path_video();
-    timer = Timer.periodic(Duration(seconds: 1), (t) {
+    timer = Timer.periodic(const Duration(seconds: 3), (t) {
       if (resTojson['data'][0] == null && resTojson['data'].isNotEmpty) {
         timer!.cancel();
       } else {
@@ -128,23 +129,11 @@ class _PrePareVideoState extends State<PrePareVideo> {
                           ),
                         ),
                       ),
-
                       Container(
                         child: CircularProgressIndicator(
                           color: Color.fromARGB(255, 0, 139, 130),
                         ),
                       ),
-                      // Text(
-                      //     'ไม่มี ข้อมูลการเชื่อมต่อvideo resTojson["data"]={}'),
-                      // ElevatedButton(
-                      //   onPressed: () {
-                      //     Navigator.pop(context);
-                      //   },
-                      //   child: Padding(
-                      //     padding: const EdgeInsets.all(8.0),
-                      //     child: Text('กลับ'),
-                      //   ),
-                      // ),
                     ],
                   )),
                 ),
@@ -181,7 +170,7 @@ class _PrePareVideoState extends State<PrePareVideo> {
                       height: _height,
                       width: _width,
                       child: Center(
-                        child: Container(
+                        child: SizedBox(
                           height: _height,
                           width: _width,
                           child: Center(
@@ -195,8 +184,8 @@ class _PrePareVideoState extends State<PrePareVideo> {
                                     fontWeight: FontWeight.w500,
                                     fontFamily:
                                         context.read<DataProvider>().family,
-                                    color: Color(0xff00A3FF),
-                                    shadows: [
+                                    color: const Color(0xff00A3FF),
+                                    shadows: const [
                                       Shadow(
                                         color: Colors.grey,
                                         offset: Offset(2, 2),
@@ -205,10 +194,8 @@ class _PrePareVideoState extends State<PrePareVideo> {
                                     ],
                                   ),
                                 ),
-                                Container(
-                                  child: CircularProgressIndicator(
-                                    color: Color.fromARGB(255, 0, 139, 130),
-                                  ),
+                                const CircularProgressIndicator(
+                                  color: Color.fromARGB(255, 0, 139, 130),
                                 ),
                               ],
                             ),

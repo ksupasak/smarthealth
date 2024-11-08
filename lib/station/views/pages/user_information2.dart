@@ -11,6 +11,7 @@ import 'package:smart_health/station/provider/provider.dart';
 import 'package:smart_health/station/provider/provider_function.dart';
 import 'package:smart_health/station/test/esm_printer.dart';
 import 'package:smart_health/station/views/pages/videocall.dart';
+import 'package:smart_health/station/views/pages/videocall/preparationvideocall.dart';
 import 'package:smart_health/station/views/ui/widgetdew.dart/widgetdew.dart';
 import 'package:http/http.dart' as http;
 
@@ -84,7 +85,7 @@ class _UserInformation2State extends State<UserInformation2> {
       resToJsonCheckQuick = json.decode(res.body);
       setState(() {});
       if (res.statusCode == 200) {
-        debugPrint(resToJsonCheckQuick["message"].toString());
+        debugPrint("StartUs ${resToJsonCheckQuick["message"]}");
         if (resToJsonCheckQuick["health_records"].length != 0) {
           // context.read<DataProvider>().heightHealthrecord.text =
           //     resToJsonCheckQuick["health_records"][0]["height"];
@@ -111,14 +112,15 @@ class _UserInformation2State extends State<UserInformation2> {
         }
       }
       if (resToJsonCheckQuick["message"] == "processing") {
-       // timerCheckQuick?.cancel();
+        // timerCheckQuick?.cancel();
       }
       if (resToJsonCheckQuick["message"] == "completed") {
         debugPrint("ตรวจเสร็จเเล้ว message completed");
         timerCheckQuick?.cancel();
-       finished(); exam();
+        finished();
+        exam();
       }
-      if(resToJsonCheckQuick["message"]== "finished"){
+      if (resToJsonCheckQuick["message"] == "finished") {
         debugPrint("ตรวจเสร็จเเล้ว message finished");
         timerCheckQuick?.cancel();
         exam();
@@ -126,13 +128,13 @@ class _UserInformation2State extends State<UserInformation2> {
     });
   }
 
-Future<void> finished() async {  var url =
-          Uri.parse('${context.read<DataProvider>().platfromURL}/finish_appoint');
-      await http.post(url, body: {
-       
-        'public_id': context.read<DataProvider>().id,
-      });}
-
+  Future<void> finished() async {
+    var url =
+        Uri.parse('${context.read<DataProvider>().platfromURL}/finish_appoint');
+    await http.post(url, body: {
+      'public_id': context.read<DataProvider>().id,
+    });
+  }
 
   Future<void> checkt_queue() async {
     var url = Uri.parse('${context.read<DataProvider>().platfromURL}/check_q');
@@ -299,9 +301,7 @@ Future<void> finished() async {  var url =
       if (resTojson2 != null) {
         debugPrint(dx);
         debugPrint(doctor_note);
-        setState(() {
-          
-        });
+        setState(() {});
       }
     });
   }
@@ -407,7 +407,6 @@ Future<void> finished() async {  var url =
   //   printer?.printTest(bytes);
   // }
 
-
   @override
   void initState() {
     checkQuick();
@@ -456,7 +455,8 @@ Future<void> finished() async {  var url =
                     child: SizedBox(
                       height: height * 0.5,
                       child: resToJsonCheckQuick != null
-                          ? resToJsonCheckQuick["message"] == "completed"  || resToJsonCheckQuick["message"] == "finished" 
+                          ? resToJsonCheckQuick["message"] == "completed" ||
+                                  resToJsonCheckQuick["message"] == "finished"
                               ? ListView(
                                   children: [
                                     Padding(
@@ -527,10 +527,11 @@ Future<void> finished() async {  var url =
                                                             width * 0.03)),
                                               ]),
                                           SizedBox(height: height * 0.05),
-
                                           Center(
                                             child: ElevatedButton(
-                                                onPressed: () {printexam();},
+                                                onPressed: () {
+                                                  printexam();
+                                                },
                                                 child: Text("ปริ้นผลตรวจ",
                                                     style: TextStyle(
                                                         fontSize:
@@ -841,12 +842,10 @@ Future<void> finished() async {  var url =
                                                 Center(
                                                   child: ElevatedButton(
                                                       onPressed: () {
-                                                        Navigator.push(
-                                                            context,
-                                                            MaterialPageRoute(
-                                                                builder:
-                                                                    (context) =>
-                                                                        const PrePareVideo()));
+                                                        timerCheckQuick
+                                                            ?.cancel();
+                                                        Get.offNamed(
+                                                            'preparation_videocall');
                                                       },
                                                       child: const Text(
                                                           "VideoCall")),
@@ -971,9 +970,9 @@ Future<void> finished() async {  var url =
                                               ? GestureDetector(
                                                   onTap: () {
                                                     setState(() {
-                                                     // ontap = true;
+                                                      // ontap = true;
                                                     });
-                                                   // printq();
+                                                    // printq();
                                                   },
                                                   child: Container(
                                                       height: height * 0.05,
