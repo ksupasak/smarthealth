@@ -6,8 +6,10 @@ import 'package:provider/provider.dart';
 import 'package:smart_health/station/app/models/connection.dart';
 import 'package:smart_health/station/app/utils/extensions.dart';
 import 'package:smart_health/station/app/utils/logger.dart';
+import 'package:smart_health/station/app/widgets/config_view.dart';
 import 'package:smart_health/station/app/widgets/media_stream_view.dart';
 import 'package:smart_health/station/provider/provider.dart';
+import 'package:smart_health/station/views/ui/widgetdew.dart/widgetdew.dart';
 
 class VideoCall extends StatefulWidget {
   const VideoCall({super.key});
@@ -107,38 +109,93 @@ class _VideoCallState extends State<VideoCall> {
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
     return Scaffold(
-        body: !isInside
-            ? Column(
-                children: [
-                  Text(context.read<DataProvider>().dataVideoCall.toString()),
-                  ElevatedButton(
-                      onPressed: () {
-                        Get.offNamed('user_information');
-                      },
-                      child: const Text("ออก")),
-                  ElevatedButton(
-                      onPressed: () {
-                        onConnect();
-                      },
-                      child: const Text("เข้าห้องVideo Call"))
-                ],
-              )
-            : SizedBox(
-                child: ListView.builder(
-                    itemCount: math.max(0, remoteParticipants.length),
-                    itemBuilder: (BuildContext context, int index) {
-                      final remote = remoteParticipants.values.elementAt(index);
-                      return SizedBox(
-                        width: width / math.max(1, remoteParticipants.length),
-                        height: height / math.max(1, remoteParticipants.length),
-                        child: Expanded(
+        body: Stack(
+      children: [
+        const backgrund(),
+        Positioned(
+          child: !isInside
+              ? Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    // BoxTime(),
+                    // BoxDecorate(
+                    //     child: InformationCard(
+                    //         dataidcard:
+                    //             context.read<DataProvider>().dataidcard)),
+                    Container(
+                      height: height * 0.06,
+                      width: width,
+                      child: Center(
+                        child: Text(
+                          'เตรียมความพร้อม',
+                          style: TextStyle(
+                              fontSize: width * 0.05,
+                              fontWeight: FontWeight.w500,
+                              fontFamily:
+                                  context.read<DataProvider>().fontFamily,
+                              color: const Color(0xff48B5AA)),
+                        ),
+                      ),
+                    ),
+                    Container(
+                        width: width * 0.9,
+                        child: ConfigView(
+                            participant: localParticipant!,
+                            onConnect: onConnect)),
+                    ElevatedButton(
+                        onPressed: () {
+                          Get.offNamed('user_information');
+                        },
+                        child: const Text("ออก")),
+                  ],
+                )
+              : SizedBox(
+                  child: Stack(
+                    children: [
+                      ListView.builder(
+                          itemCount: math.max(0, remoteParticipants.length),
+                          itemBuilder: (BuildContext context, int index) {
+                            final remote =
+                                remoteParticipants.values.elementAt(index);
+                            return SizedBox(
+                              width: width /
+                                  math.max(1, remoteParticipants.length),
+                              height: height /
+                                  math.max(1, remoteParticipants.length),
+                              child: Expanded(
+                                child: MediaStreamView(
+                                  borderRadius: BorderRadius.circular(5),
+                                  participant: remote,
+                                ),
+                              ),
+                            );
+                          }),
+                      Positioned(
+                          child: ElevatedButton(
+                        onPressed: () async {
+                          await _openvidu.disconnect();
+                          Get.offNamed('user_information');
+                        },
+                        child: const Text("ออก"),
+                      )),
+                      Positioned(
+                        bottom: 5,
+                        left: 5,
+                        child: SizedBox(
+                          height: height * 0.25,
+                          width: width * 0.3,
                           child: MediaStreamView(
                             borderRadius: BorderRadius.circular(5),
-                            participant: remote,
+                            participant: localParticipant!,
                           ),
                         ),
-                      );
-                    }),
-              ));
+                      ),
+                    ],
+                  ),
+                ),
+        ),
+      ],
+    ));
   }
 }
