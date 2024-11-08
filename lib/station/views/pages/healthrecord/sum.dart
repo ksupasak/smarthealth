@@ -21,12 +21,14 @@ class SumHealthrecord extends StatefulWidget {
 
 class _SumHealthrecordState extends State<SumHealthrecord> {
   List availablePorts = [];
-  SerialPort? current_port = null;
+
+  SerialPort? currentportBP;
+  SerialPort? currentportspo2;
+  SerialPort? currentportHW;
   bool buttonsend = true;
 ////////////////////////////////////////////////////////////////////////////////
   void initPorts() {
     try {
-      //    setState(() => availablePorts = SerialPort.availablePorts);
       debugPrint('Available ports: ${availablePorts.length}');
     } catch (e) {
       debugPrint('Error retrieving ports: $e');
@@ -45,9 +47,7 @@ class _SumHealthrecordState extends State<SumHealthrecord> {
   void startBP() async {
     bool connect = false;
 
-    // while (true) {
     try {
-      // final name = SerialPort.availablePorts.first;
       for (var name in SerialPort.availablePorts) {
         debugPrint('scan $name');
         final port = SerialPort(name);
@@ -57,7 +57,7 @@ class _SumHealthrecordState extends State<SumHealthrecord> {
           if (!port.openReadWrite()) {
             print(SerialPort.lastError);
           }
-          current_port = port;
+          currentportBP = port;
 
           debugPrint("open BP");
 
@@ -119,9 +119,7 @@ class _SumHealthrecordState extends State<SumHealthrecord> {
   void startSpo2() async {
     bool connect = false;
 
-    // while (true) {
     try {
-      // final name = SerialPort.availablePorts.first;
       for (var name in SerialPort.availablePorts) {
         debugPrint('scan $name');
         final port = SerialPort(name);
@@ -132,7 +130,7 @@ class _SumHealthrecordState extends State<SumHealthrecord> {
             print(SerialPort.lastError);
             exit(-1);
           }
-          current_port = port;
+          currentportspo2 = port;
 
           debugPrint("open SPO2");
 
@@ -175,7 +173,6 @@ class _SumHealthrecordState extends State<SumHealthrecord> {
       }
     } on Exception catch (_) {
       print("throwing new error");
-      // throw Exception("Error on server");
     }
   }
 
@@ -192,7 +189,7 @@ class _SumHealthrecordState extends State<SumHealthrecord> {
           if (!port.openReadWrite()) {
             print(SerialPort.lastError);
           }
-          current_port = port;
+          currentportHW = port;
           debugPrint("open W_H");
           SerialPortConfig config = port.config;
           config.baudRate = 9600;
@@ -201,64 +198,30 @@ class _SumHealthrecordState extends State<SumHealthrecord> {
           final reader = SerialPortReader(port);
           debugPrint("reader W_H");
 
-
           reader.stream.listen((data) {
-           debugPrint(data.toString());
+            debugPrint(data.toString());
             buffer.addAll(data);
-            if(data[data.length-1]==10){
-
+            if (data[data.length - 1] == 10) {
               String txt = intArrayToString(buffer);
               debugPrint(txt);
-              
-               List<String> splitList = txt.split(" ");
 
-              if(splitList.length==1){
+              List<String> splitList = txt.split(" ");
 
+              if (splitList.length == 1) {
                 double temp = double.parse(splitList[0].split(":")[1]);
-                context.read<DataProvider>().tempHealthrecord.text = temp.toString();
-
-              }else{
-
+                context.read<DataProvider>().tempHealthrecord.text =
+                    temp.toString();
+              } else {
                 double weight = double.parse(splitList[0].split(":")[1]);
-                context.read<DataProvider>().weightHealthrecord.text = weight.toString();
+                context.read<DataProvider>().weightHealthrecord.text =
+                    weight.toString();
                 double height = double.parse(splitList[1].split(":")[1]);
-                context.read<DataProvider>().heightHealthrecord.text = height.toString();
-
-
+                context.read<DataProvider>().heightHealthrecord.text =
+                    height.toString();
               }
-                // int sys = int.parse(splitList[3].split(":")[1].split(" ")[0]);
 
-                // int dia = int.parse(splitList[5].split(":")[1].split(" ")[0]);
-
-                // int pr = int.parse(splitList[6].split(":")[1].split(" ")[0]);
-
-                // debugPrint('Sys: $sys, Dia:$dia pr: $pr');
-                // context.read<DataProvider>().sysHealthrecord.text =
-                //     sys.toString();
-                // context.read<DataProvider>().diaHealthrecord.text =
-                //     dia.toString();
-                // context.read<DataProvider>().pulseHealthrecord.text =
-                //     pr.toString();
-
-              
-              
-              
-              
-              buffer=[];
-
-
-            }else{
-               
-            }
-
-            // if (data.length == 17) {
-            //   debugPrint("น้ำหนักส่วนสูง");
-            //   debugPrint('$data');
-            // }
-            // if (data.length == 8) {
-            //   debugPrint("อุณหภูมิ");
-            //   debugPrint('$data');
-            // }
+              buffer = [];
+            } else {}
           });
         }
       }
@@ -355,16 +318,22 @@ class _SumHealthrecordState extends State<SumHealthrecord> {
   void initState() {
     super.initState();
     startH_W();
-    //  startBP();
-    // startSpo2();
+    startBP();
+    startSpo2();
   }
 
   @override
   void dispose() {
     super.dispose();
 
-    if (current_port != null) {
-      current_port?.close();
+    if (currentportBP != null) {
+      currentportBP?.close();
+    }
+    if (currentportHW != null) {
+      currentportHW?.close();
+    }
+    if (currentportspo2 != null) {
+      currentportspo2?.close();
     }
   }
 
