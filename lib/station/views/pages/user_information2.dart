@@ -14,6 +14,13 @@ import 'package:smart_health/station/views/pages/videocall/preparationvideocall.
 import 'package:smart_health/station/views/ui/widgetdew.dart/widgetdew.dart';
 import 'package:http/http.dart' as http;
 
+import 'package:flutter/services.dart' show rootBundle;
+//import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+// import 'package:printing/printing.dart';
+import 'package:pdf/pdf.dart';
+import 'package:pdf/widgets.dart' as pw;
+
 class UserInformation extends StatefulWidget {
   const UserInformation({super.key});
 
@@ -71,6 +78,12 @@ class _UserInformation2State extends State<UserInformation2> {
   String dx = '--';
 // -------
 
+  // < karn  start >
+  FocusNode _focusNode = FocusNode();
+  // Printer? selectedPrinter; // Stores the selected printer
+  late pw.Font thaiFont;
+  // < karn  end >
+
   var resToJsonCheckQuick;
   Timer? timerCheckQuick;
   Future<void> checkQuick() async {
@@ -84,22 +97,22 @@ class _UserInformation2State extends State<UserInformation2> {
       resToJsonCheckQuick = json.decode(res.body);
       setState(() {});
       if (res.statusCode == 200) {
-        debugPrint("StartUs ${resToJsonCheckQuick["message"]}");
+        //debugPrint("Status ${resToJsonCheckQuick}");
         if (resToJsonCheckQuick["health_records"].length != 0) {
-          // context.read<DataProvider>().heightHealthrecord.text =
-          //     resToJsonCheckQuick["health_records"][0]["height"];
-          // context.read<DataProvider>().weightHealthrecord.text =
-          //     resToJsonCheckQuick["health_records"][0]["weight"];
-          // context.read<DataProvider>().tempHealthrecord.text =
-          //     resToJsonCheckQuick["health_records"][0]["temp"];
-          // context.read<DataProvider>().sysHealthrecord.text =
-          //     resToJsonCheckQuick["health_records"][0]["bp_sys"];
-          // context.read<DataProvider>().diaHealthrecord.text =
-          //     resToJsonCheckQuick["health_records"][0]["bp_dia"];
-          // context.read<DataProvider>().pulseHealthrecord.text =
-          //     resToJsonCheckQuick["health_records"][0]["pulse_rate"];
-          // context.read<DataProvider>().spo2Healthrecord.text =
-          //     resToJsonCheckQuick["health_records"][0]["spo2"];
+          context.read<DataProvider>().heightHealthrecord.text =
+              resToJsonCheckQuick["health_records"][0]["height"];
+          context.read<DataProvider>().weightHealthrecord.text =
+              resToJsonCheckQuick["health_records"][0]["weight"];
+          context.read<DataProvider>().tempHealthrecord.text =
+              resToJsonCheckQuick["health_records"][0]["temp"];
+          context.read<DataProvider>().sysHealthrecord.text =
+              resToJsonCheckQuick["health_records"][0]["bp_sys"];
+          context.read<DataProvider>().diaHealthrecord.text =
+              resToJsonCheckQuick["health_records"][0]["bp_dia"];
+          context.read<DataProvider>().pulseHealthrecord.text =
+              resToJsonCheckQuick["health_records"][0]["pulse_rate"];
+          context.read<DataProvider>().spo2Healthrecord.text =
+              resToJsonCheckQuick["health_records"][0]["spo2"];
 
           //   debugPrint(context.read<DataProvider>().heightHealthrecord.text);
           //   debugPrint(context.read<DataProvider>().weightHealthrecord.text);
@@ -295,6 +308,7 @@ class _UserInformation2State extends State<UserInformation2> {
     });
     setState(() {
       resTojson2 = json.decode(res.body);
+      debugPrint('+++++++' + resTojson2.toString());
       doctor_note = resTojson2['data']['doctor_note'];
       dx = resTojson2['data']['dx'];
       if (resTojson2 != null) {
@@ -305,25 +319,138 @@ class _UserInformation2State extends State<UserInformation2> {
     });
   }
 
-  void printexam() async {
-    // debugPrint("inti Printer");
-    // List<int> bytes = [];
+//   void printexam() async {
+// <<<<<<< HEAD
+//     // debugPrint("inti Printer");
+//     // List<int> bytes = [];
 
-    // final profile = await CapabilityProfile.load(name: 'XP-N160I');
-    // final generator = Generator(PaperSize.mm58, profile);
+//     // final profile = await CapabilityProfile.load(name: 'XP-N160I');
+//     // final generator = Generator(PaperSize.mm58, profile);
 
-    // bytes += generator.text(context.read<DataProvider>().name_hospital,
-    //     styles: const PosStyles(align: PosAlign.center));
+//     // bytes += generator.text(context.read<DataProvider>().name_hospital,
+//     //     styles: const PosStyles(align: PosAlign.center));
 
-    // bytes += generator.text('Examination',
-    //     styles: const PosStyles(
-    //         width: PosTextSize.size1, height: PosTextSize.size1));
-    // bytes += generator.text('\n');
-    // bytes += generator.text('Doctor  :  pairot tanyajasesn');
-    // bytes += generator.text('Results :  $dx');
-    // bytes += generator.text('        :  $doctor_note');
-    // // printer?.printTest(bytes);
-  }
+// =======
+//     String msgHead = "";
+//     String msgDetail = "";
+//     double sizeHeader = 20;
+//     double sizeBody = 14;
+
+//      if (selectedPrinter == null) {
+//       await _selectPrinter();
+//     }
+
+//     final pdf = pw.Document();
+
+//     // Define 80mm width and auto height for a thermal printer
+//     final pageFormat = PdfPageFormat(80 * PdfPageFormat.mm, double.infinity);
+
+//     //  msg =  'ส่วนสูง:${resToJsonCheckQuick["health_records"][0]["height"]} ';
+//     //  msg += ' น้ำหนัก:${resToJsonCheckQuick["health_records"][0]["weight"]}';
+//     //  msg += ' อุณภูมิ:${resToJsonCheckQuick["health_records"][0]["temp"]}';
+
+//      msgHead = 'HN : ${resTojson2['personal']['hn']} \n';
+//      msgHead += 'คุณ : ${resTojson2['personal']['first_name']} ${resTojson2['personal']['last_name']} \n';
+
+//      msgDetail = 'น้ำหนัก : ${resTojson2['data']['weight']} | ส่วนสูง: ${resTojson2['data']['height']} \n';
+//      msgDetail += 'อุณภูมิ : ${resTojson2['data']['temp']}  | BP: ${resTojson2['data']['bp']} \n';
+//      msgDetail += 'PULSE : ${resTojson2['data']['pulse_rate']}  | RR: ${resTojson2['data']['rr']} \n';
+
+//     // Add a page with 80mm width
+//     pdf.addPage(
+//       pw.Page(
+//         pageFormat: pageFormat,
+//         build: (pw.Context context) {
+//           return pw.Column(
+//             //crossAxisAlignment: pw.CrossAxisAlignment.start,
+//             crossAxisAlignment: pw.CrossAxisAlignment.center,
+//             children: [
+//           pw.Align(
+//             alignment: pw.Alignment.center,
+//             child: pw.Text(
+//               'ผลการตรวจ',
+//               style: pw.TextStyle(font: thaiFont, fontSize: sizeHeader),
+//               textAlign: pw.TextAlign.center,
+//             ),
+//           ),
+//           pw.SizedBox(height: 3),
+//           pw.Align(
+//             alignment: pw.Alignment.center,
+//             child: pw.Text(
+//               msgHead,
+//               style: pw.TextStyle(font: thaiFont, fontSize: sizeBody),
+//               textAlign: pw.TextAlign.center,
+//             ),
+//           ),
+//           pw.SizedBox(height: 3),
+//           pw.Align(
+//             alignment: pw.Alignment.center,
+//             child: pw.Text(
+//               'อาการ \n $dx',
+//               style: pw.TextStyle(font: thaiFont, fontSize: sizeBody),
+//               textAlign: pw.TextAlign.center,
+//             ),
+//           ),
+//           pw.SizedBox(height: 3),
+//           pw.Align(
+//             alignment: pw.Alignment.center,
+//             child: pw.Text(
+//               'Doctor Note \n $doctor_note',
+//               style: pw.TextStyle(font: thaiFont, fontSize: sizeBody),
+//               textAlign: pw.TextAlign.center,
+//             ),
+//           ),
+//           pw.SizedBox(height: 3),
+//           pw.Align(
+//             alignment: pw.Alignment.center,
+//             child: pw.Text(
+//               msgDetail,
+//               style: pw.TextStyle(font: thaiFont, fontSize: sizeBody),
+//               textAlign: pw.TextAlign.center,
+//             ),
+//           ),
+//           pw.SizedBox(height: 3),
+//         ],
+//           );
+//         },
+//       ),
+//     );
+
+//     // Convert the PDF to bytes
+//     final pdfBytes = await pdf.save();
+
+//     if (selectedPrinter != null) {
+//     await Printing.directPrintPdf(
+//       printer: selectedPrinter!,
+//       onLayout: (PdfPageFormat format) async => pdfBytes,
+//       );
+//     } else {
+//       print("No printer selected.");
+//     }
+
+//     // debugPrint("inti Printer");
+//     // List<int> bytes = [];
+
+//     // final profile = await CapabilityProfile.load(name: 'XP-N160I');
+//     // final generator = Generator(PaperSize.mm58, profile);
+
+//     // bytes += generator.text(context.read<DataProvider>().name_hospital,
+//     //     styles: const PosStyles(align: PosAlign.center));
+
+// >>>>>>> fc04b57743c6b83a54e9415d8cf33376b37f6deb
+//     // bytes += generator.text('Examination',
+//     //     styles: const PosStyles(
+//     //         width: PosTextSize.size1, height: PosTextSize.size1));
+//     // bytes += generator.text('\n');
+//     // bytes += generator.text('Doctor  :  pairot tanyajasesn');
+//     // bytes += generator.text('Results :  $dx');
+//     // bytes += generator.text('        :  $doctor_note');
+// <<<<<<< HEAD
+//     // // printer?.printTest(bytes);
+// =======
+//     // printer?.printTest(bytes);
+// >>>>>>> fc04b57743c6b83a54e9415d8cf33376b37f6deb
+//   }
 
   // Future<void> printq() async {
   //   List<int> bytes = [];
@@ -406,10 +533,56 @@ class _UserInformation2State extends State<UserInformation2> {
   //   printer?.printTest(bytes);
   // }
 
+  Future<void> _loadThaiFont() async {
+    final fontData = await rootBundle.load('assets/fonts/THSarabunNew.ttf');
+    print('_loadThaiFont');
+    print(fontData);
+    setState(() {
+      thaiFont = pw.Font.ttf(fontData);
+    });
+  }
+
+  // Function to get available printers
+  Future<void> _selectPrinter() async {
+    //  final printers =//await Printing.listPrinters();
+
+    //   print('select_printer....');
+    //   if (printers.isNotEmpty) {
+
+    //     print('Total printers found: ${printers.length}');
+    //     for (var i = 0; i < printers.length; i++) {
+    //       print('Printer $i: ${printers[i].name}');
+    //     }
+
+    //     final kposPrinter = printers.firstWhere(
+    //       (printer) => printer.name == 'KPOS_80 Printer',
+    //       orElse: () => printers.first, // Fallback to the first printer if not found
+    //     );
+
+    //     setState(() {
+    //       //selectedPrinter =   printers.first;  //printers.first; // Select the first printer as default
+    //       selectedPrinter = kposPrinter;
+    //     });
+    //   }
+  }
+
   @override
   void initState() {
     checkQuick();
     // checkt_queue();
+    // karn start
+    _loadThaiFont();
+    _focusNode.addListener(() {
+      if (_focusNode.hasFocus) {
+        RawKeyboard.instance.addListener((RawKeyEvent event) {
+          if (event.logicalKey == LogicalKeyboardKey.enter &&
+              event is RawKeyDownEvent) {
+            //  _sendToSelectedPrinter();
+          }
+        });
+      }
+    });
+    // karn end
 
     printer = ESMPrinter([
       {'vendor_id': '19267', 'product_id': '14384'},
@@ -421,7 +594,7 @@ class _UserInformation2State extends State<UserInformation2> {
   @override
   void dispose() {
     timerCheckQuick?.cancel();
-
+    _focusNode.dispose();
     super.dispose();
   }
 
@@ -529,7 +702,7 @@ class _UserInformation2State extends State<UserInformation2> {
                                           Center(
                                             child: ElevatedButton(
                                                 onPressed: () {
-                                                  printexam();
+                                                  //    printexam();
                                                 },
                                                 child: Text("ปริ้นผลตรวจ",
                                                     style: TextStyle(
@@ -1204,13 +1377,6 @@ class _choiceState extends State<choice> {
       resTojson = json.decode(res.body);
       if (resTojson != null) {}
     });
-  }
-
-  @override
-  void initState() {
-    checkt_queue();
-
-    super.initState();
   }
 
   @override

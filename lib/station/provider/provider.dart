@@ -115,7 +115,7 @@ class DataProvider with ChangeNotifier {
   TextEditingController weightHealthrecord = TextEditingController();
   TextEditingController spo2Healthrecord = TextEditingController();
   TextEditingController tempHealthrecord = TextEditingController();
-
+TextEditingController bmiHealthrecord = TextEditingController();
   List<String> deviceId = [];
   StreamController<List<String>> _deviceIdStreamController =
       StreamController<List<String>>();

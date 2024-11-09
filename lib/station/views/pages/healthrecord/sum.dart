@@ -218,6 +218,17 @@ class _SumHealthrecordState extends State<SumHealthrecord> {
                 double height = double.parse(splitList[1].split(":")[1]);
                 context.read<DataProvider>().heightHealthrecord.text =
                     height.toString();
+
+ 
+if (height > 0 && weight > 0) {
+      final double bmi =  weight/ ((height/100) * (height/100));
+      setState(() {
+        context.read<DataProvider>(). bmiHealthrecord.text =
+                    bmi.toStringAsFixed(2);
+      });
+    }  
+     
+
               }
 
               buffer = [];
@@ -230,7 +241,7 @@ class _SumHealthrecordState extends State<SumHealthrecord> {
       print(e);
     }
   }
-
+ 
 ////////////////////////////////////////////////////////////////////////////
 
   void sendDataHealthrecord() async {
@@ -317,24 +328,24 @@ class _SumHealthrecordState extends State<SumHealthrecord> {
   @override
   void initState() {
     super.initState();
-    startH_W();
+   startH_W();
     startBP();
-    startSpo2();
+  startSpo2();
   }
 
   @override
-  void dispose() {
-    super.dispose();
+  void dispose() async{
+   
 
     if (currentportBP != null) {
-      currentportBP?.close();
+     await currentportBP?.close();
     }
     if (currentportHW != null) {
-      currentportHW?.close();
+     await currentportHW?.close();
     }
     if (currentportspo2 != null) {
-      currentportspo2?.close();
-    }
+    await  currentportspo2?.close();
+    } super.dispose();
   }
 
   @override
@@ -373,6 +384,10 @@ class _SumHealthrecordState extends State<SumHealthrecord> {
                     image: 'assets/kauo.png',
                     texthead: 'SPO2',
                     keyvavlue: context.read<DataProvider>().spo2Healthrecord),
+                     BoxRecord(
+                    image: 'assets/jhgh.png',
+                    texthead: 'TEMP',
+                    keyvavlue: context.read<DataProvider>().tempHealthrecord),
               ],
             ),
           ),
@@ -388,10 +403,10 @@ class _SumHealthrecordState extends State<SumHealthrecord> {
                     image: 'assets/srhnate.png',
                     texthead: 'WEIGHT',
                     keyvavlue: context.read<DataProvider>().weightHealthrecord),
-                BoxRecord(
-                    image: 'assets/jhgh.png',
-                    texthead: 'TEMP',
-                    keyvavlue: context.read<DataProvider>().tempHealthrecord),
+                  BoxRecord(
+                    image: 'assets/srhnate.png',
+                    texthead: 'BMI',
+                    keyvavlue: context.read<DataProvider>().bmiHealthrecord),
               ],
             ),
           ),
@@ -402,7 +417,7 @@ class _SumHealthrecordState extends State<SumHealthrecord> {
                 children: [
                   ElevatedButton(
                       onPressed: () {
-                        Get.toNamed('user_information');
+                        Get.offNamed('user_information');
                         //   Get.toNamed('spo2');
                       },
                       child: Text(

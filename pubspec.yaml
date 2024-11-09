@@ -66,6 +66,7 @@ dependencies:
   carousel_slider: ^4.2.1
   device_info_plus: ^2.1.2
   window_manager: ^0.3.0
+  printing: ^5.10.4
 
   openvidu_client:
     path: "vendors/flutter_openvidu_client"  
@@ -126,6 +127,7 @@ flutter:
     - assets/backgrund/
     - assets/splash/
     - assets/image_menu/
+    - assets/fonts/THSarabunNew.ttf
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
