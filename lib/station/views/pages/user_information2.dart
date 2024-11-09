@@ -17,7 +17,7 @@ import 'package:http/http.dart' as http;
 import 'package:flutter/services.dart' show rootBundle;
 //import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-// import 'package:printing/printing.dart';
+import 'package:printing/printing.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 
@@ -80,7 +80,7 @@ class _UserInformation2State extends State<UserInformation2> {
 
   // < karn  start >
   FocusNode _focusNode = FocusNode();
-  // Printer? selectedPrinter; // Stores the selected printer
+  Printer? selectedPrinter; // Stores the selected printer
   late pw.Font thaiFont;
   // < karn  end >
 
@@ -319,138 +319,115 @@ class _UserInformation2State extends State<UserInformation2> {
     });
   }
 
-//   void printexam() async {
-// <<<<<<< HEAD
-//     // debugPrint("inti Printer");
-//     // List<int> bytes = [];
+  void printexam() async {
+ 
+    String msgHead = "";
+    String msgDetail = "";
+    double sizeHeader = 20;
+    double sizeBody = 14;
 
-//     // final profile = await CapabilityProfile.load(name: 'XP-N160I');
-//     // final generator = Generator(PaperSize.mm58, profile);
+     if (selectedPrinter == null) {
+      await _selectPrinter();
+    }
 
-//     // bytes += generator.text(context.read<DataProvider>().name_hospital,
-//     //     styles: const PosStyles(align: PosAlign.center));
+    final pdf = pw.Document();
 
-// =======
-//     String msgHead = "";
-//     String msgDetail = "";
-//     double sizeHeader = 20;
-//     double sizeBody = 14;
+    // Define 80mm width and auto height for a thermal printer
+    final pageFormat = PdfPageFormat(80 * PdfPageFormat.mm, double.infinity);
 
-//      if (selectedPrinter == null) {
-//       await _selectPrinter();
-//     }
+    //  msg =  'ส่วนสูง:${resToJsonCheckQuick["health_records"][0]["height"]} ';
+    //  msg += ' น้ำหนัก:${resToJsonCheckQuick["health_records"][0]["weight"]}';
+    //  msg += ' อุณภูมิ:${resToJsonCheckQuick["health_records"][0]["temp"]}';
+ 
+     msgHead = 'HN : ${resTojson2['personal']['hn']} \n';
+     msgHead += 'คุณ : ${resTojson2['personal']['first_name']} ${resTojson2['personal']['last_name']} \n';
 
-//     final pdf = pw.Document();
+     msgDetail = 'น้ำหนัก : ${resTojson2['data']['weight']} | ส่วนสูง: ${resTojson2['data']['height']} \n';
+     msgDetail += 'อุณภูมิ : ${resTojson2['data']['temp']}  | BP: ${resTojson2['data']['bp']} \n';
+     msgDetail += 'PULSE : ${resTojson2['data']['pulse_rate']}  | RR: ${resTojson2['data']['rr']} \n';
 
-//     // Define 80mm width and auto height for a thermal printer
-//     final pageFormat = PdfPageFormat(80 * PdfPageFormat.mm, double.infinity);
+    // Add a page with 80mm width
+    pdf.addPage(
+      pw.Page(
+        pageFormat: pageFormat,
+        build: (pw.Context context) {
+          return pw.Column(
+            //crossAxisAlignment: pw.CrossAxisAlignment.start,
+            crossAxisAlignment: pw.CrossAxisAlignment.center,
+            children: [
+          pw.Align(
+            alignment: pw.Alignment.center,
+            child: pw.Text(
+              'ผลการตรวจ',
+              style: pw.TextStyle(font: thaiFont, fontSize: sizeHeader),
+              textAlign: pw.TextAlign.center,
+            ),
+          ),
+          pw.SizedBox(height: 3),
+          pw.Align(
+            alignment: pw.Alignment.center,
+            child: pw.Text(
+              msgHead,
+              style: pw.TextStyle(font: thaiFont, fontSize: sizeBody),
+              textAlign: pw.TextAlign.center,
+            ),
+          ),
+          pw.SizedBox(height: 3),
+          pw.Align(
+            alignment: pw.Alignment.center,
+            child: pw.Text(
+              'อาการ \n $dx',
+              style: pw.TextStyle(font: thaiFont, fontSize: sizeBody),
+              textAlign: pw.TextAlign.center,
+            ),
+          ),
+          pw.SizedBox(height: 3),
+          pw.Align(
+            alignment: pw.Alignment.center,
+            child: pw.Text(
+              'Doctor Note \n $doctor_note',
+              style: pw.TextStyle(font: thaiFont, fontSize: sizeBody),
+              textAlign: pw.TextAlign.center,
+            ),
+          ),
+          pw.SizedBox(height: 3),
+          pw.Align(
+            alignment: pw.Alignment.center,
+            child: pw.Text(
+              msgDetail,
+              style: pw.TextStyle(font: thaiFont, fontSize: sizeBody),
+              textAlign: pw.TextAlign.center,
+            ),
+          ),
+          pw.SizedBox(height: 3),
+        ],
+          );
+        },
+      ),
+    );
 
-//     //  msg =  'ส่วนสูง:${resToJsonCheckQuick["health_records"][0]["height"]} ';
-//     //  msg += ' น้ำหนัก:${resToJsonCheckQuick["health_records"][0]["weight"]}';
-//     //  msg += ' อุณภูมิ:${resToJsonCheckQuick["health_records"][0]["temp"]}';
+    // Convert the PDF to bytes
+    final pdfBytes = await pdf.save();
 
-//      msgHead = 'HN : ${resTojson2['personal']['hn']} \n';
-//      msgHead += 'คุณ : ${resTojson2['personal']['first_name']} ${resTojson2['personal']['last_name']} \n';
+    if (selectedPrinter != null) {
+    await Printing.directPrintPdf(
+      printer: selectedPrinter!,
+      onLayout: (PdfPageFormat format) async => pdfBytes,
+      );
+    } else {
+      print("No printer selected.");
+    }
 
-//      msgDetail = 'น้ำหนัก : ${resTojson2['data']['weight']} | ส่วนสูง: ${resTojson2['data']['height']} \n';
-//      msgDetail += 'อุณภูมิ : ${resTojson2['data']['temp']}  | BP: ${resTojson2['data']['bp']} \n';
-//      msgDetail += 'PULSE : ${resTojson2['data']['pulse_rate']}  | RR: ${resTojson2['data']['rr']} \n';
+    // debugPrint("inti Printer");
+    // List<int> bytes = [];
 
-//     // Add a page with 80mm width
-//     pdf.addPage(
-//       pw.Page(
-//         pageFormat: pageFormat,
-//         build: (pw.Context context) {
-//           return pw.Column(
-//             //crossAxisAlignment: pw.CrossAxisAlignment.start,
-//             crossAxisAlignment: pw.CrossAxisAlignment.center,
-//             children: [
-//           pw.Align(
-//             alignment: pw.Alignment.center,
-//             child: pw.Text(
-//               'ผลการตรวจ',
-//               style: pw.TextStyle(font: thaiFont, fontSize: sizeHeader),
-//               textAlign: pw.TextAlign.center,
-//             ),
-//           ),
-//           pw.SizedBox(height: 3),
-//           pw.Align(
-//             alignment: pw.Alignment.center,
-//             child: pw.Text(
-//               msgHead,
-//               style: pw.TextStyle(font: thaiFont, fontSize: sizeBody),
-//               textAlign: pw.TextAlign.center,
-//             ),
-//           ),
-//           pw.SizedBox(height: 3),
-//           pw.Align(
-//             alignment: pw.Alignment.center,
-//             child: pw.Text(
-//               'อาการ \n $dx',
-//               style: pw.TextStyle(font: thaiFont, fontSize: sizeBody),
-//               textAlign: pw.TextAlign.center,
-//             ),
-//           ),
-//           pw.SizedBox(height: 3),
-//           pw.Align(
-//             alignment: pw.Alignment.center,
-//             child: pw.Text(
-//               'Doctor Note \n $doctor_note',
-//               style: pw.TextStyle(font: thaiFont, fontSize: sizeBody),
-//               textAlign: pw.TextAlign.center,
-//             ),
-//           ),
-//           pw.SizedBox(height: 3),
-//           pw.Align(
-//             alignment: pw.Alignment.center,
-//             child: pw.Text(
-//               msgDetail,
-//               style: pw.TextStyle(font: thaiFont, fontSize: sizeBody),
-//               textAlign: pw.TextAlign.center,
-//             ),
-//           ),
-//           pw.SizedBox(height: 3),
-//         ],
-//           );
-//         },
-//       ),
-//     );
+    // final profile = await CapabilityProfile.load(name: 'XP-N160I');
+    // final generator = Generator(PaperSize.mm58, profile);
 
-//     // Convert the PDF to bytes
-//     final pdfBytes = await pdf.save();
-
-//     if (selectedPrinter != null) {
-//     await Printing.directPrintPdf(
-//       printer: selectedPrinter!,
-//       onLayout: (PdfPageFormat format) async => pdfBytes,
-//       );
-//     } else {
-//       print("No printer selected.");
-//     }
-
-//     // debugPrint("inti Printer");
-//     // List<int> bytes = [];
-
-//     // final profile = await CapabilityProfile.load(name: 'XP-N160I');
-//     // final generator = Generator(PaperSize.mm58, profile);
-
-//     // bytes += generator.text(context.read<DataProvider>().name_hospital,
-//     //     styles: const PosStyles(align: PosAlign.center));
-
-// >>>>>>> fc04b57743c6b83a54e9415d8cf33376b37f6deb
-//     // bytes += generator.text('Examination',
-//     //     styles: const PosStyles(
-//     //         width: PosTextSize.size1, height: PosTextSize.size1));
-//     // bytes += generator.text('\n');
-//     // bytes += generator.text('Doctor  :  pairot tanyajasesn');
-//     // bytes += generator.text('Results :  $dx');
-//     // bytes += generator.text('        :  $doctor_note');
-// <<<<<<< HEAD
-//     // // printer?.printTest(bytes);
-// =======
-//     // printer?.printTest(bytes);
-// >>>>>>> fc04b57743c6b83a54e9415d8cf33376b37f6deb
-//   }
+    // bytes += generator.text(context.read<DataProvider>().name_hospital,
+    //     styles: const PosStyles(align: PosAlign.center));
+ 
+  }
 
   // Future<void> printq() async {
   //   List<int> bytes = [];
@@ -544,26 +521,26 @@ class _UserInformation2State extends State<UserInformation2> {
 
   // Function to get available printers
   Future<void> _selectPrinter() async {
-    //  final printers =//await Printing.listPrinters();
+     final printers = await Printing.listPrinters();
 
-    //   print('select_printer....');
-    //   if (printers.isNotEmpty) {
+      print('select_printer....');
+      if (printers.isNotEmpty) {
 
-    //     print('Total printers found: ${printers.length}');
-    //     for (var i = 0; i < printers.length; i++) {
-    //       print('Printer $i: ${printers[i].name}');
-    //     }
+        print('Total printers found: ${printers.length}');
+        for (var i = 0; i < printers.length; i++) {
+          print('Printer $i: ${printers[i].name}');
+        }
 
-    //     final kposPrinter = printers.firstWhere(
-    //       (printer) => printer.name == 'KPOS_80 Printer',
-    //       orElse: () => printers.first, // Fallback to the first printer if not found
-    //     );
+        final kposPrinter = printers.firstWhere(
+          (printer) => printer.name == 'KPOS_80 Printer',
+          orElse: () => printers.first, // Fallback to the first printer if not found
+        );
 
-    //     setState(() {
-    //       //selectedPrinter =   printers.first;  //printers.first; // Select the first printer as default
-    //       selectedPrinter = kposPrinter;
-    //     });
-    //   }
+        setState(() {
+          //selectedPrinter =   printers.first;  //printers.first; // Select the first printer as default
+          selectedPrinter = kposPrinter;
+        });
+      }
   }
 
   @override
@@ -702,7 +679,7 @@ class _UserInformation2State extends State<UserInformation2> {
                                           Center(
                                             child: ElevatedButton(
                                                 onPressed: () {
-                                                  //    printexam();
+                                                   printexam();
                                                 },
                                                 child: Text("ปริ้นผลตรวจ",
                                                     style: TextStyle(
