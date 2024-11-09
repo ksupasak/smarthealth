@@ -4,7 +4,6 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_pos_printer_platform/esc_pos_utils_platform/esc_pos_utils_platform.dart';
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 import 'package:smart_health/station/provider/provider.dart';
@@ -307,23 +306,23 @@ class _UserInformation2State extends State<UserInformation2> {
   }
 
   void printexam() async {
-    debugPrint("inti Printer");
-    List<int> bytes = [];
+    // debugPrint("inti Printer");
+    // List<int> bytes = [];
 
-    final profile = await CapabilityProfile.load(name: 'XP-N160I');
-    final generator = Generator(PaperSize.mm58, profile);
+    // final profile = await CapabilityProfile.load(name: 'XP-N160I');
+    // final generator = Generator(PaperSize.mm58, profile);
 
-    bytes += generator.text(context.read<DataProvider>().name_hospital,
-        styles: const PosStyles(align: PosAlign.center));
+    // bytes += generator.text(context.read<DataProvider>().name_hospital,
+    //     styles: const PosStyles(align: PosAlign.center));
 
-    bytes += generator.text('Examination',
-        styles: const PosStyles(
-            width: PosTextSize.size1, height: PosTextSize.size1));
-    bytes += generator.text('\n');
-    bytes += generator.text('Doctor  :  pairot tanyajasesn');
-    bytes += generator.text('Results :  $dx');
-    bytes += generator.text('        :  $doctor_note');
-    // printer?.printTest(bytes);
+    // bytes += generator.text('Examination',
+    //     styles: const PosStyles(
+    //         width: PosTextSize.size1, height: PosTextSize.size1));
+    // bytes += generator.text('\n');
+    // bytes += generator.text('Doctor  :  pairot tanyajasesn');
+    // bytes += generator.text('Results :  $dx');
+    // bytes += generator.text('        :  $doctor_note');
+    // // printer?.printTest(bytes);
   }
 
   // Future<void> printq() async {

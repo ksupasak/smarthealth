@@ -176,7 +176,7 @@ class _HomeappState extends State<Homeapp> {
       debugPrint("Crde Reader--------------------------------=");
       debugPrint(resTojson.toString());
       if (res.statusCode == 200) {
-        context.read<DataProvider>().updateuserinformation(resTojson );
+        context.read<DataProvider>().updateuserinformation(resTojson);
         context.read<DataProvider>().upcorrelationId(resTojson);
         debugPrint(resTojson["claimTypes"][0].toString());
         context
@@ -226,7 +226,7 @@ class _HomeappState extends State<Homeapp> {
       context.read<DataProvider>().id = '';
       context
           .read<DataProvider>()
-          .updateuserinformation({"pid": "", "claimTypes": "[]"} );
+          .updateuserinformation({"pid": "", "claimTypes": "[]"});
       context.read<DataProvider>().claimType = '';
       context.read<DataProvider>().claimTypeName = '';
       context.read<DataProvider>().claimCode = '';

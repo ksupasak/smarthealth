@@ -8,8 +8,8 @@ import 'package:smart_health/station/background/color/style_color.dart';
 import 'package:smart_health/station/provider/provider.dart';
 import 'package:smart_health/station/views/ui/widgetdew.dart/widgetdew.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_pos_printer_platform/esc_pos_utils_platform/esc_pos_utils_platform.dart';
-import 'package:flutter_pos_printer_platform/flutter_pos_printer_platform.dart';
+// import 'package:flutter_pos_printer_platform/esc_pos_utils_platform/esc_pos_utils_platform.dart';
+// import 'package:flutter_pos_printer_platform/flutter_pos_printer_platform.dart';
 import 'package:image/image.dart' as img;
 import 'image_utils.dart';
 
@@ -53,15 +53,15 @@ class _TestPageState extends State<TestPage> {
     List<int> bytes = [];
 
 // Xprinter XP-N160I
-    final profile = await CapabilityProfile.load(name: 'XP-N160I');
+    //  final profile = await CapabilityProfile.load(name: 'XP-N160I');
 
     // PaperSize.mm80 or PaperSize.mm58
-    final generator = Generator(PaperSize.mm58, profile);
-    bytes += generator.setGlobalCodeTable('CP1252');
-    bytes += generator.text(context.read<DataProvider>().name_hospital,
-        styles: PosStyles(align: PosAlign.center));
-    bytes += generator.text('');
-    bytes += generator.text('it');
+    // final generator = Generator(PaperSize.mm58, profile);
+    // bytes += generator.setGlobalCodeTable('CP1252');
+    // bytes += generator.text(context.read<DataProvider>().name_hospital,
+    //     styles: PosStyles(align: PosAlign.center));
+    // bytes += generator.text('');
+    // bytes += generator.text('it');
 
     // final ByteData data = await rootBundle.load('assets/ic_launcher.png');
     // if (data.lengthInBytes > 0) {
@@ -90,7 +90,7 @@ class _TestPageState extends State<TestPage> {
     //   bytes += generator.feed(1);
     // }
 
-    printer?.printEscPos(bytes, generator);
+//    printer?.printEscPos(bytes, generator);
   }
 
   @override

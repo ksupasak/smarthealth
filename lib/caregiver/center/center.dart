@@ -10,8 +10,6 @@ import 'package:smart_health/myapp/action/playsound.dart';
 import 'package:smart_health/myapp/provider/provider.dart';
 import 'package:smart_health/myapp/setting/setting.dart';
 
-import 'package:dart_ping/dart_ping.dart';
-
 class Center_Caregiver extends StatefulWidget {
   const Center_Caregiver({super.key});
 
@@ -104,19 +102,19 @@ class _Center_CaregiverState extends State<Center_Caregiver> {
   }
 
   Future<void> _runPing() async {
-    final ping = Ping('google.com', count: 5);
-    ping.stream.listen((event) {
-      if (event.response?.time!.inMicroseconds.toString() != null) {
-        String originalString =
-            '${event.response?.time!.inMicroseconds.toString()}';
-        double convertedNumber = double.parse(originalString) / 1000;
-        String resultString = convertedNumber.toStringAsFixed(1);
-        internet = double.parse(resultString); //resultString ;
-        // print(resultString);
-      } else {
-        internet = 0;
-      }
-    });
+    // final ping = Ping('google.com', count: 5);
+    // ping.stream.listen((event) {
+    //   if (event.response?.time!.inMicroseconds.toString() != null) {
+    //     String originalString =
+    //         '${event.response?.time!.inMicroseconds.toString()}';
+    //     double convertedNumber = double.parse(originalString) / 1000;
+    //     String resultString = convertedNumber.toStringAsFixed(1);
+    //     internet = double.parse(resultString); //resultString ;
+    //     // print(resultString);
+    //   } else {
+    //     internet = 0;
+    //   }
+    // });
   }
 
   void start_runPing() async {
