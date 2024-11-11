@@ -13,7 +13,7 @@ import 'package:smart_health/station/views/pages/videocall.dart';
 import 'package:smart_health/station/views/pages/videocall/preparationvideocall.dart';
 import 'package:smart_health/station/views/ui/widgetdew.dart/widgetdew.dart';
 import 'package:http/http.dart' as http;
- 
+
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:flutter/services.dart';
 import 'package:printing/printing.dart';
@@ -79,7 +79,7 @@ class _UserInformation2State extends State<UserInformation2> {
   String doctor_note = '--';
   String dx = '--';
 // -------
- 
+
   FocusNode _focusNode = FocusNode();
   Printer? selectedPrinter; // Stores the selected printer
   late pw.Font thaiFont;
@@ -321,10 +321,9 @@ class _UserInformation2State extends State<UserInformation2> {
   }
 
   void printexam() async {
- 
     // < karn  start printer >
     String msgHN = "";
- 
+
     String msgHead = "";
     String msgDetail = "";
 
@@ -352,10 +351,6 @@ class _UserInformation2State extends State<UserInformation2> {
 
     // Define 80mm width and auto height for a thermal printer
     final pageFormat = PdfPageFormat(80 * PdfPageFormat.mm, double.infinity);
-
-    //  msg =  'ส่วนสูง:${resToJsonCheckQuick["health_records"][0]["height"]} ';
-    //  msg += ' น้ำหนัก:${resToJsonCheckQuick["health_records"][0]["weight"]}';
-    //  msg += ' อุณภูมิ:${resToJsonCheckQuick["health_records"][0]["temp"]}';
 
     msgHN = 'HN : ${resTojson2['personal']['hn']}';
     msgHead = 'HN : ${resTojson2['personal']['hn']} \n';
@@ -402,14 +397,21 @@ class _UserInformation2State extends State<UserInformation2> {
         crossAxisAlignment: pw.CrossAxisAlignment.start,
         children: [
           pw.Text(
-            'msgHead',
+            'วิเคราะห์',
             style: pw.TextStyle(
                 font: thaiFont, fontSize: 18, fontWeight: pw.FontWeight.bold),
           ),
           // pw.Text('Address Line 1\nCity, State ZIP\nPhone: (555) 123-4567'),
-          pw.Text(msgHead),
+          pw.Text(dx),
           pw.Text(
-            'msgDetail',
+            'จ่ายยา',
+            style: pw.TextStyle(
+                font: thaiFont, fontSize: 18, fontWeight: pw.FontWeight.bold),
+          ),
+          // pw.Text('Address Line 1\nCity, State ZIP\nPhone: (555) 123-4567'),
+          pw.Text(doctor_note),
+          pw.Text(
+            'รายละเอียด',
             style: pw.TextStyle(
                 font: thaiFont, fontSize: 18, fontWeight: pw.FontWeight.bold),
           ),
@@ -458,15 +460,6 @@ class _UserInformation2State extends State<UserInformation2> {
         ],
       );
     }
-// =======
- 
-//      msgHead = 'HN : ${resTojson2['personal']['hn']} \n';
-//      msgHead += 'คุณ : ${resTojson2['personal']['first_name']} ${resTojson2['personal']['last_name']} \n';
-
-//      msgDetail = 'น้ำหนัก : ${resTojson2['data']['weight']} | ส่วนสูง: ${resTojson2['data']['height']} \n';
-//      msgDetail += 'อุณภูมิ : ${resTojson2['data']['temp']}  | BP: ${resTojson2['data']['bp']} \n';
-//      msgDetail += 'PULSE : ${resTojson2['data']['pulse_rate']}  | RR: ${resTojson2['data']['rr']} \n';
-// >>>>>>> 777ae85ef2c8e147a67d6a4a4e4a31ba2ed4be09
 
     pdf.addPage(
       pw.Page(
@@ -475,23 +468,21 @@ class _UserInformation2State extends State<UserInformation2> {
           return pw.Column(
             crossAxisAlignment: pw.CrossAxisAlignment.start,
             children: [
-
               if (logoBytes != null) _buildLogo(logoBytes),
-              pw.SizedBox(height: 10),
+              pw.SizedBox(height: 5),
               _buildHeader(),
-              pw.SizedBox(height: 10),
-              // _buildItemList(items),
-              _buildDocnote(),
-              pw.Divider(),
-              //_buildTotals(subtotal, tax, total),
-              pw.SizedBox(height: 10),
-              _buildBarcode(dataBarcode),
-              pw.SizedBox(height: 10),
-              _buildQRCode(dataQrcode),
-              pw.SizedBox(height: 10),
-              _buildFooter(),
+              // pw.SizedBox(height: 5),
+              // // _buildItemList(items),
+              // _buildDocnote(),
+              // pw.Divider(),
+              // //_buildTotals(subtotal, tax, total),
+              // pw.SizedBox(height: 5),
+              // _buildBarcode(dataBarcode),
+              // pw.SizedBox(height: 5),
+              // _buildQRCode(dataQrcode),
+              // pw.SizedBox(height: 5),
+              // _buildFooter(),
             ],
-
           );
         },
       ),
@@ -577,7 +568,6 @@ class _UserInformation2State extends State<UserInformation2> {
 
     // bytes += generator.text(context.read<DataProvider>().name_hospital,
     //     styles: const PosStyles(align: PosAlign.center));
- 
   }
 
   // < karn  end printer >
@@ -665,6 +655,7 @@ class _UserInformation2State extends State<UserInformation2> {
 
   Future<void> _loadThaiFont() async {
     final fontData = await rootBundle.load('assets/fonts/THSarabunNew.ttf');
+    //final fontData = await rootBundle.load('assets/THSarabunNew.ttf');
     print('_loadThaiFont');
     print(fontData);
     setState(() {
@@ -674,7 +665,6 @@ class _UserInformation2State extends State<UserInformation2> {
 
   // Function to get available printers
   Future<void> _selectPrinter() async {
-
     final printers = await Printing.listPrinters();
     final String PrinterName_ = "KPOS_80 Printer";
 
@@ -696,28 +686,6 @@ class _UserInformation2State extends State<UserInformation2> {
         selectedPrinter = kposPrinter;
       });
     }
-// =======
-//      final printers = await Printing.listPrinters();
-
-//       print('select_printer....');
-//       if (printers.isNotEmpty) {
-
-//         print('Total printers found: ${printers.length}');
-//         for (var i = 0; i < printers.length; i++) {
-//           print('Printer $i: ${printers[i].name}');
-//         }
-
-//         final kposPrinter = printers.firstWhere(
-//           (printer) => printer.name == 'KPOS_80 Printer',
-//           orElse: () => printers.first, // Fallback to the first printer if not found
-//         );
-
-//         setState(() {
-//           //selectedPrinter =   printers.first;  //printers.first; // Select the first printer as default
-//           selectedPrinter = kposPrinter;
-//         });
-//       }
-// >>>>>>> 777ae85ef2c8e147a67d6a4a4e4a31ba2ed4be09
   }
 
   @override
@@ -856,7 +824,7 @@ class _UserInformation2State extends State<UserInformation2> {
                                           Center(
                                             child: ElevatedButton(
                                                 onPressed: () {
-                                                   printexam();
+                                                  printexam();
                                                 },
                                                 child: Text("ปริ้นผลตรวจ",
                                                     style: TextStyle(

@@ -129,7 +129,9 @@ flutter:
     - assets/backgrund/
     - assets/splash/
     - assets/image_menu/
-    - assets/fonts/THSarabunNew.ttf
+    - assets/THSarabunNew.ttf    
+    - assets/fonts/THSarabunNew.ttf        
+    - assets/logo.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
