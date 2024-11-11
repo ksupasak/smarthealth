@@ -24,8 +24,8 @@ class _VideoCallState extends State<VideoCall> {
   LocalParticipant? localParticipant;
   bool isInside = false;
   @override
-  void initState() {
-    initOpenVidu();
+  void initState() {    
+    initOpenVidu();  
     super.initState();
   }
 
@@ -33,7 +33,8 @@ class _VideoCallState extends State<VideoCall> {
     _openvidu = OpenViduClient('https://openvidu.pcm-life.com');
     localParticipant =
         await _openvidu.startLocalPreview(context, StreamMode.frontCamera);
-    listenSessionEvents();
+    setState(() {});
+      listenSessionEvents();
   }
 
   void listenSessionEvents() {
@@ -100,7 +101,10 @@ class _VideoCallState extends State<VideoCall> {
 
   @override
   void dispose() async {
+    await localParticipant!.close();
     await _openvidu.disconnect();
+    setState(() {
+    });
     super.dispose();
   }
 
@@ -118,12 +122,12 @@ class _VideoCallState extends State<VideoCall> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    // BoxTime(),
-                    // BoxDecorate(
-                    //     child: InformationCard(
-                    //         dataidcard:
-                    //             context.read<DataProvider>().dataidcard)),
-                    Container(
+                    BoxTime(),
+                    BoxDecorate(
+                        child: InformationCard(
+                            dataidcard:
+                                context.read<DataProvider>().dataidcard)),
+                    SizedBox(
                       height: height * 0.06,
                       width: width,
                       child: Center(
@@ -132,20 +136,26 @@ class _VideoCallState extends State<VideoCall> {
                           style: TextStyle(
                               fontSize: width * 0.05,
                               fontWeight: FontWeight.w500,
-                              fontFamily:
-                                  context.read<DataProvider>().fontFamily,
                               color: const Color(0xff48B5AA)),
                         ),
                       ),
                     ),
-                    Container(
-                        width: width * 0.9,
-                        child: ConfigView(
-                            participant: localParticipant!,
-                            onConnect: onConnect)),
+                    localParticipant != null
+                        ? SizedBox(
+                            width: width * 0.9,
+                            child: ConfigView(
+                                participant: localParticipant!,
+                                onConnect: onConnect))
+                        : const SizedBox(),
+
+                        
                     ElevatedButton(
                         onPressed: () {
-                          Get.offNamed('user_information');
+                            localParticipant!.close();
+                          _openvidu.disconnect();
+                          setState(() { 
+                          });
+                        Get.offNamed('user_information');
                         },
                         child: const Text("ออก")),
                   ],
@@ -173,9 +183,11 @@ class _VideoCallState extends State<VideoCall> {
                           }),
                       Positioned(
                           child: ElevatedButton(
-                        onPressed: () async {
-                          await _openvidu.disconnect();
-                          Get.offNamed('user_information');
+                        onPressed: ()   {
+                            _openvidu.disconnect();
+                          setState(() { 
+                          });
+                      Get.offNamed('user_information');
                         },
                         child: const Text("ออก"),
                       )),

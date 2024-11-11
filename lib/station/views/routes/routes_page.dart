@@ -37,21 +37,19 @@ class Routes {
 
   static const String preparation_videocall = '/preparation_videocall';
   static final routes = [
-        GetPage(name: splash, page: (() => const Splash_Screen())),
-        GetPage(name: home, page: (() => const Homeapp())),
-        GetPage(name: menu, page: (() => const Menu())),
-        GetPage(name: healthrecord, page: (() => const HealthRecord())),
-        GetPage(name: checkqueue, page: (() => const CheckQueue())),
-        GetPage(name: device, page: (() => const Device())),
-        GetPage(name: initsetting, page: (() => const Initsetting())),
-        GetPage(name: user_information, page: (() => const UserInformation2())),
-        GetPage(name: printqueue, page: (() => const PrintQueue())),
-        GetPage(name: regter, page: (() => const Regter())),
-        GetPage(name: healthRecord2, page: (() => const HealthRecord2())),
-        GetPage(name: device_manager, page: (() => const DeviceManager())),
-        GetPage(name: preparevideo, page: (() => const PrePareVideo())),
-        GetPage(
-            name: preparation_videocall, page: (() => PreparationVideoCall())),
-      ] +
-      TestRoutes.routes;
+    GetPage(name: splash, page: (() => const Splash_Screen())),
+    GetPage(name: home, page: (() => const Homeapp())),
+    GetPage(name: menu, page: (() => const Menu())),
+    GetPage(name: healthrecord, page: (() => const HealthRecord())),
+    GetPage(name: checkqueue, page: (() => const CheckQueue())),
+    GetPage(name: device, page: (() => const Device())),
+    GetPage(name: initsetting, page: (() => const Initsetting())),
+    GetPage(name: user_information, page: (() => const UserInformation2())),
+    //  GetPage(name: printqueue, page: (() => const PrintQueue())),
+    GetPage(name: regter, page: (() => const Regter())),
+    GetPage(name: healthRecord2, page: (() => const HealthRecord2())),
+    GetPage(name: device_manager, page: (() => const DeviceManager())),
+    GetPage(name: preparevideo, page: (() => const PrePareVideo())),
+    GetPage(name: preparation_videocall, page: (() => PreparationVideoCall())),
+  ];
 }

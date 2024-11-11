@@ -6,8 +6,8 @@ import 'package:smart_health/station/background/background.dart';
 import 'package:smart_health/station/background/color/style_color.dart';
 import 'package:smart_health/station/views/ui/widgetdew.dart/widgetdew.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_pos_printer_platform/esc_pos_utils_platform/esc_pos_utils_platform.dart';
-import 'package:flutter_pos_printer_platform/flutter_pos_printer_platform.dart';
+// import 'package:flutter_pos_printer_platform/esc_pos_utils_platform/esc_pos_utils_platform.dart';
+// import 'package:flutter_pos_printer_platform/flutter_pos_printer_platform.dart';
 import 'package:image/image.dart' as img;
 import 'image_utils.dart';
 
@@ -16,16 +16,16 @@ import 'dart:developer';
 import 'dart:io';
 
 class ESMPrinter {
-  var printerManager = PrinterManager.instance;
-  var defaultPrinterType = PrinterType.usb;
+  // var printerManager = PrinterManager.instance;
+  // var defaultPrinterType = PrinterType.usb;
 
   var devices = <BluetoothPrinter>[];
-  StreamSubscription<PrinterDevice>? _subscription;
-  StreamSubscription<USBStatus>? _subscriptionUsbStatus;
+  // StreamSubscription<PrinterDevice>? _subscription;
+  // StreamSubscription<USBStatus>? _subscriptionUsbStatus;
 
   BluetoothPrinter? selectedPrinter;
-  BTStatus _currentStatus = BTStatus.none;
-  USBStatus _currentUsbStatus = USBStatus.none;
+  // BTStatus _currentStatus = BTStatus.none;
+  // USBStatus _currentUsbStatus = USBStatus.none;
   List<int>? pendingTask;
 
   var _isBle = false;
@@ -40,20 +40,20 @@ class ESMPrinter {
     default_deivces = devices;
 
 //  PrinterManager.instance.stateUSB is only supports on Android
-    _subscriptionUsbStatus = PrinterManager.instance.stateUSB.listen((status) {
-      log(' ----------------- status usb ${status} ------------------ ');
-      debugPrint(' ----------------- status usb ${status} ------------------ ');
-      _currentUsbStatus = status;
-      if (Platform.isAndroid) {
-        if (status == USBStatus.connected && pendingTask != null) {
-          Future.delayed(const Duration(milliseconds: 1000), () {
-            PrinterManager.instance
-                .send(type: PrinterType.usb, bytes: pendingTask!);
-            pendingTask = null;
-          });
-        }
-      }
-    });
+    // _subscriptionUsbStatus = PrinterManager.instance.stateUSB.listen((status) {
+    //   log(' ----------------- status usb ${status} ------------------ ');
+    //   debugPrint(' ----------------- status usb ${status} ------------------ ');
+    //   _currentUsbStatus = status;
+    //   if (Platform.isAndroid) {
+    //     if (status == USBStatus.connected && pendingTask != null) {
+    //       Future.delayed(const Duration(milliseconds: 1000), () {
+    //         PrinterManager.instance
+    //             .send(type: PrinterType.usb, bytes: pendingTask!);
+    //         pendingTask = null;
+    //       });
+    //     }
+    //   }
+    // });
 
     scan();
   }
@@ -61,21 +61,21 @@ class ESMPrinter {
   void scan() {
     debugPrint('====scan');
 
-    devices.clear();
-    _subscription = printerManager
-        .discovery(type: defaultPrinterType, isBle: _isBle)
-        .listen((device) {
-      devices.add(BluetoothPrinter(
-        deviceName: device.name,
-        address: device.address,
-        isBle: _isBle,
-        vendorId: device.vendorId,
-        productId: device.productId,
-        typePrinter: defaultPrinterType,
-      ));
-      debugPrint(
-          'found printer ${device.name} ${device.vendorId} ${device.productId} ');
-    });
+    // devices.clear();
+    // _subscription = printerManager
+    //     .discovery(type: defaultPrinterType, isBle: _isBle)
+    //     .listen((device) {
+    //   devices.add(BluetoothPrinter(
+    //     deviceName: device.name,
+    //     address: device.address,
+    //     isBle: _isBle,
+    //     vendorId: device.vendorId,
+    //     productId: device.productId,
+    //     typePrinter: defaultPrinterType,
+    //   ));
+    //   debugPrint(
+    //       'found printer ${device.name} ${device.vendorId} ${device.productId} ');
+    // });
   }
 
   void printTest(List<int> data) {
@@ -113,12 +113,12 @@ class ESMPrinter {
     List<int> bytes = [];
 
     // Xprinter XP-N160I
-    final profile =
-        await CapabilityProfile.load(name: 'XP-N160I'); // Thermal_Printer
+    // final profile =
+    //     await CapabilityProfile.load(name: 'XP-N160I'); // Thermal_Printer
 
     // PaperSize.mm80 or PaperSize.mm58
-    final generator = Generator(PaperSize.mm58, profile);
-    bytes += generator.setGlobalCodeTable('CP1252');
+    //  final generator = Generator(PaperSize.mm58, profile);
+    // bytes += generator.setGlobalCodeTable('CP1252');
     bytes += datas;
     // bytes += generator.text('Test Print',
     //     styles: const PosStyles(align: PosAlign.right));
@@ -180,69 +180,69 @@ class ESMPrinter {
     //       styles: const PosStyles(align: PosAlign.right),
     //       containsChinese: true),
     // ]);
-    printEscPos(bytes, generator);
+    //  printEscPos(bytes, generator);
   }
 
   /// print ticket
-  void printEscPos(List<int> bytes, Generator generator) async {
-    print('จุด1 ${selectedPrinter.toString()}');
-    var connectedTCP = false;
-    if (selectedPrinter == null) return;
-    var bluetoothPrinter = selectedPrinter!;
+  // void printEscPos(List<int> bytes, Generator generator) async {
+  //   print('จุด1 ${selectedPrinter.toString()}');
+  //   var connectedTCP = false;
+  //   if (selectedPrinter == null) return;
+  //   var bluetoothPrinter = selectedPrinter!;
 
-    switch (bluetoothPrinter.typePrinter) {
-      case PrinterType.usb:
-        bytes += generator.feed(2);
-        bytes += generator.cut();
-        await printerManager.connect(
-            type: bluetoothPrinter.typePrinter,
-            model: UsbPrinterInput(
-                name: bluetoothPrinter.deviceName,
-                productId: bluetoothPrinter.productId,
-                vendorId: bluetoothPrinter.vendorId));
-        pendingTask = null;
-        break;
-      case PrinterType.bluetooth:
-        bytes += generator.cut();
-        await printerManager.connect(
-            type: bluetoothPrinter.typePrinter,
-            model: BluetoothPrinterInput(
-                name: bluetoothPrinter.deviceName,
-                address: bluetoothPrinter.address!,
-                isBle: bluetoothPrinter.isBle ?? false,
-                autoConnect: _reconnect));
-        pendingTask = null;
-        if (Platform.isAndroid) pendingTask = bytes;
-        break;
-      case PrinterType.network:
-        bytes += generator.feed(2);
-        bytes += generator.cut();
-        connectedTCP = await printerManager.connect(
-            type: bluetoothPrinter.typePrinter,
-            model: TcpPrinterInput(ipAddress: bluetoothPrinter.address!));
-        if (!connectedTCP) print(' --- please review your connection ---');
-        break;
-      default:
-    }
-    if (bluetoothPrinter.typePrinter == PrinterType.bluetooth &&
-        Platform.isAndroid) {
-      if (_currentStatus == BTStatus.connected) {
-        printerManager.send(type: bluetoothPrinter.typePrinter, bytes: bytes);
-        pendingTask = null;
-      }
-    } else {
-      printerManager.send(type: bluetoothPrinter.typePrinter, bytes: bytes);
-    }
-  }
+  //   switch (bluetoothPrinter.typePrinter) {
+  //     case PrinterType.usb:
+  //       bytes += generator.feed(2);
+  //       bytes += generator.cut();
+  //       await printerManager.connect(
+  //           type: bluetoothPrinter.typePrinter,
+  //           model: UsbPrinterInput(
+  //               name: bluetoothPrinter.deviceName,
+  //               productId: bluetoothPrinter.productId,
+  //               vendorId: bluetoothPrinter.vendorId));
+  //       pendingTask = null;
+  //       break;
+  //     case PrinterType.bluetooth:
+  //       bytes += generator.cut();
+  //       await printerManager.connect(
+  //           type: bluetoothPrinter.typePrinter,
+  //           model: BluetoothPrinterInput(
+  //               name: bluetoothPrinter.deviceName,
+  //               address: bluetoothPrinter.address!,
+  //               isBle: bluetoothPrinter.isBle ?? false,
+  //               autoConnect: _reconnect));
+  //       pendingTask = null;
+  //       if (Platform.isAndroid) pendingTask = bytes;
+  //       break;
+  //     case PrinterType.network:
+  //       bytes += generator.feed(2);
+  //       bytes += generator.cut();
+  //       connectedTCP = await printerManager.connect(
+  //           type: bluetoothPrinter.typePrinter,
+  //           model: TcpPrinterInput(ipAddress: bluetoothPrinter.address!));
+  //       if (!connectedTCP) print(' --- please review your connection ---');
+  //       break;
+  //     default:
+  //   }
+  //   if (bluetoothPrinter.typePrinter == PrinterType.bluetooth &&
+  //       Platform.isAndroid) {
+  //     if (_currentStatus == BTStatus.connected) {
+  //       printerManager.send(type: bluetoothPrinter.typePrinter, bytes: bytes);
+  //       pendingTask = null;
+  //     }
+  //   } else {
+  //     printerManager.send(type: bluetoothPrinter.typePrinter, bytes: bytes);
+  //   }
+  // }
 
   void selectDevice(BluetoothPrinter device) async {
     if (selectedPrinter != null) {
-      if ((device.address != selectedPrinter!.address) ||
-          (device.typePrinter == PrinterType.usb &&
-              selectedPrinter!.vendorId != device.vendorId)) {
-        await PrinterManager.instance
-            .disconnect(type: selectedPrinter!.typePrinter);
-      }
+      // if ((device.address != selectedPrinter!.address) ||
+      //     (device.typePrinter == PrinterType.usb &&
+      //         selectedPrinter!.vendorId != device.vendorId)) {
+      //   await PrinterManager.instance
+      //       .disconnect(type: selectedPrinter!.typePrinter);
+      // }
     }
     debugPrint(
         ' ----------------- selectedPrinter ${device.toString()} ------------------ ');
@@ -260,7 +260,7 @@ class BluetoothPrinter {
   String? productId;
   bool? isBle;
 
-  PrinterType typePrinter;
+  // PrinterType typePrinter;
   bool? state;
 
   BluetoothPrinter(
@@ -270,6 +270,6 @@ class BluetoothPrinter {
       this.state,
       this.vendorId,
       this.productId,
-      this.typePrinter = PrinterType.bluetooth,
+      //    this.typePrinter = PrinterType.bluetooth,
       this.isBle = false});
 }
