@@ -8,6 +8,7 @@ import 'package:smart_health/myapp/provider/provider.dart';
 import 'package:smart_health/myapp/setting/device.dart';
 import 'package:smart_health/myapp/setting/device/requestLocationPermission.dart';
 import 'package:smart_health/myapp/setting/init_setting.dart';
+import 'package:smart_health/myapp/setting/talamed_setting.dart';
 import 'package:smart_health/myapp/setting/update_license.dart';
 import 'package:smart_health/myapp/setting/videotest.dart';
 import 'package:smart_health/myapp/widgetdew.dart';
@@ -39,7 +40,7 @@ class _SettingState extends State<Setting> {
           }),
           child: Stack(
             children: [
-              backgrund(),
+              const backgrund(),
               Positioned(
                 child: Container(
                   width: _width,
@@ -57,6 +58,16 @@ class _SettingState extends State<Setting> {
                                     builder: (context) => Initsetting()));
                           },
                           child: BoxSetting(text: 'Init Setting')),
+                            GestureDetector(
+                          onTap: () {
+                            keypad_sound();
+                          
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>  TalamedSetting()));
+                          },
+                          child: BoxSetting(text: 'Talamed  Setting')),
                       GestureDetector(
                           onTap: () {
                             keypad_sound();

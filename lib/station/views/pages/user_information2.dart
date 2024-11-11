@@ -13,11 +13,7 @@ import 'package:smart_health/station/views/pages/videocall.dart';
 import 'package:smart_health/station/views/pages/videocall/preparationvideocall.dart';
 import 'package:smart_health/station/views/ui/widgetdew.dart/widgetdew.dart';
 import 'package:http/http.dart' as http;
-
-<<<<<<< HEAD
-// < karn  start printer >
-=======
->>>>>>> 777ae85ef2c8e147a67d6a4a4e4a31ba2ed4be09
+ 
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:flutter/services.dart';
 import 'package:printing/printing.dart';
@@ -83,12 +79,7 @@ class _UserInformation2State extends State<UserInformation2> {
   String doctor_note = '--';
   String dx = '--';
 // -------
-
-<<<<<<< HEAD
-  // < karn  start printer >
-=======
-  // < karn  start >
->>>>>>> 777ae85ef2c8e147a67d6a4a4e4a31ba2ed4be09
+ 
   FocusNode _focusNode = FocusNode();
   Printer? selectedPrinter; // Stores the selected printer
   late pw.Font thaiFont;

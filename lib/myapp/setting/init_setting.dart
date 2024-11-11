@@ -109,8 +109,9 @@ class _InitsettingState extends State<Initsetting> {
       Future.delayed(const Duration(seconds: 2), () {
         setState(() {
           status_safe = false;
-          Navigator.pushReplacement(context,
-              MaterialPageRoute(builder: (context) => const Splash_Screen()));
+        Navigator.pop(context);
+          // Navigator.pushReplacement(context,
+          //     MaterialPageRoute(builder: (context) => const Splash_Screen()));
         });
       });
     });
@@ -213,12 +214,13 @@ class _InitsettingState extends State<Initsetting> {
             backgroundColor: Color.fromARGB(255, 245, 245, 245),
             appBar: AppBar(
               backgroundColor: Colors.white,
+              iconTheme:const IconThemeData(color: Colors.black),
               actions: [
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: GestureDetector(
                     onTap: () {
-                      keypad_sound();
+ 
                       test();
                     },
                     child: Icon(
@@ -231,7 +233,7 @@ class _InitsettingState extends State<Initsetting> {
                   padding: const EdgeInsets.all(8.0),
                   child: GestureDetector(
                     onTap: () {
-                      keypad_sound();
+                       
                       safe();
                     },
                     child: status_safe == false
