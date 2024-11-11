@@ -67,7 +67,9 @@ dependencies:
   device_info_plus: ^2.1.2
   window_manager: ^0.3.0
   printing: ^5.10.4
-
+  qr_flutter: ^4.0.0
+  barcode_widget: ^2.0.2
+  
   openvidu_client:
     path: "vendors/flutter_openvidu_client"  
     

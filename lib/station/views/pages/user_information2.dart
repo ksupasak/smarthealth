@@ -15,13 +15,15 @@ import 'package:smart_health/station/views/pages/videocall/preparationvideocall.
 import 'package:smart_health/station/views/ui/widgetdew.dart/widgetdew.dart';
 import 'package:http/http.dart' as http;
 
-
+// < karn  start printer >
 import 'package:flutter/services.dart' show rootBundle;
-//import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:printing/printing.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
+import 'package:qr_flutter/qr_flutter.dart';
+import 'package:barcode_widget/barcode_widget.dart';
+// < karn  end printer >
 
 class UserInformation extends StatefulWidget {
   const UserInformation({super.key});
@@ -31,8 +33,6 @@ class UserInformation extends StatefulWidget {
 }
 
 class _UserInformationState extends State<UserInformation> {
- 
-
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -82,11 +82,11 @@ class _UserInformation2State extends State<UserInformation2> {
   String dx = '--';
 // -------
 
-  // < karn  start >
-  FocusNode _focusNode = FocusNode();   
+  // < karn  start printer >
+  FocusNode _focusNode = FocusNode();
   Printer? selectedPrinter; // Stores the selected printer
   late pw.Font thaiFont;
-  // < karn  end >
+  // < karn  end printer>
 
   var resToJsonCheckQuick;
   Timer? timerCheckQuick;
@@ -323,15 +323,29 @@ class _UserInformation2State extends State<UserInformation2> {
     });
   }
 
-
-
   void printexam() async {
+    // < karn  start printer >
+    String msgHN = "";
     String msgHead = "";
     String msgDetail = "";
+
+    String dataBarcode = "";
+    String dataQrcode = "";
+
     double sizeHeader = 20;
     double sizeBody = 14;
 
-     if (selectedPrinter == null) {
+    //  img Logo
+    Uint8List? logoBytes;
+    try {
+      final logoData = await rootBundle.load('assets/logo.png');
+      logoBytes = logoData.buffer.asUint8List();
+    } catch (e) {
+      print("Logo not found: $e");
+    }
+    //  img Logo
+
+    if (selectedPrinter == null) {
       await _selectPrinter();
     }
 
@@ -343,81 +357,202 @@ class _UserInformation2State extends State<UserInformation2> {
     //  msg =  'ส่วนสูง:${resToJsonCheckQuick["health_records"][0]["height"]} ';
     //  msg += ' น้ำหนัก:${resToJsonCheckQuick["health_records"][0]["weight"]}';
     //  msg += ' อุณภูมิ:${resToJsonCheckQuick["health_records"][0]["temp"]}';
-     
-     msgHead = 'HN : ${resTojson2['personal']['hn']} \n';
-     msgHead += 'คุณ : ${resTojson2['personal']['first_name']} ${resTojson2['personal']['last_name']} \n';   
-     
-     msgDetail = 'น้ำหนัก : ${resTojson2['data']['weight']} | ส่วนสูง: ${resTojson2['data']['height']} \n';    
-     msgDetail += 'อุณภูมิ : ${resTojson2['data']['temp']}  | BP: ${resTojson2['data']['bp']} \n';
-     msgDetail += 'PULSE : ${resTojson2['data']['pulse_rate']}  | RR: ${resTojson2['data']['rr']} \n';      
+    msgHN = 'HN : ${resTojson2['personal']['hn']}';
+    msgHead = 'HN : ${resTojson2['personal']['hn']} \n';
+    msgHead +=
+        'คุณ : ${resTojson2['personal']['first_name']} ${resTojson2['personal']['last_name']} \n';
 
-    // Add a page with 80mm width
+    msgDetail =
+        'น้ำหนัก : ${resTojson2['data']['weight']} | ส่วนสูง: ${resTojson2['data']['height']} \n';
+    msgDetail +=
+        'อุณภูมิ : ${resTojson2['data']['temp']}  | BP: ${resTojson2['data']['bp']} \n';
+    msgDetail +=
+        'PULSE : ${resTojson2['data']['pulse_rate']}  | RR: ${resTojson2['data']['rr']} \n';
+
+    dataBarcode = "123456789";
+    dataQrcode = "WWW.example.com";
+
+    pw.Widget _buildLogo(Uint8List logoBytes) {
+      return pw.Center(
+        child: pw.Image(
+          pw.MemoryImage(logoBytes),
+          width: 64,
+          height: 32,
+        ),
+      );
+    }
+
+    pw.Widget _buildHeader() {
+      return pw.Column(
+        crossAxisAlignment: pw.CrossAxisAlignment.start,
+        children: [
+          pw.Text(
+            'ผลการตรวจ',
+            style: pw.TextStyle(
+                font: thaiFont, fontSize: 18, fontWeight: pw.FontWeight.bold),
+          ),
+          // pw.Text('Address Line 1\nCity, State ZIP\nPhone: (555) 123-4567'),
+          pw.Text(msgHead),
+        ],
+      );
+    }
+
+    pw.Widget _buildDocnote() {
+      return pw.Column(
+        crossAxisAlignment: pw.CrossAxisAlignment.start,
+        children: [
+          pw.Text(
+            'msgHead',
+            style: pw.TextStyle(
+                font: thaiFont, fontSize: 18, fontWeight: pw.FontWeight.bold),
+          ),
+          // pw.Text('Address Line 1\nCity, State ZIP\nPhone: (555) 123-4567'),
+          pw.Text(msgHead),
+          pw.Text(
+            'msgDetail',
+            style: pw.TextStyle(
+                font: thaiFont, fontSize: 18, fontWeight: pw.FontWeight.bold),
+          ),
+          // pw.Text('Address Line 1\nCity, State ZIP\nPhone: (555) 123-4567'),
+          pw.Text(msgDetail),
+        ],
+      );
+    }
+
+    pw.Widget _buildBarcode(String dataBarcode) {
+      return pw.Center(
+        child: pw.BarcodeWidget(
+          data: dataBarcode.toString(), // Sample barcode data
+          barcode: pw.Barcode.code128(),
+          width: 80,
+          height: 40,
+        ),
+      );
+    }
+
+    pw.Widget _buildQRCode(String dataQrcode) {
+      return pw.Center(
+        child: pw.BarcodeWidget(
+          data: dataQrcode.toString(), // Sample QR code data
+          barcode: pw.Barcode.qrCode(),
+          width: 80,
+          height: 80,
+        ),
+      );
+    }
+
+    pw.Widget _buildFooter() {
+      return pw.Column(
+        crossAxisAlignment: pw.CrossAxisAlignment.center,
+        children: [
+          pw.Text(
+            'Thank you for visit !',
+            textAlign: pw.TextAlign.center,
+            style: pw.TextStyle(font: thaiFont, fontSize: 12),
+          ),
+          pw.Text(
+            'Visit us online at www.example.com',
+            textAlign: pw.TextAlign.center,
+            style: pw.TextStyle(font: thaiFont, fontSize: 10),
+          ),
+        ],
+      );
+    }
+
     pdf.addPage(
       pw.Page(
-        pageFormat: pageFormat,
+        pageFormat: PdfPageFormat(80 * PdfPageFormat.mm, double.infinity),
         build: (pw.Context context) {
           return pw.Column(
-            //crossAxisAlignment: pw.CrossAxisAlignment.start,
-            crossAxisAlignment: pw.CrossAxisAlignment.center,
+            crossAxisAlignment: pw.CrossAxisAlignment.start,
             children: [
-          pw.Align(
-            alignment: pw.Alignment.center,
-            child: pw.Text(
-              'ผลการตรวจ',
-              style: pw.TextStyle(font: thaiFont, fontSize: sizeHeader),
-              textAlign: pw.TextAlign.center,
-            ),
-          ),
-          pw.SizedBox(height: 3),
-          pw.Align(
-            alignment: pw.Alignment.center,
-            child: pw.Text(
-              msgHead,
-              style: pw.TextStyle(font: thaiFont, fontSize: sizeBody),
-              textAlign: pw.TextAlign.center,
-            ),
-          ),         
-          pw.SizedBox(height: 3),
-          pw.Align(
-            alignment: pw.Alignment.center,
-            child: pw.Text(
-              'อาการ \n $dx',
-              style: pw.TextStyle(font: thaiFont, fontSize: sizeBody),
-              textAlign: pw.TextAlign.center,
-            ),
-          ),
-          pw.SizedBox(height: 3),
-          pw.Align(
-            alignment: pw.Alignment.center,
-            child: pw.Text(
-              'Doctor Note \n $doctor_note',
-              style: pw.TextStyle(font: thaiFont, fontSize: sizeBody),
-              textAlign: pw.TextAlign.center,
-            ),
-          ),
-          pw.SizedBox(height: 3),           
-          pw.Align(
-            alignment: pw.Alignment.center,
-            child: pw.Text(
-              msgDetail,
-              style: pw.TextStyle(font: thaiFont, fontSize: sizeBody),
-              textAlign: pw.TextAlign.center,
-            ),
-          ),
-          pw.SizedBox(height: 3),
-        ],
+              if (logoBytes != null) _buildLogo(logoBytes),
+              pw.SizedBox(height: 10),
+              _buildHeader(),
+              pw.SizedBox(height: 10),
+              // _buildItemList(items),
+              _buildDocnote(),
+              pw.Divider(),
+              //_buildTotals(subtotal, tax, total),
+              pw.SizedBox(height: 10),
+              _buildBarcode(dataBarcode),
+              pw.SizedBox(height: 10),
+              _buildQRCode(dataQrcode),
+              pw.SizedBox(height: 10),
+              _buildFooter(),
+            ],
           );
         },
       ),
     );
 
+    // Add a page with 80mm width
+    // pdf.addPage(
+    //   pw.Page(
+    //     pageFormat: pageFormat,
+    //     build: (pw.Context context) {
+    //       return pw.Column(
+    //         //crossAxisAlignment: pw.CrossAxisAlignment.start,
+    //         crossAxisAlignment: pw.CrossAxisAlignment.center,
+    //         children: [
+    //           pw.Align(
+    //             alignment: pw.Alignment.center,
+    //             child: pw.Text(
+    //               'ผลการตรวจ',
+    //               style: pw.TextStyle(font: thaiFont, fontSize: sizeHeader),
+    //               textAlign: pw.TextAlign.center,
+    //             ),
+    //           ),
+    //           pw.SizedBox(height: 3),
+    //           pw.Align(
+    //             alignment: pw.Alignment.center,
+    //             child: pw.Text(
+    //               msgHead,
+    //               style: pw.TextStyle(font: thaiFont, fontSize: sizeBody),
+    //               textAlign: pw.TextAlign.center,
+    //             ),
+    //           ),
+    //           pw.SizedBox(height: 3),
+    //           pw.Align(
+    //             alignment: pw.Alignment.center,
+    //             child: pw.Text(
+    //               'อาการ \n $dx',
+    //               style: pw.TextStyle(font: thaiFont, fontSize: sizeBody),
+    //               textAlign: pw.TextAlign.center,
+    //             ),
+    //           ),
+    //           pw.SizedBox(height: 3),
+    //           pw.Align(
+    //             alignment: pw.Alignment.center,
+    //             child: pw.Text(
+    //               'Doctor Note \n $doctor_note',
+    //               style: pw.TextStyle(font: thaiFont, fontSize: sizeBody),
+    //               textAlign: pw.TextAlign.center,
+    //             ),
+    //           ),
+    //           pw.SizedBox(height: 3),
+    //           pw.Align(
+    //             alignment: pw.Alignment.center,
+    //             child: pw.Text(
+    //               msgDetail,
+    //               style: pw.TextStyle(font: thaiFont, fontSize: sizeBody),
+    //               textAlign: pw.TextAlign.center,
+    //             ),
+    //           ),
+    //           pw.SizedBox(height: 3),
+    //         ],
+    //       );
+    //     },
+    //   ),
+    // );
+
     // Convert the PDF to bytes
     final pdfBytes = await pdf.save();
 
     if (selectedPrinter != null) {
-    await Printing.directPrintPdf(
-      printer: selectedPrinter!,
-      onLayout: (PdfPageFormat format) async => pdfBytes,
+      await Printing.directPrintPdf(
+        printer: selectedPrinter!,
+        onLayout: (PdfPageFormat format) async => pdfBytes,
       );
     } else {
       print("No printer selected.");
@@ -441,6 +576,8 @@ class _UserInformation2State extends State<UserInformation2> {
     // bytes += generator.text('        :  $doctor_note');
     // printer?.printTest(bytes);
   }
+
+  // < karn  end printer >
 
   // Future<void> printq() async {
   //   List<int> bytes = [];
@@ -535,27 +672,28 @@ class _UserInformation2State extends State<UserInformation2> {
   // Function to get available printers
   Future<void> _selectPrinter() async {
     final printers = await Printing.listPrinters();
-    
+    final String PrinterName_ = "KPOS_80 Printer";
+
     print('select_printer....');
     if (printers.isNotEmpty) {
-     
       print('Total printers found: ${printers.length}');
       for (var i = 0; i < printers.length; i++) {
         print('Printer $i: ${printers[i].name}');
       }
 
       final kposPrinter = printers.firstWhere(
-        (printer) => printer.name == 'KPOS_80 Printer',
-        orElse: () => printers.first, // Fallback to the first printer if not found
+        (printer) => printer.name == PrinterName_, //'KPOS_80 Printer',
+        orElse: () =>
+            printers.first, // Fallback to the first printer if not found
       );
-   
+
       setState(() {
         //selectedPrinter =   printers.first;  //printers.first; // Select the first printer as default
         selectedPrinter = kposPrinter;
       });
     }
   }
-  
+
   @override
   void initState() {
     checkQuick();
@@ -565,8 +703,9 @@ class _UserInformation2State extends State<UserInformation2> {
     _focusNode.addListener(() {
       if (_focusNode.hasFocus) {
         RawKeyboard.instance.addListener((RawKeyEvent event) {
-          if (event.logicalKey == LogicalKeyboardKey.enter && event is RawKeyDownEvent) {
-          //  _sendToSelectedPrinter();
+          if (event.logicalKey == LogicalKeyboardKey.enter &&
+              event is RawKeyDownEvent) {
+            //  _sendToSelectedPrinter();
           }
         });
       }
@@ -1367,8 +1506,6 @@ class _choiceState extends State<choice> {
       if (resTojson != null) {}
     });
   }
-
-  
 
   @override
   Widget build(BuildContext context) {
